@@ -7,7 +7,11 @@
       </span>
     </div>
     <div class="menu">
-      <img class="menu" src="assets/hamburger_menu.svg" />
+      <img class="menu" src="assets/hamburger_menu.svg" [matMenuTriggerFor]="menu"/>
+      <mat-menu #menu="matMenu" style="z-index: 9999999; background-color: white;">
+        <button mat-menu-item>אודות</button>
+        <button mat-menu-item>התנתקות</button>
+      </mat-menu>
     </div>
   </div>
   <div class="body">
@@ -15,21 +19,27 @@
     <div class="projects">
       <span class="active-projects"></span>
       <mat-accordion>
-        <mat-expansion-panel >
+        <mat-expansion-panel [expanded]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>פרויקטים פעילים</mat-panel-title>
           </mat-expansion-panel-header>
-          <div><app-projects-list [projects]="projects"></app-projects-list></div>
+          <div><app-projects-list [projects]="userProjects?.activeProjects"></app-projects-list></div>
         </mat-expansion-panel>
       
-        <!-- <mat-expansion-panel style="box-shadow: none;">
+        <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>פרויקטים בהקפאה</mat-panel-title>
           </mat-expansion-panel-header>
-          <p>Content for section 2</p>
-        </mat-expansion-panel> -->
-      </mat-accordion>
-      
+          <div><app-projects-list [projects]="userProjects?.frozenProjects"></app-projects-list></div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>פרויקטים שהסתיימו</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div><app-projects-list [projects]="userProjects?.finishedProjects"></app-projects-list></div>
+        </mat-expansion-panel>
+      </mat-accordion>    
     </div>
     <div class="tips">
       <span class="tips-title">טיפ שבועי</span>

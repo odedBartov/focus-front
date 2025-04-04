@@ -9,6 +9,7 @@
     --font-size-xl: 1.5rem;
 
     --frame-color: #667AFF;
+    --unfilled-progress-color: rgba(102, 122, 255, 0.3);
 
     .mat-content {
         flex: none;
@@ -19,6 +20,20 @@
 
         .mat-expansion-panel-body {
             padding: 0;
+        }
+    }
+
+    .mat-mdc-menu-content {
+        padding: 0;
+        border-radius: 20px;
+    }
+
+    .mat-mdc-menu-panel {
+        background: aliceblue;
+        border-radius: 15px;
+
+        .mat-mdc-menu-item  {
+            background-color: white;
         }
     }
 }

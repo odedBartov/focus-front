@@ -6,7 +6,10 @@
                 <span class="project-description">{{project.description}}</span>
             </div>
             <div class="progress">
-                <!-- <mat-progress-bar mode="determinate" value="40"></mat-progress-bar> -->
+                <span>{{project.progress}}%</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" [style.width.%]="project.progress"></div>
+                </div>
             </div>
         </div>
     </div>

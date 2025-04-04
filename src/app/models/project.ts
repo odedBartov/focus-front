@@ -2,12 +2,12 @@ export class Project {
     id: string;
     name: string;
     description: string;
-    completion: number;
+    progress: number;
 
     constructor() {
         this.id = '';
         this.name = '';
         this.description = '';
-        this.completion = 50;
+        this.progress = 30;
     }
 }
