@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+
+:root {
+    --font-size-xs: 12px;
+    --font-size-sm: 14px;
+    --font-size-md: 1rem;
+    --font-size-lg: 20px;
+    --font-size-xl: 1.5rem;
+
+    --frame-color: #667AFF;
+
+    .mat-content {
+        flex: none;
+
+        .mat-expansion-panel-header {
+            padding: 0;
+        }
+
+        .mat-expansion-panel-body {
+            padding: 0;
+        }
+    }
+}

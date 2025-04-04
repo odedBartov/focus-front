@@ -1,0 +1,26 @@
+.project {
+    
+}
+
+.line {
+    display: flex;
+    justify-content: space-between;
+    border: solid 3px var(--frame-color);
+    border-radius: 15px;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+
+    .project-name {
+        font-weight: bold;
+        font-size: var(--font-size-md);
+    }
+
+    .project-description {
+        font-size: var(--font-size-sm);
+    }
+}

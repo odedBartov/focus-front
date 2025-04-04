@@ -1,0 +1,74 @@
+.header {
+    border: solid 3px var(--frame-color);
+    border-radius: 20px;
+    font-size: var(--font-size-lg);
+    padding: 1rem;
+    margin: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .menu {
+        height: 1.5rem;
+        cursor: pointer;
+    }
+}
+
+.adler {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-weight: 800;
+
+    .logo {
+        height: 2rem;
+        margin-left: 1rem;
+    }
+}
+
+.body {
+    margin: 0 1rem;
+    display: flex;
+    flex-direction: row;
+    height: 80vh;
+
+    .right {
+        border: solid 3px var(--frame-color);
+        border-radius: 15px;
+        flex: 3;
+    }
+
+    .projects {
+        margin: 0 2rem;
+        flex: 6;
+
+        .mat-expansion-panel-header-title {
+            font-size: var(--font-size-xl);
+            font-weight: bolder;
+        }
+    }
+
+    .tips {
+        padding: 1rem;
+        border: solid 3px var(--frame-color);
+        border-radius: 15px;
+        flex: 3;
+
+        .tips-title {
+            font-weight: bold;
+            font-size: var(--font-size-xl);
+        }
+
+        .tips-text {
+            margin-top: 1rem;
+        }
+    }
+}
+
+.mat-expansion-panel-body {
+    padding: 0;
+}
+
+.mat-expansion-panel-spacing {
+    margin: 0;
+}

@@ -1,0 +1,13 @@
+<div class="project">
+    <div *ngFor="let project of projects">
+        <div class="line">
+            <div class="text">
+                <span class="project-name">{{project.name}}</span>
+                <span class="project-description">{{project.description}}</span>
+            </div>
+            <div class="progress">
+                <!-- <mat-progress-bar mode="determinate" value="40"></mat-progress-bar> -->
+            </div>
+        </div>
+    </div>
+</div>
