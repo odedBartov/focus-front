@@ -11,6 +11,12 @@
     --frame-color: #667AFF;
     --unfilled-progress-color: rgba(102, 122, 255, 0.3);
 
+    .common-border {
+        border: solid 3px var(--frame-color);
+        border-radius: 15px;
+        padding: 1rem;
+    }
+
     .mat-content {
         flex: none;
 

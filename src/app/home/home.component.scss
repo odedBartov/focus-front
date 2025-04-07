@@ -1,0 +1,45 @@
+.body {
+    margin: 0 1rem;
+    display: flex;
+    flex-direction: row;
+    height: 80vh;
+
+    .right {
+        flex: 3;
+    }
+
+    .projects {
+        margin: 0 2rem;
+        flex: 6;
+
+        .mat-expansion-panel-header-title {
+            font-size: var(--font-size-xl);
+            font-weight: bolder;
+        }
+    }
+
+    .tips {
+        flex: 3;
+
+        .tips-title {
+            font-weight: bold;
+            font-size: var(--font-size-xl);
+        }
+
+        .tips-text {
+            margin-top: 1rem;
+        }
+    }
+}
+
+.mat-expansion-panel-body {
+    padding: 0;
+}
+
+.mat-expansion-panel-spacing {
+    margin: 0;
+}
+
+.mat-expansion-panel:not([class*=mat-elevation-z]) {
+    box-shadow: none;
+}

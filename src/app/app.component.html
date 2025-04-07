@@ -1,5 +1,4 @@
-<div>
-  <div class="header">
+<div class="header">
     <div class="adler">
       <img class="logo" src="assets/ariel_logo.svg" />
       <span>
@@ -8,42 +7,11 @@
     </div>
     <div class="menu">
       <img class="menu" src="assets/hamburger_menu.svg" [matMenuTriggerFor]="menu"/>
-      <mat-menu #menu="matMenu" style="z-index: 9999999; background-color: white;">
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="navigateToHomePage()">דף הבית</button>
         <button mat-menu-item>אודות</button>
         <button mat-menu-item>התנתקות</button>
       </mat-menu>
     </div>
   </div>
-  <div class="body">
-    <div class="right"></div>
-    <div class="projects">
-      <span class="active-projects"></span>
-      <mat-accordion>
-        <mat-expansion-panel [expanded]="true">
-          <mat-expansion-panel-header>
-            <mat-panel-title>פרויקטים פעילים</mat-panel-title>
-          </mat-expansion-panel-header>
-          <div><app-projects-list [projects]="userProjects?.activeProjects"></app-projects-list></div>
-        </mat-expansion-panel>
-      
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>פרויקטים בהקפאה</mat-panel-title>
-          </mat-expansion-panel-header>
-          <div><app-projects-list [projects]="userProjects?.frozenProjects"></app-projects-list></div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>פרויקטים שהסתיימו</mat-panel-title>
-          </mat-expansion-panel-header>
-          <div><app-projects-list [projects]="userProjects?.finishedProjects"></app-projects-list></div>
-        </mat-expansion-panel>
-      </mat-accordion>    
-    </div>
-    <div class="tips">
-      <span class="tips-title">טיפ שבועי</span>
-      <div class="tips-text">טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ </div>
-    </div>
-  </div>
-</div>
+<router-outlet></router-outlet>

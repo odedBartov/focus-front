@@ -7,34 +7,44 @@ import { UserProjects } from '../models/userProjects';
   providedIn: 'root'
 })
 export class HttpService {
+  projects = new UserProjects();
 
-  constructor() { }
-
-  getProjects (): Observable<UserProjects> {
+  constructor() {
     const p1 = new Project();
+    p1.id = "111";
     p1.name = 'פרויקט ראשון';
     p1.description = 'פה יש הסבר על הפרויקט';
     p1.progress = 17;
 
     const p2 = new Project();
+    p2.id = "222";
     p2.name = 'פרויקט שני';
     p2.description = 'סתם טקסט של תיאור';
     p2.progress = 80
 
     const p3 = new Project();
+    p3.id = "333";
     p3.name = 'פרויקט שלישי';
     p3.description = 'זה פרויקט מוקפא';
 
     const p4 = new Project();
+    p4.id = "444";
     p4.name = 'פרויקט רביעי';
     p4.description = 'זה סתם עוד פרויקט שהסתיים';
     p4.progress = 100;
 
-    const result = new UserProjects();
-    result.activeProjects = [p1, p2];
-    result.frozenProjects = [p3];
-    result.finishedProjects = [p4];
+    this.projects.activeProjects = [p1, p2];
+    this.projects.frozenProjects = [p3];
+    this.projects.finishedProjects = [p4];
+  }
 
-    return of(result);
+  getProjects(): Observable<UserProjects> {
+    return of(this.projects);
+  }
+
+  getProject(projectId: string) {
+    const projects = this.projects.activeProjects.concat(this.projects.finishedProjects).concat(this.projects.frozenProjects);
+    const res = projects.find(p => p.id === projectId);
+    return of(res);
   }
 }

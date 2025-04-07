@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Project } from '../models/project';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-projects-list',
@@ -11,4 +12,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 })
 export class ProjectsListComponent {
   @Input() projects?: Project[];
+  router = inject(Router);
+  
+  navigateToProject(projectId: string) {    
+    this.router.navigate(['/project', projectId]);
+  }
 }
