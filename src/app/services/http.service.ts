@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Project } from '../models/project';
 import { UserProjects } from '../models/userProjects';
+import { Step } from '../models/step';
 
 @Injectable({
   providedIn: 'root'
@@ -46,5 +47,27 @@ export class HttpService {
     const projects = this.projects.activeProjects.concat(this.projects.finishedProjects).concat(this.projects.frozenProjects);
     const res = projects.find(p => p.id === projectId);
     return of(res);
+  }
+
+  createStep(project: Project, step: Step): Observable<Step> {
+    const currentPrpoject = this.projects.activeProjects.find(p => p.id == project.id);
+    if (currentPrpoject) {
+      currentPrpoject.steps.push(step);
+    }
+
+    return of(step);
+  }
+
+  updateStep(project: Project, step: Step) {
+    debugger
+    const currentPrpoject = this.projects.activeProjects.find(p => p.id == project.id);
+    if (currentPrpoject) {
+      let stepIndex = currentPrpoject.steps.findIndex(s => s.stepId === step.stepId)
+      if (stepIndex !== undefined) {
+        currentPrpoject.steps[stepIndex] = step;
+      }
+    }
+
+    return of(step);
   }
 }

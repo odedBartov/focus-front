@@ -3,17 +3,22 @@ import { ActivatedRoute } from '@angular/router';
 import { Project } from '../models/project';
 import { HttpService } from '../services/http.service';
 import { CommonModule, DatePipe } from '@angular/common';
-import { Task } from '../models/task';
+import { Step } from '../models/step';
+import { LoadingService } from '../services/loading.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { StepModalComponent } from '../modals/step-modal/step-modal.component';
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule ],
+  imports: [CommonModule, MatDialogModule ],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss'
 })
 export class ProjectPageComponent implements OnInit {
   route = inject(ActivatedRoute);
   httpService = inject(HttpService);
+  loadingService = inject(LoadingService);
+  dialog = inject(MatDialog);
   projectId: string | null = null;
   project = signal<Project | undefined>(undefined);
 
@@ -24,8 +29,14 @@ export class ProjectPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadProject();
+  }
+
+  loadProject() {
     if (this.projectId) {
+      this.loadingService.changeIsloading(true);
       this.httpService.getProject(this.projectId).subscribe(res => {
+        this.loadingService.changeIsloading(false);
         if (res) {
           this.project.set(res);
         }
@@ -33,7 +44,17 @@ export class ProjectPageComponent implements OnInit {
     }
   }
 
-  changeTaskStatus(task: Task) {
-    task.isFinished = !task.isFinished;
+  changeStepStatus(step: Step) {
+    step.isFinished = !step.isFinished;
+  }
+
+  openStepModal(step?: Step) {
+    const dialogRef = this.dialog.open(StepModalComponent, {data: {step: step, project: this.project()}});
+
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) { // should reload
+        this.loadProject();
+      }
+    })
   }
 }

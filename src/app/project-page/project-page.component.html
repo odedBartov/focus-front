@@ -29,22 +29,22 @@
         </div>
         <div class="links common-border"></div>
     </div>
-    <div class="tasks common-border">
-        <div class="task" [ngClass]="task.isFinished? 'common-border finished' : 'not-finished'"
-            *ngFor="let task of project()?.tasks">
-            <div class="task-name">
-                <span>{{task.name}}</span>
-                <div class="icons" *ngIf="task.isFinished">
+    <div class="steps common-border">
+        <div class="step" [ngClass]="step.isFinished? 'common-border finished' : 'not-finished'"
+            *ngFor="let step of project()?.steps">
+            <div class="step-name">
+                <span>{{step.name}}</span>
+                <div class="icons" *ngIf="step.isFinished">
                     <img class="icon" src="assets/garbage_can.svg">
-                    <img class="icon" src="assets/pencil.svg">
+                    <img class="icon" (click)="openStepModal(step)" src="assets/pencil.svg">
                 </div>
             </div>
             <div class="confirm">
-                <img class="icon" (click)="changeTaskStatus(task)" src="assets/confirm.svg" />
+                <img class="icon" (click)="changeStepStatus(step)" src="assets/confirm.svg" />
             </div>
         </div>
-        <div class="add-task">
-            <span>+</span>
+        <div class="add-step">
+            <span (click)="openStepModal()">+</span>
         </div>
     </div>
     <div class="notes common-border"></div>

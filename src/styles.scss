@@ -10,6 +10,7 @@
     --font-size-huge: 3rem;
 
     --frame-color: #667AFF;
+    --input-color: #667AFF2B;
     --unfilled-progress-color: rgba(102, 122, 255, 0.3);
 
     .common-border {
@@ -42,5 +43,9 @@
         .mat-mdc-menu-item  {
             background-color: white;
         }
+    }
+
+    .mat-mdc-dialog-surface {
+        border-radius: 15px;
     }
 }

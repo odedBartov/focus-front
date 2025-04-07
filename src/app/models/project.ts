@@ -1,4 +1,4 @@
-import { Task } from "./task";
+import { Step } from "./step";
 
 export class Project {
     id: string;
@@ -10,7 +10,7 @@ export class Project {
     updateClient: boolean;
     basePrice: number;
     paidMoney: number;
-    tasks: Task[];
+    steps: Step[];
 
     constructor() {
         this.id = '';
@@ -22,10 +22,10 @@ export class Project {
         this.updateClient = false;
         this.basePrice = 10000;
         this.paidMoney = 30;
-        const t1 = new Task();
-        const t2 = new Task();
+        const t1 = new Step();
+        const t2 = new Step();
         t1.name = "חוזה חתום";
         t2.name = "תשלום 1";
-        this.tasks = [t1, t2];
+        this.steps = [t1, t2];
     }
 }

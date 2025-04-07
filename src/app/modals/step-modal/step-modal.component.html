@@ -1,0 +1,14 @@
+<div class="main common-border">
+    <span class="title">עריכת שלב קיים</span>
+    <span class="sub-title">כותרת*</span>
+    <input class="regular-input" [(ngModel)]="currentStep.name" type="text">
+    <span class="sub-title">מה סוג השלב*</span>
+    <select class="regular-input" [(ngModel)]="currentStep.stepType">
+        <option class="regular-input" *ngFor="let step of stepTypes" [value]="step">{{ step }}</option>
+    </select>
+    <span class="sub-title" *ngIf="currentStep.stepType === stepTypeEnum.payment">סכום*</span>
+    <input class="regular-input" *ngIf="currentStep.stepType === stepTypeEnum.payment" [(ngModel)]="currentStep.price" type="number" step="any">
+    <span class="sub-title">פירוט</span>
+    <textarea class="big-text" [(ngModel)]="currentStep.details"></textarea>
+    <button class="confirm" (click)="save()">{{data.step? 'עדכון' : 'יצירה'}}</button>
+</div>
