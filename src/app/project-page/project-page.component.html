@@ -6,10 +6,22 @@
                 <span class="description">{{project()?.description}}</span>
             </div>
             <div class="grid-container">
-                <div class="grid-item">1</div>
-                <div class="grid-item">2</div>
-                <div class="grid-item">3</div>
-                <div class="grid-item">4</div>
+                <div class="grid-item">
+                    <span class="sub-title">תאריך התחלה</span>
+                    <span class="date">{{project()?.startDate | date: 'dd.MM.yyyy'}}</span>
+                </div>
+                <div class="grid-item">
+                    <span class="sub-title"> תאריך סיום (משוער)</span>
+                    <span class="date">{{project()?.EndDate | date: 'dd.MM.yyyy'}}</span>
+                </div>
+                <div class="grid-item">
+                    <span class="sub-title">שולם (ללא מע"ם)</span>
+                    <span class="date">{{project()?.paidMoney | number}}₪</span>
+                </div>
+                <div class="grid-item">
+                    <span class="sub-title">לתשלום (ללא מע"ם)</span>
+                    <span class="date">{{(project()?.basePrice ?? 0) - (project()?.paidMoney ?? 0) | number}}₪</span>
+                </div>
             </div>
             <div class="auto-updates">
                 הלקוח מקבל עדכונים אוטומטיים
@@ -17,6 +29,23 @@
         </div>
         <div class="links common-border"></div>
     </div>
-    <div class="tasks common-border"></div>
+    <div class="tasks common-border">
+        <div class="task" [ngClass]="task.isFinished? 'common-border finished' : 'not-finished'"
+            *ngFor="let task of project()?.tasks">
+            <div class="task-name">
+                <span>{{task.name}}</span>
+                <div class="icons" *ngIf="task.isFinished">
+                    <img class="icon" src="assets/garbage_can.svg">
+                    <img class="icon" src="assets/pencil.svg">
+                </div>
+            </div>
+            <div class="confirm">
+                <img class="icon" (click)="changeTaskStatus(task)" src="assets/confirm.svg" />
+            </div>
+        </div>
+        <div class="add-task">
+            <span>+</span>
+        </div>
+    </div>
     <div class="notes common-border"></div>
 </div>
