@@ -1,54 +1,61 @@
 .main {
-    width: 23rem;
+  width: 23rem;
+  display: flex;
+  flex-direction: column;
+
+  .title {
+    font-weight: bolder;
+    font-size: var(--font-size-lg);
+    margin-bottom: 1rem;
+  }
+
+  .sub-title {
+    margin-top: 1rem;
+  }
+
+  .input-base {
+    background-color: var(--input-color);
+    border-radius: 20px;
+    border: none;
+    padding: 0 1rem;
+    outline: none;
+
+    &.invalid {
+      outline: auto;
+      border: 3px solid red;
+    }
+  }
+
+  .regular-input {
+    @extend .input-base;
+    height: 2rem;
+  }
+
+  .big-text {
+    @extend .input-base;
+    height: 4rem;
+  }
+
+  .confirm {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: var(--font-size-lg);
+    margin-top: 1rem;
+    align-self: center;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 4.5rem;
+    height: 3rem;
+    background-color: white;
+    border: solid 3px var(--frame-color);
+    border-radius: 25px;
+    transition: all 0.3s;
+  }
 
-    .title {
-        font-weight: bolder;
-        font-size: var(--font-size-lg);
-        margin-bottom: 1rem;
-    }
-
-    .sub-title {
-        margin-top: 1rem;
-    }
-
-    .input-base {
-        background-color: var(--input-color);
-        border-radius: 20px;
-        border: none;
-        padding: 0 1rem;
-      }
-      
-      .regular-input {
-        @extend .input-base;
-        height: 2rem;
-      }
-      
-      .big-text {
-        @extend .input-base;
-        height: 4rem;
-      }
-
-      .confirm {
-        cursor: pointer;
-        font-weight: bold;
-        font-size: var(--font-size-lg);
-        margin-top: 1rem;
-        align-self: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 4.5rem;
-        height: 3rem;
-        background-color: white;
-        border: solid 3px var(--frame-color);
-        border-radius: 25px;
-        transition: all 0.3s;
-    }
-    .confirm:hover {
-        border: none;
-        background-color:var(--frame-color);
-        color: white;
-    }
+  .confirm:hover {
+    border: none;
+    background-color: var(--frame-color);
+    color: white;
+  }
 }
