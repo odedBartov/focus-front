@@ -1,14 +1,17 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Project } from '../models/project';
 import { UserProjects } from '../models/userProjects';
 import { Step } from '../models/step';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
+  httpClient = inject(HttpClient);
   projects = new UserProjects();
+  apiUrl = "https://projectsmanagerserver.onrender.com/api/";
 
   constructor() {
     const p1 = new Project();
@@ -39,35 +42,24 @@ export class HttpService {
     this.projects.finishedProjects = [p4];
   }
 
-  getProjects(): Observable<UserProjects> {
-    return of(this.projects);
+  getProjects(): Observable<Project[]> {
+    return this.httpClient.get<Project[]>(this.apiUrl + "Projects/getUserProjects");
   }
 
-  getProject(projectId: string) {
-    const projects = this.projects.activeProjects.concat(this.projects.finishedProjects).concat(this.projects.frozenProjects);
-    const res = projects.find(p => p.id === projectId);
-    return of(res);
+  // ??
+  // getProject(projectId: string): Observable<Project> {
+  //   return this.httpClient.get<Project>(this.apiUrl + "")
+  // }
+
+  createStep(step: Step): Observable<Step> {
+    return this.httpClient.post<Step>(this.apiUrl + "Steps/createStep", step);
   }
 
-  createStep(project: Project, step: Step): Observable<Step> {
-    const currentPrpoject = this.projects.activeProjects.find(p => p.id == project.id);
-    if (currentPrpoject) {
-      currentPrpoject.steps.push(step);
-    }
-
-    return of(step);
+  getStep(projectId: string): Observable<Step[]> {
+    return this.httpClient.get<Step[]>(this.apiUrl + "Steps/getSteps?projectId=" + projectId);
   }
 
-  updateStep(project: Project, step: Step) {
-    debugger
-    const currentPrpoject = this.projects.activeProjects.find(p => p.id == project.id);
-    if (currentPrpoject) {
-      let stepIndex = currentPrpoject.steps.findIndex(s => s.stepId === step.stepId)
-      if (stepIndex !== undefined) {
-        currentPrpoject.steps[stepIndex] = step;
-      }
-    }
-
-    return of(step);
+  updateStep(step: Step) {
+    return this.httpClient.put(this.apiUrl + "Steps/updateStep", step);
   }
 }

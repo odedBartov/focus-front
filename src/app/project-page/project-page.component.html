@@ -31,7 +31,7 @@
     </div>
     <div class="steps common-border">
         <div class="step" [ngClass]="step.isFinished? 'common-border finished' : 'not-finished'"
-            *ngFor="let step of project()?.steps">
+            *ngFor="let step of steps()">
             <div class="step-name">
                 <span>{{step.name}}</span>
                 <div class="icons" *ngIf="step.isFinished">

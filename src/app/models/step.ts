@@ -1,7 +1,7 @@
-import { StepType } from "./stepType";
+import { StepType } from "./enums";
 
 export class Step {
-    stepId: string;
+    id: string;
     name: string;
     details: string;
     isFinished: boolean;
@@ -9,7 +9,7 @@ export class Step {
     price: number;
 
     constructor() {
-        this.stepId = 'aa';
+        this.id = 'aa';
         this.name = 'abc'
         this.details = 'עם כאלו מילים';
         this.isFinished = false;

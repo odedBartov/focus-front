@@ -10,7 +10,7 @@ import { StepModalComponent } from '../modals/step-modal/step-modal.component';
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule, MatDialogModule ],
+  imports: [CommonModule, MatDialogModule],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss'
 })
@@ -21,6 +21,7 @@ export class ProjectPageComponent implements OnInit {
   dialog = inject(MatDialog);
   projectId: string | null = null;
   project = signal<Project | undefined>(undefined);
+  steps = signal<Step[]>([]);
 
   constructor() {
     this.route.paramMap.subscribe(params => {
@@ -29,16 +30,16 @@ export class ProjectPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadProject();
+    this.loadSteps();
   }
 
-  loadProject() {
+  loadSteps() {
     if (this.projectId) {
       this.loadingService.changeIsloading(true);
-      this.httpService.getProject(this.projectId).subscribe(res => {
+      this.httpService.getStep(this.projectId).subscribe(res => {
         this.loadingService.changeIsloading(false);
         if (res) {
-          this.project.set(res);
+          this.steps.set(res);
         }
       })
     }
@@ -49,11 +50,11 @@ export class ProjectPageComponent implements OnInit {
   }
 
   openStepModal(step?: Step) {
-    const dialogRef = this.dialog.open(StepModalComponent, {data: {step: step, project: this.project()}});
+    const dialogRef = this.dialog.open(StepModalComponent, { data: { step: step, project: this.project() } });
 
     dialogRef.afterClosed().subscribe(res => {
       if (res) { // should reload
-        this.loadProject();
+        this.loadSteps();
       }
     })
   }

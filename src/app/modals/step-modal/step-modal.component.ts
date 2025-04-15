@@ -1,7 +1,7 @@
 import { Component, inject, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Step } from '../../models/step';
-import { StepType } from '../../models/stepType';
+import { StepType } from '../../models/enums';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpService } from '../../services/http.service';
@@ -30,11 +30,11 @@ export class StepModalComponent {
   save(stepForm: NgForm) {
     if (stepForm.valid) {
       if (this.data.step) {
-        this.httpServcie.updateStep(this.data.project, this.currentStep).subscribe(res => {
+        this.httpServcie.updateStep(this.currentStep).subscribe(res => {
           this.closeModal()
         })
       } else {
-        this.httpServcie.createStep(this.data?.project, this.currentStep).subscribe(res => {
+        this.httpServcie.createStep(this.currentStep).subscribe(res => {
           this.closeModal()
         })
       }

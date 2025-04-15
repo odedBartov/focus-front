@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ProjectsListComponent } from '../projects-list/projects-list.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { LoadingService } from '../services/loading.service';
+import { ProjectStatus } from '../models/enums';
 
 @Component({
   selector: 'app-home',
@@ -26,7 +27,27 @@ export class HomeComponent implements OnInit {
     this.loadingService.changeIsloading(true);
     this.httpService.getProjects().subscribe(res => {
       this.loadingService.changeIsloading(false);
-      this.userProjects = res;
+      this.userProjects = this.sortProjects(res);
     })
+  }
+
+  sortProjects(projects: Project[]): UserProjects {
+    const result = new UserProjects();
+    projects.forEach(project => {
+      switch (project.status) {
+        case ProjectStatus.active:
+          result.activeProjects.push(project);
+          break;
+        case ProjectStatus.frozen:
+          result.frozenProjects.push(project);
+          break;
+        case ProjectStatus.finished:
+          result.finishedProjects.push(project);
+          break;
+        default:
+          break;
+      }
+    })
+    return result;
   }
 }
