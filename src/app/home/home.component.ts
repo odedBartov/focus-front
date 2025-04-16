@@ -3,7 +3,7 @@ import { HttpService } from '../services/http.service';
 import { Project } from '../models/project';
 import { UserProjects } from '../models/userProjects';
 import { RouterModule } from '@angular/router';
-import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
 import { ProjectsListComponent } from '../projects-list/projects-list.component';
 import { MatMenuModule } from '@angular/material/menu';
@@ -12,14 +12,14 @@ import { ProjectStatus } from '../models/enums';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterModule, MatExpansionModule, CommonModule, ProjectsListComponent, ProjectsListComponent, MatAccordion, MatMenuModule],
+  imports: [RouterModule, MatExpansionModule, CommonModule, ProjectsListComponent, ProjectsListComponent, MatMenuModule],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrl: './home.component.scss',
+  standalone: true
 })
 export class HomeComponent implements OnInit {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
-
   projects: Project[] = [];
   userProjects?: UserProjects;
 
@@ -28,6 +28,8 @@ export class HomeComponent implements OnInit {
     this.httpService.getProjects().subscribe(res => {
       this.loadingService.changeIsloading(false);
       this.userProjects = this.sortProjects(res);
+    }, err => {
+      this.loadingService.changeIsloading(false);
     })
   }
 

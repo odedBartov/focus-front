@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Signal } from '@angular/core';
+import { Component, inject, Signal } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import {MatMenuModule} from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
@@ -8,7 +8,8 @@ import { LoadingService } from './services/loading.service';
   selector: 'app-root',
   imports: [RouterModule, RouterOutlet, MatMenuModule, CommonModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  standalone: true
 })
 export class AppComponent {
   router = inject(Router);

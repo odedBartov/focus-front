@@ -16,12 +16,12 @@ import { StepModalComponent } from '../modals/step-modal/step-modal.component';
 })
 export class ProjectPageComponent implements OnInit {
   route = inject(ActivatedRoute);
-  httpService = inject(HttpService);
   loadingService = inject(LoadingService);
   dialog = inject(MatDialog);
   projectId: string | null = null;
   project = signal<Project | undefined>(undefined);
   steps = signal<Step[]>([]);
+  httpService = inject(HttpService);
 
   constructor() {
     this.route.paramMap.subscribe(params => {

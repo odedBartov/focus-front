@@ -9,7 +9,3 @@ export const routes: Routes = [
     { path: "home", component: HomeComponent },
     { path: "project/:projectId", component: ProjectPageComponent }
 ];
-
-bootstrapApplication(AppComponent, {
-    providers: [provideRouter(routes)],
-});
