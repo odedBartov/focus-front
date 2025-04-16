@@ -86,7 +86,6 @@ export class ProjectPageComponent implements OnInit {
         },
         error: (err) => {
           // show error with toaster
-          console.error(err);
         },
         complete: () => {
           this.loadingService.changeIsloading(false);
