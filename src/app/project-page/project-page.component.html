@@ -12,7 +12,7 @@
                 </div>
                 <div class="grid-item">
                     <span class="sub-title"> תאריך סיום (משוער)</span>
-                    <span class="date">{{project()?.EndDate | date: 'dd.MM.yyyy'}}</span>
+                    <span class="date">{{project()?.endDate | date: 'dd.MM.yyyy'}}</span>
                 </div>
                 <div class="grid-item">
                     <span class="sub-title">שולם (ללא מע"ם)</span>
@@ -30,11 +30,11 @@
         <div class="links common-border"></div>
     </div>
     <div class="steps common-border">
-        <div class="step" [ngClass]="step.isFinished? 'common-border finished' : 'not-finished'"
-            *ngFor="let step of steps()">
+        <div class="step" [ngClass]="step.isComplete? 'common-border finished' : 'not-finished'"
+            *ngFor="let step of project()?.steps">
             <div class="step-name">
                 <span>{{step.name}}</span>
-                <div class="icons" *ngIf="step.isFinished">
+                <div class="icons" *ngIf="step.isComplete">
                     <img class="icon" src="assets/garbage_can.svg">
                     <img class="icon" (click)="openStepModal(step)" src="assets/pencil.svg">
                 </div>

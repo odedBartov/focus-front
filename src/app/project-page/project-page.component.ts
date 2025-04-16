@@ -20,7 +20,6 @@ export class ProjectPageComponent implements OnInit {
   dialog = inject(MatDialog);
   projectId: string | null = null;
   project = signal<Project | undefined>(undefined);
-  steps = signal<Step[]>([]);
   httpService = inject(HttpService);
 
   constructor() {
@@ -30,23 +29,23 @@ export class ProjectPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadSteps();
+    this.loadProject();
   }
 
-  loadSteps() {
+  loadProject() {
     if (this.projectId) {
       this.loadingService.changeIsloading(true);
-      this.httpService.getStep(this.projectId).subscribe(res => {
+      this.httpService.getProject(this.projectId).subscribe(res => {
         this.loadingService.changeIsloading(false);
         if (res) {
-          this.steps.set(res);
+          this.project.set(res);
         }
       })
     }
   }
 
   changeStepStatus(step: Step) {
-    step.isFinished = !step.isFinished;
+    step.isComplete = !step.isComplete;
   }
 
   openStepModal(step?: Step) {
@@ -54,7 +53,7 @@ export class ProjectPageComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(res => {
       if (res) { // should reload
-        this.loadSteps();
+        this.loadProject();
       }
     })
   }

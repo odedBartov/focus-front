@@ -1,19 +1,17 @@
 import { StepType } from "./enums";
 
 export class Step {
-    id: string;
-    name: string;
-    details: string;
-    isFinished: boolean;
+    id?: string;
+    projectId?: string;
+    name?: string;
+    description?: string;
+    isComplete: boolean;
     stepType: StepType;
     price: number;
 
     constructor() {
-        this.id = 'aa';
-        this.name = 'abc'
-        this.details = 'עם כאלו מילים';
-        this.isFinished = false;
+        this.isComplete = false;
         this.stepType = StepType.work;
-        this.price = 10;
+        this.price = 0;
     }
 }

@@ -5,7 +5,7 @@ export enum StepType {
 }
 
 export enum ProjectStatus {
-    active = "פעיל",
-    frozen = "מוקפא",
-    finished = "הסתיים"
+    active,
+    frozen,
+    finished
 }

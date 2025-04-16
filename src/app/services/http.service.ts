@@ -14,6 +14,10 @@ export class HttpService {
   apiUrl = "https://projectsmanagerserver.onrender.com/api/";
   httpClient = inject(HttpClient)
 
+  getProject(projectId: string): Observable<Project> {
+    return this.httpClient.get<Project>(`${this.apiUrl}Projects/getProject?projectId=${projectId}`);
+  }
+
   getProjects(): Observable<Project[]> {
     return this.httpClient.get<Project[]>(this.apiUrl + "Projects/getUserProjects");
   }
