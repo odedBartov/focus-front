@@ -1,7 +1,7 @@
 export enum StepType {
-    work = 'עבודה',
-    payment = 'תשלום',
-    other = 'אחר'
+    work,
+    payment,
+    other
 }
 
 export enum ProjectStatus {

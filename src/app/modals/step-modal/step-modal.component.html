@@ -12,7 +12,7 @@
         <input class="regular-input" *ngIf="currentStep.stepType === stepTypeEnum.payment"
             [(ngModel)]="currentStep.price" name="price" type="number" step="any">
         <span class="sub-title">פירוט</span>
-        <textarea class="big-text" [(ngModel)]="currentStep.details" name="details"></textarea>
+        <textarea class="big-text" [(ngModel)]="currentStep.description" name="description"></textarea>
         <button class="confirm" type="submit">{{isNewStep? 'עדכון' : 'יצירה'}}</button>
     </div>
 </form>

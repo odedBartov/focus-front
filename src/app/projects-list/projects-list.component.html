@@ -1,5 +1,5 @@
 <div class="project">
-    <div *ngFor="let project of projects" (click)="navigateToProject(project.id)">
+    <div *ngFor="let project of projects" (click)="navigateToProject(project?.id)">
         <div class="line">
             <div class="text">
                 <span class="project-name">{{project.name}}</span>
