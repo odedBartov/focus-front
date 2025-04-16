@@ -76,7 +76,7 @@ export class ProjectPageComponent implements OnInit {
 
   deleteStep(step: Step) {
     if (step.id) {
-      this.loadingService.changeIsloading(true);
+      // this.loadingService.changeIsloading(true);
       this.httpService.deleteStep(step.id).subscribe({
         next: (res) => {
           const stepIndex = this.project()?.steps?.indexOf(step);
