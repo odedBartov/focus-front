@@ -33,4 +33,8 @@ export class HttpService {
   updateStep(step: Step) {
     return this.httpClient.put(this.apiUrl + "Steps/updateStep", step);
   }
+
+  deleteStep(stepId: string) {
+    return this.httpClient.delete(`${this.apiUrl}Steps/deleteStep?stepId=${stepId}`)
+  }
 }

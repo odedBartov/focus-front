@@ -1,11 +1,12 @@
 import { Component, inject, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Step } from '../../models/step';
-import { StepType } from '../../models/enums';
+import { StepType, stepTypeLabels } from '../../models/enums';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpService } from '../../services/http.service';
 import { Project } from '../../models/project';
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-step-modal',
@@ -17,8 +18,10 @@ import { Project } from '../../models/project';
 export class StepModalComponent {
   httpServcie = inject(HttpService);
   dialogRef = inject(MatDialogRef<StepModalComponent>);
+  loadingService = inject(LoadingService);
   stepTypeEnum = StepType;
-  stepTypes = Object.values(StepType);
+  stepTypes = Object.values(StepType).filter(value => typeof value === 'number');
+  stepTypeLabels = stepTypeLabels;
   currentStep: Step;
   isNewStep = false;
 
@@ -30,10 +33,13 @@ export class StepModalComponent {
   save(stepForm: NgForm) {
     if (stepForm.valid) {
       if (this.data.step) {
+        this.loadingService.changeIsloading(true);
         this.httpServcie.updateStep(this.currentStep).subscribe(res => {
           this.closeModal()
         })
       } else {
+        this.loadingService.changeIsloading(true);
+        this.currentStep.projectId = this.data.project.id;
         this.httpServcie.createStep(this.currentStep).subscribe(res => {
           this.closeModal()
         })
@@ -44,6 +50,7 @@ export class StepModalComponent {
   }
 
   closeModal() {
+    this.loadingService.changeIsloading(false);
     this.dialogRef.close(true);
   }
 }

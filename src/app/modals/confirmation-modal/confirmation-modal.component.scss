@@ -1,0 +1,21 @@
+.main {
+    width: 23rem;
+    display: flex;
+    flex-direction: column;
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 0 1rem;
+
+        button {
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 4rem;
+            height: 2rem;
+        }
+    }
+}

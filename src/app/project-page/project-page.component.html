@@ -35,7 +35,7 @@
             <div class="step-name">
                 <span>{{step.name}}</span>
                 <div class="icons" *ngIf="step.isComplete">
-                    <img class="icon" src="assets/garbage_can.svg">
+                    <img class="icon" (click)="showDeleteStepModal(step)" src="assets/garbage_can.svg">
                     <img class="icon" (click)="openStepModal(step)" src="assets/pencil.svg">
                 </div>
             </div>

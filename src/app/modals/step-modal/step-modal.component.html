@@ -6,7 +6,7 @@
             #nameInput="ngModel" [class.invalid]="stepForm.invalid && nameInput.touched">
         <span class="sub-title">מה סוג השלב*</span>
         <select class="regular-input" [(ngModel)]="currentStep.stepType" name="stepType">
-            <option class="regular-input" *ngFor="let step of stepTypes" [ngValue]="step">{{ step }}</option>
+            <option class="regular-input" *ngFor="let step of stepTypes" [ngValue]="step">{{ stepTypeLabels[step] }}</option>
         </select>
         <span class="sub-title" *ngIf="currentStep.stepType === stepTypeEnum.payment">סכום*</span>
         <input class="regular-input" *ngIf="currentStep.stepType === stepTypeEnum.payment"

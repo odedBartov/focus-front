@@ -7,6 +7,7 @@ import { Step } from '../models/step';
 import { LoadingService } from '../services/loading.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { StepModalComponent } from '../modals/step-modal/step-modal.component';
+import { ConfirmationModalComponent } from '../modals/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-project-page',
@@ -35,12 +36,17 @@ export class ProjectPageComponent implements OnInit {
   loadProject() {
     if (this.projectId) {
       this.loadingService.changeIsloading(true);
-      this.httpService.getProject(this.projectId).subscribe(res => {
-        this.loadingService.changeIsloading(false);
-        if (res) {
-          this.project.set(res);
+      this.httpService.getProject(this.projectId).subscribe({
+        next: (res) => {
+          if (res) {
+            this.project.set(res);
+          }
+        }, error: (err) => {
+          // show error
+        }, complete: () => {
+          this.loadingService.changeIsloading(false);
         }
-      })
+      });
     }
   }
 
@@ -56,5 +62,36 @@ export class ProjectPageComponent implements OnInit {
         this.loadProject();
       }
     })
+  }
+
+  showDeleteStepModal(step: Step) {
+    const dialogRef = this.dialog.open(ConfirmationModalComponent, { data: step.name });
+
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        this.deleteStep(step);
+      }
+    })
+  }
+
+  deleteStep(step: Step) {
+    if (step.id) {
+      this.loadingService.changeIsloading(true);
+      this.httpService.deleteStep(step.id).subscribe({
+        next: (res) => {
+          const stepIndex = this.project()?.steps?.indexOf(step);
+          if (stepIndex !== undefined) { 
+            this.project()?.steps?.splice(stepIndex, 1);
+          }
+        },
+        error: (err) => {
+          // show error
+          console.error(err);
+        },
+        complete: () => {
+          this.loadingService.changeIsloading(false);
+        }
+      });
+    }
   }
 }
