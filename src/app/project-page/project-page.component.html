@@ -16,11 +16,11 @@
                 </div>
                 <div class="grid-item">
                     <span class="sub-title">שולם (ללא מע"ם)</span>
-                    <span class="date">{{project()?.paidMoney | number}}₪</span>
+                    <span class="date">{{calculatePrice() | number}}₪</span>
                 </div>
                 <div class="grid-item">
                     <span class="sub-title">לתשלום (ללא מע"ם)</span>
-                    <span class="date">{{(project()?.basePrice ?? 0) - (project()?.paidMoney ?? 0) | number}}₪</span>
+                    <span class="date">{{(project()?.basePrice ?? 0) - (calculatePrice() ?? 0) | number}}₪</span>
                 </div>
             </div>
             <div class="auto-updates">
@@ -30,11 +30,11 @@
         <div class="links common-border"></div>
     </div>
     <div class="steps common-border">
-        <div class="step" [ngClass]="step.isComplete? 'common-border finished' : 'not-finished'"
+        <div class="step" [ngClass]="!step.isComplete? 'common-border finished' : 'not-finished'"
             *ngFor="let step of project()?.steps">
             <div class="step-name">
                 <span>{{step.name}}</span>
-                <div class="icons" *ngIf="step.isComplete">
+                <div class="icons" *ngIf="!step.isComplete">
                     <img class="icon" (click)="showDeleteStepModal(step)" src="assets/garbage_can.svg">
                     <img class="icon" (click)="openStepModal(step)" src="assets/pencil.svg">
                 </div>

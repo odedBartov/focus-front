@@ -40,11 +40,11 @@ export class ProjectPageComponent implements OnInit {
         next: (res) => {
           if (res) {
             this.project.set(res);
+            this.loadingService.changeIsloading(false);
           }
         }, error: (err) => {
-          // show error
-        }, complete: () => {
           this.loadingService.changeIsloading(false);
+          // show error
         }
       });
     }
@@ -52,6 +52,15 @@ export class ProjectPageComponent implements OnInit {
 
   changeStepStatus(step: Step) {
     step.isComplete = !step.isComplete;
+    this.loadingService.changeIsloading(true);
+    this.httpService.updateStep(step).subscribe({
+      next: (res: Step) => {
+        step = res;
+        this.loadingService.changeIsloading(false);
+      }, error: (err) => {
+        this.loadingService.changeIsloading(false);
+      }
+    })
   }
 
   openStepModal(step?: Step) {
@@ -80,17 +89,20 @@ export class ProjectPageComponent implements OnInit {
       this.httpService.deleteStep(step.id).subscribe({
         next: (res) => {
           const stepIndex = this.project()?.steps?.indexOf(step);
-          if (stepIndex !== undefined) { 
+          if (stepIndex !== undefined) {
             this.project()?.steps?.splice(stepIndex, 1);
           }
+          this.loadingService.changeIsloading(false);
         },
         error: (err) => {
-          // show error with toaster
-        },
-        complete: () => {
           this.loadingService.changeIsloading(false);
+          // show error with toaster
         }
       });
     }
+  }
+
+  calculatePrice() {
+    return this.project()?.steps?.filter(s => s.isComplete).reduce((sum, item) => sum + item.price, 0);
   }
 }

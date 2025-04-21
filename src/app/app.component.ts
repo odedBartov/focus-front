@@ -13,6 +13,7 @@ import { LoadingService } from './services/loading.service';
 })
 export class AppComponent {
   router = inject(Router);
+  
   loadingService = inject(LoadingService);
   isLoading: Signal<boolean>;
 
@@ -22,5 +23,9 @@ export class AppComponent {
   
   navigateToHomePage() {
       this.router.navigate(['/home']);
+  }
+
+  signOut() {
+    this.router.navigate(['/authentication']);
   }
 }

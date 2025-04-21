@@ -30,8 +30,8 @@ export class HttpService {
     return this.httpClient.get<Step[]>(this.apiUrl + "Steps/getSteps?projectId=" + projectId);
   }
 
-  updateStep(step: Step) {
-    return this.httpClient.put(this.apiUrl + "Steps/updateStep", step);
+  updateStep(step: Step): Observable<Step> {
+    return this.httpClient.put<Step>(this.apiUrl + "Steps/updateStep", step);
   }
 
   deleteStep(stepId: string) {

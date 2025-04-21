@@ -16,7 +16,7 @@ import { LoadingService } from '../../services/loading.service';
 })
 
 export class StepModalComponent {
-  httpServcie = inject(HttpService);
+  httpService = inject(HttpService);
   dialogRef = inject(MatDialogRef<StepModalComponent>);
   loadingService = inject(LoadingService);
   stepTypeEnum = StepType;
@@ -34,13 +34,13 @@ export class StepModalComponent {
     if (stepForm.valid) {
       if (this.data.step) {
         this.loadingService.changeIsloading(true);
-        this.httpServcie.updateStep(this.currentStep).subscribe(res => {
+        this.httpService.updateStep(this.currentStep).subscribe(res => {
           this.closeModal()
         })
       } else {
         this.loadingService.changeIsloading(true);
         this.currentStep.projectId = this.data.project.id;
-        this.httpServcie.createStep(this.currentStep).subscribe(res => {
+        this.httpService.createStep(this.currentStep).subscribe(res => {
           this.closeModal()
         })
       }
