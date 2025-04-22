@@ -14,6 +14,14 @@ export class HttpService {
   apiUrl = "https://projectsmanagerserver.onrender.com/api/";
   httpClient = inject(HttpClient)
 
+  loginWithGoogleToken(token: string) {
+    return this.httpClient.post(`${this.apiUrl}Auth/googleLogin`, {"idToken": token}, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+
   getProject(projectId: string): Observable<Project> {
     return this.httpClient.get<Project>(`${this.apiUrl}Projects/getProject?projectId=${projectId}`);
   }

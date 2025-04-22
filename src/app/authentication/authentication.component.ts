@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { GoogleSigninComponent } from '../google-signin/google-signin.component';
+import { HttpService } from '../services/http.service';
 
 @Component({
   selector: 'app-authentication',
@@ -8,9 +9,11 @@ import { GoogleSigninComponent } from '../google-signin/google-signin.component'
   styleUrl: './authentication.component.scss'
 })
 export class AuthenticationComponent {
+  httpService = inject(HttpService);
 
   userSignedIn(jwt: string) {
-    console.log(jwt);
-    
+    this.httpService.loginWithGoogleToken(jwt).subscribe(res => {
+      console.log(res);
+    })
   }
 }
