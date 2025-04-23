@@ -7,7 +7,7 @@ import { AuthenticationComponent } from './authentication/authentication.compone
 
 export const routes: Routes = [
     { path: "", redirectTo: "home", pathMatch: 'full' },
-    { path: "authentication", component: AuthenticationComponent},
+    { path: "login", component: AuthenticationComponent},
     { path: "home", component: HomeComponent },
     { path: "project/:projectId", component: ProjectPageComponent }
 ];

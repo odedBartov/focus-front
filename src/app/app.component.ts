@@ -26,6 +26,6 @@ export class AppComponent {
   }
 
   signOut() {
-    this.router.navigate(['/authentication']);
+    this.router.navigate(['/login']);
   }
 }

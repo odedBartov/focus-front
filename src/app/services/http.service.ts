@@ -1,7 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { Project } from '../models/project';
-import { UserProjects } from '../models/userProjects';
 import { Step } from '../models/step';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthenticationService } from './authentication.service';
@@ -10,7 +9,6 @@ import { AuthenticationService } from './authentication.service';
   providedIn: 'root'
 })
 export class HttpService {
-  projects = new UserProjects();
   apiUrl = "https://localhost:7189/api/";
   // apiUrl = "https://projectsmanagerserver.onrender.com/api/";
   httpClient = inject(HttpClient)
@@ -27,9 +25,7 @@ export class HttpService {
       headers: {
         'Content-Type': 'application/json'
       }
-    }).pipe(tap((res: any) => {
-      this.authenticationService.setToken(res.token);
-    }))
+    })
   }
 
   getProject(projectId: string): Observable<Project> {
