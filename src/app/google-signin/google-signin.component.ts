@@ -10,33 +10,25 @@ declare global {
 @Component({
   selector: 'app-google-signin',
   standalone: true,
-  template: `<div id="google-button"></div>`,
+  templateUrl: './google-signin.component.html',
+  styleUrl: 'google-signin.component.scss'
 })
 export class GoogleSigninComponent implements OnInit {
-  private el = inject(ElementRef);
-  private zone = inject(NgZone);
-  @Output() googleLoginEmitter: EventEmitter<string> = new EventEmitter();
-
+  @Output() googleLoginEmitter = new EventEmitter<string>();
+  private codeClient: any;
   ngOnInit(): void {
-    window.google.accounts.id.initialize({
+    this.codeClient = window.google.accounts.oauth2.initCodeClient({
       client_id: '834564132220-5hncletadkegj4vaabrh2joj9rc586ai.apps.googleusercontent.com',
-      auto_select: false,
-      callback: (response: any) => {
-        this.zone.run(() => this.handleCredentialResponse(response));
-      }
+      scope: 'openid email profile',
+      ux_mode: 'popup',
+      callback: (response: any) => {        
+        this.googleLoginEmitter.emit(response.code);
+      },
     });
-
-    window.google.accounts.id.renderButton(
-      this.el.nativeElement.querySelector('#google-button'),
-      {
-        theme: 'outline',
-        size: 'large'
-      }
-    );
   }
 
-  handleCredentialResponse(response: any) {
-    // console.log('JWT Token:', response.credential);
-    this.googleLoginEmitter.emit(response.credential);
+
+  onGoogleSignInClick(): void {
+    this.codeClient.requestCode();
   }
 }

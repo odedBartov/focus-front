@@ -1,0 +1,14 @@
+.google-login {
+    cursor: pointer; 
+    border: 1px solid black;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: aqua;
+    padding: 1rem;
+
+    .icon {
+        height: 2rem;
+    }
+}

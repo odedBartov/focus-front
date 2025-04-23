@@ -15,7 +15,7 @@ export class HttpService {
   httpClient = inject(HttpClient)
 
   loginWithGoogleToken(token: string) {
-    return this.httpClient.post(`${this.apiUrl}Auth/googleLogin`, {"idToken": token}, {
+    return this.httpClient.post(`${this.apiUrl}Auth/googleLogin`, {"code": token}, {
       headers: {
         'Content-Type': 'application/json'
       }
