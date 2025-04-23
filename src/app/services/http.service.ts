@@ -1,33 +1,45 @@
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Project } from '../models/project';
 import { UserProjects } from '../models/userProjects';
 import { Step } from '../models/step';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
   projects = new UserProjects();
-  // apiUrl = "https://localhost:7189/api/";
-  apiUrl = "https://projectsmanagerserver.onrender.com/api/";
+  apiUrl = "https://localhost:7189/api/";
+  // apiUrl = "https://projectsmanagerserver.onrender.com/api/";
   httpClient = inject(HttpClient)
+  authenticationService = inject(AuthenticationService);
+
+  generateHeaders() {
+    const token = this.authenticationService.getToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return {headers};
+  }
 
   loginWithGoogleToken(token: string) {
     return this.httpClient.post(`${this.apiUrl}Auth/googleLogin`, {"code": token}, {
       headers: {
         'Content-Type': 'application/json'
       }
-    })
+    }).pipe(tap((res: any) => {
+      this.authenticationService.setToken(res.token);
+    }))
   }
 
   getProject(projectId: string): Observable<Project> {
-    return this.httpClient.get<Project>(`${this.apiUrl}Projects/getProject?projectId=${projectId}`);
+    const headers = this.generateHeaders();
+    return this.httpClient.get<Project>(`${this.apiUrl}Projects/getProject?projectId=${projectId}`, headers);
   }
 
   getProjects(): Observable<Project[]> {
-    return this.httpClient.get<Project[]>(this.apiUrl + "Projects/getUserProjects");
+    const headers = this.generateHeaders();
+    return this.httpClient.get<Project[]>(this.apiUrl + "Projects/getUserProjects", headers);
   }
 
   createStep(step: Step): Observable<Step> {
