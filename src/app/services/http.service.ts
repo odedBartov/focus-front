@@ -11,7 +11,7 @@ import { AuthenticationService } from './authentication.service';
 export class HttpService {
   apiUrl = "https://localhost:7189/api/";
   // apiUrl = "https://projectsmanagerserver.onrender.com/api/";
-  httpClient = inject(HttpClient)
+  httpClient = inject(HttpClient);
   authenticationService = inject(AuthenticationService);
 
   generateHeaders() {
@@ -25,7 +25,9 @@ export class HttpService {
       headers: {
         'Content-Type': 'application/json'
       }
-    })
+    }).pipe(tap((res: any) => {
+      this.authenticationService.setUserName(res.name);
+    }))
   }
 
   getProject(projectId: string): Observable<Project> {

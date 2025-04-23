@@ -17,15 +17,18 @@ import { ConfirmationModalComponent } from '../modals/confirmation-modal/confirm
 })
 export class ProjectPageComponent implements OnInit {
   route = inject(ActivatedRoute);
+  httpService = inject(HttpService);
   loadingService = inject(LoadingService);
   dialog = inject(MatDialog);
   projectId: string | null = null;
   project = signal<Project | undefined>(undefined);
-  httpService = inject(HttpService);
+  isReadOnly = false;
 
   constructor() {
     this.route.paramMap.subscribe(params => {
       this.projectId = params.get('projectId');
+      this.isReadOnly = params.get('readOnly') == 'true';
+      
     });
   }
 

@@ -35,16 +35,16 @@
             <div class="step-name">
                 <span>{{step.name}}</span>
                 <div class="icons" *ngIf="!step.isComplete">
-                    <img class="icon" (click)="showDeleteStepModal(step)" src="assets/garbage_can.svg">
-                    <img class="icon" (click)="openStepModal(step)" src="assets/pencil.svg">
+                    <img class="icon" [ngClass]="{pointer: !isReadOnly}" (click)="isReadOnly? '' : showDeleteStepModal(step)" src="assets/garbage_can.svg">
+                    <img class="icon" [ngClass]="{pointer: !isReadOnly}" (click)="isReadOnly? '' : openStepModal(step)" src="assets/pencil.svg">
                 </div>
             </div>
             <div class="confirm">
-                <img class="icon" (click)="changeStepStatus(step)" src="assets/confirm.svg" />
+                <img class="icon" [ngClass]="{pointer: !isReadOnly}" (click)="isReadOnly? '' : changeStepStatus(step)" src="assets/confirm.svg" />
             </div>
         </div>
         <div class="add-step">
-            <span (click)="openStepModal()">+</span>
+            <span [ngClass]="isReadOnly? 'disable' : 'enable'" (click)="isReadOnly? '' : openStepModal()">+</span>
         </div>
     </div>
     <div class="notes common-border"></div>

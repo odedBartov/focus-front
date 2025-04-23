@@ -3,6 +3,7 @@ import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import {MatMenuModule} from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { LoadingService } from './services/loading.service';
+import { AuthenticationService } from './services/authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -13,8 +14,8 @@ import { LoadingService } from './services/loading.service';
 })
 export class AppComponent {
   router = inject(Router);
-  
   loadingService = inject(LoadingService);
+  authenticationService = inject(AuthenticationService);
   isLoading: Signal<boolean>;
 
   constructor() {
@@ -26,6 +27,7 @@ export class AppComponent {
   }
 
   signOut() {
+    this.authenticationService.deleteToken();
     this.router.navigate(['/login']);
   }
 }

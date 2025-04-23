@@ -15,6 +15,6 @@ export class ProjectsListComponent {
   router = inject(Router);
   
   navigateToProject(projectId: string | undefined) {    
-    this.router.navigate(['/project', projectId]);
+    this.router.navigate(['/project', projectId, false]);
   }
 }

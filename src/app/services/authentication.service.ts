@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class AuthenticationService {
   userTokenKey = 'user-token';
+  userName = 'user-name';
 
   getToken() {
     return localStorage.getItem(this.userTokenKey);
@@ -16,5 +17,13 @@ export class AuthenticationService {
 
   deleteToken() {
     localStorage.clear();
+  }
+
+  setUserName(name: string) {
+    localStorage.setItem(this.userName, name);
+  }
+
+  getUserName() {
+    return localStorage.getItem(this.userName);
   }
 }

@@ -4,6 +4,10 @@
     flex-direction: row;
     justify-content: space-between;
 
+    .pointer {
+        cursor: pointer;
+    }
+
     .summurize {
         margin: 2rem 1rem;
         flex: 3;
@@ -88,7 +92,6 @@
 
                     .icon {
                         margin-left: 1rem;
-                        cursor: pointer;
                     }
                 }
             }
@@ -98,7 +101,6 @@
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                cursor: pointer;
             }
         }
 
@@ -112,7 +114,7 @@
             height: 2rem;
             padding: 1rem;
         }
-
+      
         .add-step {
             display: flex;
             justify-content: center;
@@ -120,25 +122,35 @@
             align-items: center;
 
             span {
-                cursor: pointer;
                 font-size: var(--font-size-huge);
                 display: flex;
                 justify-content: center;
                 font-weight: bolder;
                 align-items: center;
-                color: var(--frame-color);
-                background-color: white;
                 border-radius: 50%;
                 width: 3rem;
                 height: 3rem;
-                border: solid 3px var(--frame-color);
-                transition: all 0.3s;
+                
+                &.disable{
+                    background-color: rgb(241, 226, 226);
+                    color: var(--frame-color-disable);
+                    border: solid 3px var(--frame-color-disable);
+                    cursor: default;
+                }
+                
+                &.enable {
+                    color: var(--frame-color);
+                    border: solid 3px var(--frame-color);
+                    cursor: pointer;
+                    transition: all 0.3s;
+                    background-color: white;
+                    &:hover {
+                        color: white;
+                        background-color: var(--frame-color);
+                    }
+                }
             }
 
-            span:hover {
-                color: white;
-                background-color: var(--frame-color);
-            }
         }
     }
 

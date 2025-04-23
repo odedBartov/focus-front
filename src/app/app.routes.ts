@@ -9,5 +9,5 @@ export const routes: Routes = [
     { path: "", redirectTo: "home", pathMatch: 'full' },
     { path: "login", component: AuthenticationComponent},
     { path: "home", component: HomeComponent },
-    { path: "project/:projectId", component: ProjectPageComponent }
+    { path: "project/:projectId/:readOnly", component: ProjectPageComponent }
 ];
