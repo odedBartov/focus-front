@@ -1,45 +1,92 @@
-.body {
-    margin: 0 1rem;
+.main-window {
     display: flex;
-    flex-direction: row;
-    height: 80vh;
-
-    .right {
-        flex: 3;
-    }
-
-    .projects {
-        margin: 0 2rem;
-        flex: 6;
-
-        .mat-expansion-panel-header-title {
-            font-size: var(--font-size-xl);
-            font-weight: bolder;
-        }
-    }
-
-    .tips {
-        flex: 3;
-
-        .tips-title {
-            font-weight: bold;
-            font-size: var(--font-size-xl);
-        }
-
-        .tips-text {
-            margin-top: 1rem;
-        }
-    }
+    flex-direction: column;
+    height: 100vh;
 }
 
-.mat-expansion-panel-body {
-    padding: 0;
+.tabs-container {
+    background-color: #e9eaf6;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 3rem;
 }
 
-.mat-expansion-panel-spacing {
-    margin: 0;
+.logo {
+    height: 2rem;
+    margin-left: 1rem;
 }
 
-.mat-expansion-panel:not([class*=mat-elevation-z]) {
-    box-shadow: none;
+.tab-list {
+    display: flex;
+    justify-content: flex-start;
+    gap: 24px;
+    padding: 10px 20px 0 20px;
+    margin-top: 0.5rem;
+    height: 2rem;
+}
+
+.tab {
+    color: #9ca3af;
+    padding: 8px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.tab:hover {
+    color: #4b5563;
+}
+
+.tab-icon {
+    font-size: 14px;
+    margin-left: 4px;
+}
+
+.tab.active {
+    background-color: var(--home-color);
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 10px;
+    margin-top: -10px;
+    color: #000;
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    .home {
+        height: 100%;
+        background-color: var(--home-color);
+        padding-top: 2rem;
+        display: flex;
+        flex-direction: row;
+        border-top-right-radius: 8px;
+        border-top-left-radius: 8px;
+
+        .summary {
+            flex: 1;
+            background: red;
+            margin: 0 1rem;
+        }
+
+        .projects-list {
+            flex: 2;
+            margin: 0 1rem;
+        }
+
+        .insight {
+            flex: 1;
+            background-color: blue;
+            margin: 0 1rem;
+        }
+    }
 }

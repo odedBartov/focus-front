@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpService } from '../services/http.service';
 import { Project } from '../models/project';
 import { UserProjects } from '../models/userProjects';
@@ -22,12 +22,23 @@ export class HomeComponent implements OnInit {
   loadingService = inject(LoadingService);
   projects: Project[] = [];
   userProjects?: UserProjects;
+  activeTab: string = 'home';
+
+  tabs = [
+    { id: 'home', label: '🏠' }
+  ];
+
+  setActive(tabId: string) {
+    this.activeTab = tabId;
+  }
 
   ngOnInit(): void {
     this.loadingService.changeIsloading(true);
     this.httpService.getProjects().subscribe(res => {
       this.loadingService.changeIsloading(false);
       this.userProjects = this.sortProjects(res);
+      const activeProjectTabs = this.userProjects.activeProjects.map(p => {return {id: p.id ?? '', label: p.name}});
+      this.tabs.push(...activeProjectTabs)
     }, err => {
       this.loadingService.changeIsloading(false);
     })

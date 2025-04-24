@@ -1,35 +1,24 @@
-<div>
-    <div class="body">
-      <div class="right common-border"></div>
-      <div class="projects">
-        <span class="active-projects"></span>
-        <mat-accordion>
-          <mat-expansion-panel [expanded]="true">
-            <mat-expansion-panel-header>
-              <mat-panel-title>פרויקטים פעילים</mat-panel-title>
-            </mat-expansion-panel-header>
-            <div><app-projects-list [projects]="userProjects?.activeProjects"></app-projects-list></div>
-          </mat-expansion-panel>
-        
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>פרויקטים בהקפאה</mat-panel-title>
-            </mat-expansion-panel-header>
-            <div><app-projects-list [projects]="userProjects?.frozenProjects"></app-projects-list></div>
-          </mat-expansion-panel>
-  
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>פרויקטים שהסתיימו</mat-panel-title>
-            </mat-expansion-panel-header>
-            <div><app-projects-list [projects]="userProjects?.finishedProjects"></app-projects-list></div>
-          </mat-expansion-panel>
-        </mat-accordion>    
-      </div>
-      <div class="tips common-border">
-        <span class="tips-title">טיפ שבועי</span>
-        <div class="tips-text">טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ טקסט רץ </div>
+<div class="main-window">
+  <div class="tabs-container">
+    <div class="tab-list">
+      <div *ngFor="let tab of tabs" [class.active]="tab.id === activeTab" class="tab" (click)="setActive(tab.id)">
+        <span>{{ tab.label }}</span>
       </div>
     </div>
+    <img class="logo" src="assets/ariel_logo.svg" />
   </div>
-  <router-outlet></router-outlet>
+
+  <div class="home-container">
+    <div class="home" *ngIf="activeTab === tabs[0].id">
+      <div class="summary">בוקר טוב</div>
+      <div class="projects-list">
+        <app-projects-list [projects]="userProjects"></app-projects-list>
+      </div>
+      <div class="insight">תובנה</div>
+    </div>
+  </div>
+
+  <div class="project" *ngIf="activeTab !== tabs[0].id">
+    פרטים על הפרויקט
+  </div>
+</div>
