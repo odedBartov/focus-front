@@ -3,6 +3,7 @@
     <div class="tab-list">
       <div *ngFor="let tab of tabs" [class.active]="tab.id === activeTab" class="tab" (click)="setActive(tab.id)">
         <span>{{ tab.label }}</span>
+        <img [src]="tab.icon"/>
       </div>
     </div>
     <img class="logo" src="assets/ariel_logo.svg" />
@@ -10,7 +11,9 @@
 
   <div class="home-container">
     <div class="home" *ngIf="activeTab === tabs[0].id">
-      <div class="summary">בוקר טוב</div>
+      <div class="summary">
+        <app-summary></app-summary>
+      </div>
       <div class="projects-list">
         <app-projects-list [projects]="userProjects"></app-projects-list>
       </div>

@@ -29,14 +29,15 @@
 
 .tab {
     color: #9ca3af;
-    padding: 8px;
+    padding: 0 8px;
     cursor: pointer;
-    font-family: Arial, sans-serif;
-    font-size: 1rem;
     position: relative;
     display: flex;
     align-items: center;
     transition: all 0.3s ease;
+    padding: 0 8px 18px;
+    font-family: 'medium';
+    font-size: var(--font-size-1);
 }
 
 .tab:hover {
@@ -52,21 +53,24 @@
     background-color: var(--home-color);
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
-    padding: 10px;
+    padding: 0 8px 8px;
     margin-top: -10px;
     color: #000;
     box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.05);
 }
 
 .home-container {
+    border-radius: 16px;
+    margin-top: -6px;
     display: flex;
     flex-direction: column;
     flex: 1;
+    z-index: 2;
 
     .home {
         height: 100%;
         background-color: var(--home-color);
-        padding-top: 2rem;
+        padding: 2rem;
         display: flex;
         flex-direction: row;
         border-top-right-radius: 8px;
@@ -74,7 +78,6 @@
 
         .summary {
             flex: 1;
-            background: red;
             margin: 0 1rem;
         }
 

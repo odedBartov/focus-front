@@ -40,6 +40,11 @@ export class HttpService {
     return this.httpClient.get<Project[]>(this.apiUrl + "Projects/getUserProjects", headers);
   }
 
+  updateProject(project: Project[]): Observable<Project> {
+    const headers = this.generateHeaders();
+    return this.httpClient.put<Project>(this.apiUrl + "Projects/updateProject", project, headers);
+  }
+
   createStep(step: Step): Observable<Step> {
     return this.httpClient.post<Step>(this.apiUrl + "Steps/createStep", step);
   }

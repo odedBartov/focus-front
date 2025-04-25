@@ -1,30 +1,62 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { Project } from '../models/project';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Router } from '@angular/router';
-import { ProjectStatus } from '../models/enums';
+import { ProjectStatus, StepType } from '../models/enums';
 import { UserProjects } from '../models/userProjects';
 import { MatMenuModule } from '@angular/material/menu';
+import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { HttpService } from '../services/http.service';
+import { LoadingService } from '../services/loading.service';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-projects-list',
-  imports: [CommonModule, MatProgressBarModule, MatMenuModule],
+  imports: [CommonModule, MatProgressBarModule, MatMenuModule, DragDropModule],
   templateUrl: './projects-list.component.html',
   styleUrl: './projects-list.component.scss'
 })
 export class ProjectsListComponent {
-  @Input() projects?: UserProjects;
+  httpService = inject(HttpService);
+  loadingService = inject(LoadingService);
+  private _projects!: UserProjects;
+  @Input()
+  set projects(val: UserProjects) {
+    this._projects = val;
+    this.selectProjectStatus(this.projectStatusEnum.active);
+    this.rearrangeUserProjects();
+  }
+
+  get projects(): UserProjects {
+    return this._projects;
+  }
+
   router = inject(Router);
   projectStatusEnum = ProjectStatus;
-  selectedStatus = ProjectStatus.active;
+  selectedStatus!: ProjectStatus;
+  selectedProjects: Project[] = [];
+
+  rearrangeUserProjects() {
+    if (this.projects) {
+      this.rearrangeProjects(this.projects.activeProjects);
+      this.rearrangeProjects(this.projects.frozenProjects);
+      this.rearrangeProjects(this.projects.finishedProjects);
+    }
+  }
+
+  rearrangeProjects(projects: Project[]) {
+    projects = projects.sort((a, b) => a.positionInList - b.positionInList);
+  }
 
   selectProjectStatus(status: ProjectStatus) {
     this.selectedStatus = status;
+    this.selectedProjects = this.getProjectsForStatus() ?? [];
   }
 
-  getProjectsForStatus() {
-    switch (this.selectedStatus) {
+  getProjectsForStatus(status?: ProjectStatus): Project[] | undefined {
+    const statusToReturn = status ?? this.selectedStatus;
+    switch (statusToReturn) {
       case ProjectStatus.active:
         return this.projects?.activeProjects
       case ProjectStatus.frozen:
@@ -43,12 +75,63 @@ export class ProjectsListComponent {
     return ((completedSteps ?? 0) / (project.steps?.length ?? 1)) * 100;
   }
 
+  getPaidMoney (project: Project) {
+    const steps = project.steps?.filter(s => s.isComplete && s.stepType === StepType.payment);
+    return steps?.reduce((sum, step) => sum + step.price, 0) ?? 0;
+  }
+
   changeProjectStatus(project: Project, status: ProjectStatus) {
     project.status = status;
-    // update server
+    this.updateProjects([project]).subscribe({
+      next: (res: Project) => {
+        const oldStatusList = this.getProjectsForStatus();
+        oldStatusList?.splice(oldStatusList.indexOf(project), 1);
+        const newStatusList = this.getProjectsForStatus(project.status);
+        newStatusList?.push(project);
+      }, error: this.handleError
+    });
+  }
+
+  togglePriority(event: Event, project: Project) {
+    event.stopPropagation()
+    project.isPriority = !project.isPriority;
+    if (project.isPriority) {
+      const currentIndex = this.selectedProjects.indexOf(project);
+      moveItemInArray(this.selectedProjects, currentIndex, 0);
+      this.updateProjectsPosition();
+    }
+    this.updateProjects(this.selectedProjects).subscribe({
+      next: (res: Project) => {}, error: this.handleError
+    });
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.selectedProjects, event.previousIndex, event.currentIndex);
+    this.updateProjectsPosition();
+    this.updateProjects(this.selectedProjects).subscribe({
+      next: (res: Project) => {}, error: this.handleError
+    });
+  }
+
+  updateProjectsPosition() {
+    for (let index = 0; index < this.selectedProjects.length; index++) {
+      this.selectedProjects[index].positionInList = index;
+    }
+  }
+
+  updateProjects(projects: Project[]) {
+    this.loadingService.changeIsloading(true);
+    return this.httpService.updateProject(projects).pipe(tap(res => {
+      this.loadingService.changeIsloading(false);
+    }));
+  }
+
+  handleError(err: any) {
+    this.loadingService.changeIsloading(false);
+    // todo: show error
   }
 
   navigateToProject(projectId: string | undefined) {
-    this.router.navigate(['/project', projectId, false]);
+    // this.router.navigate(['/project', projectId, false]);
   }
 }

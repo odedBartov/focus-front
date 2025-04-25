@@ -8,47 +8,58 @@
             <div class="tab" [class.active]="selectedStatus === projectStatusEnum.finished"
                 (click)="selectProjectStatus(projectStatusEnum.finished)">פרויקטים שהסתיימו</div>
         </div>
-        <div class="project" *ngFor="let project of getProjectsForStatus()">
-            <img class="favorites" src="assets/star_empty.svg" />
-            <div class="project-description">
-                <span class="disabled-text">
-                    {{project.name}}
-                </span>
-                <span>
-                    {{project.description}}
-                </span>
-            </div>
-            <div class="current-step">
-                <span class="disabled-text">
-                    שלב נוכחי
-                </span>
-                <span>
-                    {{getCurrentStep(project)?.name}}
-                </span>
-            </div>
-            <div class="payment">
-                <span class="disabled-text">
-                    נשאר לתשלום
-                </span>
-                <span>
-                    {{project.paidMoney}}
-                </span>
-            </div>
-            <div class="progress">
-                <span>{{getProjectProgress(project) | number:'1.0-0'}}%</span>
-                <div class="progress-bar">
-                    <div class="progress-fill" [style.width.%]="getProjectProgress(project)"></div>
+        <div cdkDropList (cdkDropListDropped)="drop($event)">
+            <div class="project-drag" *ngFor="let project of selectedProjects" cdkDrag>
+                <div class="project" (click)="navigateToProject(project.id)">
+                    <img class="priority" (click)="togglePriority($event, project)"
+                        [src]="`assets/${project.isPriority?'star_full' :'star_empty'}.svg`" />
+                    <div class="project-description">
+                        <span class="disabled-text">
+                            {{project.name}}
+                        </span>
+                        <span>
+                            {{project.description}}
+                        </span>
+                    </div>
+                    <div class="current-step">
+                        <span class="disabled-text">
+                            שלב נוכחי
+                        </span>
+                        <span>
+                            {{getCurrentStep(project)?.name}}
+                        </span>
+                    </div>
+                    <div class="payment">
+                        <span class="disabled-text">
+                            נשאר לתשלום
+                        </span>
+                        <span>
+                            {{getPaidMoney(project)}} מתוך {{project.paidMoney}} ₪
+                        </span>
+                    </div>
+                    <div class="progress">
+                        <span>{{getProjectProgress(project) | number:'1.0-0'}}%</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" [style.width.%]="getProjectProgress(project)"></div>
+                        </div>
+                    </div>
+                    <div class="menu" (click)="$event.stopPropagation()">
+                        <img class="menu" src="assets/kabab_menu.svg" [matMenuTriggerFor]="menu" />
+                        <mat-menu #menu="matMenu" class="pointer">
+                            <button mat-menu-item
+                                (click)="changeProjectStatus(project, projectStatusEnum.active)">פעיל</button>
+                            <button mat-menu-item
+                                (click)="changeProjectStatus(project, projectStatusEnum.frozen)">מוקפא</button>
+                            <button mat-menu-item
+                                (click)="changeProjectStatus(project, projectStatusEnum.finished)">הסתיים</button>
+                        </mat-menu>
+                    </div>
                 </div>
             </div>
-            <div class="menu">
-                <img class="menu" src="assets/kabab_menu.svg" [matMenuTriggerFor]="menu" />
-                <mat-menu #menu="matMenu" class="pointer">
-                    <button mat-menu-item (click)="changeProjectStatus(project, projectStatusEnum.active)">פעיל</button>
-                    <button mat-menu-item
-                        (click)="changeProjectStatus(project, projectStatusEnum.frozen)">מוקפא</button>
-                    <button mat-menu-item
-                        (click)="changeProjectStatus(project, projectStatusEnum.finished)">הסתיים</button>
-                </mat-menu>
+        </div>
+        <div class="line">
+            <div class="add-project">
+                + פרויקט חדש
             </div>
         </div>
     </div>

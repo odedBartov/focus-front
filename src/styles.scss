@@ -1,16 +1,29 @@
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
+@font-face {
+    font-family: 'black';
+    src: url('assets/fonts/SimonaPro-Black.woff2') format('woff2')
+}
+
+@font-face {
+    font-family: 'medium';
+    src: url('assets/fonts/SimonaPro-Medium.woff2') format('woff2')
+}
+
+@font-face {
+    font-family: 'regular';
+    src: url('assets/fonts/SimonaPro-Regular.woff2') format('woff2')
+}
 
 :root {
-    --font-size-xs: 12px;
-    --font-size-sm: 14px;
-    --font-size-md: 1rem;
-    --font-size-lg: 20px;
-    --font-size-xl: 1.5rem;
-    --font-size-huge: 3rem;
+    --font-size-1: 16px;
+    --font-size-2: 20px;
+    --font-size-3: 24px;
+    --font-size-4: 29px;
+    --font-size-5: 35px;
 
     --home-color: #F3F3F5;
     --frame-color: #667AFF;
+    --main-color: #667AFF;
+    --main-color-not-active: #A2ACEF;
     --frame-color-disable: #a1acf3d4;
     --input-color: #667AFF2B;
     --disabled-text: rgba(0, 0, 0, 0.4);
@@ -43,7 +56,7 @@
         background: aliceblue;
         border-radius: 15px;
 
-        .mat-mdc-menu-item  {
+        .mat-mdc-menu-item {
             background-color: white;
         }
     }
