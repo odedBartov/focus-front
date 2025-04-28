@@ -3,13 +3,15 @@ import { inject, Injectable } from "@angular/core";
 import { catchError, Observable, tap, throwError } from "rxjs";
 import { AuthenticationService } from "../services/authentication.service";
 import { Router } from "@angular/router";
+import { LoadingService } from "../services/loading.service";
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
     authenticationService = inject(AuthenticationService);
     router = inject(Router);
+    loadingService = inject(LoadingService);
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {        
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const token = this.authenticationService.getToken();
         const authReq = token
             ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
@@ -25,14 +27,14 @@ export class TokenInterceptor implements HttpInterceptor {
                 }
             }), catchError((err: HttpErrorResponse) => {
                 if (err.status === 401) {
-                  this.authenticationService.deleteToken();
-                  this.router.navigate(['/login']);
+                    this.authenticationService.deleteToken();
+                    this.router.navigate(['/login']);
                 } else {
                     alert(err);
-                    // stop loading
+                    this.loadingService.hideIsLoading();
                 }
                 return throwError(() => err);
-              })
+            })
         );
     }
 }

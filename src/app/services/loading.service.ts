@@ -13,4 +13,8 @@ export class LoadingService {
   changeIsloading(value: boolean): void {
     this.isLoading.set(value);
   }
+
+  hideIsLoading() {
+    this.isLoading.set(false);
+  }
 }
