@@ -10,6 +10,7 @@ import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-
 import { HttpService } from '../services/http.service';
 import { LoadingService } from '../services/loading.service';
 import { tap } from 'rxjs';
+import { ProjectHoverService } from '../services/project-hover.service';
 
 @Component({
   selector: 'app-projects-list',
@@ -20,8 +21,10 @@ import { tap } from 'rxjs';
 export class ProjectsListComponent {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
+  projectHoverService = inject(ProjectHoverService);
   @Output() selectProjectEmitter = new EventEmitter<Project>();
   @Output() activeProjectsEmitter = new EventEmitter<Project[]>();
+  hoveredProject = this.projectHoverService.getSignal();
   private _projects!: UserProjects;
   @Input()
   set projects(val: UserProjects) {

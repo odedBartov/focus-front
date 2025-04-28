@@ -20,6 +20,7 @@ export class HttpService {
   generateHeaders() {
     const token = this.authenticationService.getToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    headers.append("withCredentials", 'true');
     return {headers};
   }
 

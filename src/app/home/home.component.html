@@ -9,7 +9,7 @@
     <img class="logo" src="assets/ariel_logo.svg" />
   </div>
 
-  <div class="home-container">
+  <div class="home-container" [ngClass]="{ 'show-before': isProjectHovered() }">
     <div class="home" *ngIf="activeTab?.id === tabs[0]?.id">
       <div class="summary">
         <app-summary [projects]="userProjects.activeProjects"></app-summary>
@@ -23,7 +23,7 @@
     </div>
   </div>
 
-  <div class="project" *ngIf="activeTab?.id !== tabs[0]?.id">
-    <app-project-page [projectInput]="selectedProject"></app-project-page>
+  <div class="project-container" *ngIf="activeTab?.id !== tabs[0]?.id">
+    <app-project-page class="project-page" [projectInput]="selectedProject"></app-project-page>
   </div>
 </div>

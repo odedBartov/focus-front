@@ -9,15 +9,15 @@
                 (click)="selectProjectStatus(projectStatusEnum.finished)">פרויקטים שהסתיימו</div>
         </div>
         <div cdkDropList (cdkDropListDropped)="drop($event)">
-            <div class="project-drag" *ngFor="let project of selectedProjects; let i = index" cdkDrag>
+            <div class="project-drag" [ngClass]="{'clear-opacity': hoveredProject() === project.id}" *ngFor="let project of selectedProjects; let i = index" cdkDrag>
                 <div class="project" (click)="selectProject(project)">
                     <img class="priority" (click)="togglePriority($event, project)"
                         [src]="`assets/icons/${project.isPriority?'star_full' :'star_empty'}.svg`" />
                     <div class="project-description">
-                        <span class="disabled-text">
+                        <span class="project-name">
                             {{project.name}}
                         </span>
-                        <span>
+                        <span class="small-text">
                             {{project.description}}
                         </span>
                     </div>
@@ -25,7 +25,7 @@
                         <span class="disabled-text">
                             שלב נוכחי
                         </span>
-                        <span>
+                        <span class="small-text">
                             {{getCurrentStep(project)?.name}}
                         </span>
                     </div>
@@ -33,11 +33,11 @@
                         <span class="disabled-text">
                             נשאר לתשלום
                         </span>
-                        <span>
+                        <span class="small-text">
                             {{getPaidMoney(project)}} מתוך {{project.paidMoney}} ₪
                         </span>
                     </div>
-                    <div class="progress">
+                    <div class="progress small-text">
                         <span>{{getProjectProgress(project) | number:'1.0-0'}}%</span>
                         <div class="progress-bar">
                             <div class="progress-fill" [style.width.%]="getProjectProgress(project)"></div>
@@ -47,11 +47,11 @@
                         <img class="menu" [src]="'assets/icons/'+ (hoveredMenuIndex === i? 'kabab_menu_yes.svg' : 'kabab_menu_not.svg')" [matMenuTriggerFor]="menu" (mouseenter)="hoveredMenuIndex = i"
                         (mouseleave)="hoveredMenuIndex = undefined"/>
                         <mat-menu #menu="matMenu" class="pointer">
-                            <button mat-menu-item
+                            <button mat-menu-item class="project-status"
                                 (click)="changeProjectStatus(project, projectStatusEnum.active)">פעיל</button>
-                            <button mat-menu-item
+                            <button mat-menu-item class="project-status"
                                 (click)="changeProjectStatus(project, projectStatusEnum.frozen)">מוקפא</button>
-                            <button mat-menu-item
+                            <button mat-menu-item class="project-status"
                                 (click)="changeProjectStatus(project, projectStatusEnum.finished)">הסתיים</button>
                         </mat-menu>
                     </div>

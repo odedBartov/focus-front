@@ -1,68 +1,136 @@
 .main {
-    height: 80vh;
+    height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    background-color: var(--home-color);
 
     .pointer {
         cursor: pointer;
     }
 
     .summurize {
-        margin: 2rem 1rem;
+        margin: 0 1rem;
         flex: 3;
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
 
-        .dates-and-payment {
-            flex: 4;
-            margin-bottom: 1.5rem;
+        .text-and-icon {
+            display: flex;
+            justify-content: space-between;
 
-            .project-title {
-                display: flex;
-                flex-direction: column;
-                margin-bottom: 2rem;
+            img {
+                cursor: pointer;
+            }
+        }
 
-                .title {
-                    font-size: var(--font-size-xl);
-                    font-weight: bolder;
-                }
+        .info {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
 
-                .description {
-                    font-weight: bold;
-                }
+            .title {
+                font-family: 'black';
+                font-size: var(--font-size-5);
             }
 
-            .grid-container {
+            .sub-title {
+                font-family: 'black';
+                font-size: var(--font-size-2);
+            }
+
+            .description {
+                margin: 2rem 0;
+                font-family: 'regular';
+                font-size: var(--font-size-1);
+            }
+            
+            .dates {
                 display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: repeat(2, 1fr);
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr 2fr;
                 gap: 10px;
+    
+                .cell {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                }
+    
+                .date-heaeder {
+                    font-size: var(--font-size-1);
+                    font-family: 'medium';
+                }
+    
+                .date-value {
+                    font-size: var(--font-size-3);
+                    font-family: 'black';
+                }
             }
 
-            .grid-item {
+            .update-client {
                 display: flex;
-                flex-direction: column;
-                align-items: start;
-                justify-content: flex-start;
-                margin-bottom: 1rem;
-
-                .sub-title {
-                    font-size: var(--font-size-sm);
-                    ;
-                }
-
-                .date {
-                    font-size: var(--font-size-lg);
-                    ;
-                    font-weight: bolder;
+                margin-top: 1rem;
+                span {
+                    margin-right: 1rem;
+                    font-family: 'medium';
+                    font-size: var(--font-size-1);
                 }
             }
         }
 
-        .links {
-            flex: 3;
-        }
+        // .dates-and-payment {
+        //     flex: 4;
+        //     margin-bottom: 1.5rem;
+
+        //     .project-title {
+        //         display: flex;
+        //         flex-direction: column;
+        //         margin-bottom: 2rem;
+
+        //         .title {
+        //             font-size: var(--font-size-xl);
+        //             font-weight: bolder;
+        //         }
+
+        //         .description {
+        //             font-weight: bold;
+        //         }
+        //     }
+
+        //     .grid-container {
+        //         display: grid;
+        //         grid-template-columns: repeat(2, 1fr);
+        //         grid-template-rows: repeat(2, 1fr);
+        //         gap: 10px;
+        //     }
+
+        //     .grid-item {
+        //         display: flex;
+        //         flex-direction: column;
+        //         align-items: start;
+        //         justify-content: flex-start;
+        //         margin-bottom: 1rem;
+
+        //         .sub-title {
+        //             font-size: var(--font-size-sm);
+        //             ;
+        //         }
+
+        //         .date {
+        //             font-size: var(--font-size-lg);
+        //             ;
+        //             font-weight: bolder;
+        //         }
+        //     }
+        // }
+
+        // .links {
+        //     flex: 3;
+        // }
     }
 
     .steps {
@@ -73,6 +141,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        height: 100%;
 
         .step {
             width: 35%;
@@ -114,7 +183,7 @@
             height: 2rem;
             padding: 1rem;
         }
-      
+
         .add-step {
             display: flex;
             justify-content: center;
@@ -130,23 +199,24 @@
                 border-radius: 50%;
                 width: 3rem;
                 height: 3rem;
-                
-                &.disable{
+
+                &.disable {
                     background-color: rgb(241, 226, 226);
                     color: var(--frame-color-disable);
                     border: solid 3px var(--frame-color-disable);
                     cursor: default;
                 }
-                
+
                 &.enable {
-                    color: var(--frame-color);
-                    border: solid 3px var(--frame-color);
+                    color: var(--main-color);
+                    border: solid 3px var(--main-color);
                     cursor: pointer;
                     transition: all 0.3s;
                     background-color: white;
+
                     &:hover {
                         color: white;
-                        background-color: var(--frame-color);
+                        background-color: var(--main-color);
                     }
                 }
             }
@@ -156,7 +226,10 @@
 
     .notes {
         flex: 3;
-        margin: 2rem 1rem;
+        margin: 0 1rem;
+        background-color: white;
+        border-radius: 12px;
+        height: 100%;
     }
 
     .icon {

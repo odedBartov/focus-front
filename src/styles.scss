@@ -21,19 +21,13 @@
     --font-size-5: 35px;
 
     --home-color: #F3F3F5;
-    --frame-color: #667AFF;
     --main-color: #667AFF;
     --main-color-not-active: #A2ACEF;
     --frame-color-disable: #a1acf3d4;
     --input-color: #667AFF2B;
     --disabled-text: rgba(0, 0, 0, 0.4);
     --unfilled-progress-color: rgba(102, 122, 255, 0.3);
-
-    .common-border {
-        border: solid 3px var(--frame-color);
-        border-radius: 15px;
-        padding: 1rem;
-    }
+    --common-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.214);
 
     .mat-content {
         flex: none;
@@ -50,6 +44,12 @@
     .mat-mdc-menu-content {
         padding: 0;
         border-radius: 20px;
+
+        .project-status {
+            font-family: 'medium' !important;
+            font-size: var(--font-size-1) !important;
+            text-align: center;
+        }
     }
 
     .mat-mdc-menu-panel {
@@ -73,5 +73,40 @@
         padding: 12px;
         max-width: 300px;
         font-family: 'regular';
-      }
+    }
+}
+
+.toggle-switch {
+    width: 30px;
+    height: 16px;
+    background-color: white;
+    border: solid 4px var(--main-color-not-active);
+    border-radius: 14px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.switch-thumb {
+    width: 10px;
+    height: 10px;
+    background-color: var(--main-color-not-active);
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 4px;
+    transition: left 0.3s;
+}
+
+.toggle-switch.on {
+    width: 38px;
+    height: 24px;
+    background-color: var(--main-color);
+    border: none;
+}
+
+.toggle-switch.on .switch-thumb {
+    background-color: white;
+    top: 7px;
+    left: 22px;
 }

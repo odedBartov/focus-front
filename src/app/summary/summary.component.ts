@@ -3,10 +3,11 @@ import { AuthenticationService } from '../services/authentication.service';
 import { CommonModule } from '@angular/common';
 import { Project } from '../models/project';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CircleSegmentComponent } from '../circle-segment/circle-segment.component';
 
 @Component({
   selector: 'app-summary',
-  imports: [CommonModule, MatTooltipModule ],
+  imports: [CommonModule, MatTooltipModule, CircleSegmentComponent ],
   templateUrl: './summary.component.html',
   styleUrl: './summary.component.scss'
 })
@@ -58,6 +59,6 @@ export class SummaryComponent implements OnInit {
   }
 
   getGreeting() {
-    return "בוקר טוב"
+    return "בוקר טוב"// todo
   }
 }

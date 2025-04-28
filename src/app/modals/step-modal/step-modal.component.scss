@@ -48,14 +48,14 @@
     width: 4.5rem;
     height: 3rem;
     background-color: white;
-    border: solid 3px var(--frame-color);
+    border: solid 3px var(--main-color);
     border-radius: 25px;
     transition: all 0.3s;
   }
 
   .confirm:hover {
     border: none;
-    background-color: var(--frame-color);
+    background-color: var(--main-color);
     color: white;
   }
 }

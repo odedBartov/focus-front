@@ -8,10 +8,11 @@ import { LoadingService } from '../services/loading.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { StepModalComponent } from '../modals/step-modal/step-modal.component';
 import { ConfirmationModalComponent } from '../modals/confirmation-modal/confirmation-modal.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule, MatDialogModule],
+  imports: [CommonModule, MatDialogModule, FormsModule],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss'
 })
@@ -26,6 +27,7 @@ export class ProjectPageComponent implements OnInit {
   project = signal<Project | undefined>(undefined);
   projectId: string | null = null;
   isReadOnly = false;
+  hoverExpandProject = false;
 
   constructor() {
     this.route.paramMap.subscribe(params => {
@@ -54,6 +56,10 @@ export class ProjectPageComponent implements OnInit {
         }
       });
     }
+  }
+
+  updateCient() {
+    this.project.update(current => ({...current, updateClient: !current?.updateClient} as Project));
   }
 
   changeStepStatus(step: Step) {

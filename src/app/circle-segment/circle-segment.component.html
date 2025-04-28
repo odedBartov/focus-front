@@ -1,0 +1,16 @@
+<svg viewBox="0 0 120 120" class="progress-ring">
+    <ng-container *ngFor="let project of projects; let i = index">
+      <circle
+        r="50"
+        cx="60"
+        cy="60"
+        fill="transparent"
+        stroke-width="10"
+        [attr.stroke-dasharray]="getDashArray(project.totalWorkingTime)"
+        [attr.stroke-dashoffset]="getDashOffset(i)"
+        (mouseenter)="hoverOnProject(project.id)"
+        (mouseleave)="stopHoveringProject()"
+      ></circle>
+    </ng-container>
+  </svg>
+  

@@ -1,0 +1,10 @@
+.progress-ring {
+    width: 120px;
+    height: 120px;
+    stroke: var(--main-color-not-active);
+    pointer-events: stroke;
+
+    :hover {
+      stroke: var(--main-color);
+    }
+  }

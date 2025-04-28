@@ -13,6 +13,7 @@ import { SummaryComponent } from "../summary/summary.component";
 import { UpdatesComponent } from "../updates/updates.component";
 import { ProjectPageComponent } from '../project-page/project-page.component';
 import { ProjectTab } from '../models/projectTab';
+import { ProjectHoverService } from '../services/project-hover.service';
 
 @Component({
   selector: 'app-home',
@@ -27,8 +28,10 @@ import { ProjectTab } from '../models/projectTab';
 export class HomeComponent implements OnInit {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
+  projectHoverService = inject(ProjectHoverService);
   userProjects: UserProjects = new UserProjects();
   selectedProject?: Project;
+  isProjectHovered = this.projectHoverService.getSignal();
 
   activeTab: ProjectTab = { id: 'home', icon: 'assets/icons/home.svg' };
   tabs: ProjectTab[] = [];
@@ -51,6 +54,7 @@ export class HomeComponent implements OnInit {
     const activeProjectTabs = this.userProjects.activeProjects.map(p => { return { id: p.id ?? '', label: p.name, project: p } });
     this.tabs = [this.activeTab];
     this.tabs.push(...activeProjectTabs);
+    this.setActive(this.tabs[1]);// to remove
   }
 
   sortProjects(projects: Project[]): UserProjects {

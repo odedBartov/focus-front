@@ -1,5 +1,5 @@
 <form #stepForm="ngForm" (ngSubmit)="save(stepForm)">
-    <div class="main common-border">
+    <div class="main">
         <span class="title">{{isNewStep? 'עריכת שלב קיים' : 'הוספת שלב חדש'}}</span>
         <span class="sub-title">כותרת*</span>
         <input class="regular-input" [(ngModel)]="currentStep.name" type="text" required ngModel name="nameInput"

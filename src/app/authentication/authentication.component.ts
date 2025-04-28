@@ -17,13 +17,11 @@ export class AuthenticationComponent {
 
   userSignedIn(jwt: string) {
     this.loadingService.changeIsloading(true);
-    this.httpService.loginWithGoogleToken(jwt).subscribe({
-      next: (value) => {
+    this.httpService.loginWithGoogleToken(jwt).subscribe(
+      res => {
         this.loadingService.changeIsloading(false);
         this.router.navigate(['/home']);
-      }, error: (err) => {
-        this.loadingService.changeIsloading(false);
       }
-    });
+    );
   }
 }
