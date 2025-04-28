@@ -1,0 +1,27 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        font-size: var(--font-size-3);
+        font-family: 'black';
+
+        img {
+            height: 1.2rem;
+        }
+    }
+
+    .text {
+        font-size: var(--font-size-1);
+        font-family: 'regular';
+    }
+
+    .contact {
+
+    }
+}

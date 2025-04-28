@@ -1,5 +1,5 @@
 .main {
-
+    height: 100%;
     .header {
         display: flex;
         flex-direction: column;
@@ -16,6 +16,16 @@
         }
     }
 
+    .text-and-icon {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+
+        img {
+            height: 1.2rem;
+        }
+    }
+
     .coffee {
         display: flex;
         flex-direction: row;
@@ -26,6 +36,28 @@
             cursor: pointer;
             height: 10rem;
             transform: rotate(90deg);
+        }
+    }
+
+    .payments {
+        height: 8rem;
+        margin: 5rem 0;
+    }
+
+    .resources {
+        display: flex;
+        flex-direction: column;
+
+        .projects {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            margin-top: 0.5rem;
+
+            .project {
+                background-color: blue;
+                margin: 0.1rem;
+            }
         }
     }
 }

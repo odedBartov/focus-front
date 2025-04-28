@@ -14,7 +14,9 @@ export class Project {
     status: ProjectStatus;
     isPriority: boolean;
     steps?: Step[];
-    positionInList;
+    positionInList: number;
+    totalWorkingTime: number;
+    totalWorkingSessions: number;
 
     constructor() {
         this.id = '';
@@ -29,5 +31,7 @@ export class Project {
         this.status = ProjectStatus.active;
         this.isPriority = false;
         this.positionInList = 0;
+        this.totalWorkingTime = 0;
+        this.totalWorkingSessions = 0;
     }
 }

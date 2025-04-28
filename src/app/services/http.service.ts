@@ -4,13 +4,13 @@ import { Project } from '../models/project';
 import { Step } from '../models/step';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthenticationService } from './authentication.service';
+import { environment } from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
-  apiUrl = "https://localhost:7189/api/";
-  // apiUrl = "https://projectsmanagerserver.onrender.com/api/";
+  apiUrl = environment.apiUrl;
   httpClient = inject(HttpClient);
   authenticationService = inject(AuthenticationService);
 

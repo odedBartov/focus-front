@@ -10,10 +10,16 @@ import { MatMenuModule } from '@angular/material/menu';
 import { LoadingService } from '../services/loading.service';
 import { ProjectStatus } from '../models/enums';
 import { SummaryComponent } from "../summary/summary.component";
+import { UpdatesComponent } from "../updates/updates.component";
+import { ProjectPageComponent } from '../project-page/project-page.component';
+import { ProjectTab } from '../models/projectTab';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterModule, MatExpansionModule, CommonModule, ProjectsListComponent, ProjectsListComponent, MatMenuModule, SummaryComponent],
+  imports: [RouterModule, MatExpansionModule, CommonModule,
+    ProjectsListComponent, ProjectsListComponent,
+    MatMenuModule, SummaryComponent, UpdatesComponent,
+    ProjectPageComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   standalone: true
@@ -21,20 +27,17 @@ import { SummaryComponent } from "../summary/summary.component";
 export class HomeComponent implements OnInit {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
-  projects: Project[] = [];
-  userProjects!: UserProjects;
-  activeTab: string = 'home';
+  userProjects: UserProjects = new UserProjects();
+  selectedProject?: Project;
 
-  tabs: {
-    id: string;
-    label?: string;
-    icon?: string;
-  }[] = [
-      { id: 'home', icon: 'assets/home.svg' }
-    ];
+  activeTab: ProjectTab = { id: 'home', icon: 'assets/icons/home.svg' };
+  tabs: ProjectTab[] = [
+    this.activeTab
+  ];
 
-  setActive(tabId: string) {
-    this.activeTab = tabId;
+  setActive(tab: ProjectTab) {
+    this.activeTab = tab;
+    this.selectedProject = tab.project;
   }
 
   ngOnInit(): void {
@@ -42,7 +45,7 @@ export class HomeComponent implements OnInit {
     this.httpService.getProjects().subscribe(res => {
       this.loadingService.changeIsloading(false);
       this.userProjects = this.sortProjects(res);
-      const activeProjectTabs = this.userProjects.activeProjects.map(p => { return { id: p.id ?? '', label: p.name } });
+      const activeProjectTabs = this.userProjects.activeProjects.map(p => { return { id: p.id ?? '', label: p.name, project: p } });
       this.tabs.push(...activeProjectTabs)
     }, err => {
       this.loadingService.changeIsloading(false);
@@ -67,5 +70,15 @@ export class HomeComponent implements OnInit {
       }
     })
     return result;
+  }
+
+  selectProject(project: Project) {
+    const projectTab = this.tabs.find(t => t.id === project.id);
+    if (projectTab) {
+      this.setActive(projectTab);
+    } else {
+      this.activeTab = {id: 'none'};
+      this.selectedProject = project;
+    }
   }
 }

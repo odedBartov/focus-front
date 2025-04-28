@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { GoogleSigninComponent } from '../google-signin/google-signin.component';
 import { HttpService } from '../services/http.service';
 import { Router } from '@angular/router';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-authentication',
@@ -11,11 +12,18 @@ import { Router } from '@angular/router';
 })
 export class AuthenticationComponent {
   httpService = inject(HttpService);
+  loadingService = inject(LoadingService);
   router = inject(Router);
 
   userSignedIn(jwt: string) {
-    this.httpService.loginWithGoogleToken(jwt).subscribe(res => {
-      this.router.navigate(['/home']);
-    })
+    this.loadingService.changeIsloading(true);
+    this.httpService.loginWithGoogleToken(jwt).subscribe({
+      next: (value) => {
+        this.loadingService.changeIsloading(false);
+        this.router.navigate(['/home']);
+      }, error: (err) => {
+        this.loadingService.changeIsloading(false);
+      }
+    });
   }
 }

@@ -64,4 +64,14 @@
     .mat-mdc-dialog-surface {
         border-radius: 15px;
     }
+
+    .custom-tooltip {
+        background-color: #070533;
+        color: white;
+        font-size: var(--font-size-1);
+        border-radius: 8px;
+        padding: 12px;
+        max-width: 300px;
+        font-family: 'regular';
+      }
 }

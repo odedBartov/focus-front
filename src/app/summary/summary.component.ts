@@ -1,14 +1,18 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
+import { CommonModule } from '@angular/common';
+import { Project } from '../models/project';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-summary',
-  imports: [],
+  imports: [CommonModule, MatTooltipModule ],
   templateUrl: './summary.component.html',
   styleUrl: './summary.component.scss'
 })
 export class SummaryComponent implements OnInit {
   authService = inject(AuthenticationService);
+  @Input() projects: Project[] = [];
   coffeePictures = [
     'assets/pictures/coffee_1.png',
     'assets/pictures/coffee_2.png',
@@ -20,6 +24,9 @@ export class SummaryComponent implements OnInit {
   coffeePicture = this.coffeePictures[0];
   userName: string | null = '';
   coffeeRotation = 0;
+
+  isPaymentsHovered = false;
+  isResourcesHovered = false;
   
   ngOnInit(): void {
     this.userName = this.authService.getUserName();

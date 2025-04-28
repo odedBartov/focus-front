@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../models/project';
 import { HttpService } from '../services/http.service';
@@ -20,15 +20,18 @@ export class ProjectPageComponent implements OnInit {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
   dialog = inject(MatDialog);
-  projectId: string | null = null;
+  @Input() set projectInput(value: Project | undefined) {
+    this.project.set(value);
+  }
   project = signal<Project | undefined>(undefined);
+  projectId: string | null = null;
   isReadOnly = false;
 
   constructor() {
     this.route.paramMap.subscribe(params => {
       this.projectId = params.get('projectId');
       this.isReadOnly = params.get('readOnly') == 'true';
-      
+
     });
   }
 

@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Project } from '../models/project';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -20,6 +20,7 @@ import { tap } from 'rxjs';
 export class ProjectsListComponent {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
+  @Output() selectProjectEmitter = new EventEmitter<Project>();
   private _projects!: UserProjects;
   @Input()
   set projects(val: UserProjects) {
@@ -36,6 +37,7 @@ export class ProjectsListComponent {
   projectStatusEnum = ProjectStatus;
   selectedStatus!: ProjectStatus;
   selectedProjects: Project[] = [];
+  hoveredMenuIndex: number | undefined;
 
   rearrangeUserProjects() {
     if (this.projects) {
@@ -131,7 +133,8 @@ export class ProjectsListComponent {
     // todo: show error
   }
 
-  navigateToProject(projectId: string | undefined) {
-    // this.router.navigate(['/project', projectId, false]);
+  selectProject(project: Project) {
+  this.selectProjectEmitter.emit(project);
+    //this.router.navigate(['/project', projectId, false]);
   }
 }

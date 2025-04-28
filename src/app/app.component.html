@@ -1,20 +1,5 @@
 <div class="loading" *ngIf="isLoading()">
   <img src="assets/loading.gif" />
 </div>
-<!-- <div class="header">
-  <div class="adler">
-    <img class="logo" src="assets/ariel_logo.svg" />
-    <span>
-      אריאל אדלר, מעצב עסקים
-    </span>
-  </div>
-  <div class="menu">
-    <img class="menu" src="assets/hamburger_menu.svg" [matMenuTriggerFor]="menu" />
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="navigateToHomePage()">דף הבית</button>
-      <button mat-menu-item>אודות</button>
-      <button mat-menu-item (click)="signOut()">התנתקות</button>
-    </mat-menu>
-  </div>
-</div> -->
+
 <router-outlet></router-outlet>
