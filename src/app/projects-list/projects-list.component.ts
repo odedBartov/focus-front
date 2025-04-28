@@ -21,6 +21,7 @@ export class ProjectsListComponent {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
   @Output() selectProjectEmitter = new EventEmitter<Project>();
+  @Output() activeProjectsEmitter = new EventEmitter<Project[]>();
   private _projects!: UserProjects;
   @Input()
   set projects(val: UserProjects) {
@@ -77,7 +78,7 @@ export class ProjectsListComponent {
     return ((completedSteps ?? 0) / (project.steps?.length ?? 1)) * 100;
   }
 
-  getPaidMoney (project: Project) {
+  getPaidMoney(project: Project) {
     const steps = project.steps?.filter(s => s.isComplete && s.stepType === StepType.payment);
     return steps?.reduce((sum, step) => sum + step.price, 0) ?? 0;
   }
@@ -90,6 +91,8 @@ export class ProjectsListComponent {
         oldStatusList?.splice(oldStatusList.indexOf(project), 1);
         const newStatusList = this.getProjectsForStatus(project.status);
         newStatusList?.push(project);
+
+        this.activeProjectsEmitter.emit(this.projects.activeProjects);
       }, error: this.handleError
     });
   }
@@ -101,9 +104,11 @@ export class ProjectsListComponent {
       const currentIndex = this.selectedProjects.indexOf(project);
       moveItemInArray(this.selectedProjects, currentIndex, 0);
       this.updateProjectsPosition();
+      this.activeProjectsEmitter.emit(this.projects.activeProjects);
     }
+
     this.updateProjects(this.selectedProjects).subscribe({
-      next: (res: Project) => {}, error: this.handleError
+      next: (res: Project) => { }, error: this.handleError
     });
   }
 
@@ -111,7 +116,7 @@ export class ProjectsListComponent {
     moveItemInArray(this.selectedProjects, event.previousIndex, event.currentIndex);
     this.updateProjectsPosition();
     this.updateProjects(this.selectedProjects).subscribe({
-      next: (res: Project) => {}, error: this.handleError
+      next: (res: Project) => { }, error: this.handleError
     });
   }
 
@@ -134,7 +139,7 @@ export class ProjectsListComponent {
   }
 
   selectProject(project: Project) {
-  this.selectProjectEmitter.emit(project);
+    this.selectProjectEmitter.emit(project);
     //this.router.navigate(['/project', projectId, false]);
   }
 }

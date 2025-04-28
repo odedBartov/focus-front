@@ -5,13 +5,15 @@ import { Injectable, Signal, signal } from '@angular/core';
 })
 export class LoadingService {
   isLoading = signal<boolean>(false);
+  counter = 0;
   
   getIsLoading(): Signal<boolean> {
     return this.isLoading;
   }
 
   changeIsloading(value: boolean): void {
-    this.isLoading.set(value);
+    this.counter += value? 1 : -1;
+    this.isLoading.set(this.counter > 0);
   }
 
   hideIsLoading() {

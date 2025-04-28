@@ -31,9 +31,7 @@ export class HomeComponent implements OnInit {
   selectedProject?: Project;
 
   activeTab: ProjectTab = { id: 'home', icon: 'assets/icons/home.svg' };
-  tabs: ProjectTab[] = [
-    this.activeTab
-  ];
+  tabs: ProjectTab[] = [];
 
   setActive(tab: ProjectTab) {
     this.activeTab = tab;
@@ -45,11 +43,14 @@ export class HomeComponent implements OnInit {
     this.httpService.getProjects().subscribe(res => {
       this.loadingService.changeIsloading(false);
       this.userProjects = this.sortProjects(res);
-      const activeProjectTabs = this.userProjects.activeProjects.map(p => { return { id: p.id ?? '', label: p.name, project: p } });
-      this.tabs.push(...activeProjectTabs)
-    }, err => {
-      this.loadingService.changeIsloading(false);
+      this.initTabs();
     })
+  }
+
+  initTabs() {
+    const activeProjectTabs = this.userProjects.activeProjects.map(p => { return { id: p.id ?? '', label: p.name, project: p } });
+    this.tabs = [this.activeTab];
+    this.tabs.push(...activeProjectTabs);
   }
 
   sortProjects(projects: Project[]): UserProjects {
@@ -77,8 +78,13 @@ export class HomeComponent implements OnInit {
     if (projectTab) {
       this.setActive(projectTab);
     } else {
-      this.activeTab = {id: 'none'};
+      this.activeTab = { id: 'none' };
       this.selectedProject = project;
     }
+  }
+
+  updateActiveTabs(projects: Project[]) {
+    this.userProjects.activeProjects = projects;
+    this.initTabs();
   }
 }

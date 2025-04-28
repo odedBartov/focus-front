@@ -1,5 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { HttpService } from '../services/http.service';
+import { Feature } from '../models/feature';
+import { Insight } from '../models/insight';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-updates',
@@ -8,9 +12,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './updates.component.scss'
 })
 export class UpdatesComponent implements OnInit {
-  features!: string[];
+  httpService = inject(HttpService);
+  loadingService = inject(LoadingService);
+  features: Feature[] = [];
+  insight: Insight = new Insight();
 
   ngOnInit(): void {
-    this.features = ["סתם טקסט בנוגע למאפיין שנוסיך בעתיד", "עוד טקסט הפעם יותר קצר", "בלה בלה בלה"];
+    this.loadingService.changeIsloading(true);
+    this.httpService.getInsightAndUpdates().subscribe(res => {
+      this.loadingService.changeIsloading(false);
+      this.insight = res.insight ?? new Insight();
+      this.features = res.updates;
+    })
   }
 }

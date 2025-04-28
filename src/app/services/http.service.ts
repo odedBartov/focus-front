@@ -5,6 +5,9 @@ import { Step } from '../models/step';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthenticationService } from './authentication.service';
 import { environment } from "../../environments/environment";
+import { Insight } from '../models/insight';
+import { Feature } from '../models/feature';
+import { InsightAndUpdates } from '../models/insightAndUpdates';
 
 @Injectable({
   providedIn: 'root'
@@ -59,5 +62,9 @@ export class HttpService {
 
   deleteStep(stepId: string) {
     return this.httpClient.delete(`${this.apiUrl}Steps/deleteStep?stepId=${stepId}`)
+  }
+
+  getInsightAndUpdates(): Observable<InsightAndUpdates> {
+    return this.httpClient.get<InsightAndUpdates>(this.apiUrl + "Info/GetInsightAndUpdates");
   }
 }

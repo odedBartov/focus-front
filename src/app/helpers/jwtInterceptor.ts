@@ -26,12 +26,12 @@ export class TokenInterceptor implements HttpInterceptor {
                     }
                 }
             }), catchError((err: HttpErrorResponse) => {
+                this.loadingService.hideIsLoading();
                 if (err.status === 401) {
                     this.authenticationService.deleteToken();
                     this.router.navigate(['/login']);
                 } else {
-                    alert(err);
-                    this.loadingService.hideIsLoading();
+                    alert(err); // show in toaster
                 }
                 return throwError(() => err);
             })
