@@ -24,6 +24,7 @@
     --main-color: #667AFF;
     --main-color-not-active: #A2ACEF;
     --frame-color-disable: #a1acf3d4;
+    --disabled-text: #0705334D;
     --input-color: #667AFF2B;
     --disabled-text: rgba(0, 0, 0, 0.4);
     --unfilled-progress-color: rgba(102, 122, 255, 0.3);
@@ -109,4 +110,17 @@
     background-color: white;
     top: 7px;
     left: 22px;
+}
+
+.progress-bar {
+    height: 0.5rem;
+    background-color: var(--unfilled-progress-color);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--main-color);
+    transition: width 0.3s ease;
 }

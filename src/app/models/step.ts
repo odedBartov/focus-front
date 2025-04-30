@@ -8,10 +8,13 @@ export class Step {
     isComplete: boolean;
     stepType: StepType;
     price: number;
+    dateCompleted?: Date;
+    dateDue: Date;
 
     constructor() {
         this.isComplete = false;
         this.stepType = StepType.work;
         this.price = 0;
+        this.dateDue = new Date();
     }
 }

@@ -11,10 +11,11 @@ import { HttpService } from '../services/http.service';
 import { LoadingService } from '../services/loading.service';
 import { tap } from 'rxjs';
 import { ProjectHoverService } from '../services/project-hover.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-projects-list',
-  imports: [CommonModule, MatProgressBarModule, MatMenuModule, DragDropModule],
+  imports: [CommonModule, MatProgressBarModule, MatMenuModule, DragDropModule, MatTooltipModule],
   templateUrl: './projects-list.component.html',
   styleUrl: './projects-list.component.scss'
 })

@@ -9,7 +9,8 @@
                 (click)="selectProjectStatus(projectStatusEnum.finished)">פרויקטים שהסתיימו</div>
         </div>
         <div cdkDropList (cdkDropListDropped)="drop($event)">
-            <div class="project-drag" [ngClass]="{'clear-opacity': hoveredProject() === project.id}" *ngFor="let project of selectedProjects; let i = index" cdkDrag>
+            <div class="project-drag" [ngClass]="{'clear-opacity': hoveredProject() === project.id}"
+                *ngFor="let project of selectedProjects; let i = index" cdkDrag>
                 <div class="project" (click)="selectProject(project)">
                     <img class="priority" (click)="togglePriority($event, project)"
                         [src]="`assets/icons/${project.isPriority?'star_full' :'star_empty'}.svg`" />
@@ -17,7 +18,8 @@
                         <span class="project-name">
                             {{project.name}}
                         </span>
-                        <span class="small-text">
+                        <span class="small-text" [matTooltipDisabled]="description.clientWidth >= description.scrollWidth" matTooltipPosition="above"
+                            matTooltipClass="custom-tooltip" [matTooltip]="project.description" #description>
                             {{project.description}}
                         </span>
                     </div>
@@ -44,8 +46,10 @@
                         </div>
                     </div>
                     <div class="menu" (click)="$event.stopPropagation()">
-                        <img class="menu" [src]="'assets/icons/'+ (hoveredMenuIndex === i? 'kabab_menu_yes.svg' : 'kabab_menu_not.svg')" [matMenuTriggerFor]="menu" (mouseenter)="hoveredMenuIndex = i"
-                        (mouseleave)="hoveredMenuIndex = undefined"/>
+                        <img class="menu"
+                            [src]="'assets/icons/'+ (hoveredMenuIndex === i? 'kabab_menu_yes.svg' : 'kabab_menu_not.svg')"
+                            [matMenuTriggerFor]="menu" (mouseenter)="hoveredMenuIndex = i"
+                            (mouseleave)="hoveredMenuIndex = undefined" />
                         <mat-menu #menu="matMenu" class="pointer">
                             <button mat-menu-item class="project-status"
                                 (click)="changeProjectStatus(project, projectStatusEnum.active)">פעיל</button>

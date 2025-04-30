@@ -9,10 +9,11 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { StepModalComponent } from '../modals/step-modal/step-modal.component';
 import { ConfirmationModalComponent } from '../modals/confirmation-modal/confirmation-modal.component';
 import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule, MatDialogModule, FormsModule],
+  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss'
 })
@@ -27,7 +28,10 @@ export class ProjectPageComponent implements OnInit {
   project = signal<Project | undefined>(undefined);
   projectId: string | null = null;
   isReadOnly = false;
-  hoverExpandProject = false;
+  isExpandProjectHover = false;
+  isPriceHover = false;
+  isTimeHover = false;
+  isAddStepHover = false;
 
   constructor() {
     this.route.paramMap.subscribe(params => {
