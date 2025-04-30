@@ -25,9 +25,6 @@ export class SummaryComponent implements OnInit {
   coffeePicture = this.coffeePictures[0];
   userName: string | null = '';
   coffeeRotation = 0;
-
-  isPaymentsHovered = false;
-  isResourcesHovered = false;
   
   ngOnInit(): void {
     this.userName = this.authService.getUserName();

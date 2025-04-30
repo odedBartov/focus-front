@@ -11,7 +11,7 @@
     }
 
     .summurize {
-        margin: 0 1rem;
+        margin: 0 5rem;
         padding: 2rem;
         flex: 1;
         display: flex;
@@ -21,10 +21,6 @@
         .text-and-icon {
             display: flex;
             justify-content: space-between;
-
-            img {
-                cursor: pointer;
-            }
         }
 
         .info {
@@ -133,7 +129,7 @@
     }
 
     .steps {
-        overflow-y: auto;
+        margin: 0 10rem;
         flex: 1.11;
         display: flex;
         flex-direction: column;
@@ -141,46 +137,60 @@
         height: 100%;
 
         .step {
-            width: 35%;
+            width: 400px;
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            padding: 1rem;
 
             .step-name {
+                width: 100%;
                 display: flex;
-                flex-direction: column;
                 justify-content: space-between;
                 font-family: 'black';
                 font-size: var(--font-size-2);
 
-                .icons {
-                    margin-top: 1rem;
-                    display: flex;
-                    flex-direction: row;
-
-                    .icon {
-                        margin-left: 1rem;
-                    }
+                img {
+                    height: 24px;
                 }
             }
 
-            .confirm {
+            .extra {
+                font-family: 'regular';
+                font-size: var(--font-size-2);
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
-                align-items: center;
+            }
+
+            .extra.visible {}
+
+            .extra-not-finished {
+                span {
+                    margin-bottom: 2rem;
+                }
+
+                .step-icons {
+                    display: flex;
+                    justify-content: space-between;
+                    img {
+                        cursor: pointer;
+                    }
+
+                    .edit-delete {
+                        img {
+                            margin-left: 1rem;
+                        }
+                    }
+                }
             }
         }
 
-        .step.finished {
-            font-weight: bold;
-            font-size: var(--font-size-xl);
-            margin-bottom: 1rem;
-        }
+        .step.finished {}
 
         .step.not-finished {
-            height: 2rem;
-            padding: 1rem;
+            border: solid 2px #C3C8EB;
+            border-radius: 15px;
         }
 
         .add-step {
@@ -193,7 +203,7 @@
 
     .notes {
         flex: 1;
-        margin: 0 1rem;
+        margin: 0 5rem;
         background-color: white;
         border-radius: 12px;
         height: 100%;

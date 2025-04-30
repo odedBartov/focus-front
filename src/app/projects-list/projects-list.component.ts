@@ -42,7 +42,6 @@ export class ProjectsListComponent {
   projectStatusEnum = ProjectStatus;
   selectedStatus!: ProjectStatus;
   selectedProjects: Project[] = [];
-  hoveredMenuIndex: number | undefined;
 
   rearrangeUserProjects() {
     if (this.projects) {

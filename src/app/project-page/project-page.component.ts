@@ -10,12 +10,30 @@ import { StepModalComponent } from '../modals/step-modal/step-modal.component';
 import { ConfirmationModalComponent } from '../modals/confirmation-modal/confirmation-modal.component';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-project-page',
   imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule],
   templateUrl: './project-page.component.html',
-  styleUrl: './project-page.component.scss'
+  styleUrl: './project-page.component.scss',
+  animations: [
+    trigger('expandCollapse', [
+      state('collapsed', style({
+        height: '0px',
+        opacity: 0,
+        overflow: 'hidden',
+      })),
+      state('expanded', style({
+        height: '*',
+        opacity: 1,
+        overflow: 'hidden',
+      })),
+      transition('collapsed <=> expanded', [
+        animate('300ms ease')
+      ]),
+    ])
+  ]
 })
 export class ProjectPageComponent implements OnInit {
   route = inject(ActivatedRoute);
@@ -27,11 +45,9 @@ export class ProjectPageComponent implements OnInit {
   }
   project = signal<Project | undefined>(undefined);
   projectId: string | null = null;
+  activeStepId? = '';
   isReadOnly = false;
-  isExpandProjectHover = false;
-  isPriceHover = false;
-  isTimeHover = false;
-  isAddStepHover = false;
+  hoverStepId? = '';
 
   constructor() {
     this.route.paramMap.subscribe(params => {
@@ -48,22 +64,19 @@ export class ProjectPageComponent implements OnInit {
   loadProject() {
     if (this.projectId) {
       this.loadingService.changeIsloading(true);
-      this.httpService.getProject(this.projectId).subscribe({
-        next: (res) => {
-          if (res) {
-            this.project.set(res);
-            this.loadingService.changeIsloading(false);
-          }
-        }, error: (err) => {
+      this.httpService.getProject(this.projectId).subscribe(res => {
+        if (res.steps) {
+          this.project.set(res);
+          // todo: find active step
+          this.activeStepId = res.steps[1].id;
           this.loadingService.changeIsloading(false);
-          // show error
         }
       });
     }
   }
 
   updateCient() {
-    this.project.update(current => ({...current, updateClient: !current?.updateClient} as Project));
+    this.project.update(current => ({ ...current, updateClient: !current?.updateClient } as Project));
   }
 
   changeStepStatus(step: Step) {

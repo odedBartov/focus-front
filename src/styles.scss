@@ -124,3 +124,68 @@
     background-color: var(--main-color);
     transition: width 0.3s ease;
 }
+
+//icons
+.icon-garbage-can {
+    content: url('/assets/icons/garbage_can_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/garbage_can_yes.svg');
+    }
+}
+
+.icon-pencil {
+    content: url('/assets/icons/pencil_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/pencil_yes.svg');
+    }
+}
+
+.icon-confirm-circle {
+    content: url('/assets/icons/confirm_circle_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/confirm_circle_yes.svg');
+    }
+}
+
+.icon-confirm {
+    content: url('/assets/icons/confirm_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/confirm_yes.svg');
+    }
+}
+
+.icon-plus {
+    content: url('/assets/icons/plus_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/plus_yes.svg');
+    }
+}
+
+.icon-info {
+    content: url('/assets/icons/info_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/info_yes.svg');
+    }
+}
+
+.icon-expand {
+    content: url('/assets/icons/expand_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/expand_yes.svg');
+    }
+}
+
+.icon-kabab-menu {
+    content: url('/assets/icons/kabab_menu_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/kabab_menu_yes.svg');
+    }
+}

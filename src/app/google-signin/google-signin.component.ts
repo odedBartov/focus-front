@@ -17,11 +17,15 @@ export class GoogleSigninComponent implements OnInit {
   @Output() googleLoginEmitter = new EventEmitter<string>();
   private codeClient: any;
   ngOnInit(): void {
+    this.initGoogleClient();
+  }
+
+  initGoogleClient() {
     this.codeClient = window.google.accounts.oauth2.initCodeClient({
       client_id: '834564132220-5hncletadkegj4vaabrh2joj9rc586ai.apps.googleusercontent.com',
       scope: 'openid email profile',
       ux_mode: 'popup',
-      callback: (response: any) => {        
+      callback: (response: any) => {
         this.googleLoginEmitter.emit(response.code);
       },
     });
@@ -29,6 +33,9 @@ export class GoogleSigninComponent implements OnInit {
 
 
   onGoogleSignInClick(): void {
+    if (!this.codeClient) {
+      this.initGoogleClient();
+    }
     this.codeClient.requestCode();
   }
 }

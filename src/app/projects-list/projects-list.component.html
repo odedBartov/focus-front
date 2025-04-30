@@ -18,8 +18,10 @@
                         <span class="project-name">
                             {{project.name}}
                         </span>
-                        <span class="small-text" [matTooltipDisabled]="description.clientWidth >= description.scrollWidth" matTooltipPosition="above"
-                            matTooltipClass="custom-tooltip" [matTooltip]="project.description" #description>
+                        <span class="small-text"
+                            [matTooltipDisabled]="description.clientWidth >= description.scrollWidth"
+                            matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                            [matTooltip]="project.description" #description>
                             {{project.description}}
                         </span>
                     </div>
@@ -46,10 +48,7 @@
                         </div>
                     </div>
                     <div class="menu" (click)="$event.stopPropagation()">
-                        <img class="menu"
-                            [src]="'assets/icons/'+ (hoveredMenuIndex === i? 'kabab_menu_yes.svg' : 'kabab_menu_not.svg')"
-                            [matMenuTriggerFor]="menu" (mouseenter)="hoveredMenuIndex = i"
-                            (mouseleave)="hoveredMenuIndex = undefined" />
+                        <img class="menu icon-kabab-menu" [matMenuTriggerFor]="menu" />
                         <mat-menu #menu="matMenu" class="pointer">
                             <button mat-menu-item class="project-status"
                                 (click)="changeProjectStatus(project, projectStatusEnum.active)">פעיל</button>
