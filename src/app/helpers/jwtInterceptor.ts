@@ -31,7 +31,7 @@ export class TokenInterceptor implements HttpInterceptor {
                     this.authenticationService.deleteToken();
                     this.router.navigate(['/login']);
                 } else {
-                    alert(err); // show in toaster
+                    alert(err.message); // show in toaster
                 }
                 return throwError(() => err);
             })

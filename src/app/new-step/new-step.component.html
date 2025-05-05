@@ -1,5 +1,5 @@
 <div class="main">
-    <div class="choose-type" *ngIf="selectedType === undefined">
+    <div class="choose-type" *ngIf="!isEdit && selectedType === undefined">
         <span class="header">שלב חדש</span>
         <span class="text">מהו סוג השלב?</span>
         <div class="steps">
@@ -12,10 +12,20 @@
             </div>
         </div>
     </div>
-    <form [formGroup]="form" class="form" *ngIf="selectedType !== undefined">
-        <div class="title">
+    <form [formGroup]="form" class="form" *ngIf="isEdit || selectedType !== undefined">
+        <div class="title" *ngIf="!isEdit">
             <span class="header">שלב {{stepTypeLabels[selectedType.type]}} חדש</span>
             <img [src]="`assets/icons/${selectedType.icon}.svg`" />
+        </div>
+        <div *ngIf="isEdit">
+            <span class="header">עריכת שלב</span>
+            <div class="types">
+                <div class="edit-type" [ngClass]="{'selected': stepType.type === step()?.stepType}"
+                    *ngFor="let stepType of stepTypes" (click)="editStepType(stepType.type)">
+                    <img [src]="`assets/icons/${stepType.icon}.svg`" />
+                    <span>{{stepTypeLabels[stepType.type]}}</span>
+                </div>
+            </div>
         </div>
         <div class="text-and-input">
             <span class="text">שם השלב</span>
@@ -28,16 +38,17 @@
         </div>
         <div class="text-and-input" *ngIf="selectedType.type === stepTypeEnum.payment">
             <span class="text">סכום (לא כולל מע"ם)</span>
-            <input class="text" type="number" formControlName="price"/>
+            <input class="text" type="number" formControlName="price" />
             <span *ngIf="submitted && form.get('price')?.errors" class="error">אנא הזינו סכום תקין</span>
         </div>
         <div class="text-and-input">
             <span class="text">תאריך סיום מתוכנן</span>
-            <input class="text date" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _" formControlName="dateDue" [dropSpecialCharacters]="false"/>
+            <input class="text date" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _" formControlName="dateDue"
+                [dropSpecialCharacters]="false" />
             <span *ngIf="submitted && form.get('dateDue')?.errors" class="error">אנא הזינו תאריך תקין</span>
         </div>
         <div class="create-step">
             <img class="icon-confirm-circle" (click)="createStep()" />
         </div>
-    </form >
+    </form>
 </div>

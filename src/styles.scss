@@ -31,7 +31,7 @@
     --select-color: #C3C8EB;
     --disabled-text: rgba(0, 0, 0, 0.4);
     --unfilled-progress-color: rgba(102, 122, 255, 0.3);
-    --common-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.214);
+    --common-shadow: 0px 0px 16px 1px rgba(0, 0, 0, 0.116);
 
     .mat-content {
         flex: none;
@@ -79,7 +79,8 @@
         font-family: 'regular';
     }
 
-    input, textarea {
+    input,
+    textarea {
         outline: none;
         padding: 0.5rem 1rem;
     }

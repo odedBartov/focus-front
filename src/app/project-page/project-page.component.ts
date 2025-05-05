@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NewStepComponent } from '../new-step/new-step.component';
+import { reduce } from 'rxjs';
+import { StepType } from '../models/enums';
 
 @Component({
   selector: 'app-project-page',
@@ -42,14 +44,18 @@ export class ProjectPageComponent implements OnInit {
   loadingService = inject(LoadingService);
   dialog = inject(MatDialog);
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
+  editDiv?: HTMLDivElement;
   @Input() set projectInput(value: Project | undefined) {
-    this.project.set(value);
-  }
-  project = signal<Project | undefined>(undefined);
+    this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
+    this.project = value;
+    this.calculatePaidMoney();
+  };
+  project?: Project;
   projectId: string | null = null;
   activeStepId? = '';
   isReadOnly = false;
   isShowNewStep = false;
+  editStepId: string | undefined = '';
   hoverStepId? = '';
 
   constructor() {
@@ -67,10 +73,13 @@ export class ProjectPageComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     if (this.newStepDiv?.nativeElement) {
-      const clickedInside = this.newStepDiv.nativeElement.contains(event.target);
-      if (!clickedInside) {
+      if (!this.newStepDiv.nativeElement.contains(event.target)) {
         this.isShowNewStep = false;
       }
+    }
+
+    if (!this.editDiv?.contains(event.target as Node)) {
+      this.editStepId = '';
     }
   }
 
@@ -79,9 +88,8 @@ export class ProjectPageComponent implements OnInit {
       this.loadingService.changeIsloading(true);
       this.httpService.getProject(this.projectId).subscribe(res => {
         if (res.steps) {
-          this.project.set(res);
-          // todo: find active step
-          this.activeStepId = res.steps[1].id;
+          this.project = res;
+          this.activeStepId = res.steps.find(s => !s.isComplete)?.id;
           this.loadingService.changeIsloading(false);
         }
       });
@@ -89,7 +97,9 @@ export class ProjectPageComponent implements OnInit {
   }
 
   updateCient() {
-    this.project.update(current => ({ ...current, updateClient: !current?.updateClient } as Project));
+    if (this.project) {
+      this.project.updateClient = !this.project.updateClient;
+    }
   }
 
   changeStepStatus(step: Step) {
@@ -102,13 +112,16 @@ export class ProjectPageComponent implements OnInit {
 
   updateStep(step: Step) {
     this.loadingService.changeIsloading(true);
-    this.httpService.updateStep(step).subscribe({
-      next: (res: Step) => {
-        step = res;
-        this.loadingService.changeIsloading(false);
-      }, error: (err) => {
-        this.loadingService.changeIsloading(false);
+    this.httpService.updateStep(step).subscribe(res => {
+      if (this.project && this.project.steps) {
+        this.project.steps = this.project?.steps?.map(step =>
+          step.id === res.id ? res : step
+        )
       }
+      this.editStepId = '';
+      this.activeStepId = this.project?.steps?.find(s => !s.isComplete)?.id;
+      this.calculatePaidMoney();
+      this.loadingService.changeIsloading(false);
     })
   }
 
@@ -138,28 +151,36 @@ export class ProjectPageComponent implements OnInit {
 
   createNewStep(step: Step) {
     this.loadingService.changeIsloading(true);
-    step.projectId = this.project()?.id;
+    step.projectId = this.project?.id;
     this.httpService.createStep(step).subscribe(res => {
-      this.project()?.steps?.push(res);
+      this.project?.steps?.push(res);
       this.isShowNewStep = false;
       this.loadingService.changeIsloading(false);
     })
+  }
+
+  editStep(div: HTMLDivElement, stepId: string | undefined) {
+    this.editDiv = div;
+    this.editStepId = stepId;
   }
 
   deleteStep(step: Step) {
     if (step.id) {
       this.loadingService.changeIsloading(true);
       this.httpService.deleteStep(step.id).subscribe(res => {
-        const stepIndex = this.project()?.steps?.indexOf(step);
+        const stepIndex = this.project?.steps?.indexOf(step);
         if (stepIndex !== undefined) {
-          this.project()?.steps?.splice(stepIndex, 1);
+          this.project?.steps?.splice(stepIndex, 1);
         }
         this.loadingService.changeIsloading(false);
       });
     }
   }
 
-  calculatePrice() {
-    return this.project()?.steps?.filter(s => s.isComplete).reduce((sum, item) => sum + item.price, 0);
+  calculatePaidMoney() {
+    const sum = this.project?.steps?.reduce((sum, step) => sum + ((step.isComplete && step.stepType === StepType.payment) ? step.price : 0), 0);
+    if (this.project) {
+      this.project.paidMoney = sum ?? 0;
+    }
   }
 }

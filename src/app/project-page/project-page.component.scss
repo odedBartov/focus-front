@@ -1,3 +1,5 @@
+@import '../../mixins.scss';
+
 .main {
     height: 100%;
     width: 100%;
@@ -12,7 +14,8 @@
 
     .summurize {
         margin: 0 5rem;
-        padding: 2rem;
+        padding: 2rem 2rem 0;
+        height: 90vh;
         flex: 1;
         display: flex;
         flex-direction: column;
@@ -138,19 +141,31 @@
         overflow: auto;
 
         .step {
-            width: 300px;
+            width: 15.25rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             margin-top: 2rem;
             padding: 1rem;
 
-            .step-name {
+            &.active-step {
+                width: 20rem;
+                font-size: var(--font-size-4) !important;
+                background-color: white;
+                border: none !important;
+                box-shadow: var(--common-shadow);
+                padding: 2rem;
+            }
+
+            .step-header {
                 width: 100%;
                 display: flex;
                 justify-content: space-between;
                 font-family: 'black';
-                font-size: var(--font-size-2);
+                
+                .step-name {
+                    font-size: var(--font-size-2);
+                }
 
                 img {
                     height: 25px;
@@ -164,8 +179,6 @@
                 flex-direction: column;
             }
 
-            .extra.visible {}
-
             .extra-not-finished {
                 span {
                     margin-bottom: 2rem;
@@ -174,6 +187,7 @@
                 .step-icons {
                     display: flex;
                     justify-content: space-between;
+                    align-items: center;
                     img {
                         cursor: pointer;
                     }
@@ -185,13 +199,15 @@
                     }
                 }
             }
+
+            .edit {
+                display: flex;
+                justify-content: center;
+            }
         }
 
-        .step.finished {}
-
         .step.not-finished {
-            border: solid 2px var(--border-color);
-            border-radius: 15px;
+            @include regular-border;
         }
 
         .add-step {

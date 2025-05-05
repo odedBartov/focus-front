@@ -1,7 +1,7 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { StepType, stepTypeLabels } from '../models/enums';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Step } from '../models/step';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,7 +12,7 @@ import { LoadingService } from '../services/loading.service';
 @Component({
   selector: 'app-new-step',
   imports: [CommonModule, FormsModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule, NgxMaskDirective],
-  providers: [provideNgxMask()],
+  providers: [provideNgxMask(), DatePipe],
   templateUrl: './new-step.component.html',
   styleUrl: './new-step.component.scss'
 })
@@ -20,14 +20,29 @@ export class NewStepComponent implements OnInit {
   httpService = inject(HttpService);
   formBuilder = inject(FormBuilder);
   loadingService = inject(LoadingService);
+  datePipe = inject(DatePipe);
+  @Input() set steptInput(value: Step | undefined) {
+    if (value) {
+      this.isEdit = true;
+      this.selectedType = {icon: "", text: "", type: value.stepType}
+      this.form.patchValue({ name: value.name });
+      this.form.patchValue({ description: value.description });
+      const formattedDate = this.datePipe.transform(value.dateDue, 'MM/dd/yy')!;
+      this.form.patchValue({ dateDue: formattedDate });
+      this.form.patchValue({ price: value.price });
+      this.step.set({...value});
+    }
+  }
+  step = signal<Step | undefined>(undefined);
   @Output() stepsEmitter = new EventEmitter<Step>();
   stepTypes: { text: string, icon: string, type: StepType }[] = []
   stepTypeLabels = stepTypeLabels;
   stepTypeEnum = StepType;
-  selectedType?: { text: string, icon: string, type: StepType };
+  selectedType!: { text: string, icon: string, type: StepType };
   newStep!: Step;
   form: FormGroup;
   submitted = false;
+  isEdit = false;
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -72,11 +87,22 @@ export class NewStepComponent implements OnInit {
     this.selectedType = type;
     this.newStep = new Step();
     this.newStep.stepType = type.type;
-    const defaultString = this.formatDate(this.newStep.dateDue);
-    this.form.patchValue({ dateDue: defaultString });
+  }
+
+  editStepType(type: StepType) {
+    const updatedStep = this.step();
+    if (updatedStep) {
+      updatedStep.stepType = type;
+      this.step.update(current => updatedStep);
+      this.selectedType.type = type;
+    }
   }
 
   createStep() {
+    const oldStep = this.step();
+    if (oldStep) { 
+      this.newStep = oldStep;
+    }
     this.submitted = true;
     const raw = this.form.get('dateDue')!.value;
     const parsed = this.parseDate(raw);
