@@ -1,13 +1,18 @@
 <div class="main">
-    <span class="header">שלב חדש</span>
-    <span class="text">מהו סוג השלב?</span>
-    <div class="steps">
-        <div class="step-type" *ngFor="let stepType of stepTypes">
-            <img [src]="`assets/icons/${stepType.icon}.svg`" />
-            <div class="details">
-                <span class="header">{{stepTypeLabels[stepType.type]}}</span>
-                <span class="text">{{stepType.text}}</span>
+    <div class="choose-type" *ngIf="selectedType === undefined">
+        <span class="header">שלב חדש</span>
+        <span class="text">מהו סוג השלב?</span>
+        <div class="steps">
+            <div class="step-type" *ngFor="let stepType of stepTypes" (click)="selectType(stepType.type)">
+                <img [src]="`assets/icons/${stepType.icon}.svg`" />
+                <div class="details">
+                    <span class="header">{{stepTypeLabels[stepType.type]}}</span>
+                    <span class="text">{{stepType.text}}</span>
+                </div>
             </div>
         </div>
+    </div>
+    <div class="form" *ngIf="selectedType !== undefined">
+        bla
     </div>
 </div>
