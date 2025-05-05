@@ -1,13 +1,13 @@
 export enum StepType {
-    work,
+    task,
     payment,
-    other
+    coomunication
 }
 
 export const stepTypeLabels = {
-    [StepType.work]: 'עבודה',
+    [StepType.task]: 'משימה',
     [StepType.payment]: 'תשלום',
-    [StepType.other]: 'אחר',
+    [StepType.coomunication]: 'תקשורת',
   };
 
 export enum ProjectStatus {

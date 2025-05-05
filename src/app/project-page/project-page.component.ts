@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, Input, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../models/project';
 import { HttpService } from '../services/http.service';
@@ -11,10 +11,11 @@ import { ConfirmationModalComponent } from '../modals/confirmation-modal/confirm
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { NewStepComponent } from '../new-step/new-step.component';
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule],
+  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, NewStepComponent],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss',
   animations: [
@@ -40,6 +41,7 @@ export class ProjectPageComponent implements OnInit {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
   dialog = inject(MatDialog);
+  @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @Input() set projectInput(value: Project | undefined) {
     this.project.set(value);
   }
@@ -47,6 +49,7 @@ export class ProjectPageComponent implements OnInit {
   projectId: string | null = null;
   activeStepId? = '';
   isReadOnly = false;
+  isShowNewStep = true;
   hoverStepId? = '';
 
   constructor() {
@@ -59,6 +62,16 @@ export class ProjectPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProject();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.newStepDiv?.nativeElement) {
+      const clickedInside = this.newStepDiv.nativeElement.contains(event.target);
+      if (!clickedInside) {
+        this.isShowNewStep = false;
+      }
+    }
   }
 
   loadProject() {
@@ -81,6 +94,10 @@ export class ProjectPageComponent implements OnInit {
 
   changeStepStatus(step: Step) {
     step.isComplete = !step.isComplete;
+    this.updateStep(step);
+  }
+
+  updateStep(step: Step) {
     this.loadingService.changeIsloading(true);
     this.httpService.updateStep(step).subscribe({
       next: (res: Step) => {
@@ -92,14 +109,18 @@ export class ProjectPageComponent implements OnInit {
     })
   }
 
-  openStepModal(step?: Step) {
-    const dialogRef = this.dialog.open(StepModalComponent, { data: { step: step, project: this.project() } });
+  // openStepModal(step?: Step) {
+  //   const dialogRef = this.dialog.open(StepModalComponent, { data: { step: step, project: this.project() } });
 
-    dialogRef.afterClosed().subscribe(res => {
-      if (res) { // should reload
-        this.loadProject();
-      }
-    })
+  //   dialogRef.afterClosed().subscribe(res => {
+  //     if (res) { // should reload
+  //       this.loadProject();
+  //     }
+  //   })
+  // }
+
+  showNewStep() {
+    this.isShowNewStep = true;
   }
 
   showDeleteStepModal(step: Step) {

@@ -1,0 +1,41 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 2rem;
+    border: solid 2px var(--border-color);
+    border-radius: 15px;
+    width: 100%;
+
+    .header {
+        font-family: 'black';
+        font-size: var(--font-size-3);
+    }
+
+    .text {
+        font-family: 'regular';
+        font-size: var(--font-size-1);
+    }
+
+    .steps {
+        margin-top: 3rem;
+
+        .step-type {
+            cursor: pointer;
+            border: solid 2px var(--border-color);
+            border-radius: 15px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+
+            img {
+                margin-left: 1rem;
+            }
+
+            .details {
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
+}

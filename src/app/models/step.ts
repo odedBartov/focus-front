@@ -13,7 +13,7 @@ export class Step {
 
     constructor() {
         this.isComplete = false;
-        this.stepType = StepType.work;
+        this.stepType = StepType.task;
         this.price = 0;
         this.dateDue = new Date();
     }

@@ -129,6 +129,7 @@
     }
 
     .steps {
+        padding: 2rem;
         margin: 0 10rem;
         flex: 1.11;
         display: flex;
@@ -137,7 +138,7 @@
         height: 100%;
 
         .step {
-            width: 400px;
+            width: 300px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -152,7 +153,7 @@
                 font-size: var(--font-size-2);
 
                 img {
-                    height: 24px;
+                    height: 25px;
                 }
             }
 
@@ -189,7 +190,7 @@
         .step.finished {}
 
         .step.not-finished {
-            border: solid 2px #C3C8EB;
+            border: solid 2px var(--border-color);
             border-radius: 15px;
         }
 
@@ -198,6 +199,11 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
+        }
+
+        .new-step {
+            display: flex;
+            width: 400px;
         }
     }
 

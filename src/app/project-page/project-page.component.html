@@ -25,8 +25,7 @@
         <div class="price">
             <div class="text-and-icon">
                 <span class="title">מחיר (לא כולל מע"מ)</span>
-                <img class="icon icon-info" matTooltipPosition="above"
-                    matTooltipClass="custom-tooltip"
+                <img class="icon icon-info" matTooltipPosition="above" matTooltipClass="custom-tooltip"
                     matTooltip="אם מחיר הפרויקט משתנה, כל מה שצריך לעשות הוא לשנות את הסכומים בשלבי התשלום (או להוסיף תשלום חדש). המחיר הכולל יתעדכן בהתאם." />
             </div>
             <span class="base-price">{{project()?.basePrice | number}} ₪</span>
@@ -48,8 +47,7 @@
         <div class="time">
             <div class=" text-and-icon">
                 <span>זמן מצטבר מוערך</span>
-                <img class="icon icon-info" matTooltipPosition="above"
-                    matTooltipClass="custom-tooltip"
+                <img class="icon icon-info" matTooltipPosition="above" matTooltipClass="custom-tooltip"
                     matTooltip="השעון הזה מודד את סך הזמן שבו עמוד הפרויקט פתוח, גם אם עברת לעשות דברים אחרים. הוא יכול לתת לך הערכה של זמן העבודה שלך, אם תקפיד/י להשאיר אותו פתוח במקביל לעבודה על הפרויקט ולסגור אותו כשסיימת לעבוד.חשוב: מדובר בהערכה בלבד ולא בשעות מדויקות לצורך חיוב ותשלום." />
             </div>
             <span class="hours">{{((project()?.totalWorkingTime??0)/3600000).toFixed(1)}} שעות</span>
@@ -60,26 +58,31 @@
             (mouseenter)="hoverStepId = step.id" (mouseleave)="hoverStepId = undefined">
             <div class="step-name">
                 <span>{{step.name}}</span>
-                <img [src]="`assets/icons/${step.isComplete? 'confirm_yes' : 'working'}.svg`" />
+                <img class="pointer icon-confirm" (click)="changeStepStatus(step)" *ngIf="step.isComplete" />
+                <img src="assets/icons/working.svg" *ngIf="!step.isComplete" />
             </div>
-            <div class="extra" [@expandCollapse]="hoverStepId === step.id ? 'expanded' : 'collapsed'" [ngClass]="{'visible': hoverStepId === step.id}" *ngIf="step.isComplete">
+            <div class="extra" [@expandCollapse]="hoverStepId === step.id ? 'expanded' : 'collapsed'"
+                [ngClass]="{'visible': hoverStepId === step.id}" *ngIf="step.isComplete">
                 הסתיים בתאריך {{step.dateCompleted}}
             </div>
-            <div [@expandCollapse]="hoverStepId === step.id ? 'expanded' : 'collapsed'" class="extra extra-not-finished" [ngClass]="{'visible': hoverStepId === step.id}"
-                *ngIf="!step.isComplete">
+            <div [@expandCollapse]="hoverStepId === step.id ? 'expanded' : 'collapsed'" class="extra extra-not-finished"
+                [ngClass]="{'visible': hoverStepId === step.id}" *ngIf="!step.isComplete">
                 <span>{{step.description}}</span>
                 <span>סיום משוער: {{step.dateDue}}</span>
                 <div class="step-icons">
                     <div class="edit-delete">
                         <img class="icon-garbage-can" />
-                        <img class="icon-pencil"/>
+                        <img class="icon-pencil" />
                     </div>
-                    <img class="icon-confirm-circle"/>
+                    <img class="icon-confirm-circle" (click)="changeStepStatus(step)" />
                 </div>
             </div>
         </div>
-        <div class="add-step">
-            <img (click)="openStepModal()" class="icon-plus"/>
+        <div class="add-step" *ngIf="!isShowNewStep">
+            <img (click)="showNewStep()" class="icon-plus" />
+        </div>
+        <div *ngIf="isShowNewStep" #newStepDiv>
+            <app-new-step class="new-step"></app-new-step>
         </div>
     </div>
     <div class="notes"></div>
