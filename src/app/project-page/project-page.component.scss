@@ -129,20 +129,20 @@
     }
 
     .steps {
-        padding: 2rem;
         margin: 0 10rem;
         flex: 1.11;
         display: flex;
         flex-direction: column;
         align-items: center;
-        height: 100%;
+        height: 90vh;
+        overflow: auto;
 
         .step {
             width: 300px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            margin-bottom: 2rem;
+            margin-top: 2rem;
             padding: 1rem;
 
             .step-name {
@@ -199,9 +199,11 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            margin: 2rem;
         }
 
         .new-step {
+            margin: 2rem;
             display: flex;
             width: 400px;
         }

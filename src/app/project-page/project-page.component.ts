@@ -49,7 +49,7 @@ export class ProjectPageComponent implements OnInit {
   projectId: string | null = null;
   activeStepId? = '';
   isReadOnly = false;
-  isShowNewStep = true;
+  isShowNewStep = false;
   hoverStepId? = '';
 
   constructor() {
@@ -94,6 +94,9 @@ export class ProjectPageComponent implements OnInit {
 
   changeStepStatus(step: Step) {
     step.isComplete = !step.isComplete;
+    if (step.isComplete) {
+      step.dateCompleted = new Date();
+    }
     this.updateStep(step);
   }
 
@@ -133,21 +136,25 @@ export class ProjectPageComponent implements OnInit {
     })
   }
 
+  createNewStep(step: Step) {
+    this.loadingService.changeIsloading(true);
+    step.projectId = this.project()?.id;
+    this.httpService.createStep(step).subscribe(res => {
+      this.project()?.steps?.push(res);
+      this.isShowNewStep = false;
+      this.loadingService.changeIsloading(false);
+    })
+  }
+
   deleteStep(step: Step) {
     if (step.id) {
       this.loadingService.changeIsloading(true);
-      this.httpService.deleteStep(step.id).subscribe({
-        next: (res) => {
-          const stepIndex = this.project()?.steps?.indexOf(step);
-          if (stepIndex !== undefined) {
-            this.project()?.steps?.splice(stepIndex, 1);
-          }
-          this.loadingService.changeIsloading(false);
-        },
-        error: (err) => {
-          this.loadingService.changeIsloading(false);
-          // show error with toaster
+      this.httpService.deleteStep(step.id).subscribe(res => {
+        const stepIndex = this.project()?.steps?.indexOf(step);
+        if (stepIndex !== undefined) {
+          this.project()?.steps?.splice(stepIndex, 1);
         }
+        this.loadingService.changeIsloading(false);
       });
     }
   }

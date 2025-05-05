@@ -78,6 +78,11 @@
         max-width: 300px;
         font-family: 'regular';
     }
+
+    input, textarea {
+        outline: none;
+        padding: 0.5rem 1rem;
+    }
 }
 
 .toggle-switch {

@@ -63,15 +63,15 @@
             </div>
             <div class="extra" [@expandCollapse]="hoverStepId === step.id ? 'expanded' : 'collapsed'"
                 [ngClass]="{'visible': hoverStepId === step.id}" *ngIf="step.isComplete">
-                הסתיים בתאריך {{step.dateCompleted}}
+                הסתיים בתאריך {{step.dateCompleted | date: 'dd.MM.yyyy'}}
             </div>
             <div [@expandCollapse]="hoverStepId === step.id ? 'expanded' : 'collapsed'" class="extra extra-not-finished"
                 [ngClass]="{'visible': hoverStepId === step.id}" *ngIf="!step.isComplete">
                 <span>{{step.description}}</span>
-                <span>סיום משוער: {{step.dateDue}}</span>
+                <span>סיום משוער: {{step.dateDue | date: 'dd.MM.yyyy'}}</span>
                 <div class="step-icons">
                     <div class="edit-delete">
-                        <img class="icon-garbage-can" />
+                        <img class="icon-garbage-can" (click)="deleteStep(step)"/>
                         <img class="icon-pencil" />
                     </div>
                     <img class="icon-confirm-circle" (click)="changeStepStatus(step)" />
@@ -82,7 +82,7 @@
             <img (click)="showNewStep()" class="icon-plus" />
         </div>
         <div *ngIf="isShowNewStep" #newStepDiv>
-            <app-new-step class="new-step"></app-new-step>
+            <app-new-step class="new-step" (stepsEmitter)="createNewStep($event)"></app-new-step>
         </div>
     </div>
     <div class="notes"></div>

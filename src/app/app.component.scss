@@ -1,32 +1,32 @@
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
-.header {
-    border: solid 3px var(--main-color);
-    border-radius: 20px;
-    font-size: var(--font-size-lg);
-    padding: 1rem;
-    margin: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+// .header {
+//     border: solid 3px var(--main-color);
+//     border-radius: 20px;
+//     font-size: var(--font-size-lg);
+//     padding: 1rem;
+//     margin: 1rem;
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
 
-    .menu {
-        height: 1.5rem;
-        cursor: pointer;
-    }
-}
+//     .menu {
+//         height: 1.5rem;
+//         cursor: pointer;
+//     }
+// }
 
-.adler {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    font-weight: 800;
+// .adler {
+//     display: flex;
+//     align-items: center;
+//     justify-content: flex-start;
+//     font-weight: 800;
 
-    .logo {
-        height: 2rem;
-        margin-left: 1rem;
-    }
-}
+//     .logo {
+//         height: 2rem;
+//         margin-left: 1rem;
+//     }
+// }
 
 .loading {
     position: absolute;
