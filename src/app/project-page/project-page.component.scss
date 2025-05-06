@@ -14,9 +14,8 @@
 
     .summurize {
         margin: 0 5rem;
-        padding: 2rem 2rem 0;
-        height: 90vh;
-        flex: 1;
+        padding: 2rem 2rem;
+        width: 22.5rem;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -132,12 +131,11 @@
     }
 
     .steps {
-        margin: 0 10rem;
         flex: 1.11;
         display: flex;
         flex-direction: column;
         align-items: center;
-        height: 90vh;
+        height: 85vh;
         overflow: auto;
 
         .step {

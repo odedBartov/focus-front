@@ -24,6 +24,6 @@
   </div>
 
   <div class="project-container" *ngIf="activeTab?.id !== tabs[0]?.id">
-    <app-project-page class="project-page" [projectInput]="selectedProject"></app-project-page>
+    <app-project-page class="project-page" [projectInput]="selectedProject" #projectPage></app-project-page>
   </div>
 </div>

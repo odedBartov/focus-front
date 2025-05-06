@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, inject, Input, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, Input, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../models/project';
 import { HttpService } from '../services/http.service';
@@ -38,7 +38,7 @@ import { StepType } from '../models/enums';
     ])
   ]
 })
-export class ProjectPageComponent implements OnInit {
+export class ProjectPageComponent implements OnInit, OnDestroy {
   route = inject(ActivatedRoute);
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
@@ -57,6 +57,8 @@ export class ProjectPageComponent implements OnInit {
   isShowNewStep = false;
   editStepId: string | undefined = '';
   hoverStepId? = '';
+  currentSessionTime = new Date();
+  workingTimeInterval: any;
 
   constructor() {
     this.route.paramMap.subscribe(params => {
@@ -68,6 +70,7 @@ export class ProjectPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProject();
+    this.resetWorkingTimer();
   }
 
   @HostListener('document:click', ['$event'])
@@ -182,5 +185,43 @@ export class ProjectPageComponent implements OnInit {
     if (this.project) {
       this.project.paidMoney = sum ?? 0;
     }
+  }
+
+  resetWorkingTimer() {
+    const timeInterval = 60000;
+    this.currentSessionTime = new Date();
+    this.workingTimeInterval = setInterval(() => {
+      if (this.project) {
+        this.project.totalWorkingTime += timeInterval;
+      }
+    }, timeInterval);
+  }
+
+  calculateWorkingTime() {
+    this.stopInterval();
+    if (this.project) {
+      let workedTime = 0;
+      const workingHours = new Date().getTime() - this.currentSessionTime.getTime();
+      if (workingHours > 21600000) { // 6 hours
+        workedTime = this.project.totalWorkingTime / this.project.totalWorkingSessions;
+      } else {
+        workedTime = new Date().getTime() - this.currentSessionTime.getTime();
+      }
+      this.project.totalWorkingSessions += 1;
+      this.project.totalWorkingTime += workedTime;
+      this.httpService.updateProject([this.project]).subscribe(res => {
+      })
+    }
+  }
+
+  stopInterval() {
+    if (this.workingTimeInterval) {
+      clearInterval(this.workingTimeInterval);
+      this.workingTimeInterval = null;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.calculateWorkingTime();
   }
 }

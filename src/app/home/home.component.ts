@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild, viewChild } from '@angular/core';
 import { HttpService } from '../services/http.service';
 import { Project } from '../models/project';
 import { UserProjects } from '../models/userProjects';
@@ -26,6 +26,7 @@ import { ProjectHoverService } from '../services/project-hover.service';
   standalone: true
 })
 export class HomeComponent implements OnInit {
+  @ViewChild('projectPage', { static: false }) projectPage?: ProjectPageComponent;
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
   projectHoverService = inject(ProjectHoverService);
@@ -37,6 +38,12 @@ export class HomeComponent implements OnInit {
   tabs: ProjectTab[] = [];
 
   setActive(tab: ProjectTab) {
+    if (this.activeTab.project) {
+      this.projectPage?.calculateWorkingTime();
+      setTimeout(() => {
+        this.projectPage?.resetWorkingTimer();
+      }, 1);
+    }
     this.activeTab = tab;
     this.selectedProject = tab.project;
   }
