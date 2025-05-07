@@ -88,15 +88,13 @@ export class ProjectsListComponent {
 
   changeProjectStatus(project: Project, status: ProjectStatus) {
     project.status = status;
-    this.updateProjects([project]).subscribe({
-      next: (res: Project) => {
-        const oldStatusList = this.getProjectsForStatus();
-        oldStatusList?.splice(oldStatusList.indexOf(project), 1);
-        const newStatusList = this.getProjectsForStatus(project.status);
-        newStatusList?.push(project);
+    this.updateProjects([project]).subscribe(res => {
+      const oldStatusList = this.getProjectsForStatus();
+      oldStatusList?.splice(oldStatusList.indexOf(project), 1);
+      const newStatusList = this.getProjectsForStatus(project.status);
+      newStatusList?.push(project);
 
-        this.activeProjectsEmitter.emit(this.projects.activeProjects);
-      }, error: this.handleError
+      this.activeProjectsEmitter.emit(this.projects.activeProjects);
     });
   }
 
@@ -110,17 +108,13 @@ export class ProjectsListComponent {
       this.activeProjectsEmitter.emit(this.projects.activeProjects);
     }
 
-    this.updateProjects(this.selectedProjects).subscribe({
-      next: (res: Project) => { }, error: this.handleError
-    });
+    this.updateProjects(this.selectedProjects).subscribe(res => { });
   }
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.selectedProjects, event.previousIndex, event.currentIndex);
     this.updateProjectsPosition();
-    this.updateProjects(this.selectedProjects).subscribe({
-      next: (res: Project) => { }, error: this.handleError
-    });
+    this.updateProjects(this.selectedProjects).subscribe(res => { });
   }
 
   updateProjectsPosition() {
@@ -131,14 +125,9 @@ export class ProjectsListComponent {
 
   updateProjects(projects: Project[]) {
     this.loadingService.changeIsloading(true);
-    return this.httpService.updateProject(projects).pipe(tap(res => {
+    return this.httpService.updateProjects(projects).pipe(tap(res => {
       this.loadingService.changeIsloading(false);
     }));
-  }
-
-  handleError(err: any) {
-    this.loadingService.changeIsloading(false);
-    // todo: show error
   }
 
   selectProject(project: Project) {

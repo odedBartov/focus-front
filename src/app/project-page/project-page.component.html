@@ -3,7 +3,7 @@
         <div class="info">
             <div class="text-and-icon">
                 <span class="title">{{project?.name}}</span>
-                <img class="pointer icon-expand" />
+                <img class="pointer icon-expand" (click)="openProjectModal()"/>
             </div>
             <span class="sub-title">מה זו כותרת משנית?</span>
             <span class="description">
@@ -50,13 +50,13 @@
                 <img class="icon icon-info" matTooltipPosition="above" matTooltipClass="custom-tooltip"
                     matTooltip="השעון הזה מודד את סך הזמן שבו עמוד הפרויקט פתוח, גם אם עברת לעשות דברים אחרים. הוא יכול לתת לך הערכה של זמן העבודה שלך, אם תקפיד/י להשאיר אותו פתוח במקביל לעבודה על הפרויקט ולסגור אותו כשסיימת לעבוד. חשוב: מדובר בהערכה בלבד ולא בשעות מדויקות לצורך חיוב ותשלום." />
             </div>
-            <span class="hours">{{((project?.totalWorkingTime??0)/3600000).toFixed(1)}} שעות</span>
+            <span class="hours">{{((workedTimeToShow)/3600000).toFixed(1)}} שעות</span>
         </div>
     </div>
-    <div class="steps">
+    <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)">
         <div [class]="step.isComplete? 'finished' : 'not-finished'" #stepDiv
             [ngClass]="{'step' : editStepId !== step.id, 'active-step': step.id === activeStepId && step.id !== editStepId}" *ngFor="let step of project?.steps"
-            (mouseenter)="hoverStepId = step.id" (mouseleave)="hoverStepId = undefined">
+            (mouseenter)="hoverStepId = step.id" (mouseleave)="hoverStepId = undefined" cdkDrag>
             <div *ngIf="editStepId !== step.id">
                 <div class="step-header">
                     <span [ngClass]="{'step-name': step.id !== activeStepId}">{{step.name}}</span>

@@ -44,9 +44,9 @@ export class HttpService {
     return this.httpClient.get<Project[]>(this.apiUrl + "Projects/getUserProjects", headers);
   }
 
-  updateProject(project: Project[]): Observable<Project> {
+  updateProjects(project: Project[]): Observable<Project> {
     const headers = this.generateHeaders();
-    return this.httpClient.put<Project>(this.apiUrl + "Projects/updateProject", project, headers);
+    return this.httpClient.put<Project>(this.apiUrl + "Projects/updateProjects", project, headers);
   }
 
   createStep(step: Step): Observable<Step> {
@@ -54,15 +54,18 @@ export class HttpService {
   }
 
   getStep(projectId: string): Observable<Step[]> {
-    return this.httpClient.get<Step[]>(this.apiUrl + "Steps/getSteps?projectId=" + projectId);
+    const headers = this.generateHeaders();
+    return this.httpClient.get<Step[]>(`${this.apiUrl}"Steps/getSteps?projectId="${projectId}`, headers);
   }
 
-  updateStep(step: Step): Observable<Step> {
-    return this.httpClient.put<Step>(this.apiUrl + "Steps/updateStep", step);
+  updateSteps(steps: Step[]): Observable<Step[]> {
+    const headers = this.generateHeaders();
+    return this.httpClient.put<Step[]>(this.apiUrl + "Steps/updateSteps", steps, headers);
   }
 
   deleteStep(stepId: string) {
-    return this.httpClient.delete(`${this.apiUrl}Steps/deleteStep?stepId=${stepId}`)
+    const headers = this.generateHeaders();
+    return this.httpClient.delete(`${this.apiUrl}Steps/deleteStep?stepId=${stepId}`, headers)
   }
 
   getInsightAndUpdates(): Observable<InsightAndUpdates> {

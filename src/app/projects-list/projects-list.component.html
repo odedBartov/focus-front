@@ -10,7 +10,7 @@
         </div>
         <div cdkDropList (cdkDropListDropped)="drop($event)">
             <div class="project-drag" [ngClass]="{'clear-opacity': hoveredProject() === project.id}"
-                *ngFor="let project of selectedProjects; let i = index" cdkDrag>
+                *ngFor="let project of selectedProjects" cdkDrag>
                 <div class="project" (click)="selectProject(project)">
                     <img class="priority" (click)="togglePriority($event, project)"
                         [src]="`assets/icons/${project.isPriority?'star_full' :'star_empty'}.svg`" />

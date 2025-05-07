@@ -139,73 +139,7 @@
         overflow: auto;
 
         .step {
-            width: 15.25rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            margin-top: 2rem;
-            padding: 1rem;
-
-            &.active-step {
-                width: 20rem;
-                font-size: var(--font-size-4) !important;
-                background-color: white;
-                border: none !important;
-                box-shadow: var(--common-shadow);
-                padding: 2rem;
-            }
-
-            .step-header {
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                font-family: 'black';
-                
-                .step-name {
-                    font-size: var(--font-size-2);
-                }
-
-                img {
-                    height: 25px;
-                }
-            }
-
-            .extra {
-                font-family: 'regular';
-                font-size: var(--font-size-2);
-                display: flex;
-                flex-direction: column;
-            }
-
-            .extra-not-finished {
-                span {
-                    margin-bottom: 2rem;
-                }
-
-                .step-icons {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    img {
-                        cursor: pointer;
-                    }
-
-                    .edit-delete {
-                        img {
-                            margin-left: 1rem;
-                        }
-                    }
-                }
-            }
-
-            .edit {
-                display: flex;
-                justify-content: center;
-            }
-        }
-
-        .step.not-finished {
-            @include regular-border;
+            @include step
         }
 
         .add-step {
@@ -234,4 +168,8 @@
     .icon {
         height: 1.5rem;
     }
+}
+
+.cdk-drag-preview {
+    @include step;
 }

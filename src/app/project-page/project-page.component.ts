@@ -6,18 +6,18 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Step } from '../models/step';
 import { LoadingService } from '../services/loading.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { StepModalComponent } from '../modals/step-modal/step-modal.component';
 import { ConfirmationModalComponent } from '../modals/confirmation-modal/confirmation-modal.component';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NewStepComponent } from '../new-step/new-step.component';
-import { reduce } from 'rxjs';
 import { StepType } from '../models/enums';
+import { ProjectModalComponent } from '../modals/project-modal/project-modal.component';
+import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, NewStepComponent],
+  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss',
   animations: [
@@ -49,6 +49,9 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
     this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
     this.project = value;
     this.calculatePaidMoney();
+    if (this.project?.steps) {
+      this.project.steps = this.project.steps.sort((a, b) => a.positionInList - b.positionInList);
+    }
   };
   project?: Project;
   projectId: string | null = null;
@@ -59,12 +62,12 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   hoverStepId? = '';
   currentSessionTime = new Date();
   workingTimeInterval: any;
+  workedTimeToShow = 0;
 
   constructor() {
     this.route.paramMap.subscribe(params => {
       this.projectId = params.get('projectId');
       this.isReadOnly = params.get('readOnly') == 'true';
-
     });
   }
 
@@ -83,6 +86,25 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
 
     if (!this.editDiv?.contains(event.target as Node)) {
       this.editStepId = '';
+    }
+  }
+
+  updateStepsPosition() {
+    if (this.project?.steps) {
+      for (let index = 0; index < this.project?.steps.length; index++) {
+        this.project.steps[index].positionInList = index;
+      }
+    }
+  }
+
+  dropStep(event: CdkDragDrop<string[]>) {
+    if (this.project?.steps) {
+      moveItemInArray(this.project.steps, event.previousIndex, event.currentIndex);
+      this.updateStepsPosition();
+      this.loadingService.changeIsloading(true);
+      this.httpService.updateSteps(this.project.steps).subscribe(res => {
+        this.loadingService.changeIsloading(false);
+      })
     }
   }
 
@@ -115,10 +137,10 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
 
   updateStep(step: Step) {
     this.loadingService.changeIsloading(true);
-    this.httpService.updateStep(step).subscribe(res => {
+    this.httpService.updateSteps([step]).subscribe(res => {
       if (this.project && this.project.steps) {
         this.project.steps = this.project?.steps?.map(step =>
-          step.id === res.id ? res : step
+          step.id === res[0].id ? res[0] : step
         )
       }
       this.editStepId = '';
@@ -129,7 +151,7 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   }
 
   // openStepModal(step?: Step) {
-  //   const dialogRef = this.dialog.open(StepModalComponent, { data: { step: step, project: this.project() } });
+  //   const dialogRef = this.dialog.open(StepModalComponent, { data: { step: step, project: this.project } });
 
   //   dialogRef.afterClosed().subscribe(res => {
   //     if (res) { // should reload
@@ -137,6 +159,16 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   //     }
   //   })
   // }
+
+  openProjectModal() {
+    const dialogRef = this.dialog.open(ProjectModalComponent, { data: { project: this.project } });
+
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) { // should reload
+        this.loadProject();
+      }
+    })
+  }
 
   showNewStep() {
     this.isShowNewStep = true;
@@ -190,9 +222,10 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   resetWorkingTimer() {
     const timeInterval = 60000;
     this.currentSessionTime = new Date();
+    this.workedTimeToShow = this.project?.totalWorkingTime ?? 0;
     this.workingTimeInterval = setInterval(() => {
       if (this.project) {
-        this.project.totalWorkingTime += timeInterval;
+        this.workedTimeToShow += timeInterval;
       }
     }, timeInterval);
   }
@@ -209,7 +242,7 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
       }
       this.project.totalWorkingSessions += 1;
       this.project.totalWorkingTime += workedTime;
-      this.httpService.updateProject([this.project]).subscribe(res => {
+      this.httpService.updateProjects([this.project]).subscribe(res => {
       })
     }
   }

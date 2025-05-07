@@ -10,11 +10,13 @@ export class Step {
     price: number;
     dateCompleted?: Date;
     dateDue: Date;
+    positionInList: number;
 
     constructor() {
         this.isComplete = false;
         this.stepType = StepType.task;
         this.price = 0;
         this.dateDue = new Date();
+        this.positionInList = 0;
     }
 }

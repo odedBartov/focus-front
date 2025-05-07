@@ -68,6 +68,11 @@
     .mat-mdc-dialog-surface {
         border-radius: 15px;
     }
+    
+    .cdk-overlay-pane.mat-mdc-dialog-panel {
+        max-width: none;
+        box-shadow: var(--common-shadow);
+    }
 
     .custom-tooltip {
         background-color: #070533;
@@ -197,4 +202,4 @@
     &:hover {
         content: url('/assets/icons/kabab_menu_yes.svg');
     }
-}
+} 

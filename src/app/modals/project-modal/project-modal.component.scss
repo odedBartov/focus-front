@@ -1,0 +1,22 @@
+.main {
+    width: 55rem;
+    height: 52.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .content {
+        background-color: aliceblue;
+        width: 45rem;
+        display: flex;
+        flex-direction: column;
+
+        .header {
+            display: flex;
+            justify-content: flex-start;
+            font-family: 'black';
+            font-size: var(--font-size-4);
+        }
+    }
+}
