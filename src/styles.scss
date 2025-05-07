@@ -196,6 +196,14 @@
     }
 }
 
+.icon-ok {
+    content: url('/assets/icons/ok_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/ok_yes.svg');
+    }
+}
+
 .icon-kabab-menu {
     content: url('/assets/icons/kabab_menu_not.svg');
 

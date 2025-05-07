@@ -3,32 +3,50 @@
         <div class="header">פרטי הפרויקט</div>
         <div class="form">
             <div class="project">
-                <div class="text-and-input">
+                <div class="text-and-input-wide">
                     <span>כותרת ראשית</span>
                     <input type="text">
                 </div>
-                <div class="text-and-input">
+                <div class="text-and-input-wide">
                     <span>כותרת משנית</span>
                     <input type="text">
                 </div>
-                <div class="text-and-input">
+                <div class="text-and-input-wide">
                     <span>תיאור</span>
                     <textarea></textarea>
                 </div>
+                <div class="dates">
+                    <div class="text-and-input-date">
+                        <span>תאריך התחלה</span>
+                        <input class="date" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _"
+                            formControlName="startDate" [dropSpecialCharacters]="false" />
+                    </div>
+                    <div class="text-and-input-date">
+                        <span>תאריך סיום משוער</span>
+                        <input class="date" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _"
+                            formControlName="endDate" [dropSpecialCharacters]="false" />
+                    </div>
+                </div>
             </div>
             <div class="client">
-                <div class="text-and-input">
+                <div class="text-and-input-wide">
                     <span>שם הלקוח</span>
                     <input type="text">
                 </div>
-                <div class="text-and-input">
+                <div class="text-and-input-wide">
                     <span>אימייל הלקוח</span>
                     <input type="text">
+                </div>
+                <div class="update-client">
+                    <div class="toggle-switch" [class.on]="project.updateClient" (click)="true">
+                        <div class="switch-thumb"></div>
+                    </div>
+                    <span>הלקוח/ה {{project.updateClient? '' : ' לא'}} מקבל/ת עדכונים על התקדמות ושינויים</span>
                 </div>
             </div>
         </div>
         <div class="confirm">
-
+            <img class="icon-ok"/>
         </div>
     </div>
 </div>
