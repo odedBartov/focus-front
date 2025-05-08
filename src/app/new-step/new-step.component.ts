@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { HttpService } from '../services/http.service';
 import { LoadingService } from '../services/loading.service';
+import { parseDate } from '../helpers/functions';
 
 @Component({
   selector: 'app-new-step',
@@ -27,7 +28,7 @@ export class NewStepComponent implements OnInit {
       this.selectedType = {icon: "", text: "", type: value.stepType}
       this.form.patchValue({ name: value.name });
       this.form.patchValue({ description: value.description });
-      const formattedDate = this.datePipe.transform(value.dateDue, 'MM/dd/yy')!;
+      const formattedDate = this.datePipe.transform(value.dateDue, 'dd/MM/yy');
       this.form.patchValue({ dateDue: formattedDate });
       this.form.patchValue({ price: value.price });
       this.step.set({...value});
@@ -61,28 +62,6 @@ export class NewStepComponent implements OnInit {
     ];
   }
 
-  parseDate(input: string): Date | null {
-    const parts = input.split('/');
-    if (parts.length !== 3) return null;
-
-    const [day, month, year] = parts.map(p => parseInt(p, 10));
-    if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
-
-    // Handle 2-digit year (assume 2000s)
-    const fullYear = year < 100 ? 2000 + year : year;
-    const date = new Date(fullYear, month - 1, day);
-    return isNaN(date.getTime()) ? null : date;
-  }
-
-  formatDate(date: Date): string {
-    const pad = (n: number) => n.toString().padStart(2, '0');
-    const day = pad(date.getDate());
-    const month = pad(date.getMonth() + 1);
-    const year = pad(date.getFullYear() % 100); // 2-digit year
-
-    return `${day}/${month}/${year}`;
-  }
-
   selectType(type: { text: string, icon: string, type: StepType }) {
     this.selectedType = type;
     this.newStep = new Step();
@@ -105,7 +84,7 @@ export class NewStepComponent implements OnInit {
     }
     this.submitted = true;
     const raw = this.form.get('dateDue')!.value;
-    const parsed = this.parseDate(raw);
+    const parsed = parseDate(raw);
     if (!parsed) {
       this.form.get('dateDue')!.setErrors({ invalidDate: true });
       return;

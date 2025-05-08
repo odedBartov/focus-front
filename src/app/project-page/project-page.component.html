@@ -5,7 +5,7 @@
                 <span class="title">{{project?.name}}</span>
                 <img class="pointer icon-expand" (click)="openProjectModal()" />
             </div>
-            <span class="sub-title">מה זו כותרת משנית?</span>
+            <span class="sub-title">{{project?.subTitle}}</span>
             <span class="description">
                 {{project?.description}}
             </span>
@@ -56,7 +56,7 @@
     <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)">
         <div [class]="step.isComplete? 'finished' : 'not-finished'" #stepDiv
             [ngClass]="{'step' : editStepId !== step.id, 'active-step': step.id === activeStepId && step.id !== editStepId}"
-            *ngFor="let step of project?.steps" (mouseenter)="hoverStepId = step.id"
+            *ngFor="let step of project?.steps" (mouseenter)="hoverStepId = step.id" 
             (mouseleave)="hoverStepId = undefined" cdkDrag>
             <div *ngIf="editStepId !== step.id">
                 <div class="step-header">
@@ -81,7 +81,7 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="editStepId === step.id">
+            <div *ngIf="editStepId === step.id" (mousedown)="$event.stopPropagation()">
                 <app-new-step class="new-step" [steptInput]="step" (stepsEmitter)="updateStep($event)"></app-new-step>
             </div>
         </div>

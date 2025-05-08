@@ -1,19 +1,27 @@
 <div class="main">
     <div class="content">
         <div class="header">פרטי הפרויקט</div>
-        <div class="form">
+        <form class="form" [formGroup]="form">
             <div class="project">
                 <div class="text-and-input-wide">
                     <span>כותרת ראשית</span>
-                    <input type="text">
+                    <input type="text" formControlName="projectName">
+                    <div>
+                        <span *ngIf="submitted && form.get('projectName')?.errors" class="error">אנא הזינו שם
+                            פרויקט</span>
+                    </div>
                 </div>
                 <div class="text-and-input-wide">
                     <span>כותרת משנית</span>
-                    <input type="text">
+                    <input type="text" formControlName="subTitle">
+                    <div>
+                        <span *ngIf="submitted && form.get('subTitle')?.errors" class="error">אנא הזינו כותרת
+                            משנית</span>
+                    </div>
                 </div>
                 <div class="text-and-input-wide">
                     <span>תיאור</span>
-                    <textarea></textarea>
+                    <textarea formControlName="description"></textarea>
                 </div>
                 <div class="dates">
                     <div class="text-and-input-date">
@@ -38,15 +46,16 @@
                     <input type="text">
                 </div>
                 <div class="update-client">
-                    <div class="toggle-switch" [class.on]="project.updateClient" (click)="true">
+                    <div class="toggle-switch" [class.on]="project.updateClient"
+                        (click)="project.updateClient = !project.updateClient">
                         <div class="switch-thumb"></div>
                     </div>
                     <span>הלקוח/ה {{project.updateClient? '' : ' לא'}} מקבל/ת עדכונים על התקדמות ושינויים</span>
                 </div>
             </div>
-        </div>
+        </form>
         <div class="confirm">
-            <img class="icon-ok"/>
+            <img class="icon-ok" (click)="submit()" />
         </div>
     </div>
 </div>

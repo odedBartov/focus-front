@@ -1,6 +1,6 @@
 @import '../../../mixins.scss';
 @mixin text-and-input($width) {
-    margin-top: 1rem;
+    margin-top: 2rem;
     display: flex;
     flex-direction: column;
     width: $width;
@@ -94,6 +94,7 @@
         }
 
         .error {
+            position: absolute;
             font-family: 'regular';
             font-size: var(--font-size-1);
             color: red;

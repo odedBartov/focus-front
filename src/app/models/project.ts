@@ -4,6 +4,7 @@ import { Step } from "./step";
 export class Project {
     id?: string;
     name: string;
+    subTitle: string;
     userEmail: string;
     description: string;
     startDate: Date;
@@ -17,10 +18,13 @@ export class Project {
     positionInList: number;
     totalWorkingTime: number;
     totalWorkingSessions: number;
+    clientName: string;
+    clientMail: string;
 
     constructor() {
         this.id = '';
         this.name = '';
+        this.subTitle = '';
         this.userEmail = '';
         this.description = '';
         this.startDate = new Date();
@@ -33,5 +37,7 @@ export class Project {
         this.positionInList = 0;
         this.totalWorkingTime = 0;
         this.totalWorkingSessions = 0;
+        this.clientName = '';
+        this.clientMail = '';
     }
 }

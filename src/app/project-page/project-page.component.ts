@@ -111,7 +111,7 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   loadProject() {
     if (this.projectId) {
       this.loadingService.changeIsloading(true);
-      this.httpService.getProject(this.projectId).subscribe(res => {
+      this.httpService.getProject(this.projectId).subscribe(res => {        
         if (res.steps) {
           this.project = res;
           this.activeStepId = res.steps.find(s => !s.isComplete)?.id;
@@ -150,22 +150,11 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
     })
   }
 
-  // openStepModal(step?: Step) {
-  //   const dialogRef = this.dialog.open(StepModalComponent, { data: { step: step, project: this.project } });
-
-  //   dialogRef.afterClosed().subscribe(res => {
-  //     if (res) { // should reload
-  //       this.loadProject();
-  //     }
-  //   })
-  // }
-
   openProjectModal() {
     const dialogRef = this.dialog.open(ProjectModalComponent, { data: { project: this.project } });
-
     dialogRef.afterClosed().subscribe(res => {
-      if (res) { // should reload
-        this.loadProject();
+      if (res) {        
+        this.project = res;
       }
     })
   }
