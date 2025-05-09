@@ -39,11 +39,11 @@
             <div class="client">
                 <div class="text-and-input-wide">
                     <span>שם הלקוח</span>
-                    <input type="text">
+                    <input type="text" formControlName="clientName">
                 </div>
                 <div class="text-and-input-wide">
                     <span>אימייל הלקוח</span>
-                    <input type="text">
+                    <input type="text" formControlName="clientMail">
                 </div>
                 <div class="update-client">
                     <div class="toggle-switch" [class.on]="project.updateClient"

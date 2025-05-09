@@ -210,4 +210,12 @@
     &:hover {
         content: url('/assets/icons/kabab_menu_yes.svg');
     }
-} 
+}
+
+.icon-link {
+    content: url('/assets/icons/link_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/link_yes.svg');
+    }
+}

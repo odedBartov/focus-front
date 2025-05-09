@@ -1,0 +1,117 @@
+@use '../../mixins.scss' as mixins;
+
+.main {
+    width: 100%;
+    height: 85vh;
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .header {
+        font-size: var(--font-size-3);
+        font-family: 'regular';
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        color: #ACACBC;
+
+        .selected {
+            color: black;
+            font-family: 'black';
+        }
+    }
+
+    .lists {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        border-radius: 16px;
+        box-shadow: var(--common-shadow);
+    }
+
+    .links {
+        display: flex;
+        flex-direction: column;
+        margin-top: 2rem;
+
+        .link {
+            font-family: 'regular';
+            font-size: var(--font-size-2);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+
+            span {
+                cursor: pointer;
+                margin-left: 0.5rem;
+
+            }
+
+            &:hover {
+                color: var(--main-color);
+            }
+        }
+
+        .add-link {
+            display: flex;
+            justify-content: center;
+
+            span {
+                font-family: 'regular';
+                font-size: var(--font-size-1);
+                border-radius: 16px;
+                padding: 0.2rem 1rem;
+                background-color: var(--hover-color);
+
+                &:hover {
+                    color: white;
+                    background-color: var(--main-color);
+                }
+            }
+        }
+
+        .new-link {
+            @include mixins.regular-border;
+            height: 18rem;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            align-items: flex-start;
+
+            .title {
+                font-family: 'black';
+                font-size: var(--font-size-3);
+            }
+
+            .text-and-input {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                font-family: 'regular';
+                font-size: var(--font-size-1);
+
+                input {
+                    background-color: transparent;
+                    @include mixins.regular-border;
+                }
+            }
+
+            .error {
+                position: absolute;
+                font-family: 'regular';
+                font-size: var(--font-size-1);
+                color: red;
+            }
+
+            .confirm {
+                display: flex;
+                justify-content: center;
+                width: 100%;
+            }
+        }
+    }
+}

@@ -1,4 +1,4 @@
-@import '../../mixins.scss';
+@use '../../mixins.scss' as mixins;
 
 .main {
     height: 100%;
@@ -13,8 +13,8 @@
     }
 
     .summurize {
-        margin: 0 5rem;
-        padding: 2rem 2rem;
+        margin: 0 3rem;
+        padding: 2rem;
         width: 22.5rem;
         display: flex;
         flex-direction: column;
@@ -139,7 +139,7 @@
         overflow: auto;
 
         .step {
-            @include step
+            @include mixins.step
         }
 
         .add-step {
@@ -158,11 +158,10 @@
     }
 
     .notes {
-        flex: 1;
-        margin: 0 5rem;
-        background-color: white;
-        border-radius: 12px;
+        width: 22.5rem;
         height: 100%;
+        margin: 0 3rem;
+        padding: 2rem;
     }
 
     .icon {
@@ -171,5 +170,5 @@
 }
 
 .cdk-drag-preview {
-    @include step;
+    @include mixins.step;
 }

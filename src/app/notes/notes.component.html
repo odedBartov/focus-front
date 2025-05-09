@@ -1,0 +1,40 @@
+<div class="main">
+    <div class="header">
+        <span class="pointer" [class.selected]="notesSelected" (click)="notesSelected = true">רשימות וסיכומים</span>
+        <span class="pointer" [class.selected]="!notesSelected" (click)="notesSelected = false">קישורים</span>
+        <img class="pointer icon-expand" />
+    </div>
+    <div class="lists" *ngIf="notesSelected">dd</div>
+    <div class="links" *ngIf="!notesSelected">
+        <div class="link" *ngFor="let link of links" #link (mouseenter)="hoverLink(link)" (mouseleave)="leaveLink()">
+            <div class="pointer">
+                <span (click)="openLink(link.url)">{{link.name}}</span>
+                <img [src]="`/assets/icons/${hoveredLink === link? 'link_yes' : 'link_not'}.svg`" />
+            </div>
+            <img class="icon-garbage-can pointer" *ngIf="hoveredLink === link" (click)="deleteLink(link)" />
+        </div>
+        <div class="add-link">
+            <span class="pointer" (click)="addingNewLing = true; resetLinkForm()" *ngIf="!addingNewLing">+ קישור חדש</span>
+        </div>
+        <form class="new-link" *ngIf="addingNewLing" [formGroup]="form" #newLinkDiv>
+            <span class="title">קישור חדש</span>
+            <div class="text-and-input">
+                <span>שם</span>
+                <input type="text" formControlName="name">
+                <div>
+                    <span *ngIf="submitted && form.get('name')?.errors" class="error">אנא הזינו שם</span>
+                </div>
+            </div>
+            <div class="text-and-input">
+                <span>קישור</span>
+                <input type="text" formControlName="url">
+                <div>
+                    <span *ngIf="submitted && form.get('url')?.errors" class="error">אנא הזינו קישור</span>
+                </div>
+            </div>
+            <div class="confirm">
+                <img class="icon-confirm-circle pointer" (click)="addLink()" />
+            </div>
+        </form>
+    </div>
+</div>

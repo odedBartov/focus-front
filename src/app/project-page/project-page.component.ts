@@ -14,10 +14,11 @@ import { NewStepComponent } from '../new-step/new-step.component';
 import { StepType } from '../models/enums';
 import { ProjectModalComponent } from '../modals/project-modal/project-modal.component';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { NotesComponent } from '../notes/notes.component';
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent],
+  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss',
   animations: [
