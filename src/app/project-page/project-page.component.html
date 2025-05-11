@@ -1,5 +1,5 @@
 <div class="main">
-    <div class="summurize">
+    <div class="summurize" [ngClass]="{ 'show-before': hideProperties() }">
         <div class="info">
             <div class="text-and-icon">
                 <span class="title">{{project?.name}}</span>
@@ -92,7 +92,7 @@
             <app-new-step class="new-step" (stepsEmitter)="createNewStep($event)"></app-new-step>
         </div>
     </div>
-    <div class="notes">
-       <app-notes [project]="project" [notesPopup]="showNotes" (showNotesEmitter)="showNotes = $event"></app-notes>
+    <div class="notes" #notesDiv>
+       <app-notes [project]="project" [notesPopup]="showNotes" (showNotesEmitter)="showNotesPopup($event)"></app-notes>
     </div>
 </div>

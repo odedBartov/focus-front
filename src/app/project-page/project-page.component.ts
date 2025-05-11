@@ -1,8 +1,8 @@
-import { Component, ElementRef, HostListener, inject, Input, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../models/project';
 import { HttpService } from '../services/http.service';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Step } from '../models/step';
 import { LoadingService } from '../services/loading.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -15,6 +15,7 @@ import { StepType } from '../models/enums';
 import { ProjectModalComponent } from '../modals/project-modal/project-modal.component';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NotesComponent } from '../notes/notes.component';
+import { ProjectHoverService } from '../services/project-hover.service';
 
 @Component({
   selector: 'app-project-page',
@@ -44,12 +45,15 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
   dialog = inject(MatDialog);
+  projectHoverService = inject(ProjectHoverService);
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
+  @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
   editDiv?: HTMLDivElement;
   @Input() set projectInput(value: Project | undefined) {
     this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
     this.project = value;
     this.calculatePaidMoney();
+    this.workedTimeToShow = value?.totalWorkingTime ?? 0;
     if (this.project?.steps) {
       this.project.steps = this.project.steps.sort((a, b) => a.positionInList - b.positionInList);
     }
@@ -65,6 +69,7 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   workingTimeInterval: any;
   workedTimeToShow = 0;
   showNotes = false;
+  hideProperties = this.projectHoverService.getSignal();
 
   constructor() {
     this.route.paramMap.subscribe(params => {
@@ -80,14 +85,17 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    if (this.newStepDiv?.nativeElement) {
-      if (!this.newStepDiv.nativeElement.contains(event.target)) {
+      if (this.newStepDiv?.nativeElement && !this.newStepDiv.nativeElement.contains(event.target)) {
         this.isShowNewStep = false;
       }
-    }
 
     if (!this.editDiv?.contains(event.target as Node)) {
       this.editStepId = '';
+    }
+
+    if (this.notesDiv?.nativeElement && !this.notesDiv.nativeElement.contains(event.target)) {
+      this.showNotes = false;
+      this.projectHoverService.projectHover();
     }
   }
 
@@ -243,6 +251,11 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
       clearInterval(this.workingTimeInterval);
       this.workingTimeInterval = null;
     }
+  }
+
+  showNotesPopup(show: boolean) {
+    this.showNotes = show;
+    this.projectHoverService.projectHover('empty');
   }
 
   ngOnDestroy(): void {

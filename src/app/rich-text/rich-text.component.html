@@ -1,0 +1,11 @@
+<div class="main">
+    <div class="toolbar">
+        <img class="icon-ordered-list pointer" (click)="toggleOrderedList()" />
+        <img class="icon-bullet-list pointer" (click)="toggleBulletList()" />
+        <img class="icon-bold pointer" (click)="toggleBold()" />
+        <img class="icon-h3 pointer" (click)="setHeading(3)" />
+        <img class="icon-h2 pointer" (click)="setHeading(2)" />
+        <img class="icon-h1 pointer" (click)="setHeading(1)" />
+    </div>
+    <ngx-editor class="editor" [editor]="editor" [formControl]="editorControl"></ngx-editor>
+</div>

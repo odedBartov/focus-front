@@ -7,14 +7,15 @@ import { LoadingService } from '../services/loading.service';
 import { HttpService } from '../services/http.service';
 import { Editor, NgxEditorModule } from 'ngx-editor';
 import { debounceTime, Subscription } from 'rxjs';
+import { RichTextComponent } from "../rich-text/rich-text.component";
 
 @Component({
   selector: 'app-notes',
-  imports: [CommonModule, ReactiveFormsModule, NgxEditorModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgxEditorModule, FormsModule, RichTextComponent],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.scss'
 })
-export class NotesComponent implements OnDestroy, OnChanges {
+export class NotesComponent {
   @Input() project?: Project;
   @Input({ required: false }) notesPopup?: boolean;
   @Output() showNotesEmitter: EventEmitter<boolean> = new EventEmitter();
@@ -28,20 +29,13 @@ export class NotesComponent implements OnDestroy, OnChanges {
   hoveredLink = undefined;
   addingNewLink = false;
   submitted = false;
-  editor = new Editor();
-  editorControl = new FormControl('');
-  private valueChangesSub!: Subscription;
+  
 
   constructor() {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
       url: ['', [Validators.required]]
     });
-  }
-
-  ngOnDestroy(): void {
-    this.editor.destroy();
-    this.valueChangesSub?.unsubscribe();
   }
 
   @HostListener('document:click', ['$event'])
@@ -51,40 +45,6 @@ export class NotesComponent implements OnDestroy, OnChanges {
         this.addingNewLink = false;
       }
     }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['project'] && this.project) {
-      this.initEditor();
-    }
-  }
-
-  initEditor() {
-    if (this.project) {
-      this.editorControl.setValue(this.project?.notes);
-      this.valueChangesSub = this.editorControl.valueChanges.pipe(debounceTime(1000)).subscribe(content => {
-        if (this.project) {
-          this.project.notes = content ?? '';
-          this.httpService.updateProjects([this.project]).subscribe(res => { })
-        }
-      });
-    }
-  }
-
-  toggleBold(): void {
-    this.editor.commands.toggleBold().focus().exec();
-  }
-
-  toggleBulletList(): void {
-    this.editor.commands.toggleBulletList().focus().exec();
-  }
-
-  toggleOrderedList(): void {
-    this.editor.commands.toggleOrderedList().focus().exec();
-  }
-
-  setHeading(level: 1 | 2 | 3): void {
-    this.editor.commands.toggleHeading(level).focus().exec();
   }
 
   hoverLink(link: any) {

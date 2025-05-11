@@ -33,11 +33,13 @@
             .title {
                 font-family: 'black';
                 font-size: var(--font-size-5);
+                z-index: 2;
             }
 
             .sub-title {
                 font-family: 'black';
                 font-size: var(--font-size-2);
+                z-index: 2;
             }
 
             .description {
@@ -130,6 +132,18 @@
         }
     }
 
+    .summurize.show-before::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--home-color);
+        z-index: 1;
+        pointer-events: none;
+    }
+
     .steps {
         flex: 1.11;
         display: flex;
@@ -158,6 +172,7 @@
     }
 
     .notes {
+        z-index: 2;
         width: 22.5rem;
         height: 100%;
         margin: 0 3rem;
