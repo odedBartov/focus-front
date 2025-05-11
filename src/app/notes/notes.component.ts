@@ -1,24 +1,36 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, HostListener, inject, input, Input, OnChanges, OnDestroy, Output, output, SimpleChanges, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Project } from '../models/project';
+import { LoadingService } from '../services/loading.service';
+import { HttpService } from '../services/http.service';
+import { Editor, NgxEditorModule } from 'ngx-editor';
+import { debounceTime, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-notes',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgxEditorModule, FormsModule],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.scss'
 })
-export class NotesComponent implements OnInit {
+export class NotesComponent implements OnDestroy, OnChanges {
+  @Input() project?: Project;
+  @Input({ required: false }) notesPopup?: boolean;
+  @Output() showNotesEmitter: EventEmitter<boolean> = new EventEmitter();
+  @ViewChild('newLinkDiv', { static: false }) newLinkDiv?: ElementRef;
   router = inject(Router);
   formBuilder = inject(FormBuilder);
-  @ViewChild('newLinkDiv', { static: false }) newLinkDiv?: ElementRef;
+  loadingService = inject(LoadingService);
+  httpService = inject(HttpService);
   form: FormGroup;
-  links: {name: string, url: string}[] = [];
-  notesSelected = false;
+  notesSelected = true;
   hoveredLink = undefined;
-  addingNewLing = false;
+  addingNewLink = false;
   submitted = false;
+  editor = new Editor();
+  editorControl = new FormControl('');
+  private valueChangesSub!: Subscription;
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -27,20 +39,52 @@ export class NotesComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.links = [{name: 'חתול', url: "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_16x9.jpg?w=1200"},
-                  {name: 'כלב', url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYdAyA3iUciFLZ5NUwn_cErsIb4tieQ1FnlA&s"},
-                  {name: "יוטיוב", url: "https://www.youtube.com/"}
-    ]
+  ngOnDestroy(): void {
+    this.editor.destroy();
+    this.valueChangesSub?.unsubscribe();
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     if (this.newLinkDiv?.nativeElement) {
       if (!this.newLinkDiv.nativeElement.contains(event.target)) {
-        this.addingNewLing = false;
+        this.addingNewLink = false;
       }
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['project'] && this.project) {
+      this.initEditor();
+    }
+  }
+
+  initEditor() {
+    if (this.project) {
+      this.editorControl.setValue(this.project?.notes);
+      this.valueChangesSub = this.editorControl.valueChanges.pipe(debounceTime(1000)).subscribe(content => {
+        if (this.project) {
+          this.project.notes = content ?? '';
+          this.httpService.updateProjects([this.project]).subscribe(res => { })
+        }
+      });
+    }
+  }
+
+  toggleBold(): void {
+    this.editor.commands.toggleBold().focus().exec();
+  }
+
+  toggleBulletList(): void {
+    this.editor.commands.toggleBulletList().focus().exec();
+  }
+
+  toggleOrderedList(): void {
+    this.editor.commands.toggleOrderedList().focus().exec();
+  }
+
+  setHeading(level: 1 | 2 | 3): void {
+    this.editor.commands.toggleHeading(level).focus().exec();
   }
 
   hoverLink(link: any) {
@@ -51,9 +95,15 @@ export class NotesComponent implements OnInit {
     this.hoveredLink = undefined;
   }
 
-  deleteLink(link: {name: string, url: string}) {
-    const index = this.links.indexOf(link);
-    this.links.splice(index, 1);
+  deleteLink(link: { name: string, url: string }) {
+    if (this.project) {
+      const index = this.project.links.indexOf(link);
+      this.project.links.splice(index, 1);
+      this.loadingService.changeIsloading(true);
+      this.httpService.updateProjects([this.project]).subscribe(res => {
+        this.loadingService.changeIsloading(false);
+      })
+    }
   }
 
   openLink(url: string) {
@@ -66,13 +116,24 @@ export class NotesComponent implements OnInit {
   }
 
   addLink() {
-    this.submitted = true;    
-    if (this.form.valid) {   
+    this.submitted = true;
+    if (this.form.valid && this.project) {
       const name = this.form.get("name")?.value;
       const url = this.form.get("url")?.value;
-      this.links.push({name: name, url: url});
-      this.addingNewLing = false;
-      this.resetLinkForm();
+      if (!this.project.links) {
+        this.project.links = [];
+      }
+      this.project.links.push({ name: name, url: url });
+      this.loadingService.changeIsloading(true);
+      this.httpService.updateProjects([this.project]).subscribe(res => {
+        this.loadingService.changeIsloading(false);
+        this.addingNewLink = false;
+        this.resetLinkForm();
+      })
     }
+  }
+
+  showNotes() {
+    this.showNotesEmitter.emit(true);
   }
 }

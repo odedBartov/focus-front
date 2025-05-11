@@ -20,6 +20,8 @@ export class Project {
     totalWorkingSessions: number;
     clientName: string;
     clientMail: string;
+    links:{name: string, url: string}[];
+    notes: string;
 
     constructor() {
         this.id = '';
@@ -39,5 +41,7 @@ export class Project {
         this.totalWorkingSessions = 0;
         this.clientName = '';
         this.clientMail = '';
+        this.links = [];
+        this.notes = '';
     }
 }

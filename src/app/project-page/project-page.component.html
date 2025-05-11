@@ -93,6 +93,6 @@
         </div>
     </div>
     <div class="notes">
-       <app-notes></app-notes>
+       <app-notes [project]="project" [notesPopup]="showNotes" (showNotesEmitter)="showNotes = $event"></app-notes>
     </div>
 </div>

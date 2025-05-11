@@ -1,22 +1,45 @@
-<div class="main">
-    <div class="header">
+<div class="main" [ngClass]="{'show-notes': notesPopup}">
+    <div class="header" *ngIf="!notesPopup">
         <span class="pointer" [class.selected]="notesSelected" (click)="notesSelected = true">רשימות וסיכומים</span>
         <span class="pointer" [class.selected]="!notesSelected" (click)="notesSelected = false">קישורים</span>
-        <img class="pointer icon-expand" />
+        <img class="pointer icon-expand" (click)="showNotes()"/>
     </div>
-    <div class="lists" *ngIf="notesSelected">dd</div>
-    <div class="links" *ngIf="!notesSelected">
-        <div class="link" *ngFor="let link of links" #link (mouseenter)="hoverLink(link)" (mouseleave)="leaveLink()">
+    <ng-container *ngIf="notesSelected && !notesPopup; then editorTemplate; else linksTemplate"></ng-container>
+</div>
+
+<ng-template #editorTemplate>
+    <div class="lists">
+        <div class="toolbar">
+            <img class="icon-ordered-list pointer" (click)="toggleOrderedList()" />
+            <img class="icon-bullet-list pointer" (click)="toggleBulletList()" />
+            <img class="icon-bold pointer" (click)="toggleBold()" />
+            <img class="icon-h3 pointer" (click)="setHeading(3)" />
+            <img class="icon-h2 pointer" (click)="setHeading(2)" />
+            <img class="icon-h1 pointer" (click)="setHeading(1)" />
+        </div>
+        <ngx-editor class="editor" [editor]="editor" [formControl]="editorControl"></ngx-editor>
+    </div>
+</ng-template>
+
+<ng-template #linksTemplate>
+    <div class="links" [ngClass]="{'padding-links': notesPopup}">
+        <div *ngIf="notesPopup" class="links-header">
+            <span>קישורים</span>
+        </div>
+        <div class="link" *ngFor="let link of project?.links" #link (mouseenter)="hoverLink(link)"
+            (mouseleave)="leaveLink()">
             <div class="pointer">
                 <span (click)="openLink(link.url)">{{link.name}}</span>
-                <img [src]="`/assets/icons/${hoveredLink === link? 'link_yes' : 'link_not'}.svg`" />
+                <img [src]="`/assets/icons/${hoveredLink === link? 'link_yes' : 'link_not'}.svg`"
+                    (click)="openLink(link.url)" />
             </div>
             <img class="icon-garbage-can pointer" *ngIf="hoveredLink === link" (click)="deleteLink(link)" />
         </div>
         <div class="add-link">
-            <span class="pointer" (click)="addingNewLing = true; resetLinkForm()" *ngIf="!addingNewLing">+ קישור חדש</span>
+            <span class="pointer" (click)="addingNewLink = true; resetLinkForm()" *ngIf="!addingNewLink">+ קישור
+                חדש</span>
         </div>
-        <form class="new-link" *ngIf="addingNewLing" [formGroup]="form" #newLinkDiv>
+        <form class="new-link" *ngIf="addingNewLink" [formGroup]="form" #newLinkDiv>
             <span class="title">קישור חדש</span>
             <div class="text-and-input">
                 <span>שם</span>
@@ -37,4 +60,4 @@
             </div>
         </form>
     </div>
-</div>
+</ng-template>

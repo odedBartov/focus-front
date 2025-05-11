@@ -64,6 +64,7 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   currentSessionTime = new Date();
   workingTimeInterval: any;
   workedTimeToShow = 0;
+  showNotes = false;
 
   constructor() {
     this.route.paramMap.subscribe(params => {

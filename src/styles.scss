@@ -45,6 +45,12 @@
         }
     }
 
+    .NgxEditor {
+        border-radius: 16px;
+        border: none;
+        height: 100%;
+    }
+
     .mat-mdc-menu-content {
         padding: 0;
         border-radius: 20px;
@@ -217,5 +223,61 @@
 
     &:hover {
         content: url('/assets/icons/link_yes.svg');
+    }
+}
+
+.icon-h1 {
+    content: url('/assets/icons/h1_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/h1_yes.svg');
+    }
+}
+
+.icon-h2 {
+    content: url('/assets/icons/h2_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/h2_yes.svg');
+    }
+}
+
+.icon-h3 {
+    content: url('/assets/icons/h3_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/h3_yes.svg');
+    }
+}
+
+.icon-bold {
+    content: url('/assets/icons/bold_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/bold_yes.svg');
+    }
+}
+
+.icon-ordered-list {
+    content: url('/assets/icons/ordered_list_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/ordered_list_yes.svg');
+    }
+}
+
+.icon-bullet-list {
+    content: url('/assets/icons/bullet_list_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/bullet_list_yes.svg');
+    }
+}
+
+.icon-ordered-list {
+    content: url('/assets/icons/ordered_list_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/ordered_list_yes.svg');
     }
 }
