@@ -6,7 +6,7 @@
                 <div class="text-and-input-wide">
                     <span>כותרת ראשית</span>
                     <input type="text" formControlName="projectName">
-                    <div>
+                    <div class="error-container">
                         <span *ngIf="submitted && form.get('projectName')?.errors" class="error">אנא הזינו שם
                             פרויקט</span>
                     </div>
@@ -14,7 +14,7 @@
                 <div class="text-and-input-wide">
                     <span>כותרת משנית</span>
                     <input type="text" formControlName="subTitle">
-                    <div>
+                    <div class="error-container">
                         <span *ngIf="submitted && form.get('subTitle')?.errors" class="error">אנא הזינו כותרת
                             משנית</span>
                     </div>

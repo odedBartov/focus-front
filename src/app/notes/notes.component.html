@@ -36,14 +36,14 @@
             <div class="text-and-input">
                 <span>שם</span>
                 <input type="text" formControlName="name">
-                <div>
+                <div class="error-container">
                     <span *ngIf="submitted && form.get('name')?.errors" class="error">אנא הזינו שם</span>
                 </div>
             </div>
             <div class="text-and-input">
                 <span>קישור</span>
                 <input type="text" formControlName="url">
-                <div>
+                <div class="error-container">
                     <span *ngIf="submitted && form.get('url')?.errors" class="error">אנא הזינו קישור</span>
                 </div>
             </div>

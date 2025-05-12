@@ -1,3 +1,5 @@
+@use './mixins.scss' as mixins;
+
 @font-face {
     font-family: 'black';
     src: url('assets/fonts/SimonaPro-Black.woff2') format('woff2')
@@ -12,6 +14,7 @@
     font-family: 'regular';
     src: url('assets/fonts/SimonaPro-Regular.woff2') format('woff2')
 }
+
 
 :root {
     --font-size-1: 1rem;
@@ -79,7 +82,7 @@
     .mat-mdc-dialog-surface {
         border-radius: var(--common-radius);
     }
-    
+
     .cdk-overlay-pane.mat-mdc-dialog-panel {
         max-width: none;
         box-shadow: var(--common-shadow);
@@ -99,6 +102,8 @@
     textarea {
         outline: none;
         padding: 0.5rem 1rem;
+        background-color: transparent;
+        @include mixins.regular-border;
     }
 }
 
@@ -148,6 +153,17 @@
     height: 100%;
     background-color: var(--main-color);
     transition: width 0.3s ease;
+}
+
+.error-container {
+    position: relative;
+}
+
+.error {
+    position: absolute;
+    font-family: 'regular';
+    font-size: var(--font-size-1);
+    color: red;
 }
 
 //icons

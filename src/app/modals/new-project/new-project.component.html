@@ -1,5 +1,5 @@
 <div class="template">
-    <div class="main">
+    <Form [formGroup]="descriptionForm" class="descriptionForm">
         <div class="progress small-text">
             <div class="progress-bar">
                 <div class="progress-fill" [style.width.%]="getCurrentProgress()"></div>
@@ -9,5 +9,46 @@
             <span class="title">פרויקט חדש</span>
             <span class="sub-title">איזה כיף! אתגר חדש בדרך</span>
         </div>
-    </div>
+        <div class="line">
+            <div class="text-and-input">
+                <span>כותרת ראשית</span>
+                <input type="text" formControlName="title"/>
+                <div class="error-container">
+                    <span *ngIf="descriptionFormSubmitted && descriptionForm.get('title')?.errors" class="error">אנא
+                        הזינו כותרת</span>
+                </div>
+            </div>
+            <div class="description">
+                <span>רוב המשתמשים מעדיפים לקרוא לפרויקט בשם הלקוח</span>
+            </div>
+        </div>
+        <div class="line">
+            <div class="text-and-input">
+                <span>כותרת משנית</span>
+                <input type="text" formControlName="subTitle"/>
+                <div class="error-container">
+                    <span *ngIf="descriptionFormSubmitted && descriptionForm.get('subTitle')?.errors" class="error">אנא
+                        הזינו כותרת משנית</span>
+                </div>
+            </div>
+            <div class="description">
+                <span>כאן כדאי לציין את מהות הפרויקט. למשל "תהליך מיתוג" או "אתר תדמית"</span>
+            </div>
+        </div>
+        <div class="line">
+            <div class="text-and-input">
+                <span>תיאור קצר</span>
+                <textarea></textarea>
+            </div>
+            <div class="description">
+                <span>לא חובה, אבל כדאי. הבריף מוצג במיקום מרכזי במסך הפרויקט, ומטרתו לעזור לך להיכנס לעניינים ולזכור את
+                    הדברים החשובים.</span>
+            </div>
+        </div>
+        <div class="confirm">
+            <div class="confirm-button" (click)="submitDescription()">
+                אישור והמשך
+            </div>
+        </div>
+    </Form>
 </div>
