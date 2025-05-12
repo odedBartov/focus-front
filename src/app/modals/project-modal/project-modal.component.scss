@@ -1,4 +1,4 @@
-@import '../../../mixins.scss';
+@use '../../../mixins.scss' as mixins;
 @mixin text-and-input($width) {
     margin-top: 2rem;
     display: flex;
@@ -14,7 +14,7 @@
     textarea {
         font-size: var(--font-size-2);
         background-color: transparent;
-        @include regular-border;
+        @include mixins.regular-border;
     }
 
     textarea {
@@ -23,8 +23,7 @@
 }
 
 .main {
-    width: 55rem;
-    height: 52.5rem;
+    @include mixins.big-popup;
     display: flex;
     flex-direction: column;
     align-items: center;

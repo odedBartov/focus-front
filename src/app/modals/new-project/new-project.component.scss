@@ -1,0 +1,23 @@
+@use '../../../mixins.scss' as mixins;
+.template {
+    @include mixins.big-popup;
+    .main {
+        padding: 5rem;
+        background-color: white;
+        border-radius: var(--common-radius);
+
+        .header {
+            display: flex;
+            flex-direction: column;
+            margin: 5rem 0;
+            .title {
+                font-family: 'black';
+                font-size: var(--font-size-4);
+            }
+
+            .sub-title {
+
+            }
+        }
+    }
+}

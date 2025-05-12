@@ -52,8 +52,8 @@
 
 .tab.active {
     background-color: var(--home-color);
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
+    border-top-left-radius: var(--common-radius);
+    border-top-right-radius: var(--common-radius);
     padding: 0 8px 8px;
     margin-top: -10px;
     color: #000;
@@ -61,7 +61,7 @@
 }
 
 .home-container {
-    border-radius: 16px;
+    border-radius: var(--common-radius);
     margin-top: -6px;
     display: flex;
     flex-direction: column;
@@ -84,7 +84,7 @@
         }
 
         .projects-list {
-            flex: 2.3;
+            flex: 2;
             margin: 0 3rem;
         }
     }
@@ -104,7 +104,7 @@
 
 .project-container {
     height: 100%;
-    border-radius: 16px;
+    border-radius: var(--common-radius);
     display: flex;
     flex-direction: column;
     z-index: 1;

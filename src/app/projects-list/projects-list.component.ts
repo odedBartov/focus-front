@@ -12,6 +12,8 @@ import { LoadingService } from '../services/loading.service';
 import { tap } from 'rxjs';
 import { ProjectHoverService } from '../services/project-hover.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
+import { NewProjectComponent } from '../modals/new-project/new-project.component';
 
 @Component({
   selector: 'app-projects-list',
@@ -22,6 +24,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class ProjectsListComponent {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
+  dialog = inject(MatDialog);
   projectHoverService = inject(ProjectHoverService);
   @Output() selectProjectEmitter = new EventEmitter<Project>();
   @Output() activeProjectsEmitter = new EventEmitter<Project[]>();
@@ -133,5 +136,12 @@ export class ProjectsListComponent {
   selectProject(project: Project) {
     this.selectProjectEmitter.emit(project);
     //this.router.navigate(['/project', projectId, false]);
+  }
+
+  openProjectModal() {
+    const dialogRef = this.dialog.open(NewProjectComponent);
+    dialogRef.afterClosed().subscribe(res => {
+      // recieve the project
+    })
   }
 }

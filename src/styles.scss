@@ -20,6 +20,10 @@
     --font-size-4: 1.813rem;
     --font-size-5: 2.188rem;
 
+    --common-radius: 16px;
+    --big-window-height: 84vh;
+    --big-window-width: 84vh;
+
     --home-color: #F3F3F5;
     --main-color: #667AFF;
     --main-color-not-active: #A2ACEF;
@@ -47,7 +51,7 @@
     }
 
     .NgxEditor {
-        border-radius: 16px;
+        border-radius: var(--common-radius);
         border: none;
         height: 100%;
     }
@@ -73,7 +77,7 @@
     }
 
     .mat-mdc-dialog-surface {
-        border-radius: 15px;
+        border-radius: var(--common-radius);
     }
     
     .cdk-overlay-pane.mat-mdc-dialog-panel {

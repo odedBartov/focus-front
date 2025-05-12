@@ -3,11 +3,11 @@
 .main {
     margin-top: 2rem;
     width: 100%;
-    height: 85vh;
+    height: var(--big-window-height);
 
     &.show-notes {
         background-color: white;
-        border-radius: 16px;
+        border-radius: var(--common-radius);
         box-shadow: var(--common-shadow);
     }
 
@@ -76,7 +76,7 @@
             span {
                 font-family: 'regular';
                 font-size: var(--font-size-1);
-                border-radius: 16px;
+                border-radius: var(--common-radius);
                 padding: 0.2rem 1rem 0.4rem;
                 background-color: var(--hover-color);
 

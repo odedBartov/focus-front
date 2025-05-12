@@ -46,7 +46,7 @@
 
 .shadow-and-background {
     padding: 0 2rem;
-    border-radius: 16px;
+    border-radius: var(--common-radius);
     box-shadow: var(--common-shadow);
     background-color: white;
 }
