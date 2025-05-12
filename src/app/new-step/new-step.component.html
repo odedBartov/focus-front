@@ -29,8 +29,10 @@
         </div>
         <div class="text-and-input">
             <span class="text">שם השלב</span>
-            <input class="text" type="text" formControlName="name">
-            <span *ngIf="submitted && form.get('name')?.errors" class="error">אנא הזינו שם</span>
+            <input class="text" type="text" formControlName="name" #stepNameInput>
+            <div>
+                <span *ngIf="submitted && form.get('name')?.errors" class="error">אנא הזינו שם</span>
+            </div>
         </div>
         <div class="text-and-input" *ngIf="selectedType.type !== stepTypeEnum.payment">
             <span class="text">פירוט (לא חובה)</span>
@@ -39,13 +41,17 @@
         <div class="text-and-input" *ngIf="selectedType.type === stepTypeEnum.payment">
             <span class="text">סכום (לא כולל מע"ם)</span>
             <input class="text" type="number" formControlName="price" />
-            <span *ngIf="submitted && form.get('price')?.errors" class="error">אנא הזינו סכום תקין</span>
+            <div>
+                <span *ngIf="submitted && form.get('price')?.errors" class="error">אנא הזינו סכום תקין</span>
+            </div>
         </div>
         <div class="text-and-input">
             <span class="text">תאריך סיום מתוכנן</span>
             <input class="text date" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _" formControlName="dateDue"
                 [dropSpecialCharacters]="false" />
-            <span *ngIf="submitted && form.get('dateDue')?.errors" class="error">אנא הזינו תאריך תקין</span>
+            <div>
+                <span *ngIf="submitted && form.get('dateDue')?.errors" class="error">אנא הזינו תאריך תקין</span>
+            </div>
         </div>
         <div class="create-step">
             <img class="icon-confirm-circle" (click)="createStep()" />

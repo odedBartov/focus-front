@@ -145,6 +145,8 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
     step.isComplete = !step.isComplete;
     if (step.isComplete) {
       step.dateCompleted = new Date();
+    } else {
+      step.dateCompleted = undefined;
     }
     this.updateStep(step);
   }
@@ -190,6 +192,7 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   createNewStep(step: Step) {
     this.loadingService.changeIsloading(true);
     step.projectId = this.project?.id;
+    step.positionInList = (this.project?.steps?.length ?? 0) + 1;
     this.httpService.createStep(step).subscribe(res => {
       this.project?.steps?.push(res);
       this.isShowNewStep = false;

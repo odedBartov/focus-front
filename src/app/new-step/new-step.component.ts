@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { StepType, stepTypeLabels } from '../models/enums';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -22,16 +22,17 @@ export class NewStepComponent implements OnInit {
   formBuilder = inject(FormBuilder);
   loadingService = inject(LoadingService);
   datePipe = inject(DatePipe);
+  @ViewChild('stepNameInput') stepNameInput!: ElementRef;
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
-      this.selectedType = {icon: "", text: "", type: value.stepType}
+      this.selectedType = { icon: "", text: "", type: value.stepType }
       this.form.patchValue({ name: value.name });
       this.form.patchValue({ description: value.description });
       const formattedDate = this.datePipe.transform(value.dateDue, 'dd/MM/yy');
       this.form.patchValue({ dateDue: formattedDate });
       this.form.patchValue({ price: value.price });
-      this.step.set({...value});
+      this.step.set({ ...value });
     }
   }
   step = signal<Step | undefined>(undefined);
@@ -60,12 +61,21 @@ export class NewStepComponent implements OnInit {
       { text: "על ידי הלקוח", icon: "dollar", type: StepType.payment },
       { text: "חוזה, פגישה, אימייל חשוב וכו'", icon: "telegram", type: StepType.coomunication }
     ];
+
+    setTimeout(() => {
+      if (this.stepNameInput?.nativeElement) {
+        this.stepNameInput.nativeElement.focus()
+      }
+    }, 0);
   }
 
   selectType(type: { text: string, icon: string, type: StepType }) {
     this.selectedType = type;
     this.newStep = new Step();
     this.newStep.stepType = type.type;
+    setTimeout(() => {
+      this.stepNameInput.nativeElement.focus()
+    }, 0);
   }
 
   editStepType(type: StepType) {
@@ -79,7 +89,7 @@ export class NewStepComponent implements OnInit {
 
   createStep() {
     const oldStep = this.step();
-    if (oldStep) { 
+    if (oldStep) {
       this.newStep = oldStep;
     }
     this.submitted = true;

@@ -7,18 +7,31 @@
         <img [style.transform]="'rotate(' + coffeeRotation + 'deg)'" (click)="getRandomCoffee()"
             [src]="coffeePicture" />
     </div>
-    <div class="payments text-and-icon">
-        <span>תשלומים</span>
-        <img class="icon icon-info"
-                matTooltip="תשלומים עתידיים (לא כולל מעמ) בחודשים הקרובים. מבוסס על התאריכים שהזנת בשלבי התשלום שבתוך הפרויקטים השונים." 
-                matTooltipPosition="above" matTooltipClass="custom-tooltip"/>
+    <div class="payments">
+        <div class="text-and-icon">
+            <span class="title">מאזן</span>
+            <img class="icon icon-info"
+                matTooltip="תשלומים עתידיים (לא כולל מעמ) בחודשים הקרובים. מבוסס על התאריכים שהזנת בשלבי התשלום שבתוך הפרויקטים השונים."
+                matTooltipPosition="above" matTooltipClass="custom-tooltip" />
+        </div>
+        <div class="graph">
+            <!-- <div class="background">
+                <div class="sums">
+                    <span>30,000</span>
+                    <span>20,000</span>
+                    <span>10,000</span>
+                </div>
+                <img src="assets/icons/lines.svg" />
+            </div> -->
+            <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType">
+            </canvas>
+        </div>
     </div>
     <div class="resources">
         <div class="text">
             <span>חלוקת משאבים</span>
-            <img class="icon icon-info"
-                matTooltipPosition="above" matTooltipClass="custom-tooltip"
-                matTooltip="איך זמן העבודה שלך מתחלק בין הפרויקטים? הערכה על בסיס הפיצ׳ר ׳זמן מצטבר משוער׳."/>
+            <img class="icon icon-info" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                matTooltip="איך זמן העבודה שלך מתחלק בין הפרויקטים? הערכה על בסיס הפיצ׳ר ׳זמן מצטבר משוער׳." />
         </div>
         <div class="projects">
             <app-circle-segment [projects]="projects"></app-circle-segment>

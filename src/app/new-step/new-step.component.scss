@@ -1,7 +1,7 @@
-@import '../../mixins.scss';
+@use '../../mixins.scss' as mixins;
 .main {
     padding: 1rem 2rem;
-    @include regular-border;
+    @include mixins.regular-border;
     width: 100%;
 
     .choose-type {
@@ -14,7 +14,7 @@
 
             .step-type {
                 cursor: pointer;
-                @include regular-border;
+                @include mixins.regular-border;
                 padding: 0.5rem 1rem;
                 margin-bottom: 1.5rem;
                 display: flex;
@@ -57,7 +57,7 @@
                 width: 92px;
                 height: 71px;
                 cursor: pointer;
-                @include regular-border;
+                @include mixins.regular-border;
 
                 &:hover {
                     background-color: var(--hover-color);
@@ -77,7 +77,7 @@
             input,
             textarea {
                 background-color: transparent;
-                @include regular-border;
+                @include mixins.regular-border;
             }
 
             textarea {
@@ -87,7 +87,7 @@
 
         .date {
             .date {
-                @include regular-border;
+                @include mixins.regular-border;
             }
         }
 
@@ -118,4 +118,5 @@
     font-family: 'regular';
     font-size: var(--font-size-1);
     color: red;
+    position: absolute;
 }
