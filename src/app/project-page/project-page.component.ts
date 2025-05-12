@@ -16,10 +16,11 @@ import { ProjectModalComponent } from '../modals/project-modal/project-modal.com
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NotesComponent } from '../notes/notes.component';
 import { ProjectHoverService } from '../services/project-hover.service';
+import { RichTextComponent } from "../rich-text/rich-text.component";
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent],
+  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, RichTextComponent],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss',
   animations: [
@@ -48,6 +49,7 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   projectHoverService = inject(ProjectHoverService);
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
+  @ViewChild('richTextDiv', { static: false }) richTextDiv?: ElementRef;
   editDiv?: HTMLDivElement;
   @Input() set projectInput(value: Project | undefined) {
     this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
@@ -93,7 +95,9 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
       this.editStepId = '';
     }
 
-    if (this.notesDiv?.nativeElement && !this.notesDiv.nativeElement.contains(event.target)) {
+    if (this.notesDiv?.nativeElement && 
+       !this.notesDiv.nativeElement.contains(event.target) && 
+       !this.richTextDiv?.nativeElement.contains(event.target)) {
       this.showNotes = false;
       this.projectHoverService.projectHover();
     }

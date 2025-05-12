@@ -4,15 +4,17 @@ import { Editor, NgxEditorModule } from 'ngx-editor';
 import { debounceTime, Subscription } from 'rxjs';
 import { Project } from '../models/project';
 import { HttpService } from '../services/http.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-rich-text',
-  imports: [NgxEditorModule, ReactiveFormsModule, FormsModule],
+  imports: [NgxEditorModule, ReactiveFormsModule, FormsModule, CommonModule],
   templateUrl: './rich-text.component.html',
   styleUrl: './rich-text.component.scss'
 })
 export class RichTextComponent implements OnDestroy, OnChanges {
   @Input() project?: Project;
+  @Input() expanded?: boolean;
   httpService = inject(HttpService);
   editor = new Editor();
   editorControl = new FormControl('');

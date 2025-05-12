@@ -1,4 +1,8 @@
-<div class="main">
+<div class="main" [class.shadow-and-background]="expanded">
+    <div class="header" *ngIf="expanded">
+        <span class="title">רשימות וסיכומים</span>
+        <span class="sub-title">כל מי שצופה בפרויקט יכול לקרוא את הרשימות שלך</span>
+    </div>
     <div class="toolbar">
         <img class="icon-ordered-list pointer" (click)="toggleOrderedList()" />
         <img class="icon-bullet-list pointer" (click)="toggleBulletList()" />
@@ -7,5 +11,5 @@
         <img class="icon-h2 pointer" (click)="setHeading(2)" />
         <img class="icon-h1 pointer" (click)="setHeading(1)" />
     </div>
-    <ngx-editor class="editor" [editor]="editor" [formControl]="editorControl"></ngx-editor>
+    <ngx-editor class="editor" [class.editor-border]="expanded" [class.shadow-and-background]="!expanded" [editor]="editor" [formControl]="editorControl" placeholder="הקלד כאן..."></ngx-editor>
 </div>

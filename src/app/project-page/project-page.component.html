@@ -53,10 +53,10 @@
             <span class="hours">{{((workedTimeToShow)/3600000).toFixed(1)}} שעות</span>
         </div>
     </div>
-    <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)">
+    <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)" *ngIf="!showNotes">
         <div [class]="step.isComplete? 'finished' : 'not-finished'" #stepDiv
             [ngClass]="{'step' : editStepId !== step.id, 'active-step': step.id === activeStepId && step.id !== editStepId}"
-            *ngFor="let step of project?.steps" (mouseenter)="hoverStepId = step.id" 
+            *ngFor="let step of project?.steps" (mouseenter)="hoverStepId = step.id"
             (mouseleave)="hoverStepId = undefined" cdkDrag>
             <div *ngIf="editStepId !== step.id">
                 <div class="step-header">
@@ -92,7 +92,10 @@
             <app-new-step class="new-step" (stepsEmitter)="createNewStep($event)"></app-new-step>
         </div>
     </div>
+    <div class="rich-text" *ngIf="showNotes" #richTextDiv>
+        <app-rich-text [project]="project" [expanded]="true"></app-rich-text>
+    </div>
     <div class="notes" #notesDiv>
-       <app-notes [project]="project" [notesPopup]="showNotes" (showNotesEmitter)="showNotesPopup($event)"></app-notes>
+        <app-notes [project]="project" [notesPopup]="showNotes" (showNotesEmitter)="showNotesPopup($event)"></app-notes>
     </div>
 </div>
