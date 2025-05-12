@@ -21,7 +21,7 @@ export class CircleSegmentComponent {
   }
 
   get adjustedCircumference(): number {
-    return this.circumference - (this.projects.length+1) * this.gapSize;
+    return this.circumference - (this.projects.length) * this.gapSize;
   }
 
   getDashArray(value: number): string {

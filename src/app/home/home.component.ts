@@ -61,7 +61,6 @@ export class HomeComponent implements OnInit {
     const activeProjectTabs = this.userProjects.activeProjects.map(p => { return { id: p.id ?? '', label: p.name, project: p } });
     this.tabs = [this.activeTab];
     this.tabs.push(...activeProjectTabs);
-    this.setActive(this.tabs[1]);// to remove
   }
 
   sortProjects(projects: Project[]): UserProjects {
