@@ -15,16 +15,24 @@
                 matTooltipPosition="above" matTooltipClass="custom-tooltip" />
         </div>
         <div class="graph">
-            <!-- <div class="background">
-                <div class="sums">
-                    <span>30,000</span>
-                    <span>20,000</span>
-                    <span>10,000</span>
+            <div class="sums">
+                <span>{{maxGraphValue}}</span>
+            </div>
+            <div class="background">
+                <div class="bars">
+                    <div class="month" *ngFor="let month of graphMonths; let i = index">
+                        <div class="progress" [style.height.%]="getFutureGraphValue(i)">
+                            <div class="progress-bar-vertical" [matTooltip]="futurePayments[i].toString()" matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="isPayedHovered">
+                                <div class="progress-fill-vertical" [style.height.%]="getPastGraphValue(i)" (mouseenter)="isPayedHovered = true"
+                                (mouseleave)="isPayedHovered = false" [matTooltip]="pastPayments[i].toString()" matTooltipPosition="above" matTooltipClass="custom-tooltip"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <img src="assets/icons/lines.svg" />
-            </div> -->
-            <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType">
-            </canvas>
+                <div class="months">
+                    <span *ngFor="let month of graphMonths">{{month | number: '2.0'}}</span>
+                </div>
+            </div>
         </div>
     </div>
     <div class="resources">

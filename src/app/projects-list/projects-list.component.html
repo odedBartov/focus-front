@@ -41,7 +41,7 @@
                             {{getPaidMoney(project)}} מתוך {{project.paidMoney}} ₪
                         </span>
                     </div>
-                    <div class="progress small-text">
+                    <div class="small-text">
                         <span>{{getProjectProgress(project) | number:'1.0-0'}}%</span>
                         <div class="progress-bar">
                             <div class="progress-fill" [style.width.%]="getProjectProgress(project)"></div>

@@ -4,32 +4,12 @@ import { CommonModule } from '@angular/common';
 import { Project } from '../models/project';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CircleSegmentComponent } from '../circle-segment/circle-segment.component';
-import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartType } from 'chart.js';
-import {
-  Chart,
-  CategoryScale,
-  LinearScale,
-  BarController,
-  BarElement,
-  Tooltip,
-  Legend,
-  Title,
-} from 'chart.js';
 import { StepType } from '../models/enums';
 import { Step } from '../models/step';
-Chart.register(
-  CategoryScale,
-  LinearScale,
-  BarController,
-  BarElement,
-  Tooltip,
-  Legend,
-  Title
-);
+
 @Component({
   selector: 'app-summary',
-  imports: [CommonModule, MatTooltipModule, CircleSegmentComponent, BaseChartDirective],
+  imports: [CommonModule, MatTooltipModule, CircleSegmentComponent],
   templateUrl: './summary.component.html',
   styleUrl: './summary.component.scss'
 })
@@ -47,41 +27,12 @@ export class SummaryComponent implements OnInit {
   coffeePicture = this.coffeePictures[0];
   userName: string | null = '';
   coffeeRotation = 0;
-  public barChartType: 'bar' = 'bar';
-  public barChartData: ChartConfiguration<'bar'>['data'] = {
-    labels: [],
-    datasets: [
-      {
-        label: 'Primary',
-        data: [20000, 15000, 10000, 20000, 17000],
-        backgroundColor: '#4A7CFF',
-        stack: 'combined',
-      },
-      {
-        label: 'Secondary',
-        data: [5000, 5000, 15000, 0, 0],
-        backgroundColor: '#D1DBF8',
-        stack: 'combined',
-      }
-    ],
-  };
-  public barChartOptions: ChartConfiguration<'bar'>['options'] = {
-    responsive: true,
-    scales: {
-      x: {
-        stacked: true,
-      },
-      y: {
-        stacked: true,
-        ticks: {
-          stepSize: 10000,
-        }
-      }
-    },
-    plugins: {
-      legend: { display: false },
-    },
-  };
+  pastPayments: number[] = [];
+  futurePayments: number[] = [];
+  maxGraphValue = 1;
+  graphMonths: number[] = [];
+  isPayedHovered = false;
+  graphScales: number[] = [5, 10, 20, 40, 50, 80, 100, 250, 300, 700, 1000, 3000, 5000, 10000, 20000, 40000, 50000, 80000, 100000, 200000, 300000, 500000];
 
   ngOnInit(): void {
     this.userName = this.authService.getUserName();
@@ -95,7 +46,7 @@ export class SummaryComponent implements OnInit {
     const oneMonthAgo = new Date(today.getFullYear(), today.getMonth() - 1, 1);
     const oneMonthFuture = new Date(today.getFullYear(), today.getMonth() + 1, 1);
     const twoMonthsFuture = new Date(today.getFullYear(), today.getMonth() + 2, 1);
-    this.barChartData.labels = [(today.getMonth() + 3) % 12, (today.getMonth() + 2) % 12, (today.getMonth() + 1) % 12, today.getMonth() % 12, (today.getMonth() - 1) % 12];
+    this.graphMonths = [(today.getMonth() + 3) % 12, (today.getMonth() + 2) % 12, (today.getMonth() + 1) % 12, today.getMonth() % 12, (today.getMonth() - 1) % 12];
 
     const chartModel = this.projects.map(p => p.steps).flat();
     const paymentSteps = chartModel.filter(s => s && s.stepType === StepType.payment) as Step[];
@@ -106,31 +57,19 @@ export class SummaryComponent implements OnInit {
     filteredMonths[3] = paymentSteps.filter(s => this.compareYearAndMonth(s?.dateCompleted, oneMonthAgo) && s.isComplete);
     filteredMonths[4] = paymentSteps.filter(s => this.compareYearAndMonth(s?.dateCompleted, twoMonthsAgo) && s.isComplete);
 
-    const primaries: number[] = [];
-    primaries[0] = 0;
-    primaries[1] = 0;
-    primaries[2] = filteredMonths[2].reduce((sum, step) => sum + (step.isComplete ? step.price : 0), 0);
-    primaries[3] = filteredMonths[3].reduce((sum, step) => sum + step.price, 0);
-    primaries[4] = filteredMonths[4].reduce((sum, step) => sum + step.price, 0);
+    this.pastPayments[0] = 0;
+    this.pastPayments[1] = 0;
+    this.pastPayments[2] = filteredMonths[2].reduce((sum, step) => sum + (step.isComplete ? step.price : 0), 0);
+    this.pastPayments[3] = filteredMonths[3].reduce((sum, step) => sum + step.price, 0);
+    this.pastPayments[4] = filteredMonths[4].reduce((sum, step) => sum + step.price, 0);
 
-    const Secondaries: number[] = [];
-    Secondaries[0] = filteredMonths[0].reduce((sum, step) => sum + step.price, 0);
-    Secondaries[1] = filteredMonths[1].reduce((sum, step) => sum + step.price, 0);
-    Secondaries[2] = filteredMonths[2].reduce((sum, step) => sum + (!step.isComplete ? step.price : 0), 0);
-    Secondaries[3] = 0;
-    Secondaries[4] = 0;
+    this.futurePayments[0] = filteredMonths[0].reduce((sum, step) => sum + step.price, 0);
+    this.futurePayments[1] = filteredMonths[1].reduce((sum, step) => sum + step.price, 0);
+    this.futurePayments[2] = filteredMonths[2].reduce((sum, step) => sum + (!step.isComplete ? step.price : 0), 0);
+    this.futurePayments[3] = 0;
+    this.futurePayments[4] = 0;
 
-    this.barChartData.datasets = [{
-      label: 'תשלום שהתבצע',
-      data: primaries,
-      backgroundColor: '#667AFF',
-      stack: 'combined',
-    }, {
-      label: 'תשלום צפוי',
-      data: Secondaries,
-      backgroundColor: 'rgba(102, 122, 255, 0.3)',
-      stack: 'combined',
-    }];
+    this.calculateGraphScale();
   }
 
   compareYearAndMonth(first: Date | undefined, second: Date) {
@@ -140,6 +79,25 @@ export class SummaryComponent implements OnInit {
       firstDate.getMonth() === second.getMonth()
     }
     return false;
+  }
+
+  getPastGraphValue(index: number) {
+    let value = this.pastPayments[index];
+    return (value / (this.futurePayments[index] > 0 ? this.futurePayments[index] : 1)) * 100;
+  }
+
+  getFutureGraphValue(index: number) {
+    let value = this.pastPayments[index] + this.futurePayments[index];
+    return (value / this.maxGraphValue) * 100;
+  }
+
+  calculateGraphScale() {
+    const maxPast = Math.max(...this.pastPayments);
+    const maxFuture = Math.max(...this.futurePayments);
+    const todaySum = this.pastPayments[2] + this.futurePayments[2];
+    const maxPayment = Math.max(maxPast, maxFuture, todaySum);
+    const maxScale = this.graphScales.find(n => n > maxPayment);
+    this.maxGraphValue = maxScale ?? 0;
   }
 
   startCoffeeRotationCalculation() {
