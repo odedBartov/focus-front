@@ -14,8 +14,11 @@ export class NewProjectComponent {
   dialogRef = inject(MatDialogRef<NewProjectComponent>);
   formBuilder = inject(FormBuilder);
   descriptionForm: FormGroup;
-  descriptionFormSubmitted = false;
+  descriptionSubmitted = false;
+  dateAndPriceForm: FormGroup;
+  dateAndPriceSubmitted = false;
   project: Project;
+  currentProgress = 1;
 
   constructor() {
     this.project = new Project();
@@ -24,22 +27,44 @@ export class NewProjectComponent {
       subTitle: ['', [Validators.required]],
       description: ''
     });
+
+    this.dateAndPriceForm = this.formBuilder.group({
+      price: ['', [Validators.required]],
+      startDate: ['', [Validators.required]],
+      endDate: ['', [Validators.required]]
+    });
   }
 
   getCurrentProgress() {
-    return 3;
+    return (this.currentProgress / 4) * 100;
+  }
+
+  submit() {
+    switch (this.currentProgress) {
+      case 1:
+        this.submitDescription()
+        break;
+      case 2:
+        this.submitDateAndPrice()
+        break;
+    }
   }
 
   submitDescription() {
-    this.descriptionFormSubmitted = true;
+    this.descriptionSubmitted = true;
     if (this.descriptionForm.valid && this.project) {
       this.project.name = this.descriptionForm.get("title")?.value;
       this.project.subTitle = this.descriptionForm.get("subTitle")?.value;
       this.project.description = this.descriptionForm.get("description")?.value;
+      this.currentProgress++;
     }
   }
 
-  closeModal(confirm: boolean){
+  submitDateAndPrice() {
+
+  }
+
+  closeModal(confirm: boolean) {
     this.dialogRef.close(confirm);
   }
 }

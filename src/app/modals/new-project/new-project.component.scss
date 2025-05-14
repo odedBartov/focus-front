@@ -1,15 +1,26 @@
 @use '../../../mixins.scss' as mixins;
+
 .template {
     @include mixins.big-popup;
-    .descriptionForm {
+
+    .main {
         padding: 5rem;
         background-color: white;
         border-radius: var(--common-radius);
+
+        Form {
+            width: 45rem;
+            height: 31rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
 
         .header {
             display: flex;
             flex-direction: column;
             margin: 2rem 0;
+
             .title {
                 font-family: 'black';
                 font-size: var(--font-size-4);
@@ -21,59 +32,66 @@
             }
         }
 
-        .line {
-            display: flex;
-            align-items: flex-end;
-            margin-bottom: 2rem;
-            .text-and-input {
+        .descriptionForm {
+            .line {
                 display: flex;
-                flex-direction: column;
-                flex: 3;
-                margin-left: 4rem;
-                font-family: 'regular';
-                font-size: var(--font-size-1);
+                align-items: flex-end;
+                margin-bottom: 2rem;
 
-                textarea,
-                input {
-                    margin-top: 0.2rem;
-                    
+                .text-and-input {
+                    display: flex;
+                    flex-direction: column;
+                    flex: 3;
+                    margin-left: 4rem;
+                    font-family: 'regular';
+                    font-size: var(--font-size-1);
+
+                    textarea,
+                    input {
+                        margin-top: 0.2rem;
+
+                    }
+
+                    textarea {
+                        height: 120px;
+                    }
                 }
 
-                textarea {
-                    height: 120px;
+                .description {
+                    flex: 2;
+                    font-family: 'regular';
+                    font-size: var(--font-size-1);
                 }
-            }
-
-            .description {
-                flex: 2;
-                font-family: 'regular';
-                font-size: var(--font-size-1);
             }
         }
-    }
 
-    .confirm {
-        margin-top: 5rem;
-        display: flex;
-        width: 100%;
-        align-items: center;
-        justify-content: center;
+        .dateAndPriceForm {
 
-        .confirm-button {
-            border-radius: 26px;
-            padding: 0.5rem 1rem;
-            transition: all 0.3s;
-            cursor: pointer;
+        }
+
+        .confirm {
+            margin-top: 5rem;
             display: flex;
-            justify-content: center;
+            width: 100%;
             align-items: center;
-            font-family: 'medium';
-            font-size: var(--font-size-2);
-            color: white;
-            background-color: var(--main-color-not-active);
+            justify-content: center;
 
-            &:hover {
-                background-color: var(--main-color);
+            .confirm-button {
+                border-radius: 26px;
+                padding: 0.5rem 1rem;
+                transition: all 0.3s;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-family: 'medium';
+                font-size: var(--font-size-2);
+                color: white;
+                background-color: var(--main-color-not-active);
+
+                &:hover {
+                    background-color: var(--main-color);
+                }
             }
         }
     }

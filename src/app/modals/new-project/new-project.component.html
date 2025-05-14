@@ -1,54 +1,66 @@
 <div class="template">
-    <Form [formGroup]="descriptionForm" class="descriptionForm">
+    <div class="main">
         <div class="progress small-text">
             <div class="progress-bar">
                 <div class="progress-fill" [style.width.%]="getCurrentProgress()"></div>
             </div>
         </div>
-        <div class="header">
-            <span class="title">פרויקט חדש</span>
-            <span class="sub-title">איזה כיף! אתגר חדש בדרך</span>
-        </div>
-        <div class="line">
-            <div class="text-and-input">
-                <span>כותרת ראשית</span>
-                <input type="text" formControlName="title"/>
-                <div class="error-container">
-                    <span *ngIf="descriptionFormSubmitted && descriptionForm.get('title')?.errors" class="error">אנא
-                        הזינו כותרת</span>
+        <Form [formGroup]="descriptionForm" class="descriptionForm" *ngIf="currentProgress === 1">
+            <div class="header">
+                <span class="title">פרויקט חדש</span>
+                <span class="sub-title">איזה כיף! אתגר חדש בדרך</span>
+            </div>
+            <div class="line">
+                <div class="text-and-input">
+                    <span>כותרת ראשית</span>
+                    <input type="text" formControlName="title" />
+                    <div class="error-container">
+                        <span *ngIf="descriptionSubmitted && descriptionForm.get('title')?.errors" class="error">אנא
+                            הזינו כותרת</span>
+                    </div>
+                </div>
+                <div class="description">
+                    <span>רוב המשתמשים מעדיפים לקרוא לפרויקט בשם הלקוח</span>
                 </div>
             </div>
-            <div class="description">
-                <span>רוב המשתמשים מעדיפים לקרוא לפרויקט בשם הלקוח</span>
-            </div>
-        </div>
-        <div class="line">
-            <div class="text-and-input">
-                <span>כותרת משנית</span>
-                <input type="text" formControlName="subTitle"/>
-                <div class="error-container">
-                    <span *ngIf="descriptionFormSubmitted && descriptionForm.get('subTitle')?.errors" class="error">אנא
-                        הזינו כותרת משנית</span>
+            <div class="line">
+                <div class="text-and-input">
+                    <span>כותרת משנית</span>
+                    <input type="text" formControlName="subTitle" />
+                    <div class="error-container">
+                        <span *ngIf="descriptionSubmitted && descriptionForm.get('subTitle')?.errors"
+                            class="error">אנא
+                            הזינו כותרת משנית</span>
+                    </div>
+                </div>
+                <div class="description">
+                    <span>כאן כדאי לציין את מהות הפרויקט. למשל "תהליך מיתוג" או "אתר תדמית"</span>
                 </div>
             </div>
-            <div class="description">
-                <span>כאן כדאי לציין את מהות הפרויקט. למשל "תהליך מיתוג" או "אתר תדמית"</span>
+            <div class="line">
+                <div class="text-and-input">
+                    <span>תיאור קצר</span>
+                    <textarea></textarea>
+                </div>
+                <div class="description">
+                    <span>לא חובה, אבל כדאי. הבריף מוצג במיקום מרכזי במסך הפרויקט, ומטרתו לעזור לך להיכנס לעניינים
+                        ולזכור את
+                        הדברים החשובים.</span>
+                </div>
             </div>
-        </div>
-        <div class="line">
-            <div class="text-and-input">
-                <span>תיאור קצר</span>
-                <textarea></textarea>
+        </Form>
+        
+        <form [formGroup]="dateAndPriceForm" class="dateAndPriceForm" *ngIf="currentProgress === 2">
+            <div class="header">
+                <span class="title">מחיר ותאריכים</span>
+                <span class="sub-title">עם כל הכבוד לאתגר, הוא צריך להכנס למסגרת עסקית</span>
             </div>
-            <div class="description">
-                <span>לא חובה, אבל כדאי. הבריף מוצג במיקום מרכזי במסך הפרויקט, ומטרתו לעזור לך להיכנס לעניינים ולזכור את
-                    הדברים החשובים.</span>
-            </div>
-        </div>
+        </form>
+
         <div class="confirm">
-            <div class="confirm-button" (click)="submitDescription()">
+            <div class="confirm-button" (click)="submit()">
                 אישור והמשך
             </div>
         </div>
-    </Form>
+    </div>
 </div>
