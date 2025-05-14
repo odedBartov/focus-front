@@ -7,6 +7,8 @@ import { importProvidersFrom } from '@angular/core';
 import { SocialLoginModule } from '@abacritt/angularx-social-login';
 import { TokenInterceptor } from './helpers/jwtInterceptor';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideLottieOptions } from 'ngx-lottie';
+import player from 'lottie-web';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
@@ -19,6 +21,9 @@ export const appConfig: ApplicationConfig = {
     useClass: TokenInterceptor,
     multi: true
   },
-  importProvidersFrom(SocialLoginModule)
+  importProvidersFrom(SocialLoginModule),
+  provideLottieOptions({
+      player: () => player,
+    })
   ]
 };

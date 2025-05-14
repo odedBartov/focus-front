@@ -5,58 +5,105 @@
                 <div class="progress-fill" [style.width.%]="getCurrentProgress()"></div>
             </div>
         </div>
-        <Form [formGroup]="descriptionForm" class="descriptionForm" *ngIf="currentProgress === 1">
+        <div *ngIf="currentProgress === 1">
             <div class="header">
                 <span class="title">פרויקט חדש</span>
                 <span class="sub-title">איזה כיף! אתגר חדש בדרך</span>
             </div>
-            <div class="line">
-                <div class="text-and-input">
-                    <span>כותרת ראשית</span>
-                    <input type="text" formControlName="title" />
-                    <div class="error-container">
-                        <span *ngIf="descriptionSubmitted && descriptionForm.get('title')?.errors" class="error">אנא
-                            הזינו כותרת</span>
+            <Form [formGroup]="descriptionForm">
+                <div class="line">
+                    <div class="text-and-input">
+                        <span>כותרת ראשית</span>
+                        <input type="text" formControlName="title" />
+                        <div class="error-container">
+                            <span *ngIf="descriptionSubmitted && descriptionForm.get('title')?.errors" class="error">אנא
+                                הזינו כותרת</span>
+                        </div>
+                    </div>
+                    <div class="description">
+                        <span>רוב המשתמשים מעדיפים לקרוא לפרויקט בשם הלקוח</span>
                     </div>
                 </div>
-                <div class="description">
-                    <span>רוב המשתמשים מעדיפים לקרוא לפרויקט בשם הלקוח</span>
-                </div>
-            </div>
-            <div class="line">
-                <div class="text-and-input">
-                    <span>כותרת משנית</span>
-                    <input type="text" formControlName="subTitle" />
-                    <div class="error-container">
-                        <span *ngIf="descriptionSubmitted && descriptionForm.get('subTitle')?.errors"
-                            class="error">אנא
-                            הזינו כותרת משנית</span>
+                <div class="line">
+                    <div class="text-and-input">
+                        <span>כותרת משנית</span>
+                        <input type="text" formControlName="subTitle" />
+                        <div class="error-container">
+                            <span *ngIf="descriptionSubmitted && descriptionForm.get('subTitle')?.errors"
+                                class="error">אנא
+                                הזינו כותרת משנית</span>
+                        </div>
+                    </div>
+                    <div class="description">
+                        <span>כאן כדאי לציין את מהות הפרויקט. למשל "תהליך מיתוג" או "אתר תדמית"</span>
                     </div>
                 </div>
-                <div class="description">
-                    <span>כאן כדאי לציין את מהות הפרויקט. למשל "תהליך מיתוג" או "אתר תדמית"</span>
+                <div class="line">
+                    <div class="text-and-input">
+                        <span>תיאור קצר</span>
+                        <textarea></textarea>
+                    </div>
+                    <div class="description">
+                        <span>לא חובה, אבל כדאי. הבריף מוצג במיקום מרכזי במסך הפרויקט, ומטרתו לעזור לך להיכנס לעניינים
+                            ולזכור את
+                            הדברים החשובים.</span>
+                    </div>
                 </div>
-            </div>
-            <div class="line">
-                <div class="text-and-input">
-                    <span>תיאור קצר</span>
-                    <textarea></textarea>
-                </div>
-                <div class="description">
-                    <span>לא חובה, אבל כדאי. הבריף מוצג במיקום מרכזי במסך הפרויקט, ומטרתו לעזור לך להיכנס לעניינים
-                        ולזכור את
-                        הדברים החשובים.</span>
-                </div>
-            </div>
-        </Form>
-        
-        <form [formGroup]="dateAndPriceForm" class="dateAndPriceForm" *ngIf="currentProgress === 2">
+            </Form>
+        </div>
+        <div *ngIf="currentProgress === 2">
             <div class="header">
                 <span class="title">מחיר ותאריכים</span>
                 <span class="sub-title">עם כל הכבוד לאתגר, הוא צריך להכנס למסגרת עסקית</span>
             </div>
-        </form>
-
+            <form [formGroup]="dateAndPriceForm" class="dateAndPriceForm">
+                <div class="line">
+                    <div class="text-and-input">
+                        <span>מחיר הפרויקט הכולל</span>
+                        <div style="width: 100%; display: flex; align-items: center;">
+                            <input type="number" formControlName="price" style="flex: 1;" />
+                            <span style="position: absolute; left: 50%;">₪</span>
+                        </div>
+                        <div class="error-container">
+                            <span *ngIf="descriptionSubmitted && descriptionForm.get('price')?.errors" class="error">אנא
+                                הזינו מחיר</span>
+                        </div>
+                    </div>
+                    <div class="description">
+                        <span>החלוקה לתשלומים תתבצע בהמשך, ותמיד אפשר לשנות ולעדכן. ללא מע״מ</span>
+                    </div>
+                </div>
+                <div class="line">
+                    <div class="dates">
+                        <div class="text-and-input">
+                            <span>תאריך התחלה</span>
+                            <div>
+                                <input type="text" formControlName="startDate" mask="00/00/00" placeholder="_ _/_ _/_ _" [dropSpecialCharacters]="false"/>
+                            </div>
+                            <div class="error-container">
+                                <span *ngIf="descriptionSubmitted && descriptionForm.get('startDate')?.errors"
+                                    class="error">אנא
+                                    הזינו מחיר</span>
+                            </div>
+                        </div>
+                        <div class="text-and-input">
+                            <span>תאריך סיום</span>
+                            <div>
+                                <input type="text" formControlName="endDate" mask="00/00/00" placeholder="_ _/_ _/_ _" [dropSpecialCharacters]="false"/>
+                            </div>
+                            <div class="error-container">
+                                <span *ngIf="descriptionSubmitted && descriptionForm.get('endDate')?.errors"
+                                    class="error">אנא
+                                    הזינו מחיר</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="description">
+                        <span>חשוב לתחום את הפרויקט בתאריכים, כדי לצפות את לוחות הזמנים וההכנסות.</span>
+                    </div>
+                </div>
+            </form>
+        </div>
         <div class="confirm">
             <div class="confirm-button" (click)="submit()">
                 אישור והמשך

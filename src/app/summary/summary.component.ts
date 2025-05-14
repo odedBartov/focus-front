@@ -83,7 +83,7 @@ export class SummaryComponent implements OnInit {
 
   getPastGraphValue(index: number) {
     let value = this.pastPayments[index];
-    return (value / (this.futurePayments[index] > 0 ? this.futurePayments[index] : 1)) * 100;
+    return (value / (this.futurePayments[index] > 0 ? this.futurePayments[index]+value : 1)) * 100;
   }
 
   getFutureGraphValue(index: number) {

@@ -2,15 +2,19 @@
 
 .template {
     @include mixins.big-popup;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     .main {
-        padding: 5rem;
+        width: 45rem;
+        display: flex;
+        flex-direction: column;
         background-color: white;
         border-radius: var(--common-radius);
 
         Form {
-            width: 45rem;
-            height: 31rem;
+            height: 30rem;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
@@ -19,7 +23,7 @@
         .header {
             display: flex;
             flex-direction: column;
-            margin: 2rem 0;
+            margin-top: 2rem;
 
             .title {
                 font-family: 'black';
@@ -32,45 +36,59 @@
             }
         }
 
-        .descriptionForm {
-            .line {
+        .line {
+            display: flex;
+            align-items: flex-end;
+
+            .dates {
                 display: flex;
-                align-items: flex-end;
-                margin-bottom: 2rem;
+                margin-left: 4rem;
+                flex: 4;
+                justify-content: space-between;
 
                 .text-and-input {
-                    display: flex;
-                    flex-direction: column;
-                    flex: 3;
-                    margin-left: 4rem;
-                    font-family: 'regular';
-                    font-size: var(--font-size-1);
+                    flex: 0;
+                    margin-left: 0;
 
-                    textarea,
-                    input {
-                        margin-top: 0.2rem;
-
-                    }
-
-                    textarea {
-                        height: 120px;
+                    div {
+                        input {
+                            width: 7rem;
+                        }
                     }
                 }
+            }
 
-                .description {
-                    flex: 2;
+            .text-and-input {
+                display: flex;
+                flex-direction: column;
+                flex: 4;
+                margin-left: 4rem;
+                font-family: 'regular';
+                font-size: var(--font-size-1);
+
+                textarea,
+                input {
+                    margin-top: 0.2rem;
                     font-family: 'regular';
-                    font-size: var(--font-size-1);
+                    font-size: var(--font-size-2);
                 }
+
+                textarea {
+                    height: 120px;
+                }
+            }
+
+            .description {
+                flex: 3;
+                font-family: 'regular';
+                font-size: var(--font-size-1);
             }
         }
 
-        .dateAndPriceForm {
 
-        }
+        .dateAndPriceForm {}
 
         .confirm {
-            margin-top: 5rem;
             display: flex;
             width: 100%;
             align-items: center;

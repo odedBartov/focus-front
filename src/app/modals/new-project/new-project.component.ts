@@ -2,11 +2,13 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Project } from '../../models/project';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-new-project',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgxMaskDirective],
+  providers: [provideNgxMask(), DatePipe],
   templateUrl: './new-project.component.html',
   styleUrl: './new-project.component.scss'
 })
@@ -30,8 +32,8 @@ export class NewProjectComponent {
 
     this.dateAndPriceForm = this.formBuilder.group({
       price: ['', [Validators.required]],
-      startDate: ['', [Validators.required]],
-      endDate: ['', [Validators.required]]
+      startDate: '',
+      endDate: ''
     });
   }
 

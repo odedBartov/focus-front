@@ -15,7 +15,6 @@
     src: url('assets/fonts/SimonaPro-Regular.woff2') format('woff2')
 }
 
-
 :root {
     --font-size-1: 1rem;
     --font-size-2: 1.25rem;
@@ -107,6 +106,12 @@
         background-color: transparent;
         @include mixins.regular-border;
     }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .toggle-switch {
