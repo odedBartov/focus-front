@@ -81,7 +81,8 @@ export class ProjectsListComponent {
 
   getProjectProgress(project: Project) {
     const completedSteps = project.steps?.filter(s => s.isComplete).length;
-    return ((completedSteps ?? 0) / (project.steps?.length ?? 1)) * 100;
+    return ((completedSteps ?? 0) / (project.steps?.length > 0 ? project.steps.length : 1)) * 100;
+
   }
 
   getPaidMoney(project: Project) {
@@ -135,13 +136,16 @@ export class ProjectsListComponent {
 
   selectProject(project: Project) {
     this.selectProjectEmitter.emit(project);
-    //this.router.navigate(['/project', projectId, false]);
   }
 
   openProjectModal() {
     const dialogRef = this.dialog.open(NewProjectComponent);
     dialogRef.afterClosed().subscribe(res => {
-      // recieve the project
+      this.loadingService.changeIsloading(true);
+      this.httpService.createProject(res).subscribe(newProject => {
+        this.projects.activeProjects.push(newProject);
+        this.loadingService.changeIsloading(false);
+      })
     })
   }
 }

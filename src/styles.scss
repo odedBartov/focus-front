@@ -159,7 +159,7 @@ input::-webkit-inner-spin-button {
 .progress-fill {
     height: 100%;
     background-color: var(--main-color);
-    transition: width 0.3s ease;
+    transition: width 0.5s ease;
 }
 
 .progress-bar-vertical {
@@ -171,7 +171,7 @@ input::-webkit-inner-spin-button {
 
 .progress-fill-vertical {
     background-color: var(--main-color);
-    transition: height 0.3s ease;
+    transition: height 0.5s ease;
 }
 
 .error-container {

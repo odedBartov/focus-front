@@ -16,6 +16,12 @@ import { Step } from '../models/step';
 export class SummaryComponent implements OnInit {
   authService = inject(AuthenticationService);
   @Input() projects: Project[] = [];
+  greetings: { hour: number, greeting: string }[] = [{ hour: 5, greeting: 'לילה טוב' },
+  { hour: 12, greeting: 'בוקר טוב' },
+  { hour: 16, greeting: 'צהריים טובים' },
+  { hour: 18, greeting: 'אחר צהריים טובים' },
+  { hour: 22, greeting: 'ערב טוב' },
+  { hour: 25, greeting: 'לילה טוב' }];
   coffeePictures = [
     'assets/pictures/coffee_1.png',
     'assets/pictures/coffee_2.png',
@@ -73,17 +79,17 @@ export class SummaryComponent implements OnInit {
   }
 
   compareYearAndMonth(first: Date | undefined, second: Date) {
-    if (first) {   
+    if (first) {
       const firstDate = new Date(first);
       return firstDate.getFullYear() === second.getFullYear() &&
-      firstDate.getMonth() === second.getMonth()
+        firstDate.getMonth() === second.getMonth()
     }
     return false;
   }
 
   getPastGraphValue(index: number) {
     let value = this.pastPayments[index];
-    return (value / (this.futurePayments[index] > 0 ? this.futurePayments[index]+value : 1)) * 100;
+    return (value / (this.futurePayments[index] > 0 ? this.futurePayments[index] + value : 1)) * 100;
   }
 
   getFutureGraphValue(index: number) {
@@ -125,6 +131,8 @@ export class SummaryComponent implements OnInit {
   }
 
   getGreeting() {
-    return "בוקר טוב"// todo
+    const currentHour = new Date().getHours();
+    const greeting = this.greetings.find(g => g.hour > currentHour)?.greeting;
+    return greeting;
   }
 }

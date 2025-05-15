@@ -34,6 +34,10 @@ export class HttpService {
     }))
   }
 
+  createProject(project: Project) {
+    return this.httpClient.post<Project>(this.apiUrl + "Projects/createProject", project);
+  }
+
   getProject(projectId: string): Observable<Project> {
     const headers = this.generateHeaders();
     return this.httpClient.get<Project>(`${this.apiUrl}Projects/getProject?projectId=${projectId}`, headers);

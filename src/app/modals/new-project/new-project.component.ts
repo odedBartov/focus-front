@@ -4,6 +4,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { Project } from '../../models/project';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { parseDate } from '../../helpers/functions';
 
 @Component({
   selector: 'app-new-project',
@@ -19,6 +20,8 @@ export class NewProjectComponent {
   descriptionSubmitted = false;
   dateAndPriceForm: FormGroup;
   dateAndPriceSubmitted = false;
+  clientSubmitted = false;
+  clientForm: FormGroup;
   project: Project;
   currentProgress = 1;
 
@@ -35,6 +38,11 @@ export class NewProjectComponent {
       startDate: '',
       endDate: ''
     });
+
+    this.clientForm = this.formBuilder.group({
+      clientName: '',
+      clientMail: ''
+    })
   }
 
   getCurrentProgress() {
@@ -48,6 +56,9 @@ export class NewProjectComponent {
         break;
       case 2:
         this.submitDateAndPrice()
+        break;
+      case 3:
+        this.finish();
         break;
     }
   }
@@ -63,10 +74,30 @@ export class NewProjectComponent {
   }
 
   submitDateAndPrice() {
-
+    this.dateAndPriceSubmitted = true;
+    if (this.dateAndPriceForm.valid) {
+      this.project.basePrice = this.dateAndPriceForm.get("price")?.value;
+      const rawStartDate = this.dateAndPriceForm.get('startDate')!.value;
+      const startDate = parseDate(rawStartDate);
+      if (startDate) {
+        this.project.startDate = startDate;
+      }
+      const rawEndDate = this.dateAndPriceForm.get('endDate')!.value;
+      const endDate = parseDate(rawEndDate);
+      if (endDate) {
+        this.project.endDate = endDate;
+      }
+      this.currentProgress++;
+    }
   }
 
   closeModal(confirm: boolean) {
     this.dialogRef.close(confirm);
+  }
+
+  finish() {
+    this.project.clientName = this.clientForm.get('clientName')?.value;
+    this.project.clientMail = this.clientForm.get('clientMail')?.value;
+    this.dialogRef.close(this.project);
   }
 }

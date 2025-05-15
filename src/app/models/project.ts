@@ -5,7 +5,7 @@ export class Project {
     id?: string;
     name: string;
     subTitle: string;
-    userEmail: string;
+    userId?: string;
     description: string;
     startDate: Date;
     endDate: Date;
@@ -14,7 +14,7 @@ export class Project {
     paidMoney: number;
     status: ProjectStatus;
     isPriority: boolean;
-    steps?: Step[];
+    steps: Step[];
     positionInList: number;
     totalWorkingTime: number;
     totalWorkingSessions: number;
@@ -27,15 +27,15 @@ export class Project {
         this.id = '';
         this.name = '';
         this.subTitle = '';
-        this.userEmail = '';
         this.description = '';
         this.startDate = new Date();
         this.endDate = new Date();
-        this.updateClient = false;
-        this.basePrice = 10000;
-        this.paidMoney = 30;
+        this.updateClient = true;
+        this.basePrice = 0;
+        this.paidMoney = 0;
         this.status = ProjectStatus.active;
         this.isPriority = false;
+        this.steps = [];
         this.positionInList = 0;
         this.totalWorkingTime = 0;
         this.totalWorkingSessions = 0;

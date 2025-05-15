@@ -24,6 +24,7 @@
             display: flex;
             flex-direction: column;
             margin-top: 2rem;
+            width: 45rem;
 
             .title {
                 font-family: 'black';
@@ -33,6 +34,19 @@
             .sub-title {
                 font-family: 'regular';
                 font-size: var(--font-size-1);
+            }
+        }
+
+        .updates {
+            margin-top: 2rem;
+
+            .updates-title {
+                font-family: 'black';
+                font-size: var(--font-size-1);
+            }
+
+            li {
+                font-family: 'regular';
             }
         }
 
@@ -85,9 +99,6 @@
             }
         }
 
-
-        .dateAndPriceForm {}
-
         .confirm {
             display: flex;
             width: 100%;
@@ -100,12 +111,17 @@
                 transition: all 0.3s;
                 cursor: pointer;
                 display: flex;
-                justify-content: center;
+                justify-content: space-between;
                 align-items: center;
                 font-family: 'medium';
                 font-size: var(--font-size-2);
                 color: white;
                 background-color: var(--main-color-not-active);
+
+                img {
+                    margin-left: 0.5rem;
+                    align-self: center;
+                }
 
                 &:hover {
                     background-color: var(--main-color);
