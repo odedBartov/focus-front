@@ -1,14 +1,28 @@
 .google-login {
-    cursor: pointer; 
-    border: 1px solid black;
-    border-radius: 15px;
+    height: 80%;
+    width: 100%;
+    border-radius: 20px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: aqua;
-    padding: 1rem;
-
+    
     .icon {
-        height: 2rem;
+        width: 35rem;
+        height: 133px;
+        margin-bottom: 2rem;
+    }
+    
+    span {
+        width: 504px;
+        height: 65px;
+        cursor: pointer;
+        font-family: 'black';
+        font-size: var(--font-size-4);
+        border-radius: 30px;
+        background-color: var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }

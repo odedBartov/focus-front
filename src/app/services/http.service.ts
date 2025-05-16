@@ -21,15 +21,20 @@ export class HttpService {
     const token = this.authenticationService.getToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     headers.append("withCredentials", 'true');
-    return {headers};
+    return { headers };
   }
 
   loginWithGoogleToken(token: string) {
-    return this.httpClient.post(`${this.apiUrl}Auth/googleLogin`, {"code": token}, {
+    return this.httpClient.post(`${this.apiUrl}Auth/googleLogin`, { "code": token }, {
+      observe: 'response',
       headers: {
         'Content-Type': 'application/json'
       }
     }).pipe(tap((res: any) => {
+      const isNewUser = res.headers.get("isNewUser");
+      if (isNewUser == "True") {
+        this.authenticationService.setNewUser(isNewUser);
+      }
       this.authenticationService.setUserName(res.name);
     }))
   }
