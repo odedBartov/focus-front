@@ -8,6 +8,7 @@ import { environment } from "../../environments/environment";
 import { Insight } from '../models/insight';
 import { Feature } from '../models/feature';
 import { InsightAndUpdates } from '../models/insightAndUpdates';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,10 @@ export class HttpService {
       }
       this.authenticationService.setUserName(res.name);
     }))
+  }
+
+  updateUser(user: User) {
+    return this.httpClient.post<User>(this.apiUrl + '', user);
   }
 
   createProject(project: Project) {

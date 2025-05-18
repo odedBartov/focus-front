@@ -141,11 +141,13 @@ export class ProjectsListComponent {
   openProjectModal() {
     const dialogRef = this.dialog.open(NewProjectComponent);
     dialogRef.afterClosed().subscribe(res => {
-      this.loadingService.changeIsloading(true);
-      this.httpService.createProject(res).subscribe(newProject => {
-        this.projects.activeProjects.push(newProject);
-        this.loadingService.changeIsloading(false);
-      })
+      if (res) {
+        this.loadingService.changeIsloading(true);
+        this.httpService.createProject(res).subscribe(newProject => {
+          this.projects.activeProjects.push(newProject);
+          this.loadingService.changeIsloading(false);
+        })
+      }
     })
   }
 }

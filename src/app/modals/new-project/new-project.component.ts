@@ -91,10 +91,6 @@ export class NewProjectComponent {
     }
   }
 
-  closeModal(confirm: boolean) {
-    this.dialogRef.close(confirm);
-  }
-
   finish() {
     this.project.clientName = this.clientForm.get('clientName')?.value;
     this.project.clientMail = this.clientForm.get('clientMail')?.value;

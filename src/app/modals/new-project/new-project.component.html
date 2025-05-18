@@ -138,7 +138,7 @@
         <div class="confirm">
             <div class="confirm-button" (click)="submit()">
                 <img src="assets/icons/confirm_white.svg" />
-                אישור והמשך
+                {{currentProgress === 3? 'אישור וסיום' : 'אישור והמשך'}}
             </div>
         </div>
     </div>

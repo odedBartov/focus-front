@@ -1,0 +1,37 @@
+<div class="main">
+    <div class="progress">
+        <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getCurrentProgress()"></div>
+        </div>
+    </div>
+    <Form class="form" [formGroup]="userForm" *ngIf="currentProgress === 1">
+        <span class="header">כמה פרטים ומתחילים</span>
+        <div class="text-and-input">
+            <span>שם פרטי</span>
+            <input formControlName="firstName" />
+            <div class="error-container">
+                <span *ngIf="formSubmitted && userForm.get('firstName')?.errors" class="error">אנא הזינו מחיר</span>
+            </div>
+        </div>
+        <div class="text-and-input">
+            <span>שם משפחה</span>
+            <input formControlName="lastName" />
+            <div class="error-container">
+                <span *ngIf="formSubmitted && userForm.get('lastName')?.errors" class="error">אנא הזינו מחיר</span>
+            </div>
+        </div>
+    </Form>
+        <div class="statuses" *ngIf="currentProgress === 2">
+            <span class="header">מה הסטטוס שלך?</span>
+            <div *ngFor="let status of statuses" class="option">
+                <img [src]="status.icon" />
+                <span>{{status.text}}</span>
+            </div>
+    </div>
+    <div class="confirm-div">
+        <div class="confirm" (click)="confirm()">
+            <img src="assets/icons/confirm_white.svg" />
+            <span>{{currentProgress === 3? 'אישור וסיום' : 'אישור והמשך'}}</span>
+        </div>
+    </div>
+</div>

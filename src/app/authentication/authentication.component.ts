@@ -4,6 +4,8 @@ import { HttpService } from '../services/http.service';
 import { Router } from '@angular/router';
 import { LoadingService } from '../services/loading.service';
 import { AuthenticationService } from '../services/authentication.service';
+import { MatDialog } from '@angular/material/dialog';
+import { NewUserComponent } from '../modals/new-user/new-user.component';
 
 @Component({
   selector: 'app-authentication',
@@ -16,6 +18,10 @@ export class AuthenticationComponent {
   loadingService = inject(LoadingService);
   router = inject(Router);
   authenticationService = inject(AuthenticationService);
+  dialog = inject(MatDialog);
+  constructor() {
+    this.dialog.open(NewUserComponent);
+  }
 
   userSignedIn(jwt: string) {
     this.loadingService.changeIsloading(true);
@@ -23,7 +29,18 @@ export class AuthenticationComponent {
       res => {
         this.loadingService.changeIsloading(false);
         if (this.authenticationService.getIsNewUser()) {
-          // start proccess
+          const dialogRef = this.dialog.open(NewUserComponent);
+          dialogRef.afterClosed().subscribe(res => {
+            if (res) {
+              this.loadingService.changeIsloading(true);
+              this.httpService.updateUser(res).subscribe(newUser => {
+                this.loadingService.changeIsloading(false);
+                this.authenticationService.setNewUser(false);
+                this.authenticationService.setUserName(`${newUser.firstName} ${newUser.lastName}`);
+                this.router.navigate(['/home']);
+              })
+            }
+          })
         } else {
           this.router.navigate(['/home']);
         }
