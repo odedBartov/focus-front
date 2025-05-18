@@ -4,12 +4,15 @@ import { catchError, Observable, tap, throwError } from "rxjs";
 import { AuthenticationService } from "../services/authentication.service";
 import { Router } from "@angular/router";
 import { LoadingService } from "../services/loading.service";
+import { MatDialog } from "@angular/material/dialog";
+import { ErrorComponent } from "../modals/error/error.component";
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
     authenticationService = inject(AuthenticationService);
     router = inject(Router);
     loadingService = inject(LoadingService);
+    dialog = inject(MatDialog);
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const token = this.authenticationService.getToken();
@@ -31,7 +34,7 @@ export class TokenInterceptor implements HttpInterceptor {
                     this.authenticationService.deleteToken();
                     this.router.navigate(['/login']);
                 } else {
-                    alert(err.message); // show in toaster
+                    this.dialog.open(ErrorComponent);
                 }
                 return throwError(() => err);
             })
