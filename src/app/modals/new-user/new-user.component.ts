@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { User, UserStatus, userStatusesWithText } from '../../models/user';
+import { User, userProfessionsWithText, UserStatus, userStatusesWithText } from '../../models/user';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -15,9 +15,10 @@ export class NewUserComponent {
   formBuilder = inject(FormBuilder);
   userForm: FormGroup;
   formSubmitted = false;
-  currentProgress = 2;
+  currentProgress = 3;
   user: User;
   statuses: { status: UserStatus, text: string, icon: string }[] = userStatusesWithText;
+  professions = userProfessionsWithText;
 
   constructor() {
     this.user = new User();
@@ -42,7 +43,10 @@ export class NewUserComponent {
         }
         break;
       case 2:
-        break;
+        if (this.user.status) {
+          this.currentProgress++
+        };
+        break
       case 3:
         break;
     }

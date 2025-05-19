@@ -37,7 +37,7 @@ export class Project {
         this.isPriority = false;
         this.steps = [];
         this.positionInList = 0;
-        this.totalWorkingTime = 0;
+        this.totalWorkingTime = 1000;
         this.totalWorkingSessions = 0;
         this.clientName = '';
         this.clientMail = '';

@@ -40,6 +40,14 @@
                 margin: 0 1rem;
                 height: 24px;
             }
+
+            &.selected {
+                background-color: var(--select-color);
+            }
+
+            &:hover {
+                background-color: var(--hover-color);
+            }
         }
     }
 

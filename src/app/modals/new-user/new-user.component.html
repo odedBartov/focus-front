@@ -21,12 +21,21 @@
             </div>
         </div>
     </Form>
-        <div class="statuses" *ngIf="currentProgress === 2">
-            <span class="header">מה הסטטוס שלך?</span>
-            <div *ngFor="let status of statuses" class="option">
-                <img [src]="status.icon" />
-                <span>{{status.text}}</span>
-            </div>
+    <div class="statuses" *ngIf="currentProgress === 2">
+        <span class="header">מהו הסטטוס שלך?</span>
+        <div *ngFor="let status of statuses" class="option" (click)="user.status = status.status"
+            [ngClass]="{selected: user.status === status.status}">
+            <img [src]="status.icon" />
+            <span>{{status.text}}</span>
+        </div>
+    </div>
+     <div class="statuses" *ngIf="currentProgress === 3">
+        <span class="header">מהו התחום שלך?</span>
+        <div *ngFor="let profession of professions" class="option" (click)="user.profession = profession.profession"
+            [ngClass]="{selected: user.profession === profession.profession}">
+            <img [src]="profession.icon" />
+            <span>{{profession.text}}</span>
+        </div>
     </div>
     <div class="confirm-div">
         <div class="confirm" (click)="confirm()">
