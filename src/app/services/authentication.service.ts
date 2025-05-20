@@ -5,8 +5,10 @@ import { Injectable } from '@angular/core';
 })
 export class AuthenticationService {
   userTokenKey = 'user-token';
-  userName = 'user-name';
+  firstName = 'first-name';
+  lastName = "last-name";
   isNewUser = 'isNewUSer';
+  userPicture = "user-picture";
 
   getToken() {
     return localStorage.getItem(this.userTokenKey);
@@ -20,12 +22,15 @@ export class AuthenticationService {
     localStorage.clear();
   }
 
-  setUserName(name: string) {
-    localStorage.setItem(this.userName, name);
+  setUserName(firstName: string, lastName: string) {
+    localStorage.setItem(this.firstName, firstName ?? "");
+    localStorage.setItem(this.lastName, lastName ?? "");
   }
 
   getUserName() {
-    return localStorage.getItem(this.userName);
+    const firstName = localStorage.getItem(this.firstName);
+    const lastName = localStorage.getItem(this.lastName);
+    return `${firstName} ${lastName}`;
   }
 
   setNewUser(isNew: boolean) {
@@ -33,6 +38,14 @@ export class AuthenticationService {
   }
 
   getIsNewUser() {
-    return Boolean(localStorage.getItem(this.isNewUser));
+    return localStorage.getItem(this.isNewUser) === 'true';
+  }
+
+  setUserPicture(picture: string) {
+    localStorage.setItem(this.userPicture, picture);
+  }
+
+  getUserPicture() {
+    return localStorage.getItem(this.userPicture);
   }
 }

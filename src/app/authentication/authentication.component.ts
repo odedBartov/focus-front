@@ -19,9 +19,6 @@ export class AuthenticationComponent {
   router = inject(Router);
   authenticationService = inject(AuthenticationService);
   dialog = inject(MatDialog);
-  constructor() {
-    this.dialog.open(NewUserComponent);
-  }
 
   userSignedIn(jwt: string) {
     this.loadingService.changeIsloading(true);
@@ -36,7 +33,7 @@ export class AuthenticationComponent {
               this.httpService.updateUser(res).subscribe(newUser => {
                 this.loadingService.changeIsloading(false);
                 this.authenticationService.setNewUser(false);
-                this.authenticationService.setUserName(`${newUser.firstName} ${newUser.lastName}`);
+                this.authenticationService.setUserName(`${newUser.firstName} ${newUser.lastName}`, "");
                 this.router.navigate(['/home']);
               })
             }

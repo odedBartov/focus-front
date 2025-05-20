@@ -15,7 +15,7 @@ export class NewUserComponent {
   formBuilder = inject(FormBuilder);
   userForm: FormGroup;
   formSubmitted = false;
-  currentProgress = 3;
+  currentProgress = 1;
   user: User;
   statuses: { status: UserStatus, text: string, icon: string }[] = userStatusesWithText;
   professions = userProfessionsWithText;
@@ -48,6 +48,9 @@ export class NewUserComponent {
         };
         break
       case 3:
+        if (this.user.profession) {
+          this.dialogRef.close(this.user);
+        }
         break;
     }
   }

@@ -33,15 +33,15 @@ export class HttpService {
       }
     }).pipe(tap((res: any) => {
       const isNewUser = res.headers.get("isNewUser");
-      if (isNewUser == "True") {
-        this.authenticationService.setNewUser(isNewUser);
-      }
-      this.authenticationService.setUserName(res.name);
+      this.authenticationService.setNewUser(isNewUser == "True");
+      this.authenticationService.setUserPicture(res.body.userPicture);
+      this.authenticationService.setUserName(res.body.firstName, res.body.lastName);
     }))
   }
 
   updateUser(user: User) {
-    return this.httpClient.post<User>(this.apiUrl + '', user);
+    const headers = this.generateHeaders();
+    return this.httpClient.put<User>(this.apiUrl + 'Auth/updateUser', user, headers);
   }
 
   createProject(project: Project) {
