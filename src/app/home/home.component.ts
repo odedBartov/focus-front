@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal, ViewChild, viewChild } from '@angula
 import { HttpService } from '../services/http.service';
 import { Project } from '../models/project';
 import { UserProjects } from '../models/userProjects';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
 import { ProjectsListComponent } from '../projects-list/projects-list.component';
@@ -30,6 +30,7 @@ export class HomeComponent implements OnInit {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
   projectHoverService = inject(ProjectHoverService);
+  router = inject(Router);
   userProjects: UserProjects = new UserProjects();
   selectedProject?: Project;
   isProjectHovered = this.projectHoverService.getSignal();
@@ -96,5 +97,9 @@ export class HomeComponent implements OnInit {
   updateActiveTabs(projects: Project[]) {
     this.userProjects.activeProjects = projects;
     this.initTabs();
+  }
+
+  navigateToProfile() {
+    this.router.navigate(['/profile']);
   }
 }
