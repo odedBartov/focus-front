@@ -33,7 +33,7 @@ export class AuthenticationComponent {
               this.httpService.updateUser(res).subscribe(newUser => {
                 this.loadingService.changeIsloading(false);
                 this.authenticationService.setNewUser(false);
-                this.authenticationService.setUserName(`${newUser.firstName} ${newUser.lastName}`, "");
+                this.authenticationService.setUserName(newUser.firstName, newUser.lastName);
                 this.router.navigate(['/home']);
               })
             }

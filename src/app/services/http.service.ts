@@ -85,4 +85,8 @@ export class HttpService {
   getInsightAndUpdates(): Observable<InsightAndUpdates> {
     return this.httpClient.get<InsightAndUpdates>(this.apiUrl + "Info/GetInsightAndUpdates");
   }
+
+  createInsight(text: string) {
+    return this.httpClient.post(this.apiUrl + "Info/createInsight", {Text: text})
+  }
 }
