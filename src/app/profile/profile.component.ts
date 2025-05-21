@@ -17,7 +17,7 @@ export class ProfileComponent {
 
   constructor() {
     this.valueChangesSub = this.editor.valueChanges.subscribe(content => {
-      this.newInsight = content;
+      //this.newInsight = content;
     });
   }
 
