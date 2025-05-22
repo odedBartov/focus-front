@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { Editor, NgxEditorModule } from 'ngx-editor';
 import { HttpService } from '../services/http.service';
 import { debounceTime, Subscription } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
-  imports: [NgxEditorModule],
+  imports: [NgxEditorModule, FormsModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -22,6 +23,6 @@ export class ProfileComponent {
   }
 
   createInsight() {
-    this.http.createInsight(this.editor.);
+    this.http.createInsight(this.newInsight).subscribe(res => {});
   }
 }

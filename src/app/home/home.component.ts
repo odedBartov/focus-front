@@ -32,6 +32,7 @@ export class HomeComponent implements OnInit {
   projectHoverService = inject(ProjectHoverService);
   router = inject(Router);
   userProjects: UserProjects = new UserProjects();
+  activeProjects: Project[] = [];
   selectedProject?: Project;
   isProjectHovered = this.projectHoverService.getSignal();
 
@@ -54,6 +55,7 @@ export class HomeComponent implements OnInit {
     this.httpService.getProjects().subscribe(res => {
       this.loadingService.changeIsloading(false);
       this.userProjects = this.sortProjects(res);
+      this.activeProjects = this.userProjects.activeProjects;
       this.initTabs();
     })
   }
@@ -100,6 +102,6 @@ export class HomeComponent implements OnInit {
   }
 
   navigateToProfile() {
-    this.router.navigate(['/profile']);
+    //this.router.navigate(['/profile']);
   }
 }

@@ -63,6 +63,11 @@ export class HttpService {
     return this.httpClient.put<Project[]>(this.apiUrl + "Projects/updateProjects", project, headers);
   }
 
+  deleteProject(projectId: string) {
+    const headers = this.generateHeaders();
+    return this.httpClient.delete(`${this.apiUrl}Projects/deleteProject?projectId=${projectId}`, headers)
+  }
+
   createStep(step: Step): Observable<Step> {
     return this.httpClient.post<Step>(this.apiUrl + "Steps/createStep", step);
   }

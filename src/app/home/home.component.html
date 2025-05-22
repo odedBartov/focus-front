@@ -6,7 +6,7 @@
         <img [src]="tab.icon" />
       </div>
     </div>
-    <img class="logo" src="assets/ariel_logo.svg" />
+    <img class="logo" src="assets/ariel_logo.svg" (click)="navigateToProfile()"/>
   </div>
 
   <div class="home-container" [ngClass]="{ 'show-before': isProjectHovered() }">
@@ -15,7 +15,7 @@
         <app-summary [projects]="userProjects.activeProjects"></app-summary>
       </div>
       <div class="projects-list">
-        <app-projects-list [projects]="userProjects" (selectProjectEmitter)="selectProject($event)" (activeProjectsEmitter)="updateActiveTabs($event)"></app-projects-list>
+        <app-projects-list [projects]="activeProjects" (selectProjectEmitter)="selectProject($event)" (activeProjectsEmitter)="updateActiveTabs($event)"></app-projects-list>
       </div>
       <div class="updates">
         <app-updates></app-updates>

@@ -1,70 +1,77 @@
 <div class="projects-container">
     <div>
         <div class="projects-list">
-            <div class="tab" [class.active]="selectedStatus === projectStatusEnum.active"
-                (click)="selectProjectStatus(projectStatusEnum.active)">פרויקטים פעילים</div>
-            <div class="tab" [class.active]="selectedStatus === projectStatusEnum.frozen"
+            <div class="tab" [class.active]="activeTab === 1" (click)="activeTab = 1">פרויקטים פעילים</div>
+            <div class="tab" [class.active]="activeTab === 2" (click)="activeTab = 2">
+                משימות היום
+            </div>
+            <!-- <div class="tab" [class.active]="selectedStatus === projectStatusEnum.frozen"
                 (click)="selectProjectStatus(projectStatusEnum.frozen)">פרויקטים בהקפאה</div>
             <div class="tab" [class.active]="selectedStatus === projectStatusEnum.finished"
-                (click)="selectProjectStatus(projectStatusEnum.finished)">פרויקטים שהסתיימו</div>
+                (click)="selectProjectStatus(projectStatusEnum.finished)">פרויקטים שהסתיימו</div> -->
         </div>
-        <div cdkDropList (cdkDropListDropped)="drop($event)">
-            <div class="project-drag" [ngClass]="{'clear-opacity': hoveredProject() === project.id}"
-                *ngFor="let project of selectedProjects" cdkDrag>
-                <div class="project" (click)="selectProject(project)">
-                    <img class="priority" (click)="togglePriority($event, project)"
-                        [src]="`assets/icons/${project.isPriority?'star_full' :'star_empty'}.svg`" />
-                    <div class="project-description">
-                        <span class="project-name">
-                            {{project.name}}
-                        </span>
-                        <span class="small-text"
-                            [matTooltipDisabled]="description.clientWidth >= description.scrollWidth"
-                            matTooltipPosition="above" matTooltipClass="custom-tooltip"
-                            [matTooltip]="project.description" #description>
-                            {{project.description}}
-                        </span>
-                    </div>
-                    <div class="current-step">
-                        <span class="disabled-text">
-                            שלב נוכחי
-                        </span>
-                        <span class="small-text">
-                            {{getCurrentStep(project)?.name}}
-                        </span>
-                    </div>
-                    <div class="payment">
-                        <span class="disabled-text">
-                            נשאר לתשלום
-                        </span>
-                        <span class="small-text">
-                            {{getPaidMoney(project)}} מתוך {{project.paidMoney}} ₪
-                        </span>
-                    </div>
-                    <div class="small-text">
-                        <span>{{getProjectProgress(project) | number:'1.0-0'}}%</span>
-                        <div class="progress-bar">
-                            <div class="progress-fill" [style.width.%]="getProjectProgress(project)"></div>
+        <div *ngIf="activeTab === 1">
+            <div cdkDropList (cdkDropListDropped)="drop($event)">
+                <div class="project-drag" [ngClass]="{'clear-opacity': hoveredProject() === project.id}"
+                    *ngFor="let project of projects" cdkDrag>
+                    <div class="project" (click)="selectProject(project)">
+                        <img class="priority" (click)="togglePriority($event, project)"
+                            [src]="`assets/icons/${project.isPriority?'star_full' :'star_empty'}.svg`" />
+                        <div class="project-description">
+                            <span class="project-name">
+                                {{project.name}}
+                            </span>
+                            <span class="small-text"
+                                [matTooltipDisabled]="description.clientWidth >= description.scrollWidth"
+                                matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                                [matTooltip]="project.description" #description>
+                                {{project.description}}
+                            </span>
                         </div>
-                    </div>
-                    <div class="menu" (click)="$event.stopPropagation()">
-                        <img class="menu icon-kabab-menu" [matMenuTriggerFor]="menu" />
-                        <mat-menu #menu="matMenu" class="pointer">
-                            <button mat-menu-item class="project-status"
-                                (click)="changeProjectStatus(project, projectStatusEnum.active)">פעיל</button>
-                            <button mat-menu-item class="project-status"
-                                (click)="changeProjectStatus(project, projectStatusEnum.frozen)">מוקפא</button>
-                            <button mat-menu-item class="project-status"
-                                (click)="changeProjectStatus(project, projectStatusEnum.finished)">הסתיים</button>
-                        </mat-menu>
+                        <div class="current-step">
+                            <span class="disabled-text">
+                                שלב נוכחי
+                            </span>
+                            <span class="small-text">
+                                {{getCurrentStep(project)?.name}}
+                            </span>
+                        </div>
+                        <div class="payment">
+                            <span class="disabled-text">
+                                נשאר לתשלום
+                            </span>
+                            <span class="small-text">
+                                {{getPaidMoney(project)}} מתוך {{project.paidMoney}} ₪
+                            </span>
+                        </div>
+                        <div class="small-text">
+                            <span>{{getProjectProgress(project) | number:'1.0-0'}}%</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" [style.width.%]="getProjectProgress(project)"></div>
+                            </div>
+                        </div>
+                        <div class="menu" (click)="$event.stopPropagation()">
+                            <img class="menu icon-kabab-menu" [matMenuTriggerFor]="menu" />
+                            <mat-menu #menu="matMenu" class="pointer">
+                                <button mat-menu-item class="menu-item"
+                                    (click)="changeProjectStatus(project, projectStatusEnum.frozen)">הקפאה</button>
+                                <button mat-menu-item class="menu-item"
+                                    (click)="changeProjectStatus(project, projectStatusEnum.finished)">סיום</button>
+                                <button mat-menu-item class="menu-item" (click)="deleteProject(project)">מחיקה</button>
+                                <button mat-menu-item class="menu-item" (click)="cloneProject(project)">שכפול</button>
+                            </mat-menu>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="line">
-            <div class="add-project" (click)="openProjectModal()">
-                + פרויקט חדש
+            <div class="line">
+                <div class="add-project" (click)="openProjectModal()">
+                    + פרויקט חדש
+                </div>
             </div>
+        </div>
+        <div class="today-tasks" *ngIf="activeTab === 2">
+            <app-today-tasks></app-today-tasks>
         </div>
     </div>
 </div>

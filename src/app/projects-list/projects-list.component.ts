@@ -14,10 +14,11 @@ import { ProjectHoverService } from '../services/project-hover.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { NewProjectComponent } from '../modals/new-project/new-project.component';
+import { TodayTasksComponent } from "../today-tasks/today-tasks.component";
 
 @Component({
   selector: 'app-projects-list',
-  imports: [CommonModule, MatProgressBarModule, MatMenuModule, DragDropModule, MatTooltipModule],
+  imports: [CommonModule, MatProgressBarModule, MatMenuModule, DragDropModule, MatTooltipModule, TodayTasksComponent],
   templateUrl: './projects-list.component.html',
   styleUrl: './projects-list.component.scss'
 })
@@ -28,52 +29,23 @@ export class ProjectsListComponent {
   projectHoverService = inject(ProjectHoverService);
   @Output() selectProjectEmitter = new EventEmitter<Project>();
   @Output() activeProjectsEmitter = new EventEmitter<Project[]>();
+  @Input() projects!: Project[];
   hoveredProject = this.projectHoverService.getSignal();
-  private _projects!: UserProjects;
-  @Input()
-  set projects(val: UserProjects) {
-    this._projects = val;
-    this.selectProjectStatus(this.projectStatusEnum.active);
-    this.rearrangeUserProjects();
-  }
-
-  get projects(): UserProjects {
-    return this._projects;
-  }
-
   router = inject(Router);
   projectStatusEnum = ProjectStatus;
-  selectedStatus!: ProjectStatus;
-  selectedProjects: Project[] = [];
+  activeTab = 1;
 
-  rearrangeUserProjects() {
-    if (this.projects) {
-      this.rearrangeProjects(this.projects.activeProjects);
-      this.rearrangeProjects(this.projects.frozenProjects);
-      this.rearrangeProjects(this.projects.finishedProjects);
-    }
-  }
+  // rearrangeUserProjects() {
+  //   if (this.projects) {
+  //     this.rearrangeProjects(this.projects.activeProjects);
+  //     this.rearrangeProjects(this.projects.frozenProjects);
+  //     this.rearrangeProjects(this.projects.finishedProjects);
+  //   }
+  // }
 
-  rearrangeProjects(projects: Project[]) {
-    projects = projects.sort((a, b) => a.positionInList - b.positionInList);
-  }
-
-  selectProjectStatus(status: ProjectStatus) {
-    this.selectedStatus = status;
-    this.selectedProjects = this.getProjectsForStatus() ?? [];
-  }
-
-  getProjectsForStatus(status?: ProjectStatus): Project[] | undefined {
-    const statusToReturn = status ?? this.selectedStatus;
-    switch (statusToReturn) {
-      case ProjectStatus.active:
-        return this.projects?.activeProjects
-      case ProjectStatus.frozen:
-        return this.projects?.frozenProjects
-      case ProjectStatus.finished:
-        return this.projects?.finishedProjects
-    }
-  }
+  // rearrangeProjects(projects: Project[]) {
+  //   projects = projects.sort((a, b) => a.positionInList - b.positionInList);
+  // }
 
   getCurrentStep(project: Project) {
     return project.steps?.find(s => !s.isComplete);
@@ -93,37 +65,55 @@ export class ProjectsListComponent {
   changeProjectStatus(project: Project, status: ProjectStatus) {
     project.status = status;
     this.updateProjects([project]).subscribe(res => {
-      const oldStatusList = this.getProjectsForStatus();
-      oldStatusList?.splice(oldStatusList.indexOf(project), 1);
-      const newStatusList = this.getProjectsForStatus(project.status);
-      newStatusList?.push(project);
-
-      this.activeProjectsEmitter.emit(this.projects.activeProjects);
+      this.projects?.splice(this.projects.indexOf(project), 1);
+      this.activeProjectsEmitter.emit(this.projects);
     });
+  }
+
+  deleteProject(project: Project) {
+    if (project.id) {
+      this.loadingService.changeIsloading(true);
+      this.httpService.deleteProject(project.id).subscribe(res => {
+        const projectIndex = this.projects.indexOf(project);
+        this.projects.splice(projectIndex, 1);
+        this.loadingService.changeIsloading(false);
+      })
+    }
+  }
+
+  cloneProject(project: Project) {
+    this.loadingService.changeIsloading(true);
+    const clonedProject = {...project};
+    clonedProject.id = undefined;
+    clonedProject.startDate = new Date();
+    this.httpService.createProject(clonedProject).subscribe(res => {
+      this.projects.push(res);
+      this.loadingService.changeIsloading(false);
+    })
   }
 
   togglePriority(event: Event, project: Project) {
     event.stopPropagation()
     project.isPriority = !project.isPriority;
     if (project.isPriority) {
-      const currentIndex = this.selectedProjects.indexOf(project);
-      moveItemInArray(this.selectedProjects, currentIndex, 0);
+      const currentIndex = this.projects.indexOf(project);
+      moveItemInArray(this.projects, currentIndex, 0);
       this.updateProjectsPosition();
-      this.activeProjectsEmitter.emit(this.projects.activeProjects);
+      this.activeProjectsEmitter.emit(this.projects);
     }
 
-    this.updateProjects(this.selectedProjects).subscribe(res => { });
+    this.updateProjects(this.projects).subscribe(res => { });
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.selectedProjects, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.projects, event.previousIndex, event.currentIndex);
     this.updateProjectsPosition();
-    this.updateProjects(this.selectedProjects).subscribe(res => { });
+    this.updateProjects(this.projects).subscribe(res => { });
   }
 
   updateProjectsPosition() {
-    for (let index = 0; index < this.selectedProjects.length; index++) {
-      this.selectedProjects[index].positionInList = index;
+    for (let index = 0; index < this.projects.length; index++) {
+      this.projects[index].positionInList = index;
     }
   }
 
@@ -144,7 +134,7 @@ export class ProjectsListComponent {
       if (res) {
         this.loadingService.changeIsloading(true);
         this.httpService.createProject(res).subscribe(newProject => {
-          this.projects.activeProjects.push(newProject);
+          this.projects.push(newProject);
           this.loadingService.changeIsloading(false);
         })
       }
