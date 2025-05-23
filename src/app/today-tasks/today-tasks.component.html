@@ -6,7 +6,7 @@
                 {{task.project.name}} - {{task.step.name}}
             </span>
             <span class="description">
-                {{task.step.stepType === stepTypeEnum.payment? task.step.price : task.step.description}}
+                {{task.step.stepType === stepTypeEnum.payment? (task.step.price + ' ₪') : task.step.description}}
             </span>
         </div>
     </div>

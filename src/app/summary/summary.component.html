@@ -17,16 +17,15 @@
         <div class="graph">
             <div class="sums">
                 <div>{{maxGraphValue}}</div>
-                <!-- <div style="margin: 1rem 0; align-items: flex-end;">{{maxGraphValue/2}}</div> -->
                 <div style="align-items: flex-end;">0</div>
             </div>
             <div class="background">
                 <div class="bars">
                     <div class="month" *ngFor="let month of graphMonths; let i = index">
                         <div class="progress" [style.height.%]="getFutureGraphValue(i)">
-                            <div class="progress-bar-vertical" [matTooltip]="'הכנסות עתידיות: '+futurePayments[i]" matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="isPayedHovered">
+                            <div class="progress-bar-vertical" [matTooltip]="'הכנסות עתידיות: '+futurePayments[i]+' ₪'" matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltipDisabled]="isPayedHovered">
                                 <div class="progress-fill-vertical" [style.height.%]="getPastGraphValue(i)" (mouseenter)="isPayedHovered = true"
-                                (mouseleave)="isPayedHovered = false" [matTooltip]="'הכנסות שהתבצעו: '+pastPayments[i]" matTooltipPosition="above" matTooltipClass="custom-tooltip"></div>
+                                (mouseleave)="isPayedHovered = false" [matTooltip]="'הכנסות שהתבצעו: '+pastPayments[i]+' ₪'" matTooltipPosition="above" matTooltipClass="custom-tooltip"></div>
                             </div>
                         </div>
                     </div>
