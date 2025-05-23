@@ -15,6 +15,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { NewProjectComponent } from '../modals/new-project/new-project.component';
 import { TodayTasksComponent } from "../today-tasks/today-tasks.component";
+import { Step } from '../models/step';
 
 @Component({
   selector: 'app-projects-list',
@@ -34,18 +35,6 @@ export class ProjectsListComponent {
   router = inject(Router);
   projectStatusEnum = ProjectStatus;
   activeTab = 1;
-
-  // rearrangeUserProjects() {
-  //   if (this.projects) {
-  //     this.rearrangeProjects(this.projects.activeProjects);
-  //     this.rearrangeProjects(this.projects.frozenProjects);
-  //     this.rearrangeProjects(this.projects.finishedProjects);
-  //   }
-  // }
-
-  // rearrangeProjects(projects: Project[]) {
-  //   projects = projects.sort((a, b) => a.positionInList - b.positionInList);
-  // }
 
   getCurrentStep(project: Project) {
     return project.steps?.find(s => !s.isComplete);
@@ -126,6 +115,19 @@ export class ProjectsListComponent {
 
   selectProject(project: Project) {
     this.selectProjectEmitter.emit(project);
+  }
+
+  getTasks() {
+    const projectsAndSteps:{step: Step, project: Project}[] = [];
+
+    this.projects.forEach(project => {
+      const currentStep = project.steps.find(s => !s.isComplete);
+      if (currentStep) {
+        projectsAndSteps.push({project: project, step: currentStep});
+      }
+    })
+
+    return projectsAndSteps;
   }
 
   openProjectModal() {

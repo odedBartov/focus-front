@@ -71,7 +71,7 @@
             </div>
         </div>
         <div class="today-tasks" *ngIf="activeTab === 2">
-            <app-today-tasks></app-today-tasks>
+            <app-today-tasks [tasks]="getTasks()"></app-today-tasks>
         </div>
     </div>
 </div>

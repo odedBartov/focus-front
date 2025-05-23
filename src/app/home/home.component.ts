@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
   router = inject(Router);
   userProjects: UserProjects = new UserProjects();
   activeProjects: Project[] = [];
+  unactiveProjects: Project[] = [];
   selectedProject?: Project;
   isProjectHovered = this.projectHoverService.getSignal();
 
@@ -56,6 +57,7 @@ export class HomeComponent implements OnInit {
       this.loadingService.changeIsloading(false);
       this.userProjects = this.sortProjects(res);
       this.activeProjects = this.userProjects.activeProjects;
+      this.unactiveProjects = this.userProjects.frozenProjects.concat(this.userProjects.finishedProjects);
       this.initTabs();
     })
   }

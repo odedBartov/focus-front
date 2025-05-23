@@ -1,1 +1,16 @@
-<p>today-tasks works!</p>
+<div class="main">
+    <div class="tasks">
+        <div *ngFor="let task of tasks" class="task">
+            <img class="priority" *ngIf="task.project.isPriority" src="assets/icons/star_full.svg" />
+            <span class="title">
+                {{task.project.name}} - {{task.step.name}}
+            </span>
+            <span class="description">
+                {{task.step.stepType === stepTypeEnum.payment? task.step.price : task.step.description}}
+            </span>
+        </div>
+    </div>
+    <div class="">
+
+    </div>
+</div>
