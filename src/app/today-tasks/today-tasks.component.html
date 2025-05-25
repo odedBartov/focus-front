@@ -21,7 +21,7 @@
             </div>
             <div *ngIf="editStepId === task.step.id" (mousedown)="$event.stopPropagation()">
                 <div class="new-step">
-                    <app-new-step class="test" [steptInput]="task.step" (stepsEmitter)="updateStep(task, $event)"></app-new-step>
+                    <app-new-step class="test" [steptInput]="task.step" (stepsEmitter)="updateStep(task.project, $event)"></app-new-step>
                 </div>
             </div>
         </div>
