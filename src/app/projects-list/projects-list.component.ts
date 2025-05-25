@@ -124,7 +124,7 @@ export class ProjectsListComponent {
     this.projects.forEach(project => {
       if (project?.steps) {
         const currentStep = project.steps.find(s => !s.isComplete);
-        if (currentStep) {
+        if (currentStep && (!currentStep.hideTaskDate || this.isWithinLastDay(currentStep.hideTaskDate))) {
           projectsAndSteps.push({ project: project, step: currentStep });
         }
       }
@@ -132,6 +132,15 @@ export class ProjectsListComponent {
 
     return projectsAndSteps;
   }
+
+  isWithinLastDay(date: Date) {
+    // not working
+  const ONE_DAY_MS = 24 * 60 * 60 * 1000; // milliseconds in a day
+  const now = Date.now();
+  const dateMs = new Date(date).getTime();
+
+  return (now - dateMs) <= ONE_DAY_MS && (now - dateMs) >= 0;
+}
 
   openProjectModal() {
     const dialogRef = this.dialog.open(NewProjectComponent);

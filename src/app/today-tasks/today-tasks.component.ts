@@ -86,9 +86,14 @@ export class TodayTasksComponent implements OnInit {
 
   }
 
-  hideStepForToday(step: Step) {
-    step.hideTaskDate = new Date();
-    //update
+  hideStepForToday(task: Task) {
+    this.loadingService.changeIsloading(true);
+    task.step.hideTaskDate = new Date();
+    this.httpService.updateSteps([task.step]).subscribe(res => {
+      const taskIndex = this.tasks.indexOf(task)
+      this.tasks.splice(taskIndex, 1);
+      this.loadingService.changeIsloading(false);
+    })
   }
 
   openProject(project: Project) {
