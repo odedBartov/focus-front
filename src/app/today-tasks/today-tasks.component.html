@@ -1,6 +1,9 @@
 <div class="main">
     <div class="tasks">
-        <div *ngFor="let task of tasks" class="task">
+        <div *ngFor="let task of tasks" class="task" #stepDiv (mouseenter)="hoverStepId = task.step.id" (mouseleave)="hoverStepId = undefined">
+            <div>
+                
+            </div>
             <img class="priority" *ngIf="task.project.isPriority" src="assets/icons/star_full.svg" />
             <span class="title">
                 {{task.project.name}} - {{task.step.name}}
@@ -8,6 +11,12 @@
             <span class="description">
                 {{task.step.stepType === stepTypeEnum.payment? (task.step.price + ' ₪') : task.step.description}}
             </span>
+            <div class="buttons" [@expandCollapse]="(hoverStepId === task.step.id) ? 'expanded' : 'collapsed'">
+                <div class="actions">
+                    <img class="icon-pencil" (click)="editStep(stepDiv, task.step.id)" />
+                </div>
+                <img class="pointer icon-confirm-circle" (click)="finishStep(task)" />
+            </div>
         </div>
     </div>
     <div class="">

@@ -1,18 +1,22 @@
 .main {
     width: 100%;
-    height: 100%;
+
+    .pointer {
+        cursor: pointer;
+    }
 
     .tasks {
-        display: flex;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: auto;
+        gap: 16px;
+        align-items: start;
 
         .task {
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            // width: 420px;
-            flex: 1;
             margin: 1rem;
             background-color: white;
             border-radius: var(--common-radius);
@@ -32,6 +36,23 @@
             .priority {
                 height: 28px;
                 margin-bottom: 1rem;
+            }
+
+            .buttons {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 1rem;
+                align-items: center;
+                width: 100%;
+
+                .actions {
+                    display: flex;
+                    align-items: flex-start;
+
+                    img {
+                        margin-left: 1rem;
+                    }
+                }
             }
         }
     }

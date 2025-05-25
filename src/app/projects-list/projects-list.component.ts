@@ -72,7 +72,7 @@ export class ProjectsListComponent {
 
   cloneProject(project: Project) {
     this.loadingService.changeIsloading(true);
-    const clonedProject = {...project};
+    const clonedProject = { ...project };
     clonedProject.id = undefined;
     clonedProject.startDate = new Date();
     this.httpService.createProject(clonedProject).subscribe(res => {
@@ -118,12 +118,14 @@ export class ProjectsListComponent {
   }
 
   getTasks() {
-    const projectsAndSteps:{step: Step, project: Project}[] = [];
+    const projectsAndSteps: { step: Step, project: Project }[] = [];
 
     this.projects.forEach(project => {
-      const currentStep = project.steps.find(s => !s.isComplete);
-      if (currentStep) {
-        projectsAndSteps.push({project: project, step: currentStep});
+      if (project?.steps) {
+        const currentStep = project.steps.find(s => !s.isComplete);
+        if (currentStep) {
+          projectsAndSteps.push({ project: project, step: currentStep });
+        }
       }
     })
 
