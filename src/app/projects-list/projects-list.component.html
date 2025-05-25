@@ -5,10 +5,6 @@
             <div class="tab" [class.active]="activeTab === 2" (click)="activeTab = 2">
                 משימות היום
             </div>
-            <!-- <div class="tab" [class.active]="selectedStatus === projectStatusEnum.frozen"
-                (click)="selectProjectStatus(projectStatusEnum.frozen)">פרויקטים בהקפאה</div>
-            <div class="tab" [class.active]="selectedStatus === projectStatusEnum.finished"
-                (click)="selectProjectStatus(projectStatusEnum.finished)">פרויקטים שהסתיימו</div> -->
         </div>
         <div *ngIf="activeTab === 1">
             <div cdkDropList (cdkDropListDropped)="drop($event)">
@@ -71,7 +67,7 @@
             </div>
         </div>
         <div class="today-tasks" *ngIf="activeTab === 2">
-            <app-today-tasks [tasks]="getTasks()"></app-today-tasks>
+            <app-today-tasks [tasksInput]="getTasks()" (selectProjectEmitter)="selectProject($event)"></app-today-tasks>
         </div>
     </div>
 </div>

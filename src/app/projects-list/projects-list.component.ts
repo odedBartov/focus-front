@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NewProjectComponent } from '../modals/new-project/new-project.component';
 import { TodayTasksComponent } from "../today-tasks/today-tasks.component";
 import { Step } from '../models/step';
+import { Task } from '../models/task';
 
 @Component({
   selector: 'app-projects-list',
@@ -34,7 +35,7 @@ export class ProjectsListComponent {
   hoveredProject = this.projectHoverService.getSignal();
   router = inject(Router);
   projectStatusEnum = ProjectStatus;
-  activeTab = 1;
+  activeTab = 2;
 
   getCurrentStep(project: Project) {
     return project.steps?.find(s => !s.isComplete);
@@ -118,7 +119,7 @@ export class ProjectsListComponent {
   }
 
   getTasks() {
-    const projectsAndSteps: { step: Step, project: Project }[] = [];
+    const projectsAndSteps: Task[] = [];
 
     this.projects.forEach(project => {
       if (project?.steps) {

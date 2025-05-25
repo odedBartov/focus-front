@@ -321,3 +321,11 @@ input::-webkit-inner-spin-button {
         content: url('/assets/icons/ordered_list_yes.svg');
     }
 }
+
+.icon-history {
+    content: url('/assets/icons/history_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/history_yes.svg');
+    }
+}

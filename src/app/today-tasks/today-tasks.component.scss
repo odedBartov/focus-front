@@ -13,45 +13,58 @@
         align-items: start;
 
         .task {
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            margin: 1rem;
-            background-color: white;
-            border-radius: var(--common-radius);
-            box-shadow: var(--common-shadow);
-
-            .title {
-                font-family: 'black';
-                font-size: var(--font-size-2);
-                margin-bottom: 1rem;
-            }
-
-            .description {
-                font-family: 'regular';
-                font-size: var(--font-size-1);
-            }
-
-            .priority {
-                height: 28px;
-                margin-bottom: 1rem;
-            }
-
-            .buttons {
+            .step-info {
+                padding: 1.5rem 1.5rem 0;
                 display: flex;
-                justify-content: space-between;
-                margin-top: 1rem;
-                align-items: center;
-                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+                margin: 1rem;
+                background-color: white;
+                border-radius: var(--common-radius);
+                box-shadow: var(--common-shadow);
 
-                .actions {
+                .title {
+                    font-family: 'black';
+                    font-size: var(--font-size-2);
+                    margin-bottom: 1rem;
+                }
+
+                .description {
+                    font-family: 'regular';
+                    font-size: var(--font-size-1);
+                }
+
+                .priority {
+                    height: 28px;
+                    margin-bottom: 1rem;
+                }
+
+                .buttons {
                     display: flex;
-                    align-items: flex-start;
+                    justify-content: space-between;
+                    margin: 1rem 0;
+                    align-items: center;
+                    width: 100%;
 
-                    img {
-                        margin-left: 1rem;
+                    .actions {
+                        display: flex;
+                        align-items: flex-start;
+
+                        img {
+                            margin-left: 1rem;
+                        }
                     }
+                }
+            }
+
+            .new-step {
+                display: flex;
+                // width: 100%;
+                justify-content: center;
+                align-items: center;
+
+                .test {
+                    // width: 70%;
                 }
             }
         }

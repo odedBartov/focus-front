@@ -11,6 +11,7 @@ export class Step {
     dateCompleted?: Date;
     dateDue: Date;
     positionInList: number;
+    hideTaskDate?: Date;
 
     constructor() {
         this.isComplete = false;

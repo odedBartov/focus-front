@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, EventEmitter, HostListener, inject, Input, OnInit, Output } from '@angular/core';
 import { Step } from '../models/step';
 import { Project } from '../models/project';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,7 @@ import { HttpService } from '../services/http.service';
 import { LoadingService } from '../services/loading.service';
 import { NewStepComponent } from '../new-step/new-step.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { Task } from '../models/task';
 
 @Component({
   selector: 'app-today-tasks',
@@ -31,8 +32,9 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
     ])
   ]
 })
-export class TodayTasksComponent {
-  @Input() tasks: { step: Step, project: Project }[] = []
+export class TodayTasksComponent implements OnInit {
+  @Input() tasksInput: Task[] = []
+  @Output() selectProjectEmitter = new EventEmitter<Project>();
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
   isShowNewStep = false;
@@ -40,13 +42,31 @@ export class TodayTasksComponent {
   editDiv?: HTMLDivElement;
   hoverStepId: string | undefined = '';
   editStepId: string | undefined = '';
+  tasks: Task[] = []
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    // if (this.newStepDiv?.nativeElement && !this.newStepDiv.nativeElement.contains(event.target)) {
+    //   this.isShowNewStep = false;
+    // }
+
+    if (!this.editDiv?.contains(event.target as Node)) {
+      this.editStepId = '';
+    }
+  }
+
+  ngOnInit(): void {
+    setTimeout(() => {
+      this.tasks = this.tasksInput
+    }, 1);
+  }
 
   editStep(div: HTMLDivElement, stepId: string | undefined) {
     this.editDiv = div;
     this.editStepId = stepId;
   }
 
-  finishStep(task: { step: Step, project: Project }) {
+  finishStep(task: Task) {
     // todo - index
     task.step.isComplete = true;
     this.loadingService.changeIsloading(true);
@@ -64,5 +84,27 @@ export class TodayTasksComponent {
 
   createNewStep(step: Step) {
 
+  }
+
+  hideStepForToday(step: Step) {
+    step.hideTaskDate = new Date();
+    //update
+  }
+
+  openProject(project: Project) {
+    this.selectProjectEmitter.emit(project);
+  }
+
+  updateStep(project: Project, newStep: Step) {
+    this.loadingService.changeIsloading(true);
+    this.httpService.updateSteps([newStep]).subscribe(res => {
+      if (project && project.steps) {
+        project.steps = project?.steps?.map(step =>
+          step.id === res[0].id ? res[0] : step
+        )
+      }
+      this.editStepId = '';
+      this.loadingService.changeIsloading(false);
+    })
   }
 }
