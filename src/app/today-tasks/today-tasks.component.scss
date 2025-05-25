@@ -9,7 +9,6 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         grid-auto-rows: auto;
-        gap: 16px;
         align-items: start;
 
         .task {
@@ -18,7 +17,7 @@
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
-                margin: 1rem;
+                margin: 0.5rem 1rem;
                 background-color: white;
                 border-radius: var(--common-radius);
                 box-shadow: var(--common-shadow);
@@ -59,8 +58,14 @@
 
             .new-step {
                 display: flex;
-                justify-content: center;
+                justify-content: flex-end;
                 align-items: center;
+                width: 100%;
+
+                .test {
+                    margin: 0 1rem;
+                    width: 100%;
+                }
             }
         }
     }

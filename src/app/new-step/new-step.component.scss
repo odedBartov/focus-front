@@ -1,6 +1,5 @@
 @use '../../mixins.scss' as mixins;
 .main {
-    padding: 1rem 2rem;
     @include mixins.regular-border;
     width: 100%;
 
@@ -37,6 +36,7 @@
     }
 
     .form {
+        padding: 1rem 2rem;
         .title {
             display: flex;
             justify-content: space-between;
