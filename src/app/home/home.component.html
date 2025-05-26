@@ -9,22 +9,24 @@
     <img class="logo" src="assets/ariel_logo.svg" (click)="navigateToProfile()" />
   </div>
 
-  <div class="home-container" [ngClass]="{ 'show-before': isProjectHovered() }" *ngIf="activeTab?.id === tabs[0]?.id">
-    <div class="home">
-      <div class="summary">
-        <app-summary [projects]="userProjects.activeProjects"></app-summary>
-      </div>
-      <div class="projects-list">
-        <app-projects-list [projects]="activeProjects" (selectProjectEmitter)="selectProject($event)"
-          (activeProjectsEmitter)="updateActiveTabs($event)"></app-projects-list>
-      </div>
-      <div class="updates">
-        <app-updates></app-updates>
+  <div style="width: 100%; height: 100%;">
+    <div class="home-container" [ngClass]="{ 'show-before': isProjectHovered() }" *ngIf="activeTab?.id === tabs[0]?.id">
+      <div class="home">
+        <div class="summary">
+          <app-summary [projects]="userProjects.activeProjects"></app-summary>
+        </div>
+        <div class="projects-list">
+          <app-projects-list [projects]="activeProjects" (selectProjectEmitter)="selectProject($event)"
+            (activeProjectsEmitter)="updateActiveTabs($event)"></app-projects-list>
+        </div>
+        <div class="updates">
+          <app-updates></app-updates>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="project-container" *ngIf="activeTab?.id !== tabs[0]?.id">
-    <app-project-page [projectInput]="selectedProject" #projectPage></app-project-page>
+    <div class="project-container" *ngIf="activeTab?.id !== tabs[0]?.id">
+      <app-project-page class="project-page" [projectInput]="selectedProject" #projectPage></app-project-page>
+    </div>
   </div>
 </div>
