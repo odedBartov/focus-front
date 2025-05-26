@@ -16,28 +16,55 @@
         <div class="task" *ngIf="selectedType === stepTypeEnum.task">
             <div class="title">
                 <div class="header">
-                    <span *ngIf="isEdit">עריכת שלב</span>משימה <span></span><span *ngIf="!isEdit">חדשה</span>
+                    <span *ngIf="isEdit">עריכת שלב </span>משימה <span></span><span *ngIf="!isEdit">חדשה</span>
                 </div>
                 <img src="assets/icons/puzzle_piece.svg" />
             </div>
-            <div class="text-and-input">
+            <div class="text-and-input" style="margin-bottom: 3rem;">
                 <span class="text">שם המשימה</span>
-                <input class="text" type="text" #stepNameInput>
+                <input class="text" type="text" [(ngModel)]="newStep.name" #stepNameInput>
+                <div class="error-container">
+                    <span *ngIf="submitted && !newStep.name" class="error">אנא הזינו שם</span>
+                </div>
+            </div>
+            <div class="add-description" *ngIf="!showDescription">
+                <div class="button" (click)="showDescription = true">
+                    + הוספת פירוט
+                </div>
+            </div>
+            <div class="text-and-input" *ngIf="showDescription">
+                <span class="text">פירוט</span>
+                <textarea class="text" maxlength="100" [(ngModel)]="newStep.description"></textarea>
             </div>
         </div>
 
         <div class="payment" *ngIf="selectedType === stepTypeEnum.payment">
             <div class="title">
                 <div class="header">
-                    <span *ngIf="isEdit">עריכת שלב</span>תשלום <span></span><span *ngIf="!isEdit">חדש</span>
+                    <span *ngIf="isEdit">עריכת שלב </span>תשלום <span></span><span *ngIf="!isEdit">חדש</span>
                 </div>
                 <img src="assets/icons/dollar.svg" />
             </div>
             <div class="text-and-input">
                 <span class="text">שם השתלום</span>
-                <input class="text" type="text" #stepNameInput>
+                <input class="text" type="text" [(ngModel)]="newStep.name" #stepNameInput>
+                <div class="error-container">
+                    <span *ngIf="submitted && !newStep.name" class="error">אנא הזינו שם</span>
+                </div>
+            </div>
+
+            <div class="text-and-input">
+                <span class="text">סכום (לא כולל מע"ם)</span>
+                <input class="text" type="number" [(ngModel)]="newStep.price">
+                <div class="error-container">
+                    <span *ngIf="submitted && newStep.price <= 0 || newStep.price === undefined" class="error">אנא הזינו סכום</span>
+                </div>
             </div>
         </div>
+
+         <div class="create-step">
+                <img class="icon-confirm-circle" (click)="createStep()" />
+            </div>
     </div>
     <!-- <div [formGroup]="form" class="form" *ngIf="isEdit || selectedType !== undefined">
         <div class="text-and-input" *ngIf="selectedType.type !== stepTypeEnum.payment">

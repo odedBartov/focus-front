@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { StepType, stepTypeLabels } from '../models/enums';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Step } from '../models/step';
 import { MatInputModule } from '@angular/material/input';
@@ -19,7 +19,6 @@ import { parseDate } from '../helpers/functions';
 })
 export class NewStepComponent implements OnInit {
   httpService = inject(HttpService);
-  formBuilder = inject(FormBuilder);
   loadingService = inject(LoadingService);
   datePipe = inject(DatePipe);
   @ViewChild('stepNameInput') stepNameInput!: ElementRef;
@@ -27,33 +26,29 @@ export class NewStepComponent implements OnInit {
     if (value) {
       this.isEdit = true;
       this.selectedType = value.stepType
-      this.form.patchValue({ name: value.name });
-      this.form.patchValue({ description: value.description });
-      const formattedDate = this.datePipe.transform(value.dateDue, 'dd/MM/yy');
-      this.form.patchValue({ dateDue: formattedDate });
-      this.form.patchValue({ price: value.price });
-      this.step.set({ ...value });
+      this.newStep = value;
+      // this.form.patchValue({ name: value.name });
+      // this.form.patchValue({ description: value.description });
+      // const formattedDate = this.datePipe.transform(value.dateDue, 'dd/MM/yy');
+      // this.form.patchValue({ dateDue: formattedDate });
+      // this.form.patchValue({ price: value.price });
+      // this.step.set({ ...value });
     }
   }
-  step = signal<Step | undefined>(undefined);
+  // step = signal<Step | undefined>(undefined);
   @Output() stepsEmitter = new EventEmitter<Step>();
   stepTypes: { text: string, icon: string, type: StepType }[] = []
   stepTypeLabels = stepTypeLabels;
   stepTypeEnum = StepType;
   selectedType!: StepType;
   newStep!: Step;
-  form: FormGroup;
   submitted = false;
   isEdit = false;
-
-  constructor() {
-    this.form = this.formBuilder.group({
-      dateDue: ['', [Validators.required]],
-      description: '',
-      name: ['', Validators.required],
-      price: [0, Validators.required]
-    });
-  }
+  showDescription = false;
+  inOneMonth = new Date();
+  inTwoMonths = new Date();
+  inThreeMonths = new Date();
+  inFourMonths = new Date();
 
   ngOnInit(): void {
     this.stepTypes = [
@@ -66,6 +61,15 @@ export class NewStepComponent implements OnInit {
         this.stepNameInput.nativeElement.focus()
       }
     }, 0);
+
+    this.initFutureMonths();
+  }
+
+  initFutureMonths() {
+    this.inOneMonth.setMonth(this.inOneMonth.getMonth() + 1)
+    this.inTwoMonths.setMonth(this.inTwoMonths.getMonth() + 2)
+    this.inTwoMonths.setMonth(this.inTwoMonths.getMonth() + 3)
+    this.inFourMonths.setMonth(this.inFourMonths.getMonth() + 4)
   }
 
   selectType(type: StepType) {
@@ -77,46 +81,18 @@ export class NewStepComponent implements OnInit {
     }, 0);
   }
 
-  editStepType(type: StepType) {
-    const updatedStep = this.step();
-    if (updatedStep) {
-      updatedStep.stepType = type;
-      this.step.update(current => updatedStep);
-      this.selectedType = type;
+  createStep() {
+    if (this.validateStep()) {
+      this.stepsEmitter.emit(this.newStep);
     }
   }
 
-  createStep() {
-    const oldStep = this.step();
-    if (oldStep) {
-      this.newStep = oldStep;
-    }
+  validateStep(): boolean {
     this.submitted = true;
-    const raw = this.form.get('dateDue')!.value;
-    const parsed = parseDate(raw);
-    if (!parsed) {
-      this.form.get('dateDue')!.setErrors({ invalidDate: true });
-      return;
+    if (this.newStep.stepType === StepType.task) {
+      return this.newStep.name !== undefined;
     } else {
-      this.newStep.dateDue = parsed;
+      return this.newStep.name !== undefined && this.newStep.price !== undefined && this.newStep.price > 0;
     }
-
-    const name = this.form.get('name')!.value;
-    if (!name) {
-      this.form.get('name')!.setErrors({ invalidDate: true });
-      return;
-    } else {
-      this.newStep.name = name;
-    }
-
-    const price = this.form.get('price')!.value;
-    if (this.selectedType === StepType.payment && (price === undefined || price === '' || price <= 0)) {
-      this.form.get('price')!.setErrors({ invalidDate: true });
-      return;
-    } else {
-      this.newStep.price = price;
-    }
-    this.newStep.description = this.form.get('description')!.value;
-    this.stepsEmitter.emit(this.newStep);
   }
 }
