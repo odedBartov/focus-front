@@ -18,8 +18,8 @@ export class NewProjectComponent {
   formBuilder = inject(FormBuilder);
   descriptionForm: FormGroup;
   descriptionSubmitted = false;
-  dateAndPriceForm: FormGroup;
-  dateAndPriceSubmitted = false;
+  dateForm: FormGroup;
+  dateSubmitted = false;
   clientSubmitted = false;
   clientForm: FormGroup;
   project: Project;
@@ -32,8 +32,7 @@ export class NewProjectComponent {
       description: ''
     });
 
-    this.dateAndPriceForm = this.formBuilder.group({
-      price: ['', [Validators.required]],
+    this.dateForm = this.formBuilder.group({
       startDate: '',
       endDate: ''
     });
@@ -54,7 +53,7 @@ export class NewProjectComponent {
         this.submitDescription()
         break;
       case 2:
-        this.submitDateAndPrice()
+        this.submitDate()
         break;
       case 3:
         this.finish();
@@ -71,16 +70,15 @@ export class NewProjectComponent {
     }
   }
 
-  submitDateAndPrice() {
-    this.dateAndPriceSubmitted = true;
-    if (this.dateAndPriceForm.valid) {
-      this.project.basePrice = this.dateAndPriceForm.get("price")?.value;
-      const rawStartDate = this.dateAndPriceForm.get('startDate')!.value;
+  submitDate() {
+    this.dateSubmitted = true;
+    if (this.dateForm.valid) {
+      const rawStartDate = this.dateForm.get('startDate')!.value;
       const startDate = parseDate(rawStartDate);
       if (startDate) {
         this.project.startDate = startDate;
       }
-      const rawEndDate = this.dateAndPriceForm.get('endDate')!.value;
+      const rawEndDate = this.dateForm.get('endDate')!.value;
       const endDate = parseDate(rawEndDate);
       if (endDate) {
         this.project.endDate = endDate;

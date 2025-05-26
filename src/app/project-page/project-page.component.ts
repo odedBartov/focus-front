@@ -54,7 +54,7 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   @Input() set projectInput(value: Project | undefined) {
     this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
     this.project = value;
-    this.calculatePaidMoney();
+    this.calculatePayments();
     this.workedTimeToShow = value?.totalWorkingTime ?? 0;
     if (this.project?.steps) {
       this.project.steps = this.project.steps.sort((a, b) => a.positionInList - b.positionInList);
@@ -71,6 +71,8 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   workingTimeInterval: any;
   workedTimeToShow = 0;
   showNotes = false;
+  baseProjectPrice = 0;
+  paidMoney = 0;
   hideProperties = this.projectHoverService.getSignal();
 
   constructor() {
@@ -135,6 +137,19 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  calculatePayments() {
+    this.baseProjectPrice = 0;
+    this.paidMoney = 0;
+    this.project?.steps.forEach(step => {
+      if (step.stepType === StepType.payment) {
+        this.baseProjectPrice += step.price;
+        if (step.isComplete) {
+          this.paidMoney += step.price;
+        }
+      }
+    });
+  }
+
   updateCient() {
     if (this.project) {
       this.project.updateClient = !this.project.updateClient;
@@ -161,7 +176,7 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
       }
       this.editStepId = '';
       this.activeStepId = this.project?.steps?.find(s => !s.isComplete)?.id;
-      this.calculatePaidMoney();
+      this.calculatePayments();
       this.loadingService.changeIsloading(false);
     })
   }
@@ -215,13 +230,6 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
         }
         this.loadingService.changeIsloading(false);
       });
-    }
-  }
-
-  calculatePaidMoney() {
-    const sum = this.project?.steps?.reduce((sum, step) => sum + ((step.isComplete && step.stepType === StepType.payment) ? step.price : 0), 0);
-    if (this.project) {
-      this.project.paidMoney = sum ?? 0;
     }
   }
 

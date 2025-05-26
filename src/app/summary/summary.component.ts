@@ -3,13 +3,12 @@ import { AuthenticationService } from '../services/authentication.service';
 import { CommonModule } from '@angular/common';
 import { Project } from '../models/project';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CircleSegmentComponent } from '../circle-segment/circle-segment.component';
 import { StepType } from '../models/enums';
 import { Step } from '../models/step';
 
 @Component({
   selector: 'app-summary',
-  imports: [CommonModule, MatTooltipModule, CircleSegmentComponent],
+  imports: [CommonModule, MatTooltipModule],
   templateUrl: './summary.component.html',
   styleUrl: './summary.component.scss'
 })

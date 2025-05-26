@@ -9,8 +9,6 @@ export class Project {
     startDate: Date;
     endDate: Date;
     updateClient: boolean;
-    basePrice: number;
-    paidMoney: number;
     status: ProjectStatus;
     isPriority: boolean;
     steps: Step[];
@@ -29,8 +27,6 @@ export class Project {
         this.startDate = new Date();
         this.endDate = new Date();
         this.updateClient = true;
-        this.basePrice = 0;
-        this.paidMoney = 0;
         this.status = ProjectStatus.active;
         this.isPriority = false;
         this.steps = [];

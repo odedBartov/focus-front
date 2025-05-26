@@ -27,19 +27,19 @@
                 <img class="icon icon-info" matTooltipPosition="above" matTooltipClass="custom-tooltip"
                     matTooltip="אם מחיר הפרויקט משתנה, כל מה שצריך לעשות הוא לשנות את הסכומים בשלבי התשלום (או להוסיף תשלום חדש). המחיר הכולל יתעדכן בהתאם." />
             </div>
-            <span class="base-price">{{project?.basePrice | number}} ₪</span>
+            <span class="base-price">{{baseProjectPrice | number}} ₪</span>
             <div class="progress-bar">
-                <div class="progress-fill" [style.width.%]="((project?.paidMoney??0)/(project?.basePrice??1))*100">
+                <div class="progress-fill" [style.width.%]="((paidMoney)/(baseProjectPrice == 0? 1 : baseProjectPrice))*100">
                 </div>
             </div>
             <div class="paid-remain">
                 <div class="paid">
                     <span class="title">שולם</span>
-                    <span class="value">{{project?.paidMoney | number}} ₪</span>
+                    <span class="value">{{paidMoney | number}} ₪</span>
                 </div>
                 <div class="remain">
                     <span class="title">נשאר לתשלום</span>
-                    <span class="value">{{(project?.basePrice??0)-(project?.paidMoney??0) | number}} ₪</span>
+                    <span class="value">{{(baseProjectPrice == 0? 1 : baseProjectPrice)-(paidMoney) | number}} ₪</span>
                 </div>
             </div>
         </div>
