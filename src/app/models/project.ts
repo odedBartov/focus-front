@@ -13,8 +13,6 @@ export class Project {
     isPriority: boolean;
     steps: Step[];
     positionInList: number;
-    totalWorkingTime: number;
-    totalWorkingSessions: number;
     clientName: string;
     clientMail: string;
     links:{name: string, url: string}[];
@@ -31,8 +29,6 @@ export class Project {
         this.isPriority = false;
         this.steps = [];
         this.positionInList = 0;
-        this.totalWorkingTime = 1000;
-        this.totalWorkingSessions = 0;
         this.clientName = '';
         this.clientMail = '';
         this.links = [];

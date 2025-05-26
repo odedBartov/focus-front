@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../models/project';
 import { HttpService } from '../services/http.service';
@@ -41,7 +41,7 @@ import { RichTextComponent } from "../rich-text/rich-text.component";
     ])
   ]
 })
-export class ProjectPageComponent implements OnInit, OnDestroy {
+export class ProjectPageComponent implements OnInit {
   route = inject(ActivatedRoute);
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
@@ -55,7 +55,6 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
     this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
     this.project = value;
     this.calculatePayments();
-    this.workedTimeToShow = value?.totalWorkingTime ?? 0;
     if (this.project?.steps) {
       this.project.steps = this.project.steps.sort((a, b) => a.positionInList - b.positionInList);
     }
@@ -67,9 +66,6 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
   isShowNewStep = false;
   editStepId: string | undefined = '';
   hoverStepId? = '';
-  currentSessionTime = new Date();
-  workingTimeInterval: any;
-  workedTimeToShow = 0;
   showNotes = false;
   baseProjectPrice = 0;
   paidMoney = 0;
@@ -84,7 +80,6 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadProject();
-    this.resetWorkingTimer();
   }
 
   @HostListener('document:click', ['$event'])
@@ -233,47 +228,8 @@ export class ProjectPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  resetWorkingTimer() {
-    const timeInterval = 60000;
-    this.currentSessionTime = new Date();
-    this.workedTimeToShow = this.project?.totalWorkingTime ?? 0;
-    this.workingTimeInterval = setInterval(() => {
-      if (this.project) {
-        this.workedTimeToShow += timeInterval;
-      }
-    }, timeInterval);
-  }
-
-  calculateWorkingTime() {
-    this.stopInterval();
-    if (this.project) {
-      let workedTime = 0;
-      const workingHours = new Date().getTime() - this.currentSessionTime.getTime();
-      if (workingHours > 21600000) { // 6 hours
-        workedTime = this.project.totalWorkingTime / this.project.totalWorkingSessions;
-      } else {
-        workedTime = new Date().getTime() - this.currentSessionTime.getTime();
-      }
-      this.project.totalWorkingSessions += 1;
-      this.project.totalWorkingTime += workedTime;
-      this.httpService.updateProjects([this.project]).subscribe(res => {
-      })
-    }
-  }
-
-  stopInterval() {
-    if (this.workingTimeInterval) {
-      clearInterval(this.workingTimeInterval);
-      this.workingTimeInterval = null;
-    }
-  }
-
   showNotesPopup(show: boolean) {
     this.showNotes = show;
     this.projectHoverService.projectHover('empty');
-  }
-
-  ngOnDestroy(): void {
-    this.calculateWorkingTime();
   }
 }

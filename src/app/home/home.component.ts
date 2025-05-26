@@ -41,12 +41,6 @@ export class HomeComponent implements OnInit {
   tabs: ProjectTab[] = [];
 
   setActive(tab: ProjectTab) {
-    if (this.activeTab.project) {
-      this.projectPage?.calculateWorkingTime();
-      setTimeout(() => {
-        this.projectPage?.resetWorkingTimer();
-      }, 1);
-    }
     this.activeTab = tab;
     this.selectedProject = tab.project;
   }
