@@ -32,10 +32,11 @@
                 font-family: 'black';
                 font-size: var(--font-size-5);
                 z-index: 2;
+                margin-bottom: 20px;
             }
 
             .description {
-                margin: 2rem 0;
+                margin-bottom: 20px;
                 font-family: 'regular';
                 font-size: var(--font-size-1);
             }

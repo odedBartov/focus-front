@@ -5,7 +5,7 @@
                 <span class="title">{{project?.name}}</span>
                 <img class="pointer icon-expand" (click)="openProjectModal()" />
             </div>
-            <span class="description">
+            <span class="description" *ngIf="project?.description">
                 {{project?.description}}
             </span>
             <div class="dates">
