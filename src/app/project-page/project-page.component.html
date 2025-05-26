@@ -61,16 +61,15 @@
                 <div class="step-header">
                     <span [ngClass]="{'step-name': step.id !== activeStepId}">{{step.name}}</span>
                     <img class="pointer icon-confirm" (click)="changeStepStatus(step)" *ngIf="step.isComplete" />
-                    <img src="assets/icons/working.svg" *ngIf="!step.isComplete" />
+                    <img src="assets/icons/puzzle_piece.svg" *ngIf="!step.isComplete" />
                 </div>
                 <div class="extra" [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"
                     *ngIf="step.isComplete">
                     הסתיים בתאריך {{step.dateCompleted | date: 'dd.MM.yyyy'}}
                 </div>
                 <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id) ? 'expanded' : 'collapsed'"
-                    class="extra extra-not-finished" *ngIf="!step.isComplete">
+                    class="extra-not-finished" *ngIf="!step.isComplete">
                     <span>{{step.description}}</span>
-                    <span>סיום משוער: {{step.dateDue | date: 'dd.MM.yyyy'}}</span>
                     <div class="step-icons">
                         <div class="edit-delete">
                             <img class="icon-garbage-can" (click)="deleteStep(step)" />

@@ -145,7 +145,12 @@
         flex: 1;
 
         .step {
-            @include mixins.step
+            @include mixins.step;
+
+            .step-header {
+                height: 28px;
+                align-items: center;
+            }
         }
 
         .add-step {
@@ -182,4 +187,5 @@
 
 .cdk-drag-preview {
     @include mixins.step;
+    background-color: var(--home-color);
 }
