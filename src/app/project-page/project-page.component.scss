@@ -2,7 +2,6 @@
 
 .main {
     height: 100%;
-    // padding: 50px;
     display: flex;
     justify-content: space-between;
     gap: 80px;
@@ -188,4 +187,31 @@
 .cdk-drag-preview {
     @include mixins.step;
     background-color: var(--home-color);
+    width: 15.25rem !important;
+    height: auto !important;
+    
+    &.active-step {
+        width: 20rem !important;
+        font-size: var(--font-size-4) !important;
+        background-color: white !important;
+        border: none !important;
+        box-shadow: var(--common-shadow) !important;
+        padding: 2rem !important;
+    }
+    
+    .step-header {
+        width: 100%;
+        display: flex;
+        align-items: center !important;
+        justify-content: space-between;
+        font-family: 'black';
+
+        .step-name {
+            font-size: var(--font-size-2);
+        }
+    }
+}
+
+.cdk-drag-placeholder {
+    opacity: 0 !important;
 }
