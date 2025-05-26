@@ -29,7 +29,6 @@ export class NewProjectComponent {
     this.project = new Project();
     this.descriptionForm = this.formBuilder.group({
       title: ['', [Validators.required]],
-      subTitle: ['', [Validators.required]],
       description: ''
     });
 
@@ -67,7 +66,6 @@ export class NewProjectComponent {
     this.descriptionSubmitted = true;
     if (this.descriptionForm.valid && this.project) {
       this.project.name = this.descriptionForm.get("title")?.value;
-      this.project.subTitle = this.descriptionForm.get("subTitle")?.value;
       this.project.description = this.descriptionForm.get("description")?.value;
       this.currentProgress++;
     }

@@ -33,7 +33,6 @@ export class ProjectModalComponent {
   initForm() {
     this.form = this.formBuilder.group({
       projectName: [this.project.name, Validators.required],
-      subTitle: [this.project.subTitle, Validators.required],
       description: this.project.description,
       clientName: this.project.clientName,
       clientMail: this.project.clientMail,
@@ -59,7 +58,6 @@ export class ProjectModalComponent {
 
   updateProjectFromForm() {
     this.project.name = this.form.get('projectName')?.value;
-    this.project.subTitle = this.form.get('subTitle')?.value;
     this.project.description = this.form.get('description')?.value;
     this.project.clientName = this.form.get('clientName')?.value;
     this.project.clientMail = this.form.get('clientMail')?.value;

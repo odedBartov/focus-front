@@ -4,7 +4,6 @@ import { Step } from "./step";
 export class Project {
     id?: string;
     name: string;
-    subTitle: string;
     userId?: string;
     description: string;
     startDate: Date;
@@ -26,7 +25,6 @@ export class Project {
     constructor() {
         this.id = '';
         this.name = '';
-        this.subTitle = '';
         this.description = '';
         this.startDate = new Date();
         this.endDate = new Date();

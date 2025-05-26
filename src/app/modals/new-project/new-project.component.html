@@ -26,20 +26,6 @@
                 </div>
                 <div class="line">
                     <div class="text-and-input">
-                        <span>כותרת משנית</span>
-                        <input type="text" formControlName="subTitle" />
-                        <div class="error-container">
-                            <span *ngIf="descriptionSubmitted && descriptionForm.get('subTitle')?.errors"
-                                class="error">אנא
-                                הזינו כותרת משנית</span>
-                        </div>
-                    </div>
-                    <div class="description">
-                        <span>כאן כדאי לציין את מהות הפרויקט. למשל "תהליך מיתוג" או "אתר תדמית"</span>
-                    </div>
-                </div>
-                <div class="line">
-                    <div class="text-and-input">
                         <span>תיאור קצר</span>
                         <textarea formControlName="description"></textarea>
                     </div>
