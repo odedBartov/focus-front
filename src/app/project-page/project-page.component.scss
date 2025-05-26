@@ -34,12 +34,6 @@
                 z-index: 2;
             }
 
-            .sub-title {
-                font-family: 'black';
-                font-size: var(--font-size-2);
-                z-index: 2;
-            }
-
             .description {
                 margin: 2rem 0;
                 font-family: 'regular';
@@ -49,8 +43,6 @@
             .dates {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                grid-template-rows: 1fr 2fr;
-                gap: 10px;
 
                 .cell {
                     display: flex;
