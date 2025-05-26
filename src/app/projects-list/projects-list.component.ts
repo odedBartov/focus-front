@@ -35,7 +35,7 @@ export class ProjectsListComponent {
   hoveredProject = this.projectHoverService.getSignal();
   router = inject(Router);
   projectStatusEnum = ProjectStatus;
-  activeTab = 2;
+  activeTab = 1;
 
   getCurrentStep(project: Project) {
     return project.steps?.find(s => !s.isComplete);
