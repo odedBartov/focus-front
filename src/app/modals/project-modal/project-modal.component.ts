@@ -34,11 +34,8 @@ export class ProjectModalComponent {
     this.form = this.formBuilder.group({
       projectName: [this.project.name, Validators.required],
       description: this.project.description,
-      clientName: this.project.clientName,
-      clientMail: this.project.clientMail,
       startDate: this.datePipe.transform(this.project.startDate, 'dd/MM/yy'),
-      endDate: this.datePipe.transform(this.project.endDate, 'dd/MM/yy'),
-      updateClient: this.project.updateClient
+      endDate: this.datePipe.transform(this.project.endDate, 'dd/MM/yy')
     });
   }
 
@@ -59,10 +56,6 @@ export class ProjectModalComponent {
   updateProjectFromForm() {
     this.project.name = this.form.get('projectName')?.value;
     this.project.description = this.form.get('description')?.value;
-    this.project.clientName = this.form.get('clientName')?.value;
-    this.project.clientMail = this.form.get('clientMail')?.value;
-    this.project.startDate = this.form.get('startDate')?.value;
-    this.project.endDate = this.form.get('endDate')?.value;
 
     const rawStartDate = this.form.get('startDate')!.value;
     const startDate = parseDate(rawStartDate);
