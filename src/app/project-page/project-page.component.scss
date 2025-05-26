@@ -109,18 +109,6 @@
                 }
             }
         }
-
-        .time {
-            span {
-                font-size: var(--font-size-1);
-                font-family: 'regular';
-            }
-
-            .hours {
-                font-family: 'black';
-                font-size: var(--font-size-3);
-            }
-        }
     }
 
     .summurize.show-before::before {
@@ -160,9 +148,8 @@
         }
 
         .new-step {
-            margin: 2rem;
             display: flex;
-            width: 400px;
+            width: 24rem;
         }
     }
 

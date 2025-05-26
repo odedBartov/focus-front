@@ -5,14 +5,14 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Step } from '../models/step';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { provideNgxMask } from 'ngx-mask';
 import { HttpService } from '../services/http.service';
 import { LoadingService } from '../services/loading.service';
 import { parseDate } from '../helpers/functions';
 
 @Component({
   selector: 'app-new-step',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule, NgxMaskDirective],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule],
   providers: [provideNgxMask(), DatePipe],
   templateUrl: './new-step.component.html',
   styleUrl: './new-step.component.scss'
@@ -26,7 +26,7 @@ export class NewStepComponent implements OnInit {
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
-      this.selectedType = { icon: "", text: "", type: value.stepType }
+      this.selectedType = value.stepType
       this.form.patchValue({ name: value.name });
       this.form.patchValue({ description: value.description });
       const formattedDate = this.datePipe.transform(value.dateDue, 'dd/MM/yy');
@@ -40,7 +40,7 @@ export class NewStepComponent implements OnInit {
   stepTypes: { text: string, icon: string, type: StepType }[] = []
   stepTypeLabels = stepTypeLabels;
   stepTypeEnum = StepType;
-  selectedType!: { text: string, icon: string, type: StepType };
+  selectedType!: StepType;
   newStep!: Step;
   form: FormGroup;
   submitted = false;
@@ -58,8 +58,7 @@ export class NewStepComponent implements OnInit {
   ngOnInit(): void {
     this.stepTypes = [
       { text: "שלב בפרויקט שצריך לבצע", icon: "working", type: StepType.task },
-      { text: "על ידי הלקוח", icon: "dollar", type: StepType.payment },
-      { text: "חוזה, פגישה, אימייל חשוב וכו'", icon: "telegram", type: StepType.coomunication }
+      { text: "על ידי הלקוח", icon: "dollar", type: StepType.payment }
     ];
 
     setTimeout(() => {
@@ -69,10 +68,10 @@ export class NewStepComponent implements OnInit {
     }, 0);
   }
 
-  selectType(type: { text: string, icon: string, type: StepType }) {
-    this.selectedType = type;
+  selectType(type: StepType) {
     this.newStep = new Step();
-    this.newStep.stepType = type.type;
+    this.newStep.stepType = type;
+    this.selectedType = type;
     setTimeout(() => {
       this.stepNameInput.nativeElement.focus()
     }, 0);
@@ -83,7 +82,7 @@ export class NewStepComponent implements OnInit {
     if (updatedStep) {
       updatedStep.stepType = type;
       this.step.update(current => updatedStep);
-      this.selectedType.type = type;
+      this.selectedType = type;
     }
   }
 
@@ -111,7 +110,7 @@ export class NewStepComponent implements OnInit {
     }
 
     const price = this.form.get('price')!.value;
-    if (this.selectedType?.type === StepType.payment && (price === undefined || price === '' || price <= 0)) {
+    if (this.selectedType === StepType.payment && (price === undefined || price === '' || price <= 0)) {
       this.form.get('price')!.setErrors({ invalidDate: true });
       return;
     } else {

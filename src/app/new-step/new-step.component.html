@@ -1,39 +1,45 @@
 <div class="main">
-    <div class="choose-type" *ngIf="!isEdit && selectedType === undefined">
+    <div class="choose-type" *ngIf="!isEdit && selectedType===undefined">
         <span class="header">שלב חדש</span>
-        <span class="text">מהו סוג השלב?</span>
         <div class="steps">
-            <div class="step-type" *ngFor="let stepType of stepTypes" (click)="selectType(stepType)">
-                <img [src]="`assets/icons/${stepType.icon}.svg`" />
-                <div class="details">
-                    <span class="header">{{stepTypeLabels[stepType.type]}}</span>
-                    <span class="text">{{stepType.text}}</span>
-                </div>
+            <div class="step-type" (click)="selectType(stepTypeEnum.task)">
+                <img [src]="`assets/icons/puzzle_piece.svg`" />
+                <span class="header">{{stepTypeLabels[stepTypeEnum.task]}}</span>
+            </div>
+            <div class="step-type" (click)="selectType(stepTypeEnum.payment)">
+                <img [src]="`assets/icons/dollar.svg`" />
+                <span class="header">{{stepTypeLabels[stepTypeEnum.payment]}}</span>
             </div>
         </div>
     </div>
-    <form [formGroup]="form" class="form" *ngIf="isEdit || selectedType !== undefined">
-        <div class="title" *ngIf="!isEdit">
-            <span class="header">שלב {{stepTypeLabels[selectedType.type]}} חדש</span>
-            <img [src]="`assets/icons/${selectedType.icon}.svg`" />
-        </div>
-        <div *ngIf="isEdit">
-            <span class="header">עריכת שלב</span>
-            <div class="types">
-                <div class="edit-type" [ngClass]="{'selected': stepType.type === step()?.stepType}"
-                    *ngFor="let stepType of stepTypes" (click)="editStepType(stepType.type)">
-                    <img [src]="`assets/icons/${stepType.icon}.svg`" />
-                    <span>{{stepTypeLabels[stepType.type]}}</span>
+    <div *ngIf="selectedType !== undefined" class="details">
+        <div class="task" *ngIf="selectedType === stepTypeEnum.task">
+            <div class="title">
+                <div class="header">
+                    <span *ngIf="isEdit">עריכת שלב</span>משימה <span></span><span *ngIf="!isEdit">חדשה</span>
                 </div>
+                <img src="assets/icons/puzzle_piece.svg" />
+            </div>
+            <div class="text-and-input">
+                <span class="text">שם המשימה</span>
+                <input class="text" type="text" #stepNameInput>
             </div>
         </div>
-        <div class="text-and-input">
-            <span class="text">שם השלב</span>
-            <input class="text" type="text" formControlName="name" #stepNameInput>
-            <div class="error-container">
-                <span *ngIf="submitted && form.get('name')?.errors" class="error">אנא הזינו שם</span>
+
+        <div class="payment" *ngIf="selectedType === stepTypeEnum.payment">
+            <div class="title">
+                <div class="header">
+                    <span *ngIf="isEdit">עריכת שלב</span>תשלום <span></span><span *ngIf="!isEdit">חדש</span>
+                </div>
+                <img src="assets/icons/dollar.svg" />
+            </div>
+            <div class="text-and-input">
+                <span class="text">שם השתלום</span>
+                <input class="text" type="text" #stepNameInput>
             </div>
         </div>
+    </div>
+    <!-- <div [formGroup]="form" class="form" *ngIf="isEdit || selectedType !== undefined">
         <div class="text-and-input" *ngIf="selectedType.type !== stepTypeEnum.payment">
             <span class="text">פירוט (לא חובה)</span>
             <textarea class="text" formControlName="description" maxlength="100"></textarea>
@@ -56,5 +62,5 @@
         <div class="create-step">
             <img class="icon-confirm-circle" (click)="createStep()" />
         </div>
-    </form>
+    </div> -->
 </div>
