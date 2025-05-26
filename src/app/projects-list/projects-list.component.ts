@@ -52,6 +52,11 @@ export class ProjectsListComponent {
     return steps?.reduce((sum, step) => sum + step.price, 0) ?? 0;
   }
 
+  getBasePrice(project: Project) {
+    const steps = project.steps?.filter(s => s.stepType === StepType.payment);
+    return steps?.reduce((sum, step) => sum + step.price, 0) ?? 0;
+  }
+
   changeProjectStatus(project: Project, status: ProjectStatus) {
     project.status = status;
     this.updateProjects([project]).subscribe(res => {
