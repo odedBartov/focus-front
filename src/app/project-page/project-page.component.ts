@@ -59,6 +59,7 @@ export class ProjectPageComponent implements OnInit {
       this.project.steps = this.project.steps.sort((a, b) => a.positionInList - b.positionInList);
     }
   };
+  stepTypeEnum = StepType;
   project?: Project;
   projectId: string | null = null;
   activeStepId? = '';
@@ -206,6 +207,7 @@ export class ProjectPageComponent implements OnInit {
     this.httpService.createStep(step).subscribe(res => {
       this.project?.steps?.push(res);
       this.isShowNewStep = false;
+      this.calculatePayments();
       this.loadingService.changeIsloading(false);
     })
   }
@@ -221,6 +223,7 @@ export class ProjectPageComponent implements OnInit {
       this.httpService.deleteStep(step.id).subscribe(res => {
         const stepIndex = this.project?.steps?.indexOf(step);
         if (stepIndex !== undefined) {
+          this.calculatePayments();
           this.project?.steps?.splice(stepIndex, 1);
         }
         this.loadingService.changeIsloading(false);

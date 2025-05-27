@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { StepType, stepTypeLabels } from '../models/enums';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -8,7 +8,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNgxMask } from 'ngx-mask';
 import { HttpService } from '../services/http.service';
 import { LoadingService } from '../services/loading.service';
-import { parseDate } from '../helpers/functions';
 
 @Component({
   selector: 'app-new-step',
@@ -25,36 +24,19 @@ export class NewStepComponent implements OnInit {
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
-      this.selectedType = value.stepType
       this.newStep = value;
-      // this.form.patchValue({ name: value.name });
-      // this.form.patchValue({ description: value.description });
-      // const formattedDate = this.datePipe.transform(value.dateDue, 'dd/MM/yy');
-      // this.form.patchValue({ dateDue: formattedDate });
-      // this.form.patchValue({ price: value.price });
-      // this.step.set({ ...value });
     }
   }
-  // step = signal<Step | undefined>(undefined);
   @Output() stepsEmitter = new EventEmitter<Step>();
-  stepTypes: { text: string, icon: string, type: StepType }[] = []
   stepTypeLabels = stepTypeLabels;
   stepTypeEnum = StepType;
-  selectedType!: StepType;
   newStep!: Step;
   submitted = false;
   isEdit = false;
   showDescription = false;
-  inOneMonth = new Date();
-  inTwoMonths = new Date();
-  inThreeMonths = new Date();
-  inFourMonths = new Date();
+  futureDates: Date[] = [];
 
   ngOnInit(): void {
-    this.stepTypes = [
-      { text: "שלב בפרויקט שצריך לבצע", icon: "working", type: StepType.task },
-      { text: "על ידי הלקוח", icon: "dollar", type: StepType.payment }
-    ];
 
     setTimeout(() => {
       if (this.stepNameInput?.nativeElement) {
@@ -66,23 +48,28 @@ export class NewStepComponent implements OnInit {
   }
 
   initFutureMonths() {
-    this.inOneMonth.setMonth(this.inOneMonth.getMonth() + 1)
-    this.inTwoMonths.setMonth(this.inTwoMonths.getMonth() + 2)
-    this.inTwoMonths.setMonth(this.inTwoMonths.getMonth() + 3)
-    this.inFourMonths.setMonth(this.inFourMonths.getMonth() + 4)
+    const today = new Date();
+    for (let index = 0; index < 4; index++) {
+      today.setMonth(today.getMonth() + 1)
+      this.futureDates.push(new Date(today));
+    }
   }
 
   selectType(type: StepType) {
     this.newStep = new Step();
+    this.newStep.dateDue = this.futureDates[0];
     this.newStep.stepType = type;
-    this.selectedType = type;
     setTimeout(() => {
       this.stepNameInput.nativeElement.focus()
     }, 0);
   }
 
+  selectDate(date: Date) {
+    this.newStep.dateDue = date;
+  }
+
   createStep() {
-    if (this.validateStep()) {
+    if (this.validateStep()) {      
       this.stepsEmitter.emit(this.newStep);
     }
   }

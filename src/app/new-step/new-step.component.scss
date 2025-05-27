@@ -97,10 +97,41 @@
             display: flex;
             width: 100%;
             justify-content: center;
-            margin: 1rem;
+            margin: 2rem 0 1rem;
 
             img {
                 cursor: pointer;
+            }
+        }
+
+        .future-dates {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            font-size: var(--font-size-1);
+            font-family: 'regular';
+
+            .dates {
+                display: flex;
+                align-items: flex-start;
+
+                span {
+                    margin-top: 0.2rem;
+                    background-color: var(--hover-color);
+                    border-radius: var(--common-radius);
+                    text-align: center;
+                    padding: 0.5rem 1rem;
+                    cursor: pointer;
+                    margin-left: 0.5rem;
+
+                    &:hover {
+                        background-color: var(--select-color);
+                    }
+
+                    &.selected {
+                        background-color: var(--select-color);
+                    }
+                }
             }
         }
     }

@@ -1,5 +1,5 @@
 <div class="main">
-    <div class="choose-type" *ngIf="!isEdit && selectedType===undefined">
+    <div class="choose-type" *ngIf="!isEdit && (newStep == undefined || newStep.stepType === undefined)">
         <span class="header">שלב חדש</span>
         <div class="steps">
             <div class="step-type" (click)="selectType(stepTypeEnum.task)">
@@ -12,8 +12,8 @@
             </div>
         </div>
     </div>
-    <div *ngIf="selectedType !== undefined" class="details">
-        <div class="task" *ngIf="selectedType === stepTypeEnum.task">
+    <div *ngIf="newStep?.stepType !== undefined" class="details">
+        <div class="task" *ngIf="newStep?.stepType === stepTypeEnum.task">
             <div class="title">
                 <div class="header">
                     <span *ngIf="isEdit">עריכת שלב </span>משימה <span></span><span *ngIf="!isEdit">חדשה</span>
@@ -38,7 +38,7 @@
             </div>
         </div>
 
-        <div class="payment" *ngIf="selectedType === stepTypeEnum.payment">
+        <div class="payment" *ngIf="newStep?.stepType === stepTypeEnum.payment">
             <div class="title">
                 <div class="header">
                     <span *ngIf="isEdit">עריכת שלב </span>תשלום <span></span><span *ngIf="!isEdit">חדש</span>
@@ -60,9 +60,18 @@
                     <span *ngIf="submitted && newStep.price <= 0 || newStep.price === undefined" class="error">אנא הזינו סכום</span>
                 </div>
             </div>
+
+            <div class="future-dates">
+                <span>מתי התשלום צפוי להכנס?</span>
+                <div class="dates">
+                    <span *ngFor="let date of futureDates" (click)="selectDate(date)" [ngClass]="{'selected': newStep.dateDue == date}">
+                        {{date | date: 'MM/yy'}}
+                    </span>
+                </div>
+            </div>
         </div>
 
-         <div class="create-step">
+         <div class="create-step" *ngIf="newStep?.stepType">
                 <img class="icon-confirm-circle" (click)="createStep()" />
             </div>
     </div>
