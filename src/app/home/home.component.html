@@ -1,15 +1,16 @@
 <div class="main-window">
   <div class="tabs-container">
     <div class="tab-list">
+      <img src="assets/focus_logo.svg" class="logo"/>
       <div *ngFor="let tab of tabs" [class.active]="tab.id === activeTab.id" class="tab" (click)="setActive(tab)">
         <span>{{ tab.label }}</span>
         <img [src]="tab.icon" />
       </div>
     </div>
-    <img class="logo" src="assets/ariel_logo.svg" (click)="navigateToProfile()" />
+    <img class="profile" src="assets/icons/default_profile.svg" (click)="navigateToProfile()" />
   </div>
 
-  <div style="width: 100%; height: 100%;">
+  <div class="main-content">
     <div class="home-container" [ngClass]="{ 'show-before': isProjectHovered() }" *ngIf="activeTab?.id === tabs[0]?.id">
       <div class="home">
         <div class="summary">
