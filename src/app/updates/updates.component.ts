@@ -30,7 +30,10 @@ export class UpdatesComponent implements OnInit {
       this.features = res.updates;
     })
 
-    this.fullName = this.authenticationService.getUserName();
+    const userName = this.authenticationService.getUserName();
+    if (userName) { 
+      this.fullName = userName;
+    }
   }
 
   openWhatsapp() {

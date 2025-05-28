@@ -1,11 +1,12 @@
 import { Component, inject, Signal } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { LoadingService } from './services/loading.service';
 import { AuthenticationService } from './services/authentication.service';
 import { AnimationItem } from 'lottie-web';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -18,17 +19,22 @@ export class AppComponent {
   router = inject(Router);
   loadingService = inject(LoadingService);
   authenticationService = inject(AuthenticationService);
+  titleService = inject(Title);
   isLoading: Signal<boolean>;
   options: AnimationOptions = {
     path: '/assets/animations/loader.json',
   };
 
   constructor() {
+    const fullName = this.authenticationService.getUserName();
+    if (fullName) {
+      this.titleService.setTitle(fullName);
+    }
     this.isLoading = this.loadingService.getIsLoading();
   }
-  
+
   navigateToHomePage() {
-      this.router.navigate(['/home']);
+    this.router.navigate(['/home']);
   }
 
   signOut() {

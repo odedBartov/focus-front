@@ -30,7 +30,7 @@ export class AuthenticationService {
   getUserName() {
     const firstName = localStorage.getItem(this.firstName);
     const lastName = localStorage.getItem(this.lastName);
-    return `${firstName} ${lastName}`;
+    return firstName && lastName? `${firstName} ${lastName}` : undefined;
   }
 
   getFirstName() {

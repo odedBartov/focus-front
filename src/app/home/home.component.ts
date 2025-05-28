@@ -15,6 +15,7 @@ import { ProjectPageComponent } from '../project-page/project-page.component';
 import { ProjectTab } from '../models/projectTab';
 import { ProjectHoverService } from '../services/project-hover.service';
 import { AuthenticationService } from '../services/authentication.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -32,6 +33,7 @@ export class HomeComponent implements OnInit {
   loadingService = inject(LoadingService);
   projectHoverService = inject(ProjectHoverService);
   authenticationService = inject(AuthenticationService);
+  titleService = inject(Title);
   router = inject(Router);
   userProjects: UserProjects = new UserProjects();
   activeProjects: Project[] = [];
@@ -51,6 +53,10 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     setTimeout(() => {
       this.userPicture = this.authenticationService.getUserPicture() ?? this.defaultUserPicture;
+      const fullName = this.authenticationService.getUserName();
+      if (fullName) {
+        this.titleService.setTitle(fullName);
+      }
     }, 0);
     this.loadingService.changeIsloading(true);
     this.httpService.getProjects().subscribe(res => {
