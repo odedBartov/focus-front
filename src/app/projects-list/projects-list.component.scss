@@ -17,7 +17,7 @@
 
         .tab {
             cursor: pointer;
-            margin-left: 1rem;
+            margin-left: 40px;
             color: var(--disabled-text);
             font-family: 'black';
             font-size: var(--font-size-3);
@@ -79,7 +79,7 @@
         padding: 0 28px;
 
         .priority {
-            height: 60%;
+            height: 32px;
         }
 
         .project-description {

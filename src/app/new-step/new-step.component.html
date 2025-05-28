@@ -73,7 +73,7 @@
             </div>
         </div>
 
-        <div class="create-step" *ngIf="newStep?.stepType">
+        <div class="create-step" *ngIf="newStep?.stepType !== undefined">
             <img class="icon-confirm-circle" (click)="createStep()" />
         </div>
     </div>
