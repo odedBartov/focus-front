@@ -71,6 +71,7 @@ export class ProjectsListComponent {
       this.httpService.deleteProject(project.id).subscribe(res => {
         const projectIndex = this.projects.indexOf(project);
         this.projects.splice(projectIndex, 1);
+        this.activeProjectsEmitter.emit(this.projects);
         this.loadingService.changeIsloading(false);
       })
     }
@@ -83,6 +84,7 @@ export class ProjectsListComponent {
     clonedProject.startDate = new Date();
     this.httpService.createProject(clonedProject).subscribe(res => {
       this.projects.push(res);
+      this.activeProjectsEmitter.emit(this.projects);
       this.loadingService.changeIsloading(false);
     })
   }
@@ -115,6 +117,7 @@ export class ProjectsListComponent {
   updateProjects(projects: Project[]) {
     this.loadingService.changeIsloading(true);
     return this.httpService.updateProjects(projects).pipe(tap(res => {
+      this.activeProjectsEmitter.emit(this.projects);
       this.loadingService.changeIsloading(false);
     }));
   }
@@ -142,9 +145,9 @@ export class ProjectsListComponent {
     const today = new Date();
     const dateToCheck = new Date(date);
     return today.getFullYear() === dateToCheck.getFullYear() &&
-           today.getMonth() === dateToCheck.getMonth() &&
-           today.getDay() === dateToCheck.getDay()
-}
+      today.getMonth() === dateToCheck.getMonth() &&
+      today.getDay() === dateToCheck.getDay()
+  }
 
   openProjectModal() {
     const dialogRef = this.dialog.open(NewProjectComponent);
@@ -153,6 +156,7 @@ export class ProjectsListComponent {
         this.loadingService.changeIsloading(true);
         this.httpService.createProject(res).subscribe(newProject => {
           this.projects.push(newProject);
+          this.activeProjectsEmitter.emit(this.projects);
           this.loadingService.changeIsloading(false);
         })
       }

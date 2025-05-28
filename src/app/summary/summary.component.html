@@ -2,10 +2,10 @@
     <div class="header">
         <span class="big-title">{{getGreeting()}}, {{userName}}</span>
         <span class="sub-title">על מה עובדים היום?</span>
-    </div>
-    <div class="coffee">
-        <img [style.transform]="'rotate(' + coffeeRotation + 'deg)'" (click)="getRandomCoffee()"
-            [src]="coffeePicture" />
+        <div class="coffee">
+            <img [style.transform]="'rotate(' + coffeeRotation + 'deg)'" (click)="getRandomCoffee()"
+                [src]="coffeePicture" />
+        </div>
     </div>
     <div class="payments">
         <div class="text-and-icon">

@@ -181,7 +181,7 @@
     &.active-step {
         width: 20rem !important;
         font-size: var(--font-size-4) !important;
-        background-color: white !important;
+        background-color: var(--default-white) !important;
         border: none !important;
         box-shadow: var(--common-shadow) !important;
         padding: 2rem !important;

@@ -82,16 +82,10 @@
 
                 &:hover {
                     background-color: var(--main-color);
-                    color: white;
+                    color: var(--default-white);
                 }
             }
         }
-
-        // .date {
-        //     .date {
-        //         @include mixins.regular-border;
-        //     }
-        // }
 
         .create-step {
             display: flex;

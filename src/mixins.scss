@@ -19,7 +19,7 @@
   &.active-step {
     width: 20rem;
     font-size: var(--font-size-4) !important;
-    background-color: white;
+    background-color: var(--default-white);
     border: none !important;
     box-shadow: var(--common-shadow);
     padding: 2rem !important;
@@ -102,7 +102,7 @@
   align-items: center;
   font-family: 'medium';
   font-size: var(--font-size-2);
-  color: white;
+  color: var(--default-white);
   background-color: var(--main-color-not-active);
 
   img {

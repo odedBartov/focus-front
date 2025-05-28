@@ -29,6 +29,7 @@
     --big-window-width: 45vw;
 
     --default-black: #070533;
+    --default-white: #FBFBFB;
     --home-color: #F3F3F5;
     --main-color: #667AFF;
     --main-color-not-active: #A2ACEF;
@@ -59,6 +60,8 @@
         border-radius: var(--common-radius);
         border: none;
         height: 100%;
+        background-color: var(--default-white);
+        color: var(--default-black);
     }
 
     .mat-mdc-menu-content {
@@ -72,12 +75,15 @@
         }
     }
 
+    .cdk-overlay-dark-backdrop {
+        background-color: var(--blur);
+    }
+
     .mat-mdc-menu-panel {
-        background: aliceblue;
         border-radius: 15px;
 
         .mat-mdc-menu-item {
-            background-color: white;
+            background-color: var(--default-white);
         }
     }
 
@@ -92,7 +98,7 @@
 
     .custom-tooltip {
         background-color: #070533;
-        color: white;
+        color: var(--default-white);
         font-size: var(--font-size-1);
         border-radius: 8px;
         padding: 12px;
@@ -118,7 +124,7 @@ input::-webkit-inner-spin-button {
 .toggle-switch {
     width: 28px;
     height: 16px;
-    background-color: white;
+    background-color: var(--default-white);
     border: solid 4px var(--main-color-not-active);
     border-radius: 14px;
     position: relative;
@@ -145,7 +151,7 @@ input::-webkit-inner-spin-button {
 }
 
 .toggle-switch.on .switch-thumb {
-    background-color: white;
+    background-color: var(--default-white);
     top: 7px;
     left: 22px;
 }

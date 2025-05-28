@@ -136,7 +136,7 @@ export class ProjectPageComponent implements OnInit {
   calculatePayments() {
     this.baseProjectPrice = 0;
     this.paidMoney = 0;
-    this.project?.steps.forEach(step => {
+    this.project?.steps?.forEach(step => {
       if (step.stepType === StepType.payment) {
         this.baseProjectPrice += step.price;
         if (step.isComplete) {

@@ -5,7 +5,7 @@
     height: var(--big-window-height);
 
     &.show-notes {
-        background-color: white;
+        background-color: var(--default-white);
         border-radius: var(--common-radius);
         box-shadow: var(--common-shadow);
     }
@@ -80,7 +80,7 @@
                 background-color: var(--hover-color);
 
                 &:hover {
-                    color: white;
+                    color: var(--default-white);
                     background-color: var(--main-color);
                 }
             }

@@ -34,10 +34,11 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
+        margin-top: 20px;
 
         img {
             cursor: pointer;
-            height: 10rem;
+            height: 220px;
             transform: rotate(90deg);
         }
     }
