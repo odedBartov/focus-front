@@ -113,6 +113,21 @@
         background-color: transparent;
         @include mixins.regular-border;
     }
+
+}
+
+::-webkit-scrollbar-track {
+    background-color: blue !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0e18cc !important;
+    /* Color of the scroller */
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3753dc !important;
 }
 
 input::-webkit-outer-spin-button,
@@ -310,14 +325,6 @@ input::-webkit-inner-spin-button {
 
     &:hover {
         content: url('/assets/icons/bullet_list_yes.svg');
-    }
-}
-
-.icon-ordered-list {
-    content: url('/assets/icons/ordered_list_not.svg');
-
-    &:hover {
-        content: url('/assets/icons/ordered_list_yes.svg');
     }
 }
 
