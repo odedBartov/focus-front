@@ -7,7 +7,7 @@ export class AuthenticationService {
   userTokenKey = 'user-token';
   firstName = 'first-name';
   lastName = "last-name";
-  isNewUser = 'isNewUSer';
+  isNewUser = 'is-new-user';
   userPicture = "user-picture";
 
   getToken() {
@@ -31,6 +31,10 @@ export class AuthenticationService {
     const firstName = localStorage.getItem(this.firstName);
     const lastName = localStorage.getItem(this.lastName);
     return `${firstName} ${lastName}`;
+  }
+
+  getFirstName() {
+    return localStorage.getItem(this.firstName);
   }
 
   setNewUser(isNew: boolean) {

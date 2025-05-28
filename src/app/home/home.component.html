@@ -7,7 +7,7 @@
         <img [src]="tab.icon" />
       </div>
     </div>
-    <img class="profile" src="assets/icons/default_profile.svg" (click)="navigateToProfile()" />
+    <img class="profile" [src]="userPicture" (click)="navigateToProfile()" />
   </div>
 
   <div class="main-content">

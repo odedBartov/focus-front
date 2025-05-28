@@ -14,6 +14,7 @@ import { UpdatesComponent } from "../updates/updates.component";
 import { ProjectPageComponent } from '../project-page/project-page.component';
 import { ProjectTab } from '../models/projectTab';
 import { ProjectHoverService } from '../services/project-hover.service';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-home',
@@ -30,13 +31,15 @@ export class HomeComponent implements OnInit {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
   projectHoverService = inject(ProjectHoverService);
+  authenticationService = inject(AuthenticationService);
   router = inject(Router);
   userProjects: UserProjects = new UserProjects();
   activeProjects: Project[] = [];
   unactiveProjects: Project[] = [];
   selectedProject?: Project;
   isProjectHovered = this.projectHoverService.getSignal();
-
+  userPicture: string | null = null;
+  defaultUserPicture = "assets/icons/default_profile.svg"
   activeTab: ProjectTab = { id: 'home', icon: 'assets/icons/home.svg' };
   tabs: ProjectTab[] = [];
 
@@ -46,6 +49,9 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    setTimeout(() => {
+      this.userPicture = this.authenticationService.getUserPicture() ?? this.defaultUserPicture;
+    }, 0);
     this.loadingService.changeIsloading(true);
     this.httpService.getProjects().subscribe(res => {
       this.loadingService.changeIsloading(false);

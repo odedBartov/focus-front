@@ -4,6 +4,7 @@ import { HttpService } from '../services/http.service';
 import { Feature } from '../models/feature';
 import { Insight } from '../models/insight';
 import { LoadingService } from '../services/loading.service';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-updates',
@@ -14,8 +15,12 @@ import { LoadingService } from '../services/loading.service';
 export class UpdatesComponent implements OnInit {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
+  authenticationService = inject(AuthenticationService);
   features: Feature[] = [];
   insight: Insight = new Insight();
+  ArielsNumber = "";
+  whatsappUrl = "";
+  fullName = "משתמש ללא שם";
 
   ngOnInit(): void {
     this.loadingService.changeIsloading(true);
@@ -24,5 +29,14 @@ export class UpdatesComponent implements OnInit {
       this.insight = res.insight ?? new Insight();
       this.features = res.updates;
     })
+
+    this.fullName = this.authenticationService.getUserName();
+  }
+
+  openWhatsapp() {
+    const message = `הי, זה ${this.fullName}. אני משתמש שלכם בפוקוס ויש לי משהו להגיד:
+    `;
+    const url = `https://wa.me/${this.ArielsNumber}?text=${message}`;
+    window.open(url, '_blank');
   }
 }

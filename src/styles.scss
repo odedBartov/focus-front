@@ -116,18 +116,18 @@
 
 }
 
-::-webkit-scrollbar-track {
-    background-color: blue !important;
+::-webkit-scrollbar {
+    background: transparent; 
+    border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #0e18cc !important;
-    /* Color of the scroller */
-    border-radius: 5px;
+    background: var(--hover-color); 
+    border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #3753dc !important;
+    background: var(--select-color);
 }
 
 input::-webkit-outer-spin-button,
