@@ -17,7 +17,7 @@
           <app-summary [projects]="userProjects.activeProjects"></app-summary>
         </div>
         <div class="projects-list">
-          <app-projects-list [projects]="activeProjects" (selectProjectEmitter)="selectProject($event)"
+          <app-projects-list [projects]="userProjects.activeProjects" (selectProjectEmitter)="selectProject($event)"
             (activeProjectsEmitter)="updateActiveTabs($event)"></app-projects-list>
         </div>
         <div class="updates">

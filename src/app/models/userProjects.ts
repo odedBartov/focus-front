@@ -2,12 +2,10 @@ import { Project } from "./project";
 
 export class UserProjects {
     activeProjects: Project[];
-    frozenProjects: Project[];
-    finishedProjects: Project[];
+    unActiveProjects: Project[];
 
     constructor() {
         this.activeProjects = [];
-        this.frozenProjects = [];
-        this.finishedProjects = [];
+        this.unActiveProjects = [];
     }
 }

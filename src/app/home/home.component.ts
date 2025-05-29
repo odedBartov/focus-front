@@ -36,8 +36,8 @@ export class HomeComponent implements OnInit {
   titleService = inject(Title);
   router = inject(Router);
   userProjects: UserProjects = new UserProjects();
-  activeProjects: Project[] = [];
-  unactiveProjects: Project[] = [];
+  // activeProjects: Project[] = [];
+  // unactiveProjects: Project[] = [];
   selectedProject?: Project;
   isProjectHovered = this.projectHoverService.getSignal();
   userPicture: string | null = null;
@@ -62,8 +62,8 @@ export class HomeComponent implements OnInit {
     this.httpService.getProjects().subscribe(res => {
       this.loadingService.changeIsloading(false);
       this.userProjects = this.sortProjects(res);
-      this.activeProjects = this.userProjects.activeProjects;
-      this.unactiveProjects = this.userProjects.frozenProjects.concat(this.userProjects.finishedProjects);
+      this.userProjects.activeProjects = this.userProjects.activeProjects;
+      this.userProjects.unActiveProjects = this.userProjects.unActiveProjects;
       this.initTabs();
     })
   }
@@ -72,23 +72,19 @@ export class HomeComponent implements OnInit {
     const activeProjectTabs = this.userProjects.activeProjects.map(p => { return { id: p.id ?? '', label: p.name, project: p } });
     this.tabs = [this.activeTab];
     this.tabs.push(...activeProjectTabs);
+    if (this.userProjects.unActiveProjects.length) {
+      const archiveTab = { id: "archive", label: "ארכיון", projects: this.userProjects.unActiveProjects };
+      this.tabs.push(archiveTab);
+    }
   }
 
   sortProjects(projects: Project[]): UserProjects {
     const result = new UserProjects();
     projects.forEach(project => {
-      switch (project.status) {
-        case ProjectStatus.active:
-          result.activeProjects.push(project);
-          break;
-        case ProjectStatus.frozen:
-          result.frozenProjects.push(project);
-          break;
-        case ProjectStatus.finished:
-          result.finishedProjects.push(project);
-          break;
-        default:
-          break;
+      if (project.status === ProjectStatus.active) {
+        result.activeProjects.push(project);
+      } else {
+        result.unActiveProjects.push(project);
       }
     })
     return result;
