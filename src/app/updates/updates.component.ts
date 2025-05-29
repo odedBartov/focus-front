@@ -20,8 +20,7 @@ export class UpdatesComponent implements OnInit {
   updatesService = inject(UpdatesService)
   features: Feature[] = [];
   insight: Insight = new Insight();
-  ArielsNumber = "";
-  whatsappUrl = "";
+  ArielsNumber = "972584046213";
   fullName = "משתמש ללא שם";
 
   ngOnInit(): void {
