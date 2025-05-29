@@ -17,13 +17,14 @@ import { ProjectHoverService } from '../services/project-hover.service';
 import { AuthenticationService } from '../services/authentication.service';
 import { Title } from '@angular/platform-browser';
 import { ArchiveComponent } from "../archive/archive.component";
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-home',
   imports: [RouterModule, MatExpansionModule, CommonModule,
     ProjectsListComponent, ProjectsListComponent,
     MatMenuModule, SummaryComponent, UpdatesComponent,
-    ProjectPageComponent, ArchiveComponent],
+    ProjectPageComponent, ArchiveComponent, DragDropModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   standalone: true
@@ -78,6 +79,24 @@ export class HomeComponent implements OnInit {
       if (this.activeTab.id === this.archiveTab.id) {
         this.activeTab = this.homeTab;
       }
+    }
+  }
+
+  drop(event: CdkDragDrop<string[]>) {    
+    moveItemInArray(this.tabs, event.previousIndex, event.currentIndex);
+    moveItemInArray(this.userProjects.activeProjects, event.previousIndex-1, event.currentIndex-1)
+    this.updateProjectsPosition();
+    this.loadingService.changeIsloading(true);
+    this.httpService.updateProjects(this.userProjects.activeProjects).subscribe(res => {
+      console.log(this.userProjects.activeProjects);
+      this.userProjects.activeProjects = this.userProjects.activeProjects.sort((a, b) => a.positionInList - b.positionInList);
+      this.loadingService.changeIsloading(false);
+    });
+  }
+
+  updateProjectsPosition() {
+    for (let index = 0; index < this.userProjects.activeProjects.length; index++) {
+      this.userProjects.activeProjects[index].positionInList = index;
     }
   }
 

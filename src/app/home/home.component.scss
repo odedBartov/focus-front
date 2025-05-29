@@ -31,20 +31,8 @@
             margin-left: 24px;
         }
 
-        .tab {
-            height: 100%;
-            color: #9ca3af;
-            cursor: pointer;
-            position: relative;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-            padding: 0 24px;
-            font-family: 'medium';
-            font-size: var(--font-size-1);
-        }
-
         .tab:hover {
+            transition: all 0.3s ease;
             color: #4b5563;
         }
 
@@ -56,6 +44,7 @@
         .tab.active {
             background-color: var(--home-color);
             color: var(--default-black);
+            transition: all 0.3s ease;
         }
 
     }
@@ -119,4 +108,28 @@
             height: 100%;
         }
     }
+}
+
+.cdk-drag-placeholder {
+    opacity: 0 !important;
+}
+
+.tab,
+.cdk-drag-preview {
+    background-color: var(--hover-color);
+    height: 100%;
+    color: var(--disabled-text);
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    font-family: 'medium';
+    font-size: var(--font-size-1);
+}
+
+.cdk-drag-preview {
+    justify-content: center;
+    padding: 0;
+    margin: 0;
 }

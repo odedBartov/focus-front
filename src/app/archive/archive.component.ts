@@ -45,7 +45,6 @@ export class ArchiveComponent {
     project.positionInList += 99999;
     this.updateProjects([project]).subscribe(res => {
       this.projects?.splice(this.projects.indexOf(project), 1);
-      this.unActiveProjectsEmitter.emit(this.projects);
     });
   }
 
