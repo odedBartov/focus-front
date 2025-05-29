@@ -5,6 +5,7 @@ import { Feature } from '../models/feature';
 import { Insight } from '../models/insight';
 import { LoadingService } from '../services/loading.service';
 import { AuthenticationService } from '../services/authentication.service';
+import { UpdatesService } from '../services/updates.service';
 
 @Component({
   selector: 'app-updates',
@@ -16,6 +17,7 @@ export class UpdatesComponent implements OnInit {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
   authenticationService = inject(AuthenticationService);
+  updatesService = inject(UpdatesService)
   features: Feature[] = [];
   insight: Insight = new Insight();
   ArielsNumber = "";
@@ -24,7 +26,7 @@ export class UpdatesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadingService.changeIsloading(true);
-    this.httpService.getInsightAndUpdates().subscribe(res => {
+    this.updatesService.getInsightAndUpdates().subscribe(res => {
       this.loadingService.changeIsloading(false);
       this.insight = res.insight ?? new Insight();
       this.features = res.updates;

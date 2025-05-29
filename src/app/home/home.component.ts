@@ -16,13 +16,14 @@ import { ProjectTab } from '../models/projectTab';
 import { ProjectHoverService } from '../services/project-hover.service';
 import { AuthenticationService } from '../services/authentication.service';
 import { Title } from '@angular/platform-browser';
+import { ArchiveComponent } from "../archive/archive.component";
 
 @Component({
   selector: 'app-home',
   imports: [RouterModule, MatExpansionModule, CommonModule,
     ProjectsListComponent, ProjectsListComponent,
     MatMenuModule, SummaryComponent, UpdatesComponent,
-    ProjectPageComponent],
+    ProjectPageComponent, ArchiveComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   standalone: true
@@ -36,13 +37,13 @@ export class HomeComponent implements OnInit {
   titleService = inject(Title);
   router = inject(Router);
   userProjects: UserProjects = new UserProjects();
-  // activeProjects: Project[] = [];
-  // unactiveProjects: Project[] = [];
   selectedProject?: Project;
   isProjectHovered = this.projectHoverService.getSignal();
   userPicture: string | null = null;
   defaultUserPicture = "assets/icons/default_profile.svg"
-  activeTab: ProjectTab = { id: 'home', icon: 'assets/icons/home.svg' };
+  homeTab: ProjectTab = { id: 'home', icon: 'assets/icons/home.svg' };
+  activeTab: ProjectTab = { id: 'none' };
+  archiveTab: ProjectTab = { id: "archive", label: "ארכיון", projects: [] }
   tabs: ProjectTab[] = [];
 
   setActive(tab: ProjectTab) {
@@ -51,6 +52,12 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initUserPicture();
+    this.refreshProjects();
+    this.activeTab = this.homeTab;
+  }
+
+  initUserPicture() {
     setTimeout(() => {
       this.userPicture = this.authenticationService.getUserPicture() ?? this.defaultUserPicture;
       const fullName = this.authenticationService.getUserName();
@@ -58,24 +65,32 @@ export class HomeComponent implements OnInit {
         this.titleService.setTitle(fullName);
       }
     }, 0);
+  }
+
+  initTabs() {
+    this.tabs = [this.homeTab];
+    const activeProjectTabs = this.userProjects.activeProjects.map(p => { return { id: p.id ?? '', label: p.name, project: p } });
+    this.tabs.push(...activeProjectTabs);
+    if (this.userProjects.unActiveProjects.length) {
+      this.archiveTab.projects = this.userProjects.unActiveProjects;
+      this.tabs.push(this.archiveTab);
+    } else {
+      if (this.activeTab.id === this.archiveTab.id) {
+        this.activeTab = this.homeTab;
+      }
+    }
+  }
+
+  refreshProjects() {
     this.loadingService.changeIsloading(true);
     this.httpService.getProjects().subscribe(res => {
       this.loadingService.changeIsloading(false);
       this.userProjects = this.sortProjects(res);
-      this.userProjects.activeProjects = this.userProjects.activeProjects;
-      this.userProjects.unActiveProjects = this.userProjects.unActiveProjects;
+      this.userProjects.activeProjects = this.userProjects.activeProjects.sort((a, b) => a.positionInList - b.positionInList);
+      this.userProjects.unActiveProjects = this.userProjects.unActiveProjects.sort((a, b) => a.positionInList - b.positionInList);
       this.initTabs();
-    })
-  }
-
-  initTabs() {
-    const activeProjectTabs = this.userProjects.activeProjects.map(p => { return { id: p.id ?? '', label: p.name, project: p } });
-    this.tabs = [this.activeTab];
-    this.tabs.push(...activeProjectTabs);
-    if (this.userProjects.unActiveProjects.length) {
-      const archiveTab = { id: "archive", label: "ארכיון", projects: this.userProjects.unActiveProjects };
-      this.tabs.push(archiveTab);
-    }
+      this.activeTab = this.homeTab;
+    });
   }
 
   sortProjects(projects: Project[]): UserProjects {
@@ -100,10 +115,15 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  updateActiveTabs(projects: Project[]) {
-    this.userProjects.activeProjects = projects;
-    this.initTabs();
-  }
+  // updateActiveTabs(projects: Project[]) {
+  //   this.userProjects.activeProjects = projects;
+  //   this.initTabs();
+  // }
+
+  // updateUnActiveTabs(projects: Project[]) {
+  //   this.userProjects.unActiveProjects = projects;
+  //   this.initTabs();
+  // }
 
   navigateToProfile() {
     //this.router.navigate(['/profile']);

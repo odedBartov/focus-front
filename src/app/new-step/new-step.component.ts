@@ -24,6 +24,7 @@ export class NewStepComponent implements OnInit {
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
+      value.dateDue = new Date(value.dateDue);
       this.newStep = value;
     }
   }
@@ -37,7 +38,6 @@ export class NewStepComponent implements OnInit {
   futureDates: Date[] = [];
 
   ngOnInit(): void {
-
     setTimeout(() => {
       if (this.stepNameInput?.nativeElement) {
         this.stepNameInput.nativeElement.focus()

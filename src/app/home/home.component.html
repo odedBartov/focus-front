@@ -1,7 +1,7 @@
 <div class="main-window">
   <div class="tabs-container">
     <div class="tab-list">
-      <img src="assets/focus_logo.svg" class="logo"/>
+      <img src="assets/focus_logo.svg" class="logo" />
       <div *ngFor="let tab of tabs" [class.active]="tab.id === activeTab.id" class="tab" (click)="setActive(tab)">
         <span>{{ tab.label }}</span>
         <img [src]="tab.icon" />
@@ -18,7 +18,7 @@
         </div>
         <div class="projects-list">
           <app-projects-list [projects]="userProjects.activeProjects" (selectProjectEmitter)="selectProject($event)"
-            (activeProjectsEmitter)="updateActiveTabs($event)"></app-projects-list>
+            (activeProjectsEmitter)="refreshProjects()"></app-projects-list>
         </div>
         <div class="updates">
           <app-updates></app-updates>
@@ -26,8 +26,23 @@
       </div>
     </div>
 
-    <div class="project-container" *ngIf="activeTab?.id !== tabs[0]?.id">
+    <div class="project-container" *ngIf="activeTab?.id !== tabs[0]?.id && activeTab.id !== archiveTab.id">
       <app-project-page class="project-page" [projectInput]="selectedProject" #projectPage></app-project-page>
+    </div>
+
+    <div class="home-container" *ngIf="activeTab.id === archiveTab.id">
+      <div class="home">
+        <div class="summary">
+          <app-summary [projects]="userProjects.activeProjects"></app-summary>
+        </div>
+        <div class="projects-list">
+          <app-archive [projects]="userProjects.unActiveProjects"
+            (unActiveProjectsEmitter)="refreshProjects()"></app-archive>
+        </div>
+        <div class="updates">
+          <app-updates></app-updates>
+        </div>
+      </div>
     </div>
   </div>
 </div>

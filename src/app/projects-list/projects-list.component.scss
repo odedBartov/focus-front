@@ -52,11 +52,6 @@
     }
 }
 
-.clear-opacity {
-    position: relative;
-    z-index: 10;
-}
-
 .project-drag {
     overflow: hidden;
     margin: 0 30px;
@@ -66,7 +61,6 @@
 
     .project,
     .cdk-drag-preview {
-        font-family: '';
         cursor: pointer;
         background-color: var(--default-white);
         display: grid;

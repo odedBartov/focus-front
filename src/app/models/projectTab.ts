@@ -5,4 +5,5 @@ export type ProjectTab = {
     label?: string;
     icon?: string;
     project?: Project;
+    projects?: Project[];
 }

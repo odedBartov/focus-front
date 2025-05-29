@@ -1,0 +1,43 @@
+<div class="projects-container">
+    <div class="title">
+        <span>פרויקטים פעילים</span>
+    </div>
+    <div cdkDropList (cdkDropListDropped)="drop($event)">
+        <div class="project-drag" *ngFor="let project of projects" cdkDrag>
+            <div class="project">
+                <img class="status-icon"
+                    [src]="`assets/icons/${project.status === projectStatusEnum.frozen?'hourglass' : 'confirm_yes'}.svg`" />
+                <span class="project-name" [matTooltipDisabled]="projectName.clientWidth >= projectName.scrollWidth"
+                    matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltip]="project.description"
+                    #projectName>
+                    {{project.name}}
+                </span>
+                <div class="title-and-text">
+                    <span class="disabled-text">
+                        תאריכים
+                    </span>
+                    <span class="small-text">
+                        {{`${project.startDate | date: 'dd.MM.yyyy'} - ${project.endDate | date: 'dd.MM.yyyy'}`}}
+                    </span>
+                </div>
+                <div class="title-and-text">
+                    <span class="disabled-text">
+                        תקציב
+                    </span>
+                    <span class="small-text">
+                        {{getBasePrice(project)}} ₪
+                    </span>
+                </div>
+                <div class="menu" (click)="$event.stopPropagation()">
+                    <img class="menu icon-kabab-menu" [matMenuTriggerFor]="menu" />
+                    <mat-menu #menu="matMenu" class="pointer">
+                        <button mat-menu-item class="menu-item"
+                            (click)="activateProject(project)">הפעלה מחדש</button>
+                        <button mat-menu-item class="menu-item" (click)="cloneProject(project)">שכפול</button>
+                        <button mat-menu-item class="menu-item" (click)="deleteProject(project)">מחיקה</button>
+                    </mat-menu>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

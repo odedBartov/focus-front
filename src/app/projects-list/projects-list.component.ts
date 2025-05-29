@@ -10,7 +10,6 @@ import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-
 import { HttpService } from '../services/http.service';
 import { LoadingService } from '../services/loading.service';
 import { tap } from 'rxjs';
-import { ProjectHoverService } from '../services/project-hover.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { NewProjectComponent } from '../modals/new-project/new-project.component';
@@ -28,11 +27,9 @@ export class ProjectsListComponent {
   httpService = inject(HttpService);
   loadingService = inject(LoadingService);
   dialog = inject(MatDialog);
-  projectHoverService = inject(ProjectHoverService);
   @Output() selectProjectEmitter = new EventEmitter<Project>();
   @Output() activeProjectsEmitter = new EventEmitter<Project[]>();
   @Input() projects!: Project[];
-  hoveredProject = this.projectHoverService.getSignal();
   router = inject(Router);
   projectStatusEnum = ProjectStatus;
   activeTab = 1;
@@ -59,6 +56,9 @@ export class ProjectsListComponent {
 
   changeProjectStatus(project: Project, status: ProjectStatus) {
     project.status = status;
+    if (status !== ProjectStatus.active) {
+      project.endDate = new Date();
+    }
     this.updateProjects([project]).subscribe(res => {
       this.projects?.splice(this.projects.indexOf(project), 1);
       this.activeProjectsEmitter.emit(this.projects);
@@ -96,9 +96,8 @@ export class ProjectsListComponent {
       const currentIndex = this.projects.indexOf(project);
       moveItemInArray(this.projects, currentIndex, 0);
       this.updateProjectsPosition();
-      this.activeProjectsEmitter.emit(this.projects);
     }
-
+    
     this.updateProjects(this.projects).subscribe(res => { });
   }
 
