@@ -9,6 +9,7 @@ import { Insight } from '../models/insight';
 import { Feature } from '../models/feature';
 import { InsightAndUpdates } from '../models/insightAndUpdates';
 import { User } from '../models/user';
+import { Title } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class HttpService {
   apiUrl = environment.apiUrl;
   httpClient = inject(HttpClient);
   authenticationService = inject(AuthenticationService);
+  titleService = inject(Title);
 
   generateHeaders() {
     const token = this.authenticationService.getToken();
@@ -36,6 +38,10 @@ export class HttpService {
       this.authenticationService.setNewUser(isNewUser == "True");
       this.authenticationService.setUserPicture(res.body.userPicture);
       this.authenticationService.setUserName(res.body.firstName, res.body.lastName);
+      const fullName = this.authenticationService.getUserName();
+      if (fullName) {
+        this.titleService.setTitle("פוקוס - " + fullName);
+      }
     }))
   }
 
@@ -92,6 +98,6 @@ export class HttpService {
   }
 
   createInsight(text: string) {
-    return this.httpClient.post(this.apiUrl + "Info/createInsight", {Text: text})
+    return this.httpClient.post(this.apiUrl + "Info/createInsight", { Text: text })
   }
 }

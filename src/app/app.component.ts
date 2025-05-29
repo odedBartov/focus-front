@@ -4,7 +4,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { LoadingService } from './services/loading.service';
 import { AuthenticationService } from './services/authentication.service';
-import { AnimationItem } from 'lottie-web';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 import { Title } from '@angular/platform-browser';
 
@@ -26,11 +25,11 @@ export class AppComponent {
   };
 
   constructor() {
+    this.isLoading = this.loadingService.getIsLoading();
     const fullName = this.authenticationService.getUserName();
     if (fullName) {
-      this.titleService.setTitle(fullName);
+      this.titleService.setTitle("פוקוס - " + fullName);
     }
-    this.isLoading = this.loadingService.getIsLoading();
   }
 
   navigateToHomePage() {

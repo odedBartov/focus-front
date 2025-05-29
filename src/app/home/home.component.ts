@@ -61,10 +61,6 @@ export class HomeComponent implements OnInit {
   initUserPicture() {
     setTimeout(() => {
       this.userPicture = this.authenticationService.getUserPicture() ?? this.defaultUserPicture;
-      const fullName = this.authenticationService.getUserName();
-      if (fullName) {
-        this.titleService.setTitle(fullName);
-      }
     }, 0);
   }
 
@@ -82,9 +78,9 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  drop(event: CdkDragDrop<string[]>) {    
+  drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.tabs, event.previousIndex, event.currentIndex);
-    moveItemInArray(this.userProjects.activeProjects, event.previousIndex-1, event.currentIndex-1)
+    moveItemInArray(this.userProjects.activeProjects, event.previousIndex - 1, event.currentIndex - 1)
     this.updateProjectsPosition();
     this.loadingService.changeIsloading(true);
     this.httpService.updateProjects(this.userProjects.activeProjects).subscribe(res => {
