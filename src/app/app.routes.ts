@@ -3,7 +3,7 @@ import { AppComponent } from './app.component';
 import { ProjectPageComponent } from './project-page/project-page.component';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { HomeComponent } from './home/home.component';
-import { AuthenticationComponent } from './authentication/authentication.component';
+import { AuthenticationComponent } from './components/authentication/authentication.component';
 import { ProfileComponent } from './profile/profile.component';
 
 export const routes: Routes = [

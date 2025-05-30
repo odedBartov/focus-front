@@ -1,8 +1,8 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { HttpService } from '../services/http.service';
-import { LoadingService } from '../services/loading.service';
-import { Project } from '../models/project';
-import { ProjectStatus, StepType } from '../models/enums';
+import { HttpService } from '../../services/http.service';
+import { LoadingService } from '../../services/loading.service';
+import { Project } from '../../models/project';
+import { ProjectStatus, StepType } from '../../models/enums';
 import { tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';

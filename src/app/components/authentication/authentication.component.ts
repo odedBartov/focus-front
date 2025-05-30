@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { GoogleSigninComponent } from '../google-signin/google-signin.component';
-import { HttpService } from '../services/http.service';
+import { HttpService } from '../../services/http.service';
 import { Router } from '@angular/router';
-import { LoadingService } from '../services/loading.service';
-import { AuthenticationService } from '../services/authentication.service';
+import { LoadingService } from '../../services/loading.service';
+import { AuthenticationService } from '../../services/authentication.service';
 import { MatDialog } from '@angular/material/dialog';
-import { NewUserComponent } from '../modals/new-user/new-user.component';
+import { NewUserComponent } from '../../modals/new-user/new-user.component';
 
 @Component({
   selector: 'app-authentication',

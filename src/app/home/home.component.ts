@@ -16,7 +16,7 @@ import { ProjectTab } from '../models/projectTab';
 import { ProjectHoverService } from '../services/project-hover.service';
 import { AuthenticationService } from '../services/authentication.service';
 import { Title } from '@angular/platform-browser';
-import { ArchiveComponent } from "../archive/archive.component";
+import { ArchiveComponent } from "../components/archive/archive.component";
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
