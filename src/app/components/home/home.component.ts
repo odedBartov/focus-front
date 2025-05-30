@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit {
   archiveTab: ProjectTab = { id: "archive", label: "ארכיון", projects: [] }
   tabs: ProjectTab[] = [];
 
-  setActive(tab: ProjectTab) {    
+  setActive(tab: ProjectTab) {
     this.activeTab = tab;
     this.selectedProject = tab.project;
   }
@@ -84,7 +84,6 @@ export class HomeComponent implements OnInit {
     this.updateProjectsPosition();
     this.loadingService.changeIsloading(true);
     this.httpService.updateProjects(this.userProjects.activeProjects).subscribe(res => {
-      console.log(this.userProjects.activeProjects);
       this.userProjects.activeProjects = this.userProjects.activeProjects.sort((a, b) => a.positionInList - b.positionInList);
       this.loadingService.changeIsloading(false);
     });
@@ -99,12 +98,12 @@ export class HomeComponent implements OnInit {
   refreshProjects() {
     this.loadingService.changeIsloading(true);
     this.httpService.getProjects().subscribe(res => {
-      this.loadingService.changeIsloading(false);
       this.userProjects = this.sortProjects(res);
       this.userProjects.activeProjects = this.userProjects.activeProjects.sort((a, b) => a.positionInList - b.positionInList);
       this.userProjects.unActiveProjects = this.userProjects.unActiveProjects.sort((a, b) => a.positionInList - b.positionInList);
       this.initTabs();
       this.activeTab = this.homeTab;
+      this.loadingService.changeIsloading(false);
     });
   }
 
@@ -134,17 +133,12 @@ export class HomeComponent implements OnInit {
     this.selectedProject = project;
     this.activeTab.project = project;
     this.activeTab.label = project.name;
+    for (let index = 0; index < this.userProjects.activeProjects.length; index++) {
+      if (this.userProjects.activeProjects[index].id === project.id) {
+        this.userProjects.activeProjects[index] = project;
+      }
+    }
   }
-
-  // updateActiveTabs(projects: Project[]) {
-  //   this.userProjects.activeProjects = projects;
-  //   this.initTabs();
-  // }
-
-  // updateUnActiveTabs(projects: Project[]) {
-  //   this.userProjects.unActiveProjects = projects;
-  //   this.initTabs();
-  // }
 
   navigateToProfile() {
     //this.router.navigate(['/profile']);
