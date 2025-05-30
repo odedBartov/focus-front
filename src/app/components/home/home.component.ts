@@ -1,22 +1,22 @@
 import { Component, inject, OnInit, signal, ViewChild, viewChild } from '@angular/core';
-import { HttpService } from '../services/http.service';
-import { Project } from '../models/project';
-import { UserProjects } from '../models/userProjects';
+import { HttpService } from '../../services/http.service';
+import { Project } from '../../models/project';
+import { UserProjects } from '../../models/userProjects';
 import { Router, RouterModule } from '@angular/router';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
 import { ProjectsListComponent } from '../projects-list/projects-list.component';
 import { MatMenuModule } from '@angular/material/menu';
-import { LoadingService } from '../services/loading.service';
-import { ProjectStatus } from '../models/enums';
+import { LoadingService } from '../../services/loading.service';
+import { ProjectStatus } from '../../models/enums';
 import { SummaryComponent } from "../summary/summary.component";
 import { UpdatesComponent } from "../updates/updates.component";
 import { ProjectPageComponent } from '../project-page/project-page.component';
-import { ProjectTab } from '../models/projectTab';
-import { ProjectHoverService } from '../services/project-hover.service';
-import { AuthenticationService } from '../services/authentication.service';
+import { ProjectTab } from '../../models/projectTab';
+import { ProjectHoverService } from '../../services/project-hover.service';
+import { AuthenticationService } from '../../services/authentication.service';
 import { Title } from '@angular/platform-browser';
-import { ArchiveComponent } from "../components/archive/archive.component";
+import { ArchiveComponent } from "../archive/archive.component";
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit {
   archiveTab: ProjectTab = { id: "archive", label: "ארכיון", projects: [] }
   tabs: ProjectTab[] = [];
 
-  setActive(tab: ProjectTab) {
+  setActive(tab: ProjectTab) {    
     this.activeTab = tab;
     this.selectedProject = tab.project;
   }
@@ -128,6 +128,12 @@ export class HomeComponent implements OnInit {
       this.activeTab = { id: 'none' };
       this.selectedProject = project;
     }
+  }
+
+  projectUpdated(project: Project) {
+    this.selectedProject = project;
+    this.activeTab.project = project;
+    this.activeTab.label = project.name;
   }
 
   // updateActiveTabs(projects: Project[]) {

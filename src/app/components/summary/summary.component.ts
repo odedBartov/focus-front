@@ -1,10 +1,10 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { AuthenticationService } from '../services/authentication.service';
+import { AuthenticationService } from '../../services/authentication.service';
 import { CommonModule } from '@angular/common';
-import { Project } from '../models/project';
+import { Project } from '../../models/project';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { StepType } from '../models/enums';
-import { Step } from '../models/step';
+import { StepType } from '../../models/enums';
+import { Step } from '../../models/step';
 
 @Component({
   selector: 'app-summary',

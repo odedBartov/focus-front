@@ -1,13 +1,13 @@
 import { Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { StepType, stepTypeLabels } from '../models/enums';
+import { StepType, stepTypeLabels } from '../../models/enums';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
-import { Step } from '../models/step';
+import { Step } from '../../models/step';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNgxMask } from 'ngx-mask';
-import { HttpService } from '../services/http.service';
-import { LoadingService } from '../services/loading.service';
+import { HttpService } from '../../services/http.service';
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-new-step',

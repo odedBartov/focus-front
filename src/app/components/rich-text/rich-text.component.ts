@@ -2,8 +2,8 @@ import { Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges }
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Editor, NgxEditorModule } from 'ngx-editor';
 import { debounceTime, of, Subject, Subscription, switchMap } from 'rxjs';
-import { Project } from '../models/project';
-import { HttpService } from '../services/http.service';
+import { Project } from '../../models/project';
+import { HttpService } from '../../services/http.service';
 import { CommonModule } from '@angular/common';
 
 @Component({

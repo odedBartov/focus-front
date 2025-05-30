@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { HttpService } from '../services/http.service';
-import { Feature } from '../models/feature';
-import { Insight } from '../models/insight';
-import { LoadingService } from '../services/loading.service';
-import { AuthenticationService } from '../services/authentication.service';
-import { UpdatesService } from '../services/updates.service';
+import { HttpService } from '../../services/http.service';
+import { Feature } from '../../models/feature';
+import { Insight } from '../../models/insight';
+import { LoadingService } from '../../services/loading.service';
+import { AuthenticationService } from '../../services/authentication.service';
+import { UpdatesService } from '../../services/updates.service';
 
 @Component({
   selector: 'app-updates',

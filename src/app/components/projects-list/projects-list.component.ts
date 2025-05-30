@@ -1,21 +1,21 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { Project } from '../models/project';
+import { Project } from '../../models/project';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Router } from '@angular/router';
-import { ProjectStatus, StepType } from '../models/enums';
-import { UserProjects } from '../models/userProjects';
+import { ProjectStatus, StepType } from '../../models/enums';
+import { UserProjects } from '../../models/userProjects';
 import { MatMenuModule } from '@angular/material/menu';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { HttpService } from '../services/http.service';
-import { LoadingService } from '../services/loading.service';
+import { HttpService } from '../../services/http.service';
+import { LoadingService } from '../../services/loading.service';
 import { tap } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
-import { NewProjectComponent } from '../modals/new-project/new-project.component';
+import { NewProjectComponent } from '../../modals/new-project/new-project.component';
 import { TodayTasksComponent } from "../today-tasks/today-tasks.component";
-import { Step } from '../models/step';
-import { Task } from '../models/task';
+import { Step } from '../../models/step';
+import { Task } from '../../models/task';
 
 @Component({
   selector: 'app-projects-list',

@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Editor, NgxEditorModule } from 'ngx-editor';
-import { HttpService } from '../services/http.service';
+import { HttpService } from '../../services/http.service';
 import { debounceTime, Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 

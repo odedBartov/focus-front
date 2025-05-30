@@ -1,13 +1,13 @@
 import { Component, EventEmitter, HostListener, inject, Input, OnInit, Output } from '@angular/core';
-import { Step } from '../models/step';
-import { Project } from '../models/project';
+import { Step } from '../../models/step';
+import { Project } from '../../models/project';
 import { CommonModule } from '@angular/common';
-import { StepType } from '../models/enums';
-import { HttpService } from '../services/http.service';
-import { LoadingService } from '../services/loading.service';
+import { StepType } from '../../models/enums';
+import { HttpService } from '../../services/http.service';
+import { LoadingService } from '../../services/loading.service';
 import { NewStepComponent } from '../new-step/new-step.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { Task } from '../models/task';
+import { Task } from '../../models/task';
 
 @Component({
   selector: 'app-today-tasks',

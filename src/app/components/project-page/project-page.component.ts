@@ -1,21 +1,21 @@
-import { Component, ElementRef, HostListener, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Project } from '../models/project';
-import { HttpService } from '../services/http.service';
+import { Project } from '../../models/project';
+import { HttpService } from '../../services/http.service';
 import { CommonModule } from '@angular/common';
-import { Step } from '../models/step';
-import { LoadingService } from '../services/loading.service';
+import { Step } from '../../models/step';
+import { LoadingService } from '../../services/loading.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ConfirmationModalComponent } from '../modals/confirmation-modal/confirmation-modal.component';
+import { ConfirmationModalComponent } from '../../modals/confirmation-modal/confirmation-modal.component';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NewStepComponent } from '../new-step/new-step.component';
-import { StepType } from '../models/enums';
-import { ProjectModalComponent } from '../modals/project-modal/project-modal.component';
+import { StepType } from '../../models/enums';
+import { ProjectModalComponent } from '../../modals/project-modal/project-modal.component';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NotesComponent } from '../notes/notes.component';
-import { ProjectHoverService } from '../services/project-hover.service';
+import { ProjectHoverService } from '../../services/project-hover.service';
 import { RichTextComponent } from "../rich-text/rich-text.component";
 
 @Component({
@@ -51,6 +51,7 @@ export class ProjectPageComponent implements OnInit {
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
   @ViewChild('richTextDiv', { static: false }) richTextDiv?: ElementRef;
   editDiv?: HTMLDivElement;
+  @Output() projectUpdated = new EventEmitter<Project>();
   @Input() set projectInput(value: Project | undefined) {
     this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
     this.project = value;
@@ -182,6 +183,7 @@ export class ProjectPageComponent implements OnInit {
     dialogRef.afterClosed().subscribe(res => {
       if (res) {        
         this.project = res;
+        this.projectUpdated.emit(res);
       }
     })
   }
