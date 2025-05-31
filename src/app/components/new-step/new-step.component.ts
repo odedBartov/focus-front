@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, viewChild, ViewChild } from '@angular/core';
 import { StepType, stepTypeLabels } from '../../models/enums';
 import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -21,6 +21,7 @@ export class NewStepComponent implements OnInit {
   loadingService = inject(LoadingService);
   datePipe = inject(DatePipe);
   @ViewChild('stepNameInput') stepNameInput!: ElementRef;
+  @ViewChild('taskOption') taskOption!: ElementRef;
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
@@ -37,12 +38,21 @@ export class NewStepComponent implements OnInit {
   showDescription = false;
   futureDates: Date[] = [];
 
+  @HostListener('document:keydown.enter', ['$event'])
+  handleEnterKey(event: KeyboardEvent) {
+    const active = document.activeElement as HTMLElement;
+    if (active) {
+      active.click();
+    }
+  }
+
   ngOnInit(): void {
     setTimeout(() => {
       if (this.stepNameInput?.nativeElement) {
         this.stepNameInput.nativeElement.focus()
       }
-    }, 0);
+      this.taskOption.nativeElement.focus();
+    }, 1);
 
     this.initFutureMonths();
   }
@@ -69,7 +79,7 @@ export class NewStepComponent implements OnInit {
   }
 
   createStep() {
-    if (this.validateStep()) {      
+    if (this.validateStep()) {
       this.stepsEmitter.emit(this.newStep);
     }
   }

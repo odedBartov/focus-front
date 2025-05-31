@@ -93,6 +93,7 @@
 }
 
 @mixin confirm-button {
+  border: none;
   border-radius: 26px;
   padding: 0.5rem 1rem 0.6rem;
   transition: all 0.3s;
@@ -110,7 +111,7 @@
     align-self: center;
   }
 
-  &:hover {
+  &:hover, &:focus {
     background-color: var(--main-color);
   }
 }

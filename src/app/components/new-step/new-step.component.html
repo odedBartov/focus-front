@@ -2,11 +2,11 @@
     <div class="choose-type" *ngIf="!isEdit && (newStep == undefined || newStep.stepType === undefined)">
         <span class="header">שלב חדש</span>
         <div class="steps">
-            <div class="step-type" (click)="selectType(stepTypeEnum.task)">
+            <div class="step-type" (click)="selectType(stepTypeEnum.task)" tabindex="0" #taskOption>
                 <img [src]="`assets/icons/puzzle_piece.svg`" />
                 <span class="header">{{stepTypeLabels[stepTypeEnum.task]}}</span>
             </div>
-            <div class="step-type" (click)="selectType(stepTypeEnum.payment)">
+            <div class="step-type" (click)="selectType(stepTypeEnum.payment)" tabindex="0">
                 <img [src]="`assets/icons/dollar.svg`" />
                 <span class="header">{{stepTypeLabels[stepTypeEnum.payment]}}</span>
             </div>
