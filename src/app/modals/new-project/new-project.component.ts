@@ -16,80 +16,42 @@ import { parseDate } from '../../helpers/functions';
 export class NewProjectComponent {
   dialogRef = inject(MatDialogRef<NewProjectComponent>);
   formBuilder = inject(FormBuilder);
-  descriptionForm: FormGroup;
-  descriptionSubmitted = false;
-  dateForm: FormGroup;
-  dateSubmitted = false;
-  clientSubmitted = false;
-  clientForm: FormGroup;
+  projectForm: FormGroup;
   project: Project;
-  currentProgress = 1;
+  submitted = false;
 
   constructor() {
     this.project = new Project();
-    this.descriptionForm = this.formBuilder.group({
-      title: ['', [Validators.required]],
-      description: ''
-    });
-
-    this.dateForm = this.formBuilder.group({
-      startDate: '',
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const yy = String(today.getFullYear()).slice(-2); // Get last two digits
+    const formattedDate = `${dd}/${mm}/${yy}`;
+    this.projectForm = this.formBuilder.group({
+      projectName: ['', [Validators.required]],
+      description: '',
+      startDate: formattedDate,
       endDate: ''
     });
-
-    this.clientForm = this.formBuilder.group({
-      clientName: '',
-      clientMail: ''
-    })
-  }
-
-  getCurrentProgress() {
-    return (this.currentProgress / 4) * 100;
   }
 
   submit() {
-    switch (this.currentProgress) {
-      case 1:
-        this.submitDescription()
-        break;
-      case 2:
-        this.submitDate()
-        break;
-      case 3:
-        this.finish();
-        break;
-    }
-  }
-
-  submitDescription() {
-    this.descriptionSubmitted = true;
-    if (this.descriptionForm.valid && this.project) {
-      this.project.name = this.descriptionForm.get("title")?.value;
-      this.project.description = this.descriptionForm.get("description")?.value;
-      this.currentProgress++;
-    }
-  }
-
-  submitDate() {
-    this.dateSubmitted = true;
-    if (this.dateForm.valid) {
-      const rawStartDate = this.dateForm.get('startDate')!.value;
+    this.submitted = true;
+    if (this.projectForm.valid && this.project) {
+      this.project.name = this.projectForm.get("projectName")?.value;
+      this.project.description = this.projectForm.get("description")?.value;
+      const rawStartDate = this.projectForm.get('startDate')!.value;
       const startDate = parseDate(rawStartDate);
       if (startDate) {
         this.project.startDate = startDate;
       }
-      const rawEndDate = this.dateForm.get('endDate')!.value;
+      const rawEndDate = this.projectForm.get('endDate')!.value;
       const endDate = parseDate(rawEndDate);
       if (endDate) {
         this.project.endDate = endDate;
       }
-      this.currentProgress++;
-    }
-  }
 
-  finish() {
-    this.project.clientName = this.clientForm.get('clientName')?.value;
-    this.project.clientMail = this.clientForm.get('clientMail')?.value;
-    this.dialogRef.close(this.project);
+      this.dialogRef.close(this.project);
+    }
   }
 }

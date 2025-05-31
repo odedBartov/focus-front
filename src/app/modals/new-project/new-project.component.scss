@@ -10,7 +10,6 @@
         width: 45rem;
         display: flex;
         flex-direction: column;
-        // background-color: var(--default-white);
         border-radius: var(--common-radius);
 
         Form {
@@ -34,19 +33,6 @@
             .sub-title {
                 font-family: 'regular';
                 font-size: var(--font-size-1);
-            }
-        }
-
-        .updates {
-            margin-top: 2rem;
-
-            .updates-title {
-                font-family: 'black';
-                font-size: var(--font-size-1);
-            }
-
-            li {
-                font-family: 'regular';
             }
         }
 

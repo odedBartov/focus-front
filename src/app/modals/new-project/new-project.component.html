@@ -1,22 +1,17 @@
 <div class="template">
     <div class="main">
-        <div class="progress">
-            <div class="progress-bar">
-                <div class="progress-fill" [style.width.%]="getCurrentProgress()"></div>
-            </div>
-        </div>
-        <div *ngIf="currentProgress === 1">
+        <div>
             <div class="header">
                 <span class="title">פרויקט חדש</span>
                 <span class="sub-title">איזה כיף! אתגר חדש בדרך</span>
             </div>
-            <Form [formGroup]="descriptionForm">
+            <Form [formGroup]="projectForm">
                 <div class="line">
                     <div class="text-and-input">
-                        <span>כותרת ראשית</span>
-                        <input type="text" formControlName="title" />
+                        <span>שם הפרויקט</span>
+                        <input type="text" formControlName="projectName" />
                         <div class="error-container">
-                            <span *ngIf="descriptionSubmitted && descriptionForm.get('title')?.errors" class="error">אנא
+                            <span *ngIf="submitted && projectForm.get('projectName')?.errors" class="error">אנא
                                 הזינו כותרת</span>
                         </div>
                     </div>
@@ -35,17 +30,7 @@
                             הדברים החשובים.</span>
                     </div>
                 </div>
-            </Form>
-        </div>
-        <div *ngIf="currentProgress === 2">
-            <div class="header">
-                <span class="title">מחיר ותאריכים</span>
-                <span class="sub-title">עם כל הכבוד לאתגר, הוא צריך להכנס למסגרת עסקית</span>
-            </div>
-            <form [formGroup]="dateForm" class="dateAndPriceForm" style="justify-content: center;">
-                <div class="line" style="margin-bottom: 2rem;">
-                </div>
-                <div class="line" style="margin-top: 2rem;">
+                <div class="line">
                     <div class="dates">
                         <div class="text-and-input">
                             <span>תאריך התחלה</span>
@@ -66,51 +51,12 @@
                         <span>חשוב לתחום את הפרויקט בתאריכים, כדי לצפות את לוחות הזמנים וההכנסות.</span>
                     </div>
                 </div>
-            </form>
-        </div>
-        <div *ngIf="currentProgress === 3">
-            <div class="header">
-                <span class="title">עדכונים ללקוח</span>
-                <span class="sub-title">אנחנו ממליצים בחום לאפשר ללקוח לצפות בפרויקט, כדי
-                    להיות מודע להתקדמות שנעשית
-                    ולשלבים הבאים.
-                    זה עוזר ללקוח להרגיש שהוא בידיים טובות, ומאפשר לו להיות מעורב יותר בפרויקט, ובסופו של דבר גם מרוצה
-                    יותר.
-                    בנוסף, זה מאפשר ללקוח להסב את תשומת לבך לאי-דיוקים, להעלות בקשות נוספות ולדאוג טוב יותר למשימות שלו
-                    בזמן.</span>
-            </div>
-            <form [formGroup]="clientForm" style="height: 26.5rem;">
-                <div class="updates">
-                    <span class="updates-title">אילו עדכונים הלקוח יקבל?</span>
-                    <ul>
-                        <li>עדכון על פתיחת הפרויקט</li>
-                        <li>עדכון על יצירת שלב חדש, עריכת שלב קיים או סימון שלב כבוצע</li>
-                    </ul>
-                </div>
-                <div class="line">
-                    <div class="text-and-input">
-                        <span>שם הלקוח</span>
-                        <input type="text" formControlName="clientName" />
-                    </div>
-                    <div class="description">
-                        <span>איך נפנה ללקוח בעדכונים</span>
-                    </div>
-                </div>
-                <div class="line">
-                    <div class="text-and-input">
-                        <span>אימייל הלקוח</span>
-                        <input type="text" formControlName="clientMail" />
-                    </div>
-                    <div class="description">
-                        <span>לכתובת הזו ישלחו העדכונים</span>
-                    </div>
-                </div>
-            </form>
+            </Form>
         </div>
         <div class="confirm">
             <div class="confirm-button" (click)="submit()">
                 <img src="assets/icons/confirm_white.svg" />
-                {{currentProgress === 3? 'אישור וסיום' : 'אישור והמשך'}}
+                אישור
             </div>
         </div>
     </div>
