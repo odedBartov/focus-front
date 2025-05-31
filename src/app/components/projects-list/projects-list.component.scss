@@ -53,6 +53,9 @@
 }
 
 .project-drag {
+    .progress-bar {
+        margin: 5px 0;
+    }
     overflow: hidden;
     margin: 0 30px;
     box-shadow: var(--common-shadow);

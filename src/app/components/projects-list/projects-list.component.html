@@ -14,11 +14,6 @@
                     <span class="project-name">
                         {{project.name}}
                     </span>
-                    <span class="small-text" [matTooltipDisabled]="description.clientWidth >= description.scrollWidth"
-                        matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltip]="project.description"
-                        #description>
-                        {{project.description}}
-                    </span>
                 </div>
                 <div class="current-step">
                     <span class="disabled-text">
@@ -37,10 +32,10 @@
                     </span>
                 </div>
                 <div class="small-text">
-                    <span>{{getProjectProgress(project) | number:'1.0-0'}}%</span>
                     <div class="progress-bar">
                         <div class="progress-fill" [style.width.%]="getProjectProgress(project)"></div>
                     </div>
+                    <span style="margin-top: 1rem;">{{getProjectProgress(project) | number:'1.0-0'}}%</span>
                 </div>
                 <div class="menu" (click)="$event.stopPropagation()">
                     <img class="menu icon-kabab-menu" [matMenuTriggerFor]="menu" />
