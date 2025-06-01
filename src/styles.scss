@@ -232,7 +232,7 @@ input::-webkit-inner-spin-button {
 .icon-confirm-circle {
     content: url('/assets/icons/confirm_circle_not.svg');
 
-    &:hover {
+    &:hover, &:focus {
         content: url('/assets/icons/confirm_circle_yes.svg');
     }
 }
@@ -248,7 +248,7 @@ input::-webkit-inner-spin-button {
 .icon-plus {
     content: url('/assets/icons/plus_not.svg');
 
-    &:hover {
+    &:hover, &:focus {
         content: url('/assets/icons/plus_yes.svg');
     }
 }

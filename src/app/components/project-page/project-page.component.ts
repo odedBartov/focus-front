@@ -50,6 +50,7 @@ export class ProjectPageComponent implements OnInit {
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
   @ViewChild('richTextDiv', { static: false }) richTextDiv?: ElementRef;
+  @ViewChild('addStepDiv', {static: false}) addStepDiv!: ElementRef;
   editDiv?: HTMLDivElement;
   @Output() projectUpdated = new EventEmitter<Project>();
   @Input() set projectInput(value: Project | undefined) {
@@ -66,6 +67,7 @@ export class ProjectPageComponent implements OnInit {
   activeStepId? = '';
   isReadOnly = false;
   isShowNewStep = false;
+  spaceFocused = false;
   editStepId: string | undefined = '';
   hoverStepId? = '';
   showNotes = false;
@@ -99,6 +101,22 @@ export class ProjectPageComponent implements OnInit {
        !this.richTextDiv?.nativeElement.contains(event.target)) {
       this.showNotes = false;
       this.projectHoverService.projectHover();
+    }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeydown(event: KeyboardEvent) {
+    const isSpace = event.code === 'Space' || event.key === ' ';
+
+    if (isSpace && this.addStepDiv?.nativeElement) {
+      this.addStepDiv.nativeElement.focus();
+       this.spaceFocused = true;
+    }
+
+    const isEnter = event.code === 'Enter' || event.key === 'Enter';
+    if (isEnter && this.spaceFocused && document.activeElement === this.addStepDiv.nativeElement) {
+      this.addStepDiv.nativeElement.click();
+      this.spaceFocused = false; // reset the flag
     }
   }
 

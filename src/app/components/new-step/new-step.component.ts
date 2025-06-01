@@ -22,6 +22,7 @@ export class NewStepComponent implements OnInit {
   datePipe = inject(DatePipe);
   @ViewChild('stepNameInput') stepNameInput!: ElementRef;
   @ViewChild('taskOption') taskOption!: ElementRef;
+  @ViewChild('descriptionInput') descriptionInput!: ElementRef;
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
@@ -35,7 +36,7 @@ export class NewStepComponent implements OnInit {
   newStep!: Step;
   submitted = false;
   isEdit = false;
-  showDescription = false;
+  isShowDescription = false;
   futureDates: Date[] = [];
 
   @HostListener('document:keydown.enter', ['$event'])
@@ -51,7 +52,9 @@ export class NewStepComponent implements OnInit {
       if (this.stepNameInput?.nativeElement) {
         this.stepNameInput.nativeElement.focus()
       }
-      this.taskOption.nativeElement.focus();
+      if (this.taskOption?.nativeElement) { 
+        this.taskOption.nativeElement.focus();
+      }
     }, 1);
 
     this.initFutureMonths();
@@ -72,6 +75,13 @@ export class NewStepComponent implements OnInit {
     setTimeout(() => {
       this.stepNameInput.nativeElement.focus()
     }, 0);
+  }
+
+  showDescription() {
+    this.isShowDescription = true;
+    setTimeout(() => {
+      this.descriptionInput.nativeElement.focus();
+    }, 1);
   }
 
   selectDate(date: Date) {

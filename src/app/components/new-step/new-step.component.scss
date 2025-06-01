@@ -71,6 +71,7 @@
 
         .add-description {
             .button {
+                border: none;
                 transition: all 0.2s;
                 width: fit-content;
                 padding: 0.3rem 1rem;
@@ -80,7 +81,7 @@
                 cursor: pointer;
                 background-color: var(--hover-color);
 
-                &:hover {
+                &:hover, &:focus {
                     background-color: var(--main-color);
                     color: var(--default-white);
                 }
@@ -118,7 +119,7 @@
                     cursor: pointer;
                     margin-left: 0.5rem;
 
-                    &:hover {
+                    &:hover, &:focus {
                         background-color: var(--select-color);
                     }
 

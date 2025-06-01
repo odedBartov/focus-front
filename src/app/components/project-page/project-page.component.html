@@ -77,7 +77,7 @@
             </div>
         </div>
         <div class="add-step" *ngIf="!isShowNewStep">
-            <img (click)="showNewStep()" class="icon-plus" />
+            <img (click)="showNewStep()" class="icon-plus" #addStepDiv tabindex="0"/>
         </div>
         <div *ngIf="isShowNewStep" #newStepDiv>
             <app-new-step class="new-step" (stepsEmitter)="createNewStep($event)"></app-new-step>
