@@ -23,8 +23,8 @@
     </Form>
     <div class="statuses" *ngIf="currentProgress === 2">
         <span class="header">מהו הסטטוס שלך?</span>
-        <div *ngFor="let status of statuses" class="option" (click)="user.status = status.status"
-            [ngClass]="{selected: user.status === status.status}">
+        <div *ngFor="let status of statuses" class="option" (click)="user.status = status.status" tabindex="0"
+            [ngClass]="{selected: user.status === status.status}" #statusesDiv>
             <img [src]="status.icon" />
             <span>{{status.text}}</span>
         </div>
@@ -32,15 +32,15 @@
      <div class="statuses" *ngIf="currentProgress === 3">
         <span class="header">מהו התחום שלך?</span>
         <div *ngFor="let profession of professions" class="option" (click)="user.profession = profession.profession"
-            [ngClass]="{selected: user.profession === profession.profession}">
+            [ngClass]="{selected: user.profession === profession.profession}" tabindex="0" #professionsDiv>
             <img [src]="profession.icon" />
             <span>{{profession.text}}</span>
         </div>
     </div>
     <div class="confirm-div">
-        <div class="confirm" (click)="confirm()">
+        <button class="confirm" (click)="confirm()">
             <img src="assets/icons/confirm_white.svg" />
             <span>{{currentProgress === 3? 'אישור וסיום' : 'אישור והמשך'}}</span>
-        </div>
+        </button>
     </div>
 </div>

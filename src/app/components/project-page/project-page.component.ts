@@ -50,7 +50,7 @@ export class ProjectPageComponent implements OnInit {
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
   @ViewChild('richTextDiv', { static: false }) richTextDiv?: ElementRef;
-  @ViewChild('addStepDiv', {static: false}) addStepDiv!: ElementRef;
+  @ViewChild('addStepDiv', { static: false }) addStepDiv!: ElementRef;
   editDiv?: HTMLDivElement;
   @Output() projectUpdated = new EventEmitter<Project>();
   @Input() set projectInput(value: Project | undefined) {
@@ -67,7 +67,6 @@ export class ProjectPageComponent implements OnInit {
   activeStepId? = '';
   isReadOnly = false;
   isShowNewStep = false;
-  spaceFocused = false;
   editStepId: string | undefined = '';
   hoverStepId? = '';
   showNotes = false;
@@ -88,17 +87,17 @@ export class ProjectPageComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-      if (this.newStepDiv?.nativeElement && !this.newStepDiv.nativeElement.contains(event.target)) {
-        this.isShowNewStep = false;
-      }
+    if (this.newStepDiv?.nativeElement && !this.newStepDiv.nativeElement.contains(event.target)) {
+      this.isShowNewStep = false;
+    }
 
     if (!this.editDiv?.contains(event.target as Node)) {
       this.editStepId = '';
     }
 
-    if (this.notesDiv?.nativeElement && 
-       !this.notesDiv.nativeElement.contains(event.target) && 
-       !this.richTextDiv?.nativeElement.contains(event.target)) {
+    if (this.notesDiv?.nativeElement &&
+      !this.notesDiv.nativeElement.contains(event.target) &&
+      !this.richTextDiv?.nativeElement.contains(event.target)) {
       this.showNotes = false;
       this.projectHoverService.projectHover();
     }
@@ -110,13 +109,14 @@ export class ProjectPageComponent implements OnInit {
 
     if (isSpace && this.addStepDiv?.nativeElement) {
       this.addStepDiv.nativeElement.focus();
-       this.spaceFocused = true;
     }
 
     const isEnter = event.code === 'Enter' || event.key === 'Enter';
-    if (isEnter && this.spaceFocused && document.activeElement === this.addStepDiv.nativeElement) {
-      this.addStepDiv.nativeElement.click();
-      this.spaceFocused = false; // reset the flag
+    if (isEnter) {
+      const active = document.activeElement as HTMLElement;
+      if (active) {
+        active.click();
+      }
     }
   }
 
@@ -142,7 +142,7 @@ export class ProjectPageComponent implements OnInit {
   loadProject() {
     if (this.projectId) {
       this.loadingService.changeIsloading(true);
-      this.httpService.getProject(this.projectId).subscribe(res => {        
+      this.httpService.getProject(this.projectId).subscribe(res => {
         if (res.steps) {
           this.project = res;
           this.activeStepId = res.steps.find(s => !s.isComplete)?.id;
@@ -199,7 +199,7 @@ export class ProjectPageComponent implements OnInit {
   openProjectModal() {
     const dialogRef = this.dialog.open(ProjectModalComponent, { data: { project: this.project } });
     dialogRef.afterClosed().subscribe(res => {
-      if (res) {        
+      if (res) {
         this.project = res;
         this.projectUpdated.emit(res);
       }
