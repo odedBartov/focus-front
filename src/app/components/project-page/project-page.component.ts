@@ -17,10 +17,12 @@ import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-
 import { NotesComponent } from '../notes/notes.component';
 import { ProjectHoverService } from '../../services/project-hover.service';
 import { RichTextComponent } from "../rich-text/rich-text.component";
+import { AnimationOptions, LottieComponent } from 'ngx-lottie';
+import { AnimationItem } from 'lottie-web';
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, RichTextComponent],
+  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, RichTextComponent, LottieComponent],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss',
   animations: [
@@ -73,6 +75,13 @@ export class ProjectPageComponent implements OnInit {
   showNotes = false;
   baseProjectPrice = 0;
   paidMoney = 0;
+  lottieOptions: AnimationOptions = {
+    path: '/assets/animations/step-end.json',
+    autoplay: false,
+    loop: false,
+  };
+  private animationItem!: AnimationItem;
+
   hideProperties = this.projectHoverService.getSignal();
   animationHackFlag = true;
   constructor() {
@@ -80,6 +89,10 @@ export class ProjectPageComponent implements OnInit {
       this.projectId = params.get('projectId');
       this.isReadOnly = params.get('readOnly') == 'true';
     });
+
+    setTimeout(() => {
+      this.playAnimation()
+    }, 700);
   }
 
   ngOnInit(): void {
@@ -118,6 +131,16 @@ export class ProjectPageComponent implements OnInit {
       if (active) {
         active.click();
       }
+    }
+  }
+
+  animationCreated(animationItem: AnimationItem): void {
+    this.animationItem = animationItem;
+  }
+
+  playAnimation(): void {
+    if (this.animationItem) {
+      this.animationItem.goToAndPlay(0, true); // from beginning
     }
   }
 
