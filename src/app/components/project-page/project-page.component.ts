@@ -54,12 +54,13 @@ export class ProjectPageComponent implements OnInit {
   editDiv?: HTMLDivElement;
   @Output() projectUpdated = new EventEmitter<Project>();
   @Input() set projectInput(value: Project | undefined) {
-    this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
     this.project = value;
-    this.calculatePayments();
     if (this.project?.steps) {
       this.project.steps = this.project.steps.sort((a, b) => a.positionInList - b.positionInList);
     }
+
+    this.activeStepId = this.project?.steps?.find(s => !s.isComplete)?.id;
+    this.calculatePayments();
   };
   stepTypeEnum = StepType;
   project?: Project;
@@ -73,7 +74,7 @@ export class ProjectPageComponent implements OnInit {
   baseProjectPrice = 0;
   paidMoney = 0;
   hideProperties = this.projectHoverService.getSignal();
-
+  animationHackFlag = true;
   constructor() {
     this.route.paramMap.subscribe(params => {
       this.projectId = params.get('projectId');
@@ -132,6 +133,12 @@ export class ProjectPageComponent implements OnInit {
     if (this.project?.steps) {
       moveItemInArray(this.project.steps, event.previousIndex, event.currentIndex);
       this.updateStepsPosition();
+      this.animationHackFlag = false;
+      setTimeout(() => { // stupid angular animation
+        this.animationHackFlag = true;
+        this.activeStepId = this.project?.steps?.find(s => !s.isComplete)?.id;
+      });
+
       this.loadingService.changeIsloading(true);
       this.httpService.updateSteps(this.project.steps).subscribe(res => {
         this.loadingService.changeIsloading(false);
@@ -139,12 +146,16 @@ export class ProjectPageComponent implements OnInit {
     }
   }
 
+
   loadProject() {
     if (this.projectId) {
       this.loadingService.changeIsloading(true);
       this.httpService.getProject(this.projectId).subscribe(res => {
         if (res.steps) {
           this.project = res;
+          if (this.project?.steps) {
+            this.project.steps = this.project.steps.sort((a, b) => a.positionInList - b.positionInList);
+          }
           this.activeStepId = res.steps.find(s => !s.isComplete)?.id;
           this.loadingService.changeIsloading(false);
         }

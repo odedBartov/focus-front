@@ -6,6 +6,7 @@ import { LoadingService } from './services/loading.service';
 import { AuthenticationService } from './services/authentication.service';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 import { Title } from '@angular/platform-browser';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-root',
@@ -19,12 +20,28 @@ export class AppComponent {
   loadingService = inject(LoadingService);
   authenticationService = inject(AuthenticationService);
   titleService = inject(Title);
+  breakpointObserver = inject(BreakpointObserver);
   isLoading: Signal<boolean>;
   options: AnimationOptions = {
     path: '/assets/animations/loader.json',
   };
+  isPhone = false;
+  isTablet = false;
 
   constructor() {
+    this.breakpointObserver.observe([
+      Breakpoints.Handset,
+      Breakpoints.Tablet
+    ]).subscribe(result => {
+      this.isPhone = result.breakpoints[Breakpoints.Handset];
+      this.isTablet = result.breakpoints[Breakpoints.Tablet];
+
+      if (this.isPhone || this.isTablet) {
+        // redirect
+      }
+    });
+
+
     this.isLoading = this.loadingService.getIsLoading();
     const fullName = this.authenticationService.getUserName();
     if (fullName) {

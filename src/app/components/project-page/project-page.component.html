@@ -49,7 +49,7 @@
             [ngClass]="{'step' : editStepId !== step.id, 'active-step': step.id === activeStepId && step.id !== editStepId}"
             *ngFor="let step of project?.steps" (mouseenter)="hoverStepId = step.id"
             (mouseleave)="hoverStepId = undefined" cdkDrag>
-            <div *ngIf="editStepId !== step.id">
+            <div *ngIf="editStepId !== step.id && animationHackFlag">
                 <div class="step-header">
                     <span [ngClass]="{'step-name': step.id !== activeStepId}">{{step.name}}</span>
                     <img class="pointer icon-confirm" (click)="changeStepStatus(step)" *ngIf="step.isComplete" />
