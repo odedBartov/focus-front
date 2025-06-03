@@ -6,11 +6,11 @@ import { LoadingService } from './services/loading.service';
 import { AuthenticationService } from './services/authentication.service';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 import { Title } from '@angular/platform-browser';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver, Breakpoints, LayoutModule } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterModule, RouterOutlet, MatMenuModule, CommonModule, LottieComponent],
+  imports: [RouterModule, RouterOutlet, MatMenuModule, CommonModule, LottieComponent, LayoutModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   standalone: true
@@ -28,9 +28,10 @@ export class AppComponent {
   isPhone = false;
   isTablet = false;
 
-  constructor() {    
+  constructor() {
     this.isLoading = this.loadingService.getIsLoading();
-    if (!this.isDesktop()) {
+    
+    if (this.isMobileOrTablet()) {
       this.router.navigate(['unsupportedDevice']);
     } else {
       const fullName = this.authenticationService.getUserName();
@@ -41,17 +42,8 @@ export class AppComponent {
   }
 
   isMobileOrTablet(): boolean {
-    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
-
-    return /android|ipad|iphone|ipod|mobile|tablet/i.test(userAgent.toLowerCase());
-  }
-
-  isMobile(): boolean {
-    return this.breakpointObserver.isMatched(Breakpoints.Handset);
-  }
-
-  isDesktop(): boolean {
-    return this.breakpointObserver.isMatched(Breakpoints.Web);
+    const userAgent = navigator.userAgent.toLowerCase();
+    return /android|ipad|iphone|ipod|mobile|tablet/i.test(userAgent);
   }
 
   navigateToHomePage() {

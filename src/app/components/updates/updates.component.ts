@@ -38,7 +38,7 @@ export class UpdatesComponent implements OnInit {
   }
 
   openWhatsapp() {
-    const message = `הי, זה ${this.fullName}. אני משתמש שלכם בפוקוס ויש לי משהו להגיד:
+    const message = `הי, זה ${this.fullName}. אני משתמש בפוקוס ויש לי משהו להגיד:
     `;
     const url = `https://wa.me/${this.ArielsNumber}?text=${message}`;
     window.open(url, '_blank');
