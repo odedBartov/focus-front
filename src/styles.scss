@@ -346,3 +346,11 @@ input::-webkit-inner-spin-button {
         content: url('/assets/icons/history_yes.svg');
     }
 }
+
+.icon-paragraph {
+    content: url('/assets/icons/paragraph_not.svg');
+
+    &:hover {
+        content: url('/assets/icons/paragraph_yes.svg');
+    }
+}

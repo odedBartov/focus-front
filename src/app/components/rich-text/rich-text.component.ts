@@ -55,6 +55,10 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit {
     ).subscribe(results => {});
   }
 
+  toggleParagraph(): void {
+    //this.editor.commands.set().focus().exec();
+  }
+
   toggleBold(): void {
     this.editor.commands.toggleBold().focus().exec();
   }

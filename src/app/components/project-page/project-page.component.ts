@@ -118,14 +118,22 @@ export class ProjectPageComponent implements OnInit {
     const isSpace = event.code === 'Space' || event.key === ' ';
 
     if (isSpace && this.addStepDiv?.nativeElement) {
+      const activeElement = document.activeElement;
+      if (activeElement && (
+        activeElement.tagName === 'INPUT' ||
+        activeElement.tagName === 'TEXTAREA' ||
+        activeElement.hasAttribute('contenteditable')
+      )) {
+        return;
+      }
       this.addStepDiv.nativeElement.focus();
-    }
-
-    const isEnter = event.code === 'Enter' || event.key === 'Enter';
-    if (isEnter) {
-      const active = document.activeElement as HTMLElement;
-      if (active) {
-        active.click();
+    } else {
+      const isEnter = event.code === 'Enter' || event.key === 'Enter';
+      if (isEnter) {
+        const active = document.activeElement as HTMLElement;
+        if (active) {
+          active.click();
+        }
       }
     }
   }
