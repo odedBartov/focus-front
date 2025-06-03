@@ -53,6 +53,7 @@ export class ProjectPageComponent implements OnInit {
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
   @ViewChild('richTextDiv', { static: false }) richTextDiv?: ElementRef;
   @ViewChild('addStepDiv', { static: false }) addStepDiv!: ElementRef;
+  // @ViewChildren('lottieAnimation') lottieAnimations!: QueryList<LottieComponent>;
   editDiv?: HTMLDivElement;
   @Output() projectUpdated = new EventEmitter<Project>();
   @Input() set projectInput(value: Project | undefined) {
@@ -80,6 +81,7 @@ export class ProjectPageComponent implements OnInit {
     loop: false,
   };
   animatingItemId: string = '';
+
   hideProperties = this.projectHoverService.getSignal();
   animationHackFlag = true;
   constructor(private changeDetectorRef: ChangeDetectorRef) {
@@ -189,21 +191,33 @@ export class ProjectPageComponent implements OnInit {
   }
 
   changeStepStatus(step: Step, animation?: LottieComponent) {
-    if (!step.isComplete && animation) {
-      step.dateCompleted = new Date();
-      this.animatingItemId = step.id ?? '';
-      this.changeDetectorRef.detectChanges();
+    // if (!step.isComplete && animation) {
+    //   this.animationHackFlag = false;
+    //   this.changeDetectorRef.detectChanges();
+    //   setTimeout(() => {
+    //     this.animationHackFlag = true
+    //     step.dateCompleted = new Date();
+    //     this.animatingItemId = step.id ?? '';
+    //     animation.complete.subscribe(res => {
+    //       this.updateStep(step);
+    //       step.isComplete = !step.isComplete;
+    //       this.animatingItemId = '';
+    //     })
+    //   }, 1);
+    // } else {
+    //   step.dateCompleted = undefined;
+    //   step.isComplete = !step.isComplete;
+    //   this.updateStep(step);
+    // }
 
-      animation.complete.subscribe(res => {
-        step.isComplete = !step.isComplete;
-        this.animatingItemId = '';
-        this.updateStep(step);
-      })
+    step.isComplete = !step.isComplete;
+    if (step.isComplete) {
+      step.dateCompleted = new Date();
     } else {
       step.dateCompleted = undefined;
-      step.isComplete = !step.isComplete;
-      this.updateStep(step);
     }
+
+    this.updateStep(step);
   }
 
   updateStep(step: Step) {

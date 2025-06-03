@@ -47,7 +47,7 @@
     <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)" *ngIf="!showNotes">
         <div [class]="step.isComplete? 'finished' : 'not-finished'" #stepDiv
             [ngClass]="{'step' : editStepId !== step.id, 'active-step': step.id === activeStepId && step.id !== editStepId}"
-            *ngFor="let step of project?.steps" (mouseenter)="hoverStepId = step.id"
+            *ngFor="let step of project?.steps; let i = index" (mouseenter)="hoverStepId = step.id"
             (mouseleave)="hoverStepId = undefined" cdkDrag>
             <div *ngIf="editStepId !== step.id && animationHackFlag">
                 <div class="step-header">
@@ -60,7 +60,7 @@
                     *ngIf="step.isComplete">
                     הסתיים בתאריך {{step.dateCompleted | date: 'dd.MM.yyyy'}}
                 </div>
-                <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id) ? 'expanded' : 'collapsed'"
+                <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id||true) ? 'expanded' : 'collapsed'"
                     class="extra-not-finished" *ngIf="!step.isComplete">
                     <span>{{step.description}}</span>
                     <div class="step-icons">

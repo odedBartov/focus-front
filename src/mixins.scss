@@ -13,7 +13,7 @@
   
   &.step.not-finished {
     @include regular-border;
-    padding: 1rem;
+    padding: 20px 28px 24px;
   }
 
   &.active-step {
@@ -22,7 +22,7 @@
     background-color: var(--default-white);
     border: none !important;
     box-shadow: var(--common-shadow);
-    padding: 2rem !important;
+    padding: 32px 40px 40px !important;
   }
 
   .step-header {
@@ -30,6 +30,7 @@
     display: flex;
     justify-content: space-between;
     font-family: 'black';
+    margin-bottom: 8px;
 
     .step-name {
       font-size: var(--font-size-2);
@@ -48,7 +49,6 @@
   }
 
   .extra-not-finished {
-    margin-top: 1rem;
     font-family: 'regular';
     font-size: var(--font-size-2);
     display: flex;

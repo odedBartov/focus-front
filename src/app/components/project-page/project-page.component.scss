@@ -17,7 +17,7 @@
 
     .finish-step-animation {
         position: relative;
-        height: 90px;
+        height: 95px;
         transform: translate(-32%, 28%);
     }
 
@@ -150,11 +150,47 @@
             }
         }
 
+        .extra-not-finished {
+            font-family: 'regular';
+            font-size: var(--font-size-2);
+            display: flex;
+            flex-direction: column;
+
+            span {
+                margin-bottom: 2rem;
+            }
+
+            .step-icons {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+                height: 24px;
+
+                .edit-delete {
+                    img {
+                        height: 20px;
+                        width: 20px;
+                    }
+                }
+
+                img {
+                    cursor: pointer;
+                }
+
+                .edit-delete {
+                    img {
+                        margin-left: 1rem;
+                    }
+                }
+            }
+        }
+
         .add-step {
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            margin-bottom: 200px;
         }
 
         .new-step {
@@ -194,7 +230,7 @@
         background-color: var(--default-white) !important;
         border: none !important;
         box-shadow: var(--common-shadow) !important;
-        padding: 2rem !important;
+        // padding: 32px 40px 40px !important;
     }
 
     .step-header {
