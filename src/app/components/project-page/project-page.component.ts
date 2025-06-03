@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../../models/project';
 import { HttpService } from '../../services/http.service';
@@ -77,22 +77,16 @@ export class ProjectPageComponent implements OnInit {
   paidMoney = 0;
   lottieOptions: AnimationOptions = {
     path: '/assets/animations/step-end.json',
-    autoplay: false,
     loop: false,
   };
-  private animationItem!: AnimationItem;
-
+  animatingItemId: string = '';
   hideProperties = this.projectHoverService.getSignal();
   animationHackFlag = true;
-  constructor() {
+  constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.route.paramMap.subscribe(params => {
       this.projectId = params.get('projectId');
       this.isReadOnly = params.get('readOnly') == 'true';
     });
-
-    setTimeout(() => {
-      this.playAnimation()
-    }, 700);
   }
 
   ngOnInit(): void {
@@ -134,16 +128,6 @@ export class ProjectPageComponent implements OnInit {
     }
   }
 
-  animationCreated(animationItem: AnimationItem): void {
-    this.animationItem = animationItem;
-  }
-
-  playAnimation(): void {
-    if (this.animationItem) {
-      this.animationItem.goToAndPlay(0, true); // from beginning
-    }
-  }
-
   updateStepsPosition() {
     if (this.project?.steps) {
       for (let index = 0; index < this.project?.steps.length; index++) {
@@ -168,7 +152,6 @@ export class ProjectPageComponent implements OnInit {
       })
     }
   }
-
 
   loadProject() {
     if (this.projectId) {
@@ -205,14 +188,22 @@ export class ProjectPageComponent implements OnInit {
     }
   }
 
-  changeStepStatus(step: Step) {
-    step.isComplete = !step.isComplete;
-    if (step.isComplete) {
+  changeStepStatus(step: Step, animation?: LottieComponent) {
+    if (!step.isComplete && animation) {
       step.dateCompleted = new Date();
+      this.animatingItemId = step.id ?? '';
+      this.changeDetectorRef.detectChanges();
+
+      animation.complete.subscribe(res => {
+        step.isComplete = !step.isComplete;
+        this.animatingItemId = '';
+        this.updateStep(step);
+      })
     } else {
       step.dateCompleted = undefined;
+      step.isComplete = !step.isComplete;
+      this.updateStep(step);
     }
-    this.updateStep(step);
   }
 
   updateStep(step: Step) {

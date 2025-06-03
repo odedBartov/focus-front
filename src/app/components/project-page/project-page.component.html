@@ -1,5 +1,4 @@
 <div class="main">
-
     <div class="summurize" [ngClass]="{ 'show-before': hideProperties() }">
         <div class="info">
             <div class="text-and-icon">
@@ -69,10 +68,12 @@
                             <img class="icon-garbage-can" (click)="deleteStep(step)" />
                             <img class="icon-pencil" (click)="editStep(stepDiv, step.id)" />
                         </div>
-                        <div class="finish-step-animation">
-                            <ng-lottie [options]="lottieOptions" (animationCreated)="animationCreated($event)" />
+                        <div class="animation-container">
+                            <div class="finish-step-animation" [style.display]="animatingItemId === step.id ? 'block' : 'none'" >
+                                <ng-lottie [options]="lottieOptions" #finishStepAnimaton/>
+                            </div>
+                            <img class="icon-confirm-circle" (click)="changeStepStatus(step, finishStepAnimaton)" *ngIf="step.id !== animatingItemId"/>
                         </div>
-                        <img class="icon-confirm-circle" (click)="changeStepStatus(step)" />
                     </div>
                 </div>
             </div>

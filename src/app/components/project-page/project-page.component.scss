@@ -11,8 +11,14 @@
         cursor: pointer;
     }
 
+    .animation-container {
+        position: relative;
+    }
+
     .finish-step-animation {
-        position: absolute;
+        position: relative;
+        height: 90px;
+        transform: translate(-32%, 28%);
     }
 
     .summurize {
@@ -181,7 +187,7 @@
     background-color: var(--home-color);
     width: 15.25rem !important;
     height: auto !important;
-    
+
     &.active-step {
         width: 20rem !important;
         font-size: var(--font-size-4) !important;
@@ -190,7 +196,7 @@
         box-shadow: var(--common-shadow) !important;
         padding: 2rem !important;
     }
-    
+
     .step-header {
         width: 100%;
         display: flex;
