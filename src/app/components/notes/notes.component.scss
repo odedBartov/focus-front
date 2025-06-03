@@ -112,6 +112,11 @@
                 font-family: 'regular';
                 font-size: var(--font-size-1);
 
+                .small-text {
+                    font-family: 'regular';
+                    font-size: var(--font-size-1);
+                }
+
                 input {
                     background-color: transparent;
                     @include mixins.regular-border;

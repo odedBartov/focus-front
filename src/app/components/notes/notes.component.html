@@ -35,14 +35,14 @@
             <span class="title">קישור חדש</span>
             <div class="text-and-input">
                 <span>שם</span>
-                <input type="text" formControlName="name">
+                <input class="small-text" type="text" formControlName="name">
                 <div class="error-container">
                     <span *ngIf="submitted && form.get('name')?.errors" class="error">אנא הזינו שם</span>
                 </div>
             </div>
             <div class="text-and-input">
                 <span>קישור</span>
-                <input type="text" formControlName="url">
+                <input class="small-text" type="text" formControlName="url">
                 <div class="error-container">
                     <span *ngIf="submitted && form.get('url')?.errors" class="error">אנא הזינו קישור</span>
                 </div>
