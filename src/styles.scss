@@ -121,7 +121,33 @@
         background-color: transparent;
         @include mixins.regular-border;
     }
+}
 
+.NgxEditor {
+    p {
+        font-family: 'regular';
+        font-size: var(--font-size-1);
+    }
+
+    strong {
+        font-family: 'black';
+        font-size: var(--font-size-1);
+    }
+
+    h1 {
+        font-family: 'black';
+        font-size: var(--font-size-1);
+    }
+
+    h2 {
+        font-family: 'black';
+        font-size: var(--font-size-2);
+    }
+
+    h3 {
+        font-family: 'black';
+        font-size: var(--font-size-3);
+    }
 }
 
 ::-webkit-scrollbar {

@@ -85,6 +85,8 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit {
 
     // Restore the selection
     view.focus();
-    view.dispatch(view.state.tr.setSelection(selection));
+    console.log(selection);
+    
+    // view.dispatch(view.state.tr.setSelection(selection));
   }
 }

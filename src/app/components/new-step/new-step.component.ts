@@ -27,6 +27,9 @@ export class NewStepComponent implements OnInit {
     if (value) {
       this.isEdit = true;
       value.dateDue = new Date(value.dateDue);
+      if (value.description) {
+        this.isShowDescription = true;
+      }
       this.newStep = value;
     }
   }
