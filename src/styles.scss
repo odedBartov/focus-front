@@ -62,6 +62,10 @@
         height: 100%;
         background-color: var(--default-white);
         color: var(--default-black);
+
+        .ProseMirror {
+            height: 100%;
+        }
     }
 
     .mat-mdc-menu-content {
@@ -121,13 +125,13 @@
 }
 
 ::-webkit-scrollbar {
-    background: transparent; 
+    background: transparent;
     border-radius: 10px;
     width: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--hover-color); 
+    background: var(--hover-color);
     border-radius: 10px;
 }
 
@@ -232,7 +236,8 @@ input::-webkit-inner-spin-button {
 .icon-confirm-circle {
     content: url('/assets/icons/confirm_circle_not.svg');
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
         content: url('/assets/icons/confirm_circle_yes.svg');
     }
 }
@@ -248,7 +253,8 @@ input::-webkit-inner-spin-button {
 .icon-plus {
     content: url('/assets/icons/plus_not.svg');
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
         content: url('/assets/icons/plus_yes.svg');
     }
 }

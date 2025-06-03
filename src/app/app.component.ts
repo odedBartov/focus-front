@@ -28,25 +28,30 @@ export class AppComponent {
   isPhone = false;
   isTablet = false;
 
-  constructor() {
-    this.breakpointObserver.observe([
-      Breakpoints.Handset,
-      Breakpoints.Tablet
-    ]).subscribe(result => {
-      this.isPhone = result.breakpoints[Breakpoints.Handset];
-      this.isTablet = result.breakpoints[Breakpoints.Tablet];
-
-      if (this.isPhone || this.isTablet) {
-        // redirect
-      }
-    });
-
-
+  constructor() {    
     this.isLoading = this.loadingService.getIsLoading();
-    const fullName = this.authenticationService.getUserName();
-    if (fullName) {
-      this.titleService.setTitle("פוקוס - " + fullName);
+    if (!this.isDesktop()) {
+      this.router.navigate(['unsupportedDevice']);
+    } else {
+      const fullName = this.authenticationService.getUserName();
+      if (fullName) {
+        this.titleService.setTitle("פוקוס - " + fullName);
+      }
     }
+  }
+
+  isMobileOrTablet(): boolean {
+    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+
+    return /android|ipad|iphone|ipod|mobile|tablet/i.test(userAgent.toLowerCase());
+  }
+
+  isMobile(): boolean {
+    return this.breakpointObserver.isMatched(Breakpoints.Handset);
+  }
+
+  isDesktop(): boolean {
+    return this.breakpointObserver.isMatched(Breakpoints.Web);
   }
 
   navigateToHomePage() {

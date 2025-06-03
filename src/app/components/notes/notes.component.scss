@@ -57,6 +57,11 @@
             display: flex;
             justify-content: space-between;
 
+            .icon-garbage-can {
+                height: 14px;
+                width: 12px;
+            }
+
             span {
                 cursor: pointer;
                 margin-left: 0.5rem;
