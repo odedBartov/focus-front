@@ -60,18 +60,31 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit {
   }
 
   toggleBold(): void {
-    this.editor.commands.toggleBold().focus().exec();
+    this.executeCommandWithSelectionPreservation(commands => commands.toggleBold().exec());
   }
 
   toggleBulletList(): void {
-    this.editor.commands.toggleBulletList().focus().exec();
+    this.executeCommandWithSelectionPreservation(commands => commands.toggleBulletList().exec());
   }
 
   toggleOrderedList(): void {
-    this.editor.commands.toggleOrderedList().focus().exec();
+    this.executeCommandWithSelectionPreservation(commands => commands.toggleOrderedList().exec());
   }
 
   setHeading(level: 1 | 2 | 3): void {
-    this.editor.commands.toggleHeading(level).focus().exec();
+    this.executeCommandWithSelectionPreservation(commands => commands.toggleHeading(level).exec());
+  }
+
+  private executeCommandWithSelectionPreservation(command: (editor: any) => any): void {
+    const view = this.editor.view;
+    const { state } = view;
+    const { selection } = state;
+
+    // Execute the command
+    command(this.editor.commands);
+
+    // Restore the selection
+    view.focus();
+    view.dispatch(view.state.tr.setSelection(selection));
   }
 }
