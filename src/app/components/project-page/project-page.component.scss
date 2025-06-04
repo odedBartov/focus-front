@@ -157,8 +157,11 @@
                 border: none;
                 resize: none;
                 font-family: 'regular';
-                font-size: var(--font-size-2);
-                overflow: hidden;
+                font-size: var(--font-size-1);
+
+                &.active {
+                    font-size: var(--font-size-2);
+                }
             }
         }
 

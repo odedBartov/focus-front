@@ -47,7 +47,7 @@
     <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)" *ngIf="!showNotes">
         <div [class]="step.isComplete? 'finished' : 'not-finished'" #stepDiv
             [ngClass]="{'step' : editStepId !== step.id, 'active-step': step.id === activeStepId && step.id !== editStepId}"
-            *ngFor="let step of project?.steps; let i = index" (mouseenter)="hoverStepId = step.id"
+            *ngFor="let step of project?.steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
             (mouseleave)="hoverStepId = undefined" cdkDrag>
             <div *ngIf="editStepId !== step.id && animationHackFlag">
                 <div class="step-header">
@@ -62,7 +62,7 @@
                 </div>
                 <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id) ? 'expanded' : 'collapsed'"
                     class="extra-not-finished" *ngIf="!step.isComplete">
-                    <textarea *ngIf="step.description"  disabled="true" #oded>{{step.description}}</textarea>
+                    <textarea [ngClass]="{'active': activeStepId === step.id}" *ngIf="step.description" disabled="true" #descriptions>{{step.description}}</textarea>
                     <div class="step-icons">
                         <div class="edit-delete">
                             <img class="icon-garbage-can" (click)="deleteStep(step)" />

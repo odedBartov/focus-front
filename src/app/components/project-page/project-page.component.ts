@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren, viewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../../models/project';
 import { HttpService } from '../../services/http.service';
@@ -43,7 +43,7 @@ import { AnimationItem } from 'lottie-web';
     ])
   ]
 })
-export class ProjectPageComponent implements OnInit {
+export class ProjectPageComponent implements OnInit, AfterViewInit {
   route = inject(ActivatedRoute);
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
@@ -53,6 +53,7 @@ export class ProjectPageComponent implements OnInit {
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
   @ViewChild('richTextDiv', { static: false }) richTextDiv?: ElementRef;
   @ViewChild('addStepDiv', { static: false }) addStepDiv!: ElementRef;
+  @ViewChildren('descriptions') descriptions!: QueryList<ElementRef<HTMLTextAreaElement>>;
   editDiv?: HTMLDivElement;
   @Output() projectUpdated = new EventEmitter<Project>();
   @Input() set projectInput(value: Project | undefined) {
@@ -87,6 +88,10 @@ export class ProjectPageComponent implements OnInit {
       this.projectId = params.get('projectId');
       this.isReadOnly = params.get('readOnly') == 'true';
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.setActiveStepHeight();
   }
 
   ngOnInit(): void {
@@ -127,12 +132,32 @@ export class ProjectPageComponent implements OnInit {
       this.addStepDiv.nativeElement.focus();
     } else {
       const isEnter = event.code === 'Enter' || event.key === 'Enter';
-      if (isEnter) {
-        const active = document.activeElement as HTMLElement;
-        if (active) {
-          active.click();
-        }
-      }
+      // if (isEnter) {
+      //   const active = document.activeElement as HTMLElement;
+      //   if (active) {
+      //     active.click();
+      //   }
+      // }
+    }
+  }
+
+  setActiveStepHeight() {
+    this.setDescriptionHeight(0);
+  }
+
+  hoverStep(stepId: string | undefined, index: number) {
+    this.hoverStepId = stepId;
+
+    const finishedSteps = this.project?.steps.filter(s => s.isComplete).length;
+    if (finishedSteps !== undefined) {
+      this.setDescriptionHeight(index - finishedSteps);
+    }
+  }
+
+  setDescriptionHeight(index: number) {
+    const element = this.descriptions.get(index);
+    if (element) {
+      element.nativeElement.style.height = element.nativeElement.scrollHeight + "px";
     }
   }
 
@@ -156,6 +181,7 @@ export class ProjectPageComponent implements OnInit {
 
       this.animationsService.changeIsloading(true);
       this.httpService.updateSteps(this.project.steps).subscribe(res => {
+        this.setActiveStepHeight();
         this.animationsService.changeIsloading(false);
       })
     }
@@ -237,6 +263,9 @@ export class ProjectPageComponent implements OnInit {
       this.editStepId = '';
       this.activeStepId = this.project?.steps?.find(s => !s.isComplete)?.id;
       this.calculatePayments();
+      setTimeout(() => {
+        this.setActiveStepHeight();
+      }, 1);
       this.animationsService.changeIsloading(false);
     })
   }
