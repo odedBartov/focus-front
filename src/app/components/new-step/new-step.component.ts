@@ -1,13 +1,13 @@
 import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, viewChild, ViewChild } from '@angular/core';
 import { StepType, stepTypeLabels } from '../../models/enums';
-import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Step } from '../../models/step';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNgxMask } from 'ngx-mask';
 import { HttpService } from '../../services/http.service';
-import { LoadingService } from '../../services/loading.service';
+import { AnimationsService } from '../../services/animations.service';
 
 @Component({
   selector: 'app-new-step',
@@ -18,7 +18,7 @@ import { LoadingService } from '../../services/loading.service';
 })
 export class NewStepComponent implements OnInit {
   httpService = inject(HttpService);
-  loadingService = inject(LoadingService);
+  animationsService = inject(AnimationsService);
   datePipe = inject(DatePipe);
   @ViewChild('stepNameInput') stepNameInput!: ElementRef;
   @ViewChild('taskOption') taskOption!: ElementRef;

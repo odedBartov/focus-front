@@ -1,12 +1,13 @@
-import { Component, inject, Signal } from '@angular/core';
+import { Component, inject, NgZone, OnInit, Signal } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
-import { LoadingService } from './services/loading.service';
+import { AnimationsService } from './services/animations.service';
 import { AuthenticationService } from './services/authentication.service';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 import { Title } from '@angular/platform-browser';
 import { BreakpointObserver, Breakpoints, LayoutModule } from '@angular/cdk/layout';
+import { AnimationItem } from 'lottie-web';
 
 @Component({
   selector: 'app-root',
@@ -15,22 +16,29 @@ import { BreakpointObserver, Breakpoints, LayoutModule } from '@angular/cdk/layo
   styleUrl: './app.component.scss',
   standalone: true
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   router = inject(Router);
-  loadingService = inject(LoadingService);
+  animationsService = inject(AnimationsService);
   authenticationService = inject(AuthenticationService);
   titleService = inject(Title);
   breakpointObserver = inject(BreakpointObserver);
+  ngZone = inject(NgZone);
   isLoading: Signal<boolean>;
-  options: AnimationOptions = {
+  loadingOptions: AnimationOptions = {
     path: '/assets/animations/loader.json',
   };
+  finishProjectOptions: AnimationOptions = {
+    path: "/assets/animations/project-end.json",
+    autoplay: true,
+    loop: false
+  };
+  showFinishProject = false;
   isPhone = false;
   isTablet = false;
 
   constructor() {
-    this.isLoading = this.loadingService.getIsLoading();
-    
+    this.isLoading = this.animationsService.getIsLoading();
+
     if (this.isMobileOrTablet()) {
       this.router.navigate(['unsupportedDevice']);
     } else {
@@ -39,6 +47,20 @@ export class AppComponent {
         this.titleService.setTitle("פוקוס - " + fullName);
       }
     }
+  }
+
+  ngOnInit(): void {
+    this.animationsService.getFinishProject().subscribe(res => {
+      this.showFinishProject = true;
+    })
+  }
+
+  animationCreated(animation: AnimationItem) {
+    animation.addEventListener('complete', () => {
+      this.ngZone.run(() => {
+        this.showFinishProject = false;
+      });
+    });
   }
 
   isMobileOrTablet(): boolean {

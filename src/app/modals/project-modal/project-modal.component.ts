@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Project } from '../../models/project';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpService } from '../../services/http.service';
-import { LoadingService } from '../../services/loading.service';
+import { AnimationsService } from '../../services/animations.service';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { parseDate } from '../../helpers/functions';
@@ -18,7 +18,7 @@ import { parseDate } from '../../helpers/functions';
 export class ProjectModalComponent {
   httpService = inject(HttpService);
   dialogRef = inject(MatDialogRef<ProjectModalComponent>);
-  loadingService = inject(LoadingService);
+  animationsService = inject(AnimationsService);
   formBuilder = inject(FormBuilder);
   datePipe = inject(DatePipe);
   form!: FormGroup;
@@ -42,7 +42,7 @@ export class ProjectModalComponent {
   submit() {
     this.submitted = true;
     if (this.form.valid) {
-      this.loadingService.changeIsloading(true);
+      this.animationsService.changeIsloading(true);
       this.updateProjectFromForm();
       this.httpService.updateProjects([this.project]).subscribe(res => {
         this.project = res[0];
@@ -70,7 +70,7 @@ export class ProjectModalComponent {
   }
 
   closeModal() {
-    this.loadingService.changeIsloading(false);
+    this.animationsService.changeIsloading(false);
     this.dialogRef.close(this.project);
   }
 }

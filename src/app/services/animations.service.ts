@@ -1,14 +1,24 @@
 import { Injectable, Signal, signal } from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoadingService {
+export class AnimationsService {
   isLoading = signal<boolean>(false);
+  finishProject = new Subject<void>();
   counter = 0;
   
   getIsLoading(): Signal<boolean> {
     return this.isLoading;
+  }
+
+  getFinishProject(): Observable<void> {
+    return this.finishProject.asObservable();
+  }
+
+  showFinishProject() {
+    this.finishProject.next();
   }
 
   changeIsloading(value: boolean): void {

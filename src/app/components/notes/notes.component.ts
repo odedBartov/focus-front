@@ -3,7 +3,7 @@ import { Component, ElementRef, EventEmitter, HostListener, inject, input, Input
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Project } from '../../models/project';
-import { LoadingService } from '../../services/loading.service';
+import { AnimationsService } from '../../services/animations.service';
 import { HttpService } from '../../services/http.service';
 import { Editor, NgxEditorModule } from 'ngx-editor';
 import { debounceTime, Subscription } from 'rxjs';
@@ -22,7 +22,7 @@ export class NotesComponent {
   @ViewChild('newLinkDiv', { static: false }) newLinkDiv?: ElementRef;
   router = inject(Router);
   formBuilder = inject(FormBuilder);
-  loadingService = inject(LoadingService);
+  animationsService = inject(AnimationsService);
   httpService = inject(HttpService);
   form: FormGroup;
   notesSelected = true;
@@ -59,9 +59,9 @@ export class NotesComponent {
     if (this.project) {
       const index = this.project.links.indexOf(link);
       this.project.links.splice(index, 1);
-      this.loadingService.changeIsloading(true);
+      this.animationsService.changeIsloading(true);
       this.httpService.updateProjects([this.project]).subscribe(res => {
-        this.loadingService.changeIsloading(false);
+        this.animationsService.changeIsloading(false);
       })
     }
   }
@@ -84,9 +84,9 @@ export class NotesComponent {
         this.project.links = [];
       }
       this.project.links.push({ name: name, url: url });
-      this.loadingService.changeIsloading(true);
+      this.animationsService.changeIsloading(true);
       this.httpService.updateProjects([this.project]).subscribe(res => {
-        this.loadingService.changeIsloading(false);
+        this.animationsService.changeIsloading(false);
         this.addingNewLink = false;
         this.resetLinkForm();
       })

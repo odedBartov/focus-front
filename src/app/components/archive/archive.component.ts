@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { HttpService } from '../../services/http.service';
-import { LoadingService } from '../../services/loading.service';
+import { AnimationsService } from '../../services/animations.service';
 import { Project } from '../../models/project';
 import { ProjectStatus, StepType } from '../../models/enums';
 import { tap } from 'rxjs';
@@ -18,7 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 })
 export class ArchiveComponent {
   httpService = inject(HttpService);
-  loadingService = inject(LoadingService);
+  animationsService = inject(AnimationsService);
   @Output() unActiveProjectsEmitter = new EventEmitter<Project[]>();
   @Input() projects!: Project[];
   projectStatusEnum = ProjectStatus;
@@ -49,34 +49,34 @@ export class ArchiveComponent {
   }
 
   cloneProject(project: Project) {
-    this.loadingService.changeIsloading(true);
+    this.animationsService.changeIsloading(true);
     const clonedProject = { ...project };
     clonedProject.id = undefined;
     clonedProject.startDate = new Date();
     this.httpService.createProject(clonedProject).subscribe(res => {
       this.projects.push(res);
       this.unActiveProjectsEmitter.emit(this.projects);
-      this.loadingService.changeIsloading(false);
+      this.animationsService.changeIsloading(false);
     })
   }
 
   deleteProject(project: Project) {
     if (project.id) {
-      this.loadingService.changeIsloading(true);
+      this.animationsService.changeIsloading(true);
       this.httpService.deleteProject(project.id).subscribe(res => {
         const projectIndex = this.projects.indexOf(project);
         this.projects.splice(projectIndex, 1);
         this.unActiveProjectsEmitter.emit(this.projects);
-        this.loadingService.changeIsloading(false);
+        this.animationsService.changeIsloading(false);
       })
     }
   }
 
   updateProjects(projects: Project[]) {
-    this.loadingService.changeIsloading(true);
+    this.animationsService.changeIsloading(true);
     return this.httpService.updateProjects(projects).pipe(tap(res => {
       this.unActiveProjectsEmitter.emit(this.projects);
-      this.loadingService.changeIsloading(false);
+      this.animationsService.changeIsloading(false);
     }));
   }
 }

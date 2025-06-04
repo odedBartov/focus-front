@@ -4,7 +4,7 @@ import { Project } from '../../models/project';
 import { CommonModule } from '@angular/common';
 import { StepType } from '../../models/enums';
 import { HttpService } from '../../services/http.service';
-import { LoadingService } from '../../services/loading.service';
+import { AnimationsService } from '../../services/animations.service';
 import { NewStepComponent } from '../new-step/new-step.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Task } from '../../models/task';
@@ -36,7 +36,7 @@ export class TodayTasksComponent implements OnInit {
   @Input() tasksInput: Task[] = []
   @Output() selectProjectEmitter = new EventEmitter<Project>();
   httpService = inject(HttpService);
-  loadingService = inject(LoadingService);
+  animationsService = inject(AnimationsService);
   isShowNewStep = false;
   stepTypeEnum = StepType;
   editDiv?: HTMLDivElement;
@@ -69,7 +69,7 @@ export class TodayTasksComponent implements OnInit {
   finishStep(task: Task) {
     // todo - index
     task.step.isComplete = true;
-    this.loadingService.changeIsloading(true);
+    this.animationsService.changeIsloading(true);
     this.httpService.updateSteps([task.step]).subscribe(res => {
       const nextStep = task.project.steps.find(s => !s.isComplete);
       if (nextStep) {
@@ -78,7 +78,7 @@ export class TodayTasksComponent implements OnInit {
         const taskIndex = this.tasks.indexOf(task);
         this.tasks.splice(taskIndex, 1);
       }
-      this.loadingService.changeIsloading(false);
+      this.animationsService.changeIsloading(false);
     });
   }
 
@@ -87,12 +87,12 @@ export class TodayTasksComponent implements OnInit {
   }
 
   hideStepForToday(task: Task) {
-    this.loadingService.changeIsloading(true);
+    this.animationsService.changeIsloading(true);
     task.step.hideTaskDate = new Date();
     this.httpService.updateSteps([task.step]).subscribe(res => {
       const taskIndex = this.tasks.indexOf(task)
       this.tasks.splice(taskIndex, 1);
-      this.loadingService.changeIsloading(false);
+      this.animationsService.changeIsloading(false);
     })
   }
 
@@ -101,7 +101,7 @@ export class TodayTasksComponent implements OnInit {
   }
 
   updateStep(project: Project, newStep: Step) {
-    this.loadingService.changeIsloading(true);
+    this.animationsService.changeIsloading(true);
     this.httpService.updateSteps([newStep]).subscribe(res => {
       if (project && project.steps) {
         project.steps = project?.steps?.map(step =>
@@ -109,7 +109,7 @@ export class TodayTasksComponent implements OnInit {
         )
       }
       this.editStepId = '';
-      this.loadingService.changeIsloading(false);
+      this.animationsService.changeIsloading(false);
     })
   }
 }

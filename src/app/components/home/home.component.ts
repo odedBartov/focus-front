@@ -7,7 +7,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
 import { ProjectsListComponent } from '../projects-list/projects-list.component';
 import { MatMenuModule } from '@angular/material/menu';
-import { LoadingService } from '../../services/loading.service';
+import { AnimationsService } from '../../services/animations.service';
 import { ProjectStatus } from '../../models/enums';
 import { SummaryComponent } from "../summary/summary.component";
 import { UpdatesComponent } from "../updates/updates.component";
@@ -32,7 +32,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 export class HomeComponent implements OnInit {
   @ViewChild('projectPage', { static: false }) projectPage?: ProjectPageComponent;
   httpService = inject(HttpService);
-  loadingService = inject(LoadingService);
+  animationsService = inject(AnimationsService);
   projectHoverService = inject(ProjectHoverService);
   authenticationService = inject(AuthenticationService);
   titleService = inject(Title);
@@ -82,10 +82,10 @@ export class HomeComponent implements OnInit {
     moveItemInArray(this.tabs, event.previousIndex, event.currentIndex);
     moveItemInArray(this.userProjects.activeProjects, event.previousIndex - 1, event.currentIndex - 1)
     this.updateProjectsPosition();
-    this.loadingService.changeIsloading(true);
+    this.animationsService.changeIsloading(true);
     this.httpService.updateProjects(this.userProjects.activeProjects).subscribe(res => {
       this.userProjects.activeProjects = this.userProjects.activeProjects.sort((a, b) => a.positionInList - b.positionInList);
-      this.loadingService.changeIsloading(false);
+      this.animationsService.changeIsloading(false);
     });
   }
 
@@ -96,14 +96,14 @@ export class HomeComponent implements OnInit {
   }
 
   refreshProjects() {
-    this.loadingService.changeIsloading(true);
+    this.animationsService.changeIsloading(true);
     this.httpService.getProjects().subscribe(res => {
       this.userProjects = this.sortProjects(res);
       this.userProjects.activeProjects = this.userProjects.activeProjects.sort((a, b) => a.positionInList - b.positionInList);
       this.userProjects.unActiveProjects = this.userProjects.unActiveProjects.sort((a, b) => a.positionInList - b.positionInList);
       this.initTabs();
       this.activeTab = this.homeTab;
-      this.loadingService.changeIsloading(false);
+      this.animationsService.changeIsloading(false);
     });
   }
 

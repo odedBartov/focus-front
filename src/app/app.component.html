@@ -1,5 +1,8 @@
-<div class="loading" *ngIf="isLoading()">
-  <ng-lottie [options]="options" class="animation"/>
+<div class="animation-container" *ngIf="isLoading()">
+  <ng-lottie [options]="loadingOptions" class="animation" />
+</div>
+<div class="animation-container" *ngIf="showFinishProject">
+  <ng-lottie [options]="finishProjectOptions" class="animation" (animationCreated)="animationCreated($event)"/>
 </div>
 
 <router-outlet></router-outlet>

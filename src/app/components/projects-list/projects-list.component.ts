@@ -4,11 +4,10 @@ import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Router } from '@angular/router';
 import { ProjectStatus, StepType } from '../../models/enums';
-import { UserProjects } from '../../models/userProjects';
 import { MatMenuModule } from '@angular/material/menu';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { HttpService } from '../../services/http.service';
-import { LoadingService } from '../../services/loading.service';
+import { AnimationsService } from '../../services/animations.service';
 import { tap } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,7 +24,7 @@ import { Task } from '../../models/task';
 })
 export class ProjectsListComponent {
   httpService = inject(HttpService);
-  loadingService = inject(LoadingService);
+  animationsService = inject(AnimationsService);
   dialog = inject(MatDialog);
   @Output() selectProjectEmitter = new EventEmitter<Project>();
   @Output() activeProjectsEmitter = new EventEmitter<Project[]>();
@@ -67,25 +66,25 @@ export class ProjectsListComponent {
 
   deleteProject(project: Project) {
     if (project.id) {
-      this.loadingService.changeIsloading(true);
+      this.animationsService.changeIsloading(true);
       this.httpService.deleteProject(project.id).subscribe(res => {
         const projectIndex = this.projects.indexOf(project);
         this.projects.splice(projectIndex, 1);
         this.activeProjectsEmitter.emit(this.projects);
-        this.loadingService.changeIsloading(false);
+        this.animationsService.changeIsloading(false);
       })
     }
   }
 
   cloneProject(project: Project) {
-    this.loadingService.changeIsloading(true);
+    this.animationsService.changeIsloading(true);
     const clonedProject = { ...project };
     clonedProject.id = undefined;
     clonedProject.startDate = new Date();
     this.httpService.createProject(clonedProject).subscribe(res => {
       this.projects.push(res);
       this.activeProjectsEmitter.emit(this.projects);
-      this.loadingService.changeIsloading(false);
+      this.animationsService.changeIsloading(false);
     })
   }
 
@@ -114,10 +113,10 @@ export class ProjectsListComponent {
   }
 
   updateProjects(projects: Project[]) {
-    this.loadingService.changeIsloading(true);
+    this.animationsService.changeIsloading(true);
     return this.httpService.updateProjects(projects).pipe(tap(res => {
       this.activeProjectsEmitter.emit(this.projects);
-      this.loadingService.changeIsloading(false);
+      this.animationsService.changeIsloading(false);
     }));
   }
 
@@ -152,11 +151,11 @@ export class ProjectsListComponent {
     const dialogRef = this.dialog.open(NewProjectComponent);
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
-        this.loadingService.changeIsloading(true);
+        this.animationsService.changeIsloading(true);
         this.httpService.createProject(res).subscribe(newProject => {
           this.projects.push(newProject);
           this.activeProjectsEmitter.emit(this.projects);
-          this.loadingService.changeIsloading(false);
+          this.animationsService.changeIsloading(false);
         })
       }
     })

@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../../models/project';
 import { HttpService } from '../../services/http.service';
 import { CommonModule } from '@angular/common';
 import { Step } from '../../models/step';
-import { LoadingService } from '../../services/loading.service';
+import { AnimationsService } from '../../services/animations.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from '../../modals/confirmation-modal/confirmation-modal.component';
 import { FormsModule } from '@angular/forms';
@@ -46,14 +46,13 @@ import { AnimationItem } from 'lottie-web';
 export class ProjectPageComponent implements OnInit {
   route = inject(ActivatedRoute);
   httpService = inject(HttpService);
-  loadingService = inject(LoadingService);
+  animationsService = inject(AnimationsService);
   dialog = inject(MatDialog);
   projectHoverService = inject(ProjectHoverService);
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
   @ViewChild('richTextDiv', { static: false }) richTextDiv?: ElementRef;
   @ViewChild('addStepDiv', { static: false }) addStepDiv!: ElementRef;
-  // @ViewChildren('autoResizeTextarea') autoResizeTextarea!: QueryList<ElementRef<HTMLTextAreaElement>>;
   editDiv?: HTMLDivElement;
   @Output() projectUpdated = new EventEmitter<Project>();
   @Input() set projectInput(value: Project | undefined) {
@@ -167,16 +166,16 @@ export class ProjectPageComponent implements OnInit {
         this.activeStepId = this.project?.steps?.find(s => !s.isComplete)?.id;
       });
 
-      this.loadingService.changeIsloading(true);
+      this.animationsService.changeIsloading(true);
       this.httpService.updateSteps(this.project.steps).subscribe(res => {
-        this.loadingService.changeIsloading(false);
+        this.animationsService.changeIsloading(false);
       })
     }
   }
 
   loadProject() {
     if (this.projectId) {
-      this.loadingService.changeIsloading(true);
+      this.animationsService.changeIsloading(true);
       this.httpService.getProject(this.projectId).subscribe(res => {
         if (res.steps) {
           this.project = res;
@@ -184,7 +183,7 @@ export class ProjectPageComponent implements OnInit {
             this.project.steps = this.project.steps.sort((a, b) => a.positionInList - b.positionInList);
           }
           this.activeStepId = res.steps.find(s => !s.isComplete)?.id;
-          this.loadingService.changeIsloading(false);
+          this.animationsService.changeIsloading(false);
         }
       });
     }
@@ -240,7 +239,7 @@ export class ProjectPageComponent implements OnInit {
   }
 
   updateStep(step: Step) {
-    this.loadingService.changeIsloading(true);
+    this.animationsService.changeIsloading(true);
     this.httpService.updateSteps([step]).subscribe(res => {
       if (this.project && this.project.steps) {
         this.project.steps = this.project?.steps?.map(step =>
@@ -250,7 +249,7 @@ export class ProjectPageComponent implements OnInit {
       this.editStepId = '';
       this.activeStepId = this.project?.steps?.find(s => !s.isComplete)?.id;
       this.calculatePayments();
-      this.loadingService.changeIsloading(false);
+      this.animationsService.changeIsloading(false);
     })
   }
 
@@ -270,7 +269,6 @@ export class ProjectPageComponent implements OnInit {
 
   showDeleteStepModal(step: Step) {
     const dialogRef = this.dialog.open(ConfirmationModalComponent, { data: step.name });
-
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
         this.deleteStep(step);
@@ -279,14 +277,14 @@ export class ProjectPageComponent implements OnInit {
   }
 
   createNewStep(step: Step) {
-    this.loadingService.changeIsloading(true);
+    this.animationsService.changeIsloading(true);
     step.projectId = this.project?.id;
     step.positionInList = (this.project?.steps?.length ?? 0) + 1;
     this.httpService.createStep(step).subscribe(res => {
       this.project?.steps?.push(res);
       this.isShowNewStep = false;
       this.calculatePayments();
-      this.loadingService.changeIsloading(false);
+      this.animationsService.changeIsloading(false);
     })
   }
 
@@ -297,14 +295,14 @@ export class ProjectPageComponent implements OnInit {
 
   deleteStep(step: Step) {
     if (step.id) {
-      this.loadingService.changeIsloading(true);
+      this.animationsService.changeIsloading(true);
       this.httpService.deleteStep(step.id).subscribe(res => {
         const stepIndex = this.project?.steps?.indexOf(step);
         if (stepIndex !== undefined) {
           this.calculatePayments();
           this.project?.steps?.splice(stepIndex, 1);
         }
-        this.loadingService.changeIsloading(false);
+        this.animationsService.changeIsloading(false);
       });
     }
   }

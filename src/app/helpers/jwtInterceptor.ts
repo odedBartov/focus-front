@@ -3,7 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import { catchError, Observable, tap, throwError } from "rxjs";
 import { AuthenticationService } from "../services/authentication.service";
 import { Router } from "@angular/router";
-import { LoadingService } from "../services/loading.service";
+import { AnimationsService } from "../services/animations.service";
 import { MatDialog } from "@angular/material/dialog";
 import { ErrorComponent } from "../modals/error/error.component";
 
@@ -11,7 +11,7 @@ import { ErrorComponent } from "../modals/error/error.component";
 export class TokenInterceptor implements HttpInterceptor {
     authenticationService = inject(AuthenticationService);
     router = inject(Router);
-    loadingService = inject(LoadingService);
+    animationsService = inject(AnimationsService);
     dialog = inject(MatDialog);
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -29,7 +29,7 @@ export class TokenInterceptor implements HttpInterceptor {
                     }
                 }
             }), catchError((err: HttpErrorResponse) => {
-                this.loadingService.hideIsLoading();
+                this.animationsService.hideIsLoading();
                 if (err.status === 401) {
                     this.authenticationService.deleteToken();
                     this.router.navigate(['/login']);
