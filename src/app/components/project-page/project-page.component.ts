@@ -226,8 +226,50 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     step.isComplete = !step.isComplete;
     if (step.isComplete) {
       step.dateCompleted = new Date();
+      if (this.project) {
+        let finishedSteps = 0;
+        let notFinishedSteps = 0;
+        for (let index = 0; index < this.project.steps.length; index++) {
+          const currentStep = this.project.steps[index];
+          if (currentStep.isComplete) {
+            if (currentStep.id !== step.id) {
+              finishedSteps++;
+            } else {
+              break;
+            }
+          } else {
+            notFinishedSteps++;
+          }
+        }
+
+        moveItemInArray(this.project.steps, finishedSteps + notFinishedSteps, finishedSteps);
+        this.updateStepsPosition();
+
+      }
     } else {
       step.dateCompleted = undefined;
+      let passedStep = false;
+      let stepsToMove = 0;
+      let currentIndex = 0;
+      if (this.project) {
+        for (let index = 0; index < this.project.steps.length; index++) {
+          const currentStep = this.project.steps[index];
+          if (currentStep.id === step.id) {
+            passedStep = true;
+            currentIndex = index;
+          } else {
+            if (currentStep.isComplete) {
+              if (passedStep) {
+                stepsToMove++;
+              }
+            } else {
+              break;
+            }
+          }
+        }
+        moveItemInArray(this.project.steps, currentIndex, currentIndex + stepsToMove);
+        this.updateStepsPosition();
+      }
     }
 
     this.updateStep(step);
