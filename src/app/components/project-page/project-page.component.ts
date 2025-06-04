@@ -99,10 +99,22 @@ export class ProjectPageComponent implements OnInit {
       this.isShowNewStep = false;
     }
 
+    console.log("out");
+    
+    console.log(!this.editDiv?.contains(event.target as Node));
+    
     if (!this.editDiv?.contains(event.target as Node)) {
+      console.log("in");
+      console.log(!this.editDiv?.contains(event.target as Node));
       if (this.project && this.project.steps) { // stupid stupid angular
-        this.project.steps = this.project.steps.map(s => { return { ...s } })
-        this.editStepId = '';
+        setTimeout(() => {
+          if (this.project) {
+            
+            this.project.steps = this.project.steps.map(s => { return { ...s } })
+          }
+        }, 1);
+        //this.editStepId = '';
+      // only when nesessary
       }
     }
 
