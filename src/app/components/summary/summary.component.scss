@@ -69,9 +69,11 @@
                 flex-direction: column;
                 justify-content: space-between;
                 margin-left: 1rem;
+                height: 90%;
+                margin-top: -11px;
 
                 div {
-                    height: 2rem;
+                    height: 25px;
                     display: flex;
                     align-items: flex-start;
                 }
