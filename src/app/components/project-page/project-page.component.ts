@@ -101,13 +101,9 @@ export class ProjectPageComponent implements OnInit {
 
     if (!this.editDiv?.contains(event.target as Node)) {
       if (this.project && this.project.steps) { // stupid stupid angular
-        let editing = this.project.steps.find(s => s.id === this.editStepId);
-        if (editing) {
-          const index = this.project.steps.indexOf(editing);
-          this.project.steps[index] = { ...editing }
-        }
+        this.project.steps = this.project.steps.map(s => { return { ...s } })
+        this.editStepId = '';
       }
-      this.editStepId = '';
     }
 
     if (this.notesDiv?.nativeElement &&
@@ -289,8 +285,10 @@ export class ProjectPageComponent implements OnInit {
   }
 
   editStep(div: HTMLDivElement, stepId: string | undefined) {
-    this.editDiv = div;
-    this.editStepId = stepId;
+    setTimeout(() => {
+      this.editDiv = div;
+      this.editStepId = stepId;
+    }, 1);
   }
 
   deleteStep(step: Step) {
