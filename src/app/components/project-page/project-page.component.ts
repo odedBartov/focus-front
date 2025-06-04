@@ -99,23 +99,8 @@ export class ProjectPageComponent implements OnInit {
       this.isShowNewStep = false;
     }
 
-    console.log("out");
-    
-    console.log(!this.editDiv?.contains(event.target as Node));
-    
     if (!this.editDiv?.contains(event.target as Node)) {
-      console.log("in");
-      console.log(!this.editDiv?.contains(event.target as Node));
-      if (this.project && this.project.steps) { // stupid stupid angular
-        setTimeout(() => {
-          if (this.project) {
-            
-            this.project.steps = this.project.steps.map(s => { return { ...s } })
-          }
-        }, 1);
-        //this.editStepId = '';
-      // only when nesessary
-      }
+      this.editStepId = '';
     }
 
     if (this.notesDiv?.nativeElement &&
@@ -149,11 +134,6 @@ export class ProjectPageComponent implements OnInit {
         }
       }
     }
-  }
-
-  hoverStep(stepId: string | undefined, element: HTMLTextAreaElement) {
-    this.hoverStepId = stepId;
-    element.style.height = element.scrollHeight + "px";
   }
 
   updateStepsPosition() {
@@ -297,10 +277,8 @@ export class ProjectPageComponent implements OnInit {
   }
 
   editStep(div: HTMLDivElement, stepId: string | undefined) {
-    setTimeout(() => {
-      this.editDiv = div;
-      this.editStepId = stepId;
-    }, 1);
+    this.editDiv = div;
+    this.editStepId = stepId;
   }
 
   deleteStep(step: Step) {
