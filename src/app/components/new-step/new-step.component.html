@@ -46,7 +46,7 @@
                 <img src="assets/icons/dollar.svg" />
             </div>
             <div class="text-and-input">
-                <span class="text">שם השתלום</span>
+                <span class="text">שם התשלום</span>
                 <input class="text" type="text" [(ngModel)]="newStep.name" #stepNameInput>
                 <div class="error-container">
                     <span *ngIf="submitted && !newStep.name" class="error">אנא הזינו שם</span>
@@ -54,7 +54,7 @@
             </div>
 
             <div class="text-and-input">
-                <span class="text">סכום (לא כולל מע"ם)</span>
+                <span class="text">סכום (לא כולל מע"מ)</span>
                 <input class="text" type="number" [(ngModel)]="newStep.price">
                 <div class="error-container">
                     <span *ngIf="submitted && newStep.price <= 0 || newStep.price === undefined" class="error">אנא הזינו
