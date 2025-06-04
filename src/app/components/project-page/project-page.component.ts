@@ -53,7 +53,7 @@ export class ProjectPageComponent implements OnInit {
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
   @ViewChild('richTextDiv', { static: false }) richTextDiv?: ElementRef;
   @ViewChild('addStepDiv', { static: false }) addStepDiv!: ElementRef;
-  // @ViewChildren('lottieAnimation') lottieAnimations!: QueryList<LottieComponent>;
+  // @ViewChildren('autoResizeTextarea') autoResizeTextarea!: QueryList<ElementRef<HTMLTextAreaElement>>;
   editDiv?: HTMLDivElement;
   @Output() projectUpdated = new EventEmitter<Project>();
   @Input() set projectInput(value: Project | undefined) {
@@ -81,7 +81,6 @@ export class ProjectPageComponent implements OnInit {
     loop: false,
   };
   animatingItemId: string = '';
-
   hideProperties = this.projectHoverService.getSignal();
   animationHackFlag = true;
   constructor(private changeDetectorRef: ChangeDetectorRef) {
@@ -102,6 +101,13 @@ export class ProjectPageComponent implements OnInit {
     }
 
     if (!this.editDiv?.contains(event.target as Node)) {
+      if (this.project && this.project.steps) { // stupid stupid angular
+        let editing = this.project.steps.find(s => s.id === this.editStepId);
+        if (editing) {
+          const index = this.project.steps.indexOf(editing);
+          this.project.steps[index] = { ...editing }
+        }
+      }
       this.editStepId = '';
     }
 
@@ -136,6 +142,11 @@ export class ProjectPageComponent implements OnInit {
         }
       }
     }
+  }
+
+  hoverStep(stepId: string | undefined, element: HTMLTextAreaElement) {
+    this.hoverStepId = stepId;
+    element.style.height = element.scrollHeight + "px";
   }
 
   updateStepsPosition() {

@@ -47,9 +47,9 @@
     <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)" *ngIf="!showNotes">
         <div [class]="step.isComplete? 'finished' : 'not-finished'" #stepDiv
             [ngClass]="{'step' : editStepId !== step.id, 'active-step': step.id === activeStepId && step.id !== editStepId}"
-            *ngFor="let step of project?.steps; let i = index" (mouseenter)="hoverStepId = step.id"
+            *ngFor="let step of project?.steps; let i = index" (mouseenter)="hoverStep(step.id, oded)"
             (mouseleave)="hoverStepId = undefined" cdkDrag>
-            <div *ngIf="editStepId !== step.id && animationHackFlag">
+            <div [style.display]="editStepId !== step.id && animationHackFlag ? 'content' : 'none'">
                 <div class="step-header">
                     <span [ngClass]="{'step-name': step.id !== activeStepId}">{{step.name}}</span>
                     <img class="pointer icon-confirm" (click)="changeStepStatus(step)" *ngIf="step.isComplete" />
@@ -60,19 +60,21 @@
                     *ngIf="step.isComplete">
                     הסתיים בתאריך {{step.dateCompleted | date: 'dd.MM.yyyy'}}
                 </div>
-                <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id||true) ? 'expanded' : 'collapsed'"
-                    class="extra-not-finished" *ngIf="!step.isComplete">
-                    <span>{{step.description}}</span>
+                <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id) ? 'expanded' : 'collapsed'"
+                    class="extra-not-finished" [style.display]="!step.isComplete ? 'content' : 'none'">
+                    <textarea [style.display]="step.description ? 'content' : 'none'"  disabled="true" #oded>{{step.description}}</textarea>
                     <div class="step-icons">
                         <div class="edit-delete">
                             <img class="icon-garbage-can" (click)="deleteStep(step)" />
                             <img class="icon-pencil" (click)="editStep(stepDiv, step.id)" />
                         </div>
                         <div class="animation-container">
-                            <div class="finish-step-animation" [style.display]="animatingItemId === step.id ? 'block' : 'none'" >
-                                <ng-lottie [options]="lottieOptions" #finishStepAnimaton/>
+                            <div class="finish-step-animation"
+                                [style.display]="animatingItemId === step.id ? 'content' : 'none'">
+                                <ng-lottie [options]="lottieOptions" #finishStepAnimaton />
                             </div>
-                            <img class="icon-confirm-circle" (click)="changeStepStatus(step, finishStepAnimaton)" *ngIf="step.id !== animatingItemId"/>
+                            <img class="icon-confirm-circle" (click)="changeStepStatus(step, finishStepAnimaton)"
+                                *ngIf="step.id !== animatingItemId" />
                         </div>
                     </div>
                 </div>
