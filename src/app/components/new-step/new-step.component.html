@@ -2,7 +2,7 @@
     <div class="choose-type" *ngIf="!isEdit && (newStep == undefined || newStep.stepType === undefined)">
         <span class="header">שלב חדש</span>
         <div class="steps">
-            <div class="step-type" (click)="selectType(stepTypeEnum.task)" tabindex="0" #taskOption>
+            <div class="step-type" style="margin-left: 20px;" (click)="selectType(stepTypeEnum.task)" tabindex="0" #taskOption>
                 <img [src]="`assets/icons/puzzle_piece.svg`" />
                 <span class="header">{{stepTypeLabels[stepTypeEnum.task]}}</span>
             </div>
@@ -20,7 +20,7 @@
                 </div>
                 <img src="assets/icons/puzzle_piece.svg" />
             </div>
-            <div class="text-and-input" style="margin-bottom: 3rem;">
+            <div class="text-and-input">
                 <span class="text">שם המשימה</span>
                 <input class="text" type="text" [(ngModel)]="newStep.name" #stepNameInput tabindex="2">
                 <div class="error-container">
