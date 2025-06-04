@@ -61,6 +61,9 @@ export class ProjectsListComponent {
     this.updateProjects([project]).subscribe(res => {
       this.projects?.splice(this.projects.indexOf(project), 1);
       this.activeProjectsEmitter.emit(this.projects);
+      if (status === ProjectStatus.finished) {
+        this.animationsService.showFinishProject();
+      }
     });
   }
 
@@ -126,7 +129,6 @@ export class ProjectsListComponent {
 
   getTasks() {
     const projectsAndSteps: Task[] = [];
-
     this.projects.forEach(project => {
       if (project?.steps) {
         const currentStep = project.steps.find(s => !s.isComplete);

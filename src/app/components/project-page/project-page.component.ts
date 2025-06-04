@@ -223,25 +223,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   changeStepStatus(step: Step, animation?: LottieComponent) {
-    // if (!step.isComplete && animation) {
-    //   this.animationHackFlag = false;
-    //   this.changeDetectorRef.detectChanges();
-    //   setTimeout(() => {
-    //     this.animationHackFlag = true
-    //     step.dateCompleted = new Date();
-    //     this.animatingItemId = step.id ?? '';
-    //     animation.complete.subscribe(res => {
-    //       this.updateStep(step);
-    //       step.isComplete = !step.isComplete;
-    //       this.animatingItemId = '';
-    //     })
-    //   }, 1);
-    // } else {
-    //   step.dateCompleted = undefined;
-    //   step.isComplete = !step.isComplete;
-    //   this.updateStep(step);
-    // }
-
     step.isComplete = !step.isComplete;
     if (step.isComplete) {
       step.dateCompleted = new Date();
@@ -267,7 +248,15 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         this.setActiveStepHeight();
       }, 1);
       this.animationsService.changeIsloading(false);
+      this.isFinishProject();
     })
+  }
+
+  isFinishProject() {
+    const stepsInProgress = this.project?.steps.filter(s => !s.isComplete).length;
+    if (stepsInProgress === 0) {
+      this.animationsService.showFinishProject();
+    }
   }
 
   openProjectModal() {
