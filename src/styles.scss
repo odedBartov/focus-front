@@ -136,7 +136,7 @@
 
     h1 {
         font-family: 'black';
-        font-size: var(--font-size-1);
+        font-size: var(--font-size-3);
     }
 
     h2 {
@@ -146,7 +146,36 @@
 
     h3 {
         font-family: 'black';
-        font-size: var(--font-size-3);
+        font-size: var(--font-size-1);
+    }
+}
+
+.big-fonts {
+    .NgxEditor {
+        p {
+            font-family: 'regular';
+            font-size: var(--font-size-2);
+        }
+
+        strong {
+            font-family: 'black';
+            font-size: var(--font-size-2);
+        }
+
+        h1 {
+            font-family: 'black';
+            font-size: var(--font-size-4);
+        }
+
+        h2 {
+            font-family: 'black';
+            font-size: var(--font-size-3);
+        }
+
+        h3 {
+            font-family: 'black';
+            font-size: var(--font-size-2);
+        }
     }
 }
 
