@@ -52,11 +52,34 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit {
           return of(undefined);
         }
       })
-    ).subscribe(results => {});
+    ).subscribe(results => { });
   }
 
   toggleParagraph(): void {
-    //this.editor.commands.set().focus().exec();
+    const { state, dispatch } = this.editor.view;
+    const tr = state.tr;
+    let modified = false;
+
+    // Traverse the document to remove inline marks and convert headings
+    state.doc.descendants((node, pos) => {
+      if (node.type.name === 'heading') {
+        // Convert heading to paragraph
+        tr.setNodeMarkup(pos, state.schema.nodes['paragraph']);
+        modified = true;
+      }
+      if (node.isText && node.marks.length > 0) {
+        // Remove all inline marks (e.g., bold, italic, etc.)
+        tr.removeMark(pos, pos + node.nodeSize, null);
+        modified = true;
+      }
+    });
+
+    if (modified) {
+      dispatch(tr);
+    }
+
+    // Focus the editor
+    this.editor.commands.focus().exec();
   }
 
   toggleBold(): void {
@@ -80,13 +103,9 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit {
     const { state } = view;
     const { selection } = state;
 
-    // Execute the command
     command(this.editor.commands);
-
     // Restore the selection
     view.focus();
-    console.log(selection);
-    
     // view.dispatch(view.state.tr.setSelection(selection));
   }
 }
