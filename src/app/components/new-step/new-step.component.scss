@@ -17,18 +17,25 @@
             .step-type {
                 cursor: pointer;
                 @include mixins.regular-border;
-                padding: 0.5rem 1rem;
+                padding: 12px 20px;
                 display: flex;
                 align-items: center;
 
-                &:hover, &:focus {
+                &:hover,
+                &:focus {
                     background-color: var(--hover-color);
                 }
 
                 img {
-                    margin-left: 1rem;
+                    margin-left: 16px;
                     height: 24px;
                     width: 24px;
+                }
+
+                .step-type-tite {
+                    font-family: 'black';
+                    font-size: var(--font-size-2);
+                    margin-bottom: 4px;
                 }
             }
         }
@@ -71,6 +78,7 @@
 
         .add-description {
             margin-bottom: 20px;
+
             .button {
                 border: none;
                 transition: all 0.2s;
@@ -82,7 +90,8 @@
                 cursor: pointer;
                 background-color: var(--hover-color);
 
-                &:hover, &:focus {
+                &:hover,
+                &:focus {
                     background-color: var(--main-color);
                     color: var(--default-white);
                 }
@@ -119,7 +128,8 @@
                     cursor: pointer;
                     margin-left: 0.5rem;
 
-                    &:hover, &:focus {
+                    &:hover,
+                    &:focus {
                         background-color: var(--select-color);
                     }
 
