@@ -8,10 +8,11 @@ import { AnimationsService } from '../../services/animations.service';
 import { NewStepComponent } from '../new-step/new-step.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Task } from '../../models/task';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-today-tasks',
-  imports: [CommonModule, NewStepComponent],
+  imports: [CommonModule, NewStepComponent, MatTooltipModule],
   templateUrl: './today-tasks.component.html',
   styleUrl: './today-tasks.component.scss',
   animations: [

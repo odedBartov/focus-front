@@ -12,11 +12,11 @@
                 </span>
                 <div class="buttons" [@expandCollapse]="(hoverStepId === task.step.id) ? 'expanded' : 'collapsed'">
                     <div class="actions">
-                        <img class="icon-pencil pointer" (click)="editStep(stepDiv, task.step.id)"/>
-                        <img class="icon-expand pointer" (click)="openProject(task.project)"/>
-                        <img class="icon-history pointer" (click)="hideStepForToday(task)"/>
+                        <img class="icon-pencil pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip" matTooltip="עריכה" (click)="editStep(stepDiv, task.step.id)"/>
+                        <img class="icon-expand pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip" matTooltip="פתיחת פרויקט" (click)="openProject(task.project)"/>
+                        <img class="icon-history pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip" matTooltip="דחה למחר" (click)="hideStepForToday(task)"/>
                     </div>
-                    <img class="icon-confirm-circle pointer" (click)="finishStep(task)" />
+                    <img class="icon-confirm-circle pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip" matTooltip="סיום" (click)="finishStep(task)" />
                 </div>
             </div>
             <div *ngIf="editStepId === task.step.id" (mousedown)="$event.stopPropagation()">
