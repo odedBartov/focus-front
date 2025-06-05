@@ -8,16 +8,25 @@
     .tasks {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
         grid-auto-rows: auto;
         align-items: start;
 
         .task {
+            &.right-column {
+                margin-right: 30px;
+            }
+
+            &.left-column {
+                margin-left: 30px;
+            }
+
             .step-info {
                 padding: 1.5rem 1.5rem 0;
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
-                margin: 0.5rem 1rem;
+                // margin: 0 30px 40px;
                 background-color: var(--default-white);
                 border-radius: var(--common-radius);
                 box-shadow: var(--common-shadow);

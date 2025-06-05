@@ -1,6 +1,6 @@
 <div class="main">
     <div class="tasks">
-        <div *ngFor="let task of tasks" class="task" #stepDiv (mouseleave)="hoverStepId = undefined"
+        <div *ngFor="let task of tasks; let i = index" class="task" [ngClass]="i % 2 === 0 ? 'right-column' : 'left-column'" #stepDiv (mouseleave)="hoverStepId = undefined"
             (mouseenter)="hoverStepId = task.step.id">
             <div *ngIf="editStepId !== task.step.id" class="step-info">
                 <img class="priority" *ngIf="task.project.isPriority" src="assets/icons/star_full.svg" />
