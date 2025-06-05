@@ -182,7 +182,6 @@
 
     .rich-text {
         height: var(--big-window-height);
-        padding: 2rem;
         @include mixins.big-popup;
         z-index: 2;
     }
