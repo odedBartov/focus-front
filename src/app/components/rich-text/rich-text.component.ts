@@ -60,33 +60,33 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit {
   }
 
   toggleParagraph(): void {
-  const view = this.editor.view;
-  const { state, dispatch } = view;
-  const { selection } = state;
-  const { from, to } = selection;
-  const tr = state.tr;
-  let modified = false;
+    const view = this.editor.view;
+    const { state, dispatch } = view;
+    const { selection } = state;
+    const { from, to } = selection;
+    const tr = state.tr;
+    let modified = false;
 
-  // Apply changes only to the selected range
-  state.doc.nodesBetween(from, to, (node, pos) => {
-    if (node.type.name === 'heading') {
-      tr.setNodeMarkup(pos, state.schema.nodes['paragraph']);
-      modified = true;
+    // Apply changes only to the selected range
+    state.doc.nodesBetween(from, to, (node, pos) => {
+      if (node.type.name === 'heading') {
+        tr.setNodeMarkup(pos, state.schema.nodes['paragraph']);
+        modified = true;
+      }
+
+      if (node.isText && node.marks.length > 0) {
+        // Remove marks within selection bounds
+        tr.removeMark(pos, pos + node.nodeSize, null);
+        modified = true;
+      }
+    });
+
+    if (modified) {
+      dispatch(tr);
     }
 
-    if (node.isText && node.marks.length > 0) {
-      // Remove marks within selection bounds
-      tr.removeMark(pos, pos + node.nodeSize, null);
-      modified = true;
-    }
-  });
-
-  if (modified) {
-    dispatch(tr);
+    this.editor.commands.focus().exec();
   }
-
-  this.editor.commands.focus().exec();
-}
 
   toggleBold(): void {
     this.executeCommandWithSelectionPreservation(commands => commands.toggleBold().exec());
@@ -107,11 +107,15 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit {
   private executeCommandWithSelectionPreservation(command: (editor: any) => any): void {
     const view = this.editor.view;
     const { state } = view;
-    const { selection } = state;
+    const originalSelection = state.selection;
 
+    const transaction = state.tr.setSelection(originalSelection); // Preserve the original selection
     command(this.editor.commands);
-    // Restore the selection
+
+    // Reapply the preserved selection and dispatch
+    const newState = view.state.apply(transaction);
+    view.updateState(newState);
+
     view.focus();
-    // view.dispatch(view.state.tr.setSelection(selection));
   }
 }
