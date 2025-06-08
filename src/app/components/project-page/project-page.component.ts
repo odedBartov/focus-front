@@ -133,7 +133,10 @@ export class ProjectPageComponent implements OnInit {
   }
 
   setActiveStepHeight() {
-    this.setDescriptionHeight(0);
+    const activeStep = this.project?.steps.find(s => s.id === this.activeStepId);    
+    if (activeStep && activeStep.stepType === StepType.payment) {       
+      this.setDescriptionHeight(0, -20);
+    }
   }
 
   hoverStep(stepId: string | undefined, index: number) {
@@ -145,13 +148,13 @@ export class ProjectPageComponent implements OnInit {
     }
   }
 
-  setDescriptionHeight(index: number) {
+  setDescriptionHeight(index: number, epsilon = 0) {
     const element = this.descriptions.get(index);
     if (element) {
       const currentHeight = Number.parseInt(element.nativeElement.style.height);
       
       if (Number.isNaN(currentHeight) || currentHeight < element.nativeElement.scrollHeight) {
-        element.nativeElement.style.height = element.nativeElement.scrollHeight + 3 + "px";
+        element.nativeElement.style.height = element.nativeElement.scrollHeight + epsilon + "px";
       }
     }
   }

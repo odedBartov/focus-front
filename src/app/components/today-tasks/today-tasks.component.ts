@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Step } from '../../models/step';
 import { Project } from '../../models/project';
 import { CommonModule } from '@angular/common';
@@ -36,6 +36,7 @@ import { StandAloneStepsService } from '../../services/stand-alone-steps.service
 })
 export class TodayTasksComponent implements OnInit {
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
+  @ViewChildren('descriptions') descriptions!: QueryList<ElementRef<HTMLTextAreaElement>>;
   @Input() tasksInput: Task[] = []
   @Output() selectProjectEmitter = new EventEmitter<Project>();
   @Output() stepsUpdatedEmitter = new EventEmitter<Project>();
@@ -56,14 +57,46 @@ export class TodayTasksComponent implements OnInit {
     }
 
     if (!this.editDiv?.contains(event.target as Node)) {
+      let editingIndex = -1;
+      for (let index = 0; index < this.tasks.length; index++) {
+        const task = this.tasks[index];
+        if (task.step.id === this.editStepId && task.step.stepType === StepType.task) {
+          editingIndex = index;
+          break;
+        }
+      }
+      if (editingIndex >= 0) {
+        setTimeout(() => {
+          this.setDescriptionHeight(editingIndex);
+        }, 1);
+      }
       this.editStepId = '';
     }
   }
 
   ngOnInit(): void {
+    this.tasks = this.tasksInput;
     setTimeout(() => {
-      this.tasks = this.tasksInput
+      for (let index = 0; index < this.tasks.length; index++) {
+        let epsilon = 0;
+        if (this.tasks[index].step.stepType === StepType.payment) {
+          epsilon = -10;
+        }
+        this.setDescriptionHeight(index, epsilon);
+      }
     }, 1);
+  }
+
+
+  setDescriptionHeight(index: number, epsilon = 0) {
+    const element = this.descriptions.get(index);
+    if (element) {
+      const currentHeight = Number.parseInt(element.nativeElement.style.height);
+
+      if (Number.isNaN(currentHeight) || currentHeight < element.nativeElement.scrollHeight) {
+        element.nativeElement.style.height = element.nativeElement.scrollHeight + epsilon + "px";
+      }
+    }
   }
 
   editStep(div: HTMLDivElement, stepId: string | undefined) {

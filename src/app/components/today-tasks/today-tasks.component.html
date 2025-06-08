@@ -9,7 +9,7 @@
                     {{task.project?.name ?? 'ללא פרויקט'}} | {{task.step.name}}
                 </span>
                 <span class="description">
-                    {{task.step.stepType === stepTypeEnum.payment? (task.step.price + ' ₪') : task.step.description}}
+                    <textarea disabled="true" #descriptions>{{task.step.stepType === stepTypeEnum.payment? (task.step.price + ' ₪') : task.step.description}}</textarea>
                 </span>
                 <div class="buttons" [@expandCollapse]="(hoverStepId === task.step.id) ? 'expanded' : 'collapsed'">
                     <div class="actions">
