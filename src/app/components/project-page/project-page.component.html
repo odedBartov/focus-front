@@ -62,7 +62,8 @@
                 </div>
                 <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id) ? 'expanded' : 'collapsed'"
                     class="extra-not-finished" *ngIf="!step.isComplete">
-                    <textarea [ngClass]="{'active': activeStepId === step.id}" *ngIf="step.description" disabled="true" #descriptions>{{step.description}}</textarea>
+                    <textarea [ngClass]="{'active': activeStepId === step.id}" *ngIf="step.stepType === stepTypeEnum.task && step.description" disabled="true" #descriptions>{{step.description}}</textarea>
+                    <textarea [ngClass]="{'active': activeStepId === step.id}" *ngIf="step.stepType === stepTypeEnum.payment && step.price !== undefined" disabled="true" #descriptions>{{step.price}}</textarea>
                     <div class="step-icons">
                         <div class="edit-delete">
                             <img class="icon-garbage-can" (click)="deleteStep(step)" />

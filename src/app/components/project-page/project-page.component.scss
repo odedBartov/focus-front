@@ -160,6 +160,8 @@
                 font-family: 'regular';
                 font-size: var(--font-size-1);
                 padding: 0;
+                overflow: hidden;
+                border-radius: 0px;
 
                 &.active {
                     font-size: var(--font-size-2);
