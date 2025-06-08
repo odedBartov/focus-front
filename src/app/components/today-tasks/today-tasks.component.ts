@@ -58,16 +58,20 @@ export class TodayTasksComponent implements OnInit {
 
     if (!this.editDiv?.contains(event.target as Node)) {
       let editingIndex = -1;
+      let epsilon = 0;
       for (let index = 0; index < this.tasks.length; index++) {
         const task = this.tasks[index];
-        if (task.step.id === this.editStepId && task.step.stepType === StepType.task) {
+        if (task.step.id === this.editStepId) {
+          if (task.step.stepType === StepType.payment) {
+            epsilon = -10;
+          }
           editingIndex = index;
           break;
         }
       }
       if (editingIndex >= 0) {
         setTimeout(() => {
-          this.setDescriptionHeight(editingIndex);
+          this.setDescriptionHeight(editingIndex, epsilon);
         }, 1);
       }
       this.editStepId = '';
