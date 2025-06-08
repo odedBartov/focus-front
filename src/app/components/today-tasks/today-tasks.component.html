@@ -1,29 +1,43 @@
 <div class="main">
     <div class="tasks">
-        <div *ngFor="let task of tasks; let i = index" class="task" [ngClass]="i % 2 === 0 ? 'right-column' : 'left-column'" #stepDiv (mouseleave)="hoverStepId = undefined"
+        <div *ngFor="let task of tasks; let i = index" class="task"
+            [ngClass]="i % 2 === 0 ? 'right-column' : 'left-column'" #stepDiv (mouseleave)="hoverStepId = undefined"
             (mouseenter)="hoverStepId = task.step.id">
             <div *ngIf="editStepId !== task.step.id" class="step-info">
-                <img class="priority" *ngIf="task.project.isPriority" src="assets/icons/star_full.svg" />
+                <img class="priority" *ngIf="task.project?.isPriority" src="assets/icons/star_full.svg" />
                 <span class="title">
-                    {{task.project.name}} - {{task.step.name}}
+                    {{task.project?.name ?? 'ללא פרויקט'}} - {{task.step.name}}
                 </span>
                 <span class="description">
                     {{task.step.stepType === stepTypeEnum.payment? (task.step.price + ' ₪') : task.step.description}}
                 </span>
                 <div class="buttons" [@expandCollapse]="(hoverStepId === task.step.id) ? 'expanded' : 'collapsed'">
                     <div class="actions">
-                        <img class="icon-pencil pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip" matTooltip="עריכה" (click)="editStep(stepDiv, task.step.id)"/>
-                        <img class="icon-expand pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip" matTooltip="פתיחת פרויקט" (click)="openProject(task.project)"/>
-                        <img class="icon-history pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip" matTooltip="דחה למחר" (click)="hideStepForToday(task)"/>
+                        <img class="icon-pencil pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                            matTooltip="עריכה" (click)="editStep(stepDiv, task.step.id)" />
+                        <img class="icon-expand pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                            matTooltip="פתיחת פרויקט" (click)="openProject(task.project)" *ngIf="task.project"/>
+                        <img class="icon-history pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                            matTooltip="דחה למחר" (click)="hideStepForToday(task)" />
                     </div>
-                    <img class="icon-confirm-circle pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip" matTooltip="סיום" (click)="finishStep(task)" />
+                    <img class="icon-confirm-circle pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                        matTooltip="סיום" (click)="finishStep(task)" />
                 </div>
             </div>
             <div *ngIf="editStepId === task.step.id" (mousedown)="$event.stopPropagation()">
                 <div class="new-step">
-                    <app-new-step class="test" [steptInput]="task.step" (stepsEmitter)="updateStep(task.project, $event)"></app-new-step>
+                    <app-new-step class="new-step-component" [steptInput]="task.step"
+                        (stepsEmitter)="updateStep(task.project, $event, task.step)"></app-new-step>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="line">
+        <div class="add-step" (click)="creatingNewStep = true" *ngIf="!creatingNewStep">
+            + משימה חדשה
+        </div>
+        <div class="new-step-form" *ngIf="creatingNewStep" (mousedown)="$event.stopPropagation()" #newStepDiv>
+            <app-new-step class="new-step-component" (stepsEmitter)="createNewStep($event)"></app-new-step>
         </div>
     </div>
 </div>

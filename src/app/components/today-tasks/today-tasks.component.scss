@@ -65,17 +65,37 @@
                 }
             }
 
-            .new-step {
-                margin: 0.5rem 0;
-                display: flex;
-                justify-content: flex-end;
-                align-items: center;
-                width: 100%;
+        }
+    }
+    
+    .line {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 40px;
+        
+        .add-step {
+            text-align: center;
+            background-color: var(--main-color-not-active);
+            color: var(--default-white);
+            border-radius: 26px;
+            padding: 0.5rem 1rem 0.75rem;
+            transition: all 0.3s;
+            font-size: var(--font-size-2);
+            font-family: 'regular';
+            
+            &:hover {
+                cursor: pointer;
+                background-color: var(--main-color);
+            }
+        }
 
-                .test {
-                    margin: 0 1rem;
-                    width: 100%;
-                }
+        .new-step-form {
+            width: 50%;
+    
+            .new-step-component {
+                margin: 0 1rem;
+                width: 100%;
             }
         }
     }

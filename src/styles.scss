@@ -106,7 +106,7 @@
     }
 
     .custom-tooltip {
-        background-color: #070533;
+        background-color: var(--default-black);
         color: var(--default-white);
         font-size: var(--font-size-1);
         border-radius: 8px;
@@ -115,10 +115,14 @@
         font-family: 'regular';
     }
 
+    input {
+        padding: 0.5rem 1rem;
+    }
+
     input,
     textarea {
+        color: var(--default-black);
         outline: none;
-        padding: 0.5rem 1rem;
         background-color: transparent;
         @include mixins.regular-border;
     }

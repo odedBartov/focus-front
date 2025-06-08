@@ -103,7 +103,14 @@ export class HomeComponent implements OnInit {
       this.userProjects.unActiveProjects = this.userProjects.unActiveProjects.sort((a, b) => a.positionInList - b.positionInList);
       this.initTabs();
       this.activeTab = this.homeTab;
+      this.sortStepsPosition();
       this.animationsService.changeIsloading(false);
+    });
+  }
+
+  sortStepsPosition() {
+    this.userProjects.activeProjects.forEach(project => {
+      project.steps = project.steps.sort((a, b) => a.positionInList - b.positionInList);
     });
   }
 

@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren, viewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../../models/project';
 import { HttpService } from '../../services/http.service';
@@ -43,7 +43,7 @@ import { AnimationItem } from 'lottie-web';
     ])
   ]
 })
-export class ProjectPageComponent implements OnInit, AfterViewInit {
+export class ProjectPageComponent implements OnInit {
   route = inject(ActivatedRoute);
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
@@ -64,6 +64,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
     this.activeStepId = this.project?.steps?.find(s => !s.isComplete)?.id;
     this.calculatePayments();
+    setTimeout(() => {
+      this.setActiveStepHeight();
+    }, 1);
   };
   stepTypeEnum = StepType;
   project?: Project;
@@ -88,10 +91,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.projectId = params.get('projectId');
       this.isReadOnly = params.get('readOnly') == 'true';
     });
-  }
-
-  ngAfterViewInit(): void {
-    this.setActiveStepHeight();
   }
 
   ngOnInit(): void {
@@ -130,14 +129,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         return;
       }
       this.addStepDiv.nativeElement.focus();
-    } else {
-      const isEnter = event.code === 'Enter' || event.key === 'Enter';
-      // if (isEnter) {
-      //   const active = document.activeElement as HTMLElement;
-      //   if (active) {
-      //     active.click();
-      //   }
-      // }
     }
   }
 
@@ -157,7 +148,11 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   setDescriptionHeight(index: number) {
     const element = this.descriptions.get(index);
     if (element) {
-      element.nativeElement.style.height = element.nativeElement.scrollHeight + "px";
+      const currentHeight = Number.parseInt(element.nativeElement.style.height);
+      
+      if (Number.isNaN(currentHeight) || currentHeight < element.nativeElement.scrollHeight) {
+        element.nativeElement.style.height = element.nativeElement.scrollHeight + 3 + "px";
+      }
     }
   }
 

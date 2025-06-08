@@ -60,19 +60,22 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit {
   }
 
   toggleParagraph(): void {
-    const { state, dispatch } = this.editor.view;
+    const view = this.editor.view;
+    const { state, dispatch } = view;
+    const { selection } = state;
+    const { from, to } = selection;
     const tr = state.tr;
     let modified = false;
 
-    // Traverse the document to remove inline marks and convert headings
-    state.doc.descendants((node, pos) => {
+    // Apply changes only to the selected range
+    state.doc.nodesBetween(from, to, (node, pos) => {
       if (node.type.name === 'heading') {
-        // Convert heading to paragraph
         tr.setNodeMarkup(pos, state.schema.nodes['paragraph']);
         modified = true;
       }
+
       if (node.isText && node.marks.length > 0) {
-        // Remove all inline marks (e.g., bold, italic, etc.)
+        // Remove marks within selection bounds
         tr.removeMark(pos, pos + node.nodeSize, null);
         modified = true;
       }
@@ -82,7 +85,6 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit {
       dispatch(tr);
     }
 
-    // Focus the editor
     this.editor.commands.focus().exec();
   }
 
@@ -105,11 +107,15 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit {
   private executeCommandWithSelectionPreservation(command: (editor: any) => any): void {
     const view = this.editor.view;
     const { state } = view;
-    const { selection } = state;
+    const originalSelection = state.selection;
 
+    const transaction = state.tr.setSelection(originalSelection); // Preserve the original selection
     command(this.editor.commands);
-    // Restore the selection
+
+    // Reapply the preserved selection and dispatch
+    const newState = view.state.apply(transaction);
+    view.updateState(newState);
+
     view.focus();
-    // view.dispatch(view.state.tr.setSelection(selection));
   }
 }
