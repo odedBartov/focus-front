@@ -66,8 +66,8 @@ export class NewStepComponent implements OnInit {
   initFutureMonths() {
     const today = new Date();
     for (let index = 0; index < 4; index++) {
-      today.setMonth(today.getMonth() + 1)
       this.futureDates.push(new Date(today));
+      today.setMonth(today.getMonth() + 1)
     }
   }
 
