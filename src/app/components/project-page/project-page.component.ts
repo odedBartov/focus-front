@@ -130,14 +130,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         return;
       }
       this.addStepDiv.nativeElement.focus();
-    } else {
-      const isEnter = event.code === 'Enter' || event.key === 'Enter';
-      // if (isEnter) {
-      //   const active = document.activeElement as HTMLElement;
-      //   if (active) {
-      //     active.click();
-      //   }
-      // }
     }
   }
 
