@@ -38,6 +38,7 @@ export class TodayTasksComponent implements OnInit {
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @Input() tasksInput: Task[] = []
   @Output() selectProjectEmitter = new EventEmitter<Project>();
+  @Output() stepUpdatedEmitter = new EventEmitter<Step>();
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
   standAloneStepsService = inject(StandAloneStepsService);
@@ -130,6 +131,7 @@ export class TodayTasksComponent implements OnInit {
         project.steps = project?.steps?.map(step =>
           step.id === res[0].id ? res[0] : step
         )
+        this.stepUpdatedEmitter.emit(newStep);
       } else {
         oldStep = newStep;
       }
