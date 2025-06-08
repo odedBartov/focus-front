@@ -58,7 +58,7 @@ export class SummaryComponent implements OnInit {
     const filteredMonths = [];
     filteredMonths[0] = paymentSteps.filter(s => this.compareYearAndMonth(s?.dateDue, twoMonthsFuture) && !s.isComplete);
     filteredMonths[1] = paymentSteps.filter(s => this.compareYearAndMonth(s?.dateDue, oneMonthFuture) && !s.isComplete);
-    filteredMonths[2] = paymentSteps.filter(s => this.compareYearAndMonth(s?.dateCompleted, today) || this.compareYearAndMonth(s?.dateDue, today));
+    filteredMonths[2] = paymentSteps.filter(s => this.compareYearAndMonth(s?.dateCompleted, today) || (!s.isComplete && this.compareYearAndMonth(s?.dateDue, today)));
     filteredMonths[3] = paymentSteps.filter(s => this.compareYearAndMonth(s?.dateCompleted, oneMonthAgo) && s.isComplete);
     filteredMonths[4] = paymentSteps.filter(s => this.compareYearAndMonth(s?.dateCompleted, twoMonthsAgo) && s.isComplete);
 
