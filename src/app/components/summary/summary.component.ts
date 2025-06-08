@@ -14,7 +14,11 @@ import { Step } from '../../models/step';
 })
 export class SummaryComponent implements OnInit {
   authService = inject(AuthenticationService);
-  @Input() projects: Project[] = [];
+  @Input() steps: Step[] = [];
+  @Input() set projects(projects: Project[]) {
+    this.steps = projects.map(p => p.steps).flat();
+    this.initChart();
+  }
   greetings: { hour: number, greeting: string }[] = [{ hour: 5, greeting: 'לילה טוב' },
   { hour: 12, greeting: 'בוקר טוב' },
   { hour: 16, greeting: 'צהריים טובים' },
@@ -53,7 +57,7 @@ export class SummaryComponent implements OnInit {
     const twoMonthsFuture = new Date(today.getFullYear(), today.getMonth() + 2, 1);
     this.graphMonths = [(today.getMonth() + 3) % 12, (today.getMonth() + 2) % 12, (today.getMonth() + 1) % 12, today.getMonth() % 12, (today.getMonth() - 1) % 12];
 
-    const chartModel = this.projects.map(p => p.steps).flat();
+    const chartModel = this.steps;
     const paymentSteps = chartModel.filter(s => s && s.stepType === StepType.payment) as Step[];
     const filteredMonths = [];
     filteredMonths[0] = paymentSteps.filter(s => this.compareYearAndMonth(s?.dateDue, twoMonthsFuture) && !s.isComplete);

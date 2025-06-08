@@ -15,11 +15,11 @@
     <div class="home-container" [ngClass]="{ 'show-before': isProjectHovered() }" *ngIf="activeTab?.id === tabs[0]?.id">
       <div class="home">
         <div class="summary">
-          <app-summary [projects]="userProjects.activeProjects"></app-summary>
+          <app-summary [projects]="projectsForPayment"></app-summary>
         </div>
         <div class="projects-list">
-          <app-projects-list [projects]="userProjects.activeProjects" (selectProjectEmitter)="selectProject($event)"
-            (activeProjectsEmitter)="refreshProjects()"></app-projects-list>
+          <app-projects-list [projects]="userProjects.activeProjects" [standAloneStepsProject]="userProjects.noProject" (selectProjectEmitter)="selectProject($event)"
+            (activeProjectsEmitter)="refreshProjects()" (tasksUpatedEmitter)="tasksUpated($event)"></app-projects-list>
         </div>
         <div class="updates">
           <app-updates></app-updates>

@@ -38,7 +38,7 @@ export class TodayTasksComponent implements OnInit {
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @Input() tasksInput: Task[] = []
   @Output() selectProjectEmitter = new EventEmitter<Project>();
-  @Output() stepUpdatedEmitter = new EventEmitter<Step>();
+  @Output() stepsUpdatedEmitter = new EventEmitter<Project>();
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
   standAloneStepsService = inject(StandAloneStepsService);
@@ -63,19 +63,7 @@ export class TodayTasksComponent implements OnInit {
   ngOnInit(): void {
     setTimeout(() => {
       this.tasks = this.tasksInput
-      this.fetchStandAloneSteps();
     }, 1);
-  }
-
-  fetchStandAloneSteps() {
-    this.animationsService.changeIsloading(true);
-    this.standAloneStepsService.getSteps().subscribe(res => {
-      res.forEach(step => {
-        const newTask: Task = { step: step };
-        this.tasks.push(newTask);
-      })
-      this.animationsService.changeIsloading(false);
-    });
   }
 
   editStep(div: HTMLDivElement, stepId: string | undefined) {
@@ -124,16 +112,14 @@ export class TodayTasksComponent implements OnInit {
     this.selectProjectEmitter.emit(project);
   }
 
-  updateStep(project: Project | undefined, newStep: Step, oldStep: Step) {
+  updateStep(project: Project | undefined, newStep: Step) {
     this.animationsService.changeIsloading(true);
     this.httpService.updateSteps([newStep]).subscribe(res => {
       if (project) {
         project.steps = project?.steps?.map(step =>
           step.id === res[0].id ? res[0] : step
         )
-        this.stepUpdatedEmitter.emit(newStep);
-      } else {
-        oldStep = newStep;
+        this.stepsUpdatedEmitter.emit(project);
       }
       this.editStepId = '';
       this.animationsService.changeIsloading(false);

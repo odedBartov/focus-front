@@ -26,9 +26,11 @@ export class ProjectsListComponent {
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
   dialog = inject(MatDialog);
+  @Input() projects!: Project[];
+  @Input() standAloneStepsProject?: Project;
   @Output() selectProjectEmitter = new EventEmitter<Project>();
   @Output() activeProjectsEmitter = new EventEmitter<Project[]>();
-  @Input() projects!: Project[];
+  @Output() tasksUpatedEmitter = new EventEmitter<Project>();
   router = inject(Router);
   projectStatusEnum = ProjectStatus;
   activeTab = 1;
@@ -123,6 +125,10 @@ export class ProjectsListComponent {
     }));
   }
 
+  stepsUpdated(project: Project) {
+    this.tasksUpatedEmitter.emit(project);
+  }
+
   selectProject(project: Project) {
     this.selectProjectEmitter.emit(project);
   }
@@ -138,6 +144,10 @@ export class ProjectsListComponent {
       }
     })
 
+    this.standAloneStepsProject?.steps?.forEach(step => {
+      const newTask: Task = { project: this.standAloneStepsProject, step: step };
+      projectsAndSteps.push(newTask);
+    })
     return projectsAndSteps;
   }
 

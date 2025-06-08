@@ -57,6 +57,6 @@
         </div>
     </div>
     <div class="today-tasks" *ngIf="activeTab === 2">
-        <app-today-tasks [tasksInput]="getTasks()" (selectProjectEmitter)="selectProject($event)"></app-today-tasks>
+        <app-today-tasks [tasksInput]="getTasks()" (selectProjectEmitter)="selectProject($event)" (stepsUpdatedEmitter)="stepsUpdated($event)"></app-today-tasks>
     </div>
 </div>
