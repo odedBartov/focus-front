@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, viewChild, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, viewChild, ViewChild } from '@angular/core';
 import { StepType, stepTypeLabels } from '../../models/enums';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -16,13 +16,21 @@ import { AnimationsService } from '../../services/animations.service';
   templateUrl: './new-step.component.html',
   styleUrl: './new-step.component.scss'
 })
-export class NewStepComponent implements OnInit {
+export class NewStepComponent implements OnInit, AfterViewInit {
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      if (this.defaultType !== undefined) {
+        this.selectType(this.defaultType);
+      };
+    }, 1);
+  }
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
   datePipe = inject(DatePipe);
   @ViewChild('stepNameInput') stepNameInput!: ElementRef;
   @ViewChild('taskOption') taskOption!: ElementRef;
   @ViewChild('descriptionInput') descriptionInput!: ElementRef;
+  @Input() defaultType?: StepType;
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
@@ -55,7 +63,7 @@ export class NewStepComponent implements OnInit {
       if (this.stepNameInput?.nativeElement) {
         this.stepNameInput.nativeElement.focus()
       }
-      if (this.taskOption?.nativeElement) { 
+      if (this.taskOption?.nativeElement) {
         this.taskOption.nativeElement.focus();
       }
     }, 1);

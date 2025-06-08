@@ -37,7 +37,7 @@
             + משימה חדשה
         </div>
         <div class="new-step-form" *ngIf="creatingNewStep" (mousedown)="$event.stopPropagation()" #newStepDiv>
-            <app-new-step class="new-step-component" (stepsEmitter)="createNewStep($event)"></app-new-step>
+            <app-new-step class="new-step-component" [defaultType]="stepTypeEnum.task" (stepsEmitter)="createNewStep($event)"></app-new-step>
         </div>
     </div>
 </div>

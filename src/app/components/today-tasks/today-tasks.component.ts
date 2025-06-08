@@ -91,7 +91,6 @@ export class TodayTasksComponent implements OnInit {
     }, 1);
   }
 
-
   setDescriptionHeight(index: number, epsilon = 0) {
     const element = this.descriptions.get(index);
     if (element) {
