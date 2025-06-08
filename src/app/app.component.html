@@ -1,4 +1,4 @@
-<div class="animation-container loading" *ngIf="isLoading()">
+<div class="animation-container loading" *ngIf="isLoading() && !showFinishProject">
   <ng-lottie [options]="loadingOptions" class="animation" />
 </div>
 <div class="animation-container" *ngIf="showFinishProject">

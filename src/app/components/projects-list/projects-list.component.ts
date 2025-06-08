@@ -58,12 +58,12 @@ export class ProjectsListComponent {
     if (status !== ProjectStatus.active) {
       project.endDate = new Date();
     }
+    if (status === ProjectStatus.finished) {
+      this.animationsService.showFinishProject();
+    }
     this.updateProjects([project]).subscribe(res => {
       this.projects?.splice(this.projects.indexOf(project), 1);
       this.activeProjectsEmitter.emit(this.projects);
-      if (status === ProjectStatus.finished) {
-        this.animationsService.showFinishProject();
-      }
     });
   }
 
@@ -99,7 +99,7 @@ export class ProjectsListComponent {
       moveItemInArray(this.projects, currentIndex, 0);
       this.updateProjectsPosition();
     }
-    
+
     this.updateProjects(this.projects).subscribe(res => { });
   }
 
