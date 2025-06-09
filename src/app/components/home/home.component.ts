@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, effect, inject, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { Project } from '../../models/project';
 import { UserProjects } from '../../models/userProjects';
@@ -19,6 +19,7 @@ import { Title } from '@angular/platform-browser';
 import { ArchiveComponent } from "../archive/archive.component";
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { StandAloneStepsService } from '../../services/stand-alone-steps.service';
+import { ProjectsService } from '../../services/projects.service';
 
 @Component({
   selector: 'app-home',
@@ -37,10 +38,14 @@ export class HomeComponent implements OnInit {
   projectHoverService = inject(ProjectHoverService);
   authenticationService = inject(AuthenticationService);
   standAloneStepsService = inject(StandAloneStepsService);
+  projectsService = inject(ProjectsService);
   titleService = inject(Title);
   router = inject(Router);
-  userProjects: UserProjects = new UserProjects();
-  selectedProject?: Project;
+  // userProjects: UserProjects = new UserProjects();
+  activeProjects!: WritableSignal<Project[]>;
+  unActiveProjects!: WritableSignal<Project[]>;
+  noProject!: WritableSignal<Project>;
+  selectedProject!: WritableSignal<Project | undefined>;;
   isProjectHovered = this.projectHoverService.getSignal();
   userPicture: string | null = null;
   defaultUserPicture = "assets/icons/default_profile.svg"
@@ -50,12 +55,33 @@ export class HomeComponent implements OnInit {
   tabs: ProjectTab[] = [];
   projectsForPayment: Project[] = [];
 
+  constructor() {
+    effect(() => {
+      const selectedProject = this.selectedProject();
+      if (selectedProject) {
+        this.projectUpdated(selectedProject);
+      }
+    });
+
+    effect(() => {
+      const activeProjects = this.activeProjects();
+      if (activeProjects) {
+        this.projectsForPayment = this.activeProjects().concat(this.noProject());
+        this.initTabs();
+      }
+    });
+  }
+
   setActive(tab: ProjectTab) {
     this.activeTab = tab;
-    this.selectedProject = tab.project;
+    this.selectedProject.set(tab.project);
   }
 
   ngOnInit(): void {
+    this.activeProjects = this.projectsService.getActiveProjects();
+    this.unActiveProjects = this.projectsService.getUnActiveProjects();
+    this.noProject = this.projectsService.getNoProjects();
+    this.selectedProject = this.projectsService.getCurrentProject();
     this.initUserPicture();
     this.refreshProjects();
     this.activeTab = this.homeTab;
@@ -69,10 +95,10 @@ export class HomeComponent implements OnInit {
 
   initTabs() {
     this.tabs = [this.homeTab];
-    const activeProjectTabs = this.userProjects.activeProjects.map(p => { return { id: p.id ?? '', label: p.name, project: p } });
+    const activeProjectTabs = this.activeProjects().map(p => { return { id: p.id ?? '', label: p.name, project: p } });
     this.tabs.push(...activeProjectTabs);
-    if (this.userProjects.unActiveProjects.length) {
-      this.archiveTab.projects = this.userProjects.unActiveProjects;
+    if (this.unActiveProjects().length) {
+      this.archiveTab.projects = this.unActiveProjects();
       this.tabs.push(this.archiveTab);
     } else {
       if (this.activeTab.id === this.archiveTab.id) {
@@ -83,38 +109,37 @@ export class HomeComponent implements OnInit {
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.tabs, event.previousIndex, event.currentIndex);
-    moveItemInArray(this.userProjects.activeProjects, event.previousIndex - 1, event.currentIndex - 1)
+    moveItemInArray(this.activeProjects(), event.previousIndex - 1, event.currentIndex - 1)
     this.updateProjectsPosition();
     this.animationsService.changeIsloading(true);
-    this.httpService.updateProjects(this.userProjects.activeProjects).subscribe(res => {
-      this.userProjects.activeProjects = this.userProjects.activeProjects.sort((a, b) => a.positionInList - b.positionInList);
+    this.httpService.updateProjects(this.activeProjects()).subscribe(res => {
+      this.activeProjects.set(this.activeProjects().sort((a, b) => a.positionInList - b.positionInList));
       this.animationsService.changeIsloading(false);
     });
   }
 
   updateProjectsPosition() {
-    for (let index = 0; index < this.userProjects.activeProjects.length; index++) {
-      this.userProjects.activeProjects[index].positionInList = index;
+    for (let index = 0; index < this.activeProjects().length; index++) {
+      this.activeProjects()[index].positionInList = index;
     }
   }
 
   refreshProjects() {
     this.animationsService.changeIsloading(true);
     this.httpService.getProjects().subscribe(res => {
-      this.userProjects = this.sortProjects(res);
-      this.projectsForPayment = this.userProjects.activeProjects.concat(this.userProjects.noProject);
-      this.userProjects.activeProjects = this.userProjects.activeProjects.sort((a, b) => a.positionInList - b.positionInList);
-      this.userProjects.unActiveProjects = this.userProjects.unActiveProjects.sort((a, b) => a.positionInList - b.positionInList);
-      this.initTabs();
+      const userProjects = this.sortProjects(res);
+      this.projectsForPayment = userProjects.activeProjects.concat(userProjects.noProject);
+      userProjects.activeProjects = userProjects.activeProjects.sort((a, b) => a.positionInList - b.positionInList);
+      userProjects.unActiveProjects = userProjects.unActiveProjects.sort((a, b) => a.positionInList - b.positionInList);
       this.activeTab = this.homeTab;
-      this.sortStepsPosition();
+      userProjects.activeProjects.forEach(project => {
+        project.steps = project.steps.sort((a, b) => a.positionInList - b.positionInList);
+      });
+      this.activeProjects.set(userProjects.activeProjects);
+      this.unActiveProjects.set(userProjects.unActiveProjects);
+      this.noProject.set(userProjects.noProject);
+      this.initTabs();
       this.animationsService.changeIsloading(false);
-    });
-  }
-
-  sortStepsPosition() {
-    this.userProjects.activeProjects.forEach(project => {
-      project.steps = project.steps.sort((a, b) => a.positionInList - b.positionInList);
     });
   }
 
@@ -139,37 +164,39 @@ export class HomeComponent implements OnInit {
       this.setActive(projectTab);
     } else {
       this.activeTab = { id: 'none' };
-      this.selectedProject = project;
+      this.selectedProject?.set(project);
     }
   }
 
   projectUpdated(project: Project) {
-    this.selectedProject = project;
+    this.selectedProject.set(project);
     this.activeTab.project = project;
     this.activeTab.label = project.name;
-    for (let index = 0; index < this.userProjects.activeProjects.length; index++) {
-      if (this.userProjects.activeProjects[index].id === project.id) {
-        this.userProjects.activeProjects[index] = project;
+    for (let index = 0; index < this.activeProjects().length; index++) {
+      if (this.activeProjects()[index].id === project.id) {
+        this.activeProjects()[index] = project;
       }
     }
+    this.projectsForPayment = this.activeProjects().concat(this.noProject());
+    this.initTabs();
   }
 
   tasksUpated(project: Project) {
-    if (project.id === this.standAloneStepsService.noProjectId) {
-      this.userProjects.noProject = project;
-    } else {
-      let projectIndex = -1;
-      for (let index = 0; index < this.userProjects.activeProjects.length; index++) {
-        if (this.userProjects.activeProjects[index].id === project.id) {
-          projectIndex = index;
-        }
-      }
-      if (projectIndex >= 0) {
-        this.userProjects.activeProjects[projectIndex] = project;
-      }
-    }
+    // if (project.id === this.standAloneStepsService.noProjectId) {
+    //   this.userProjects.noProject = project;
+    // } else {
+    //   let projectIndex = -1;
+    //   for (let index = 0; index < this.userProjects.activeProjects.length; index++) {
+    //     if (this.userProjects.activeProjects[index].id === project.id) {
+    //       projectIndex = index;
+    //     }
+    //   }
+    //   if (projectIndex >= 0) {
+    //     this.userProjects.activeProjects[projectIndex] = project;
+    //   }
+    // }
 
-    this.projectsForPayment = this.userProjects.activeProjects.concat(this.userProjects.noProject);
+    // this.projectsForPayment = this.userProjects.activeProjects.concat(this.userProjects.noProject);
   }
 
   navigateToProfile() {

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../../models/project';
 import { HttpService } from '../../services/http.service';
@@ -19,6 +19,7 @@ import { ProjectHoverService } from '../../services/project-hover.service';
 import { RichTextComponent } from "../rich-text/rich-text.component";
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
 import { AnimationItem } from 'lottie-web';
+import { ProjectsService } from '../../services/projects.service';
 
 @Component({
   selector: 'app-project-page',
@@ -49,27 +50,28 @@ export class ProjectPageComponent implements OnInit {
   animationsService = inject(AnimationsService);
   dialog = inject(MatDialog);
   projectHoverService = inject(ProjectHoverService);
+  projectsService = inject(ProjectsService);
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
   @ViewChild('richTextDiv', { static: false }) richTextDiv?: ElementRef;
   @ViewChild('addStepDiv', { static: false }) addStepDiv!: ElementRef;
   @ViewChildren('descriptions') descriptions!: QueryList<ElementRef<HTMLTextAreaElement>>;
   editDiv?: HTMLDivElement;
-  @Output() projectUpdated = new EventEmitter<Project>();
-  @Input() set projectInput(value: Project | undefined) {
-    this.project = value;
-    if (this.project?.steps) {
-      this.project.steps = this.project.steps.sort((a, b) => a.positionInList - b.positionInList);
-    }
+  // @Input() set projectInput(value: Project | undefined) {
+  //   this.project = value;
+  //   if (this.project?.steps) {
+  //     this.project.steps = this.project.steps.sort((a, b) => a.positionInList - b.positionInList);
+  //   }
 
-    this.activeStepId = this.project?.steps?.find(s => !s.isComplete)?.id;
-    this.calculatePayments();
-    setTimeout(() => {
-      this.setActiveStepHeight();
-    }, 1);
-  };
+  //   this.activeStepId = this.project?.steps?.find(s => !s.isComplete)?.id;
+  //   this.calculatePayments();
+  //   setTimeout(() => {
+  //     this.setActiveStepHeight();
+  //   }, 1);
+  // };
+  // activeProject!: WritableSignal<Project>;
   stepTypeEnum = StepType;
-  project?: Project;
+  project!: WritableSignal<Project>;
   projectId: string | null = null;
   activeStepId? = '';
   isReadOnly = false;
@@ -87,9 +89,26 @@ export class ProjectPageComponent implements OnInit {
   hideProperties = this.projectHoverService.getSignal();
   animationHackFlag = true;
   constructor(private changeDetectorRef: ChangeDetectorRef) {
+    this.project = this.projectsService.getCurrentProject();
     this.route.paramMap.subscribe(params => {
       this.projectId = params.get('projectId');
       this.isReadOnly = params.get('readOnly') == 'true';
+    });
+
+    effect(() => {
+      const value = this.project();
+      this.project.set(value); // ?
+
+      if (value?.steps) {
+        value.steps.sort((a, b) => a.positionInList - b.positionInList);
+      }
+      this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
+
+      this.calculatePayments();
+
+      setTimeout(() => {
+        this.setActiveStepHeight();
+      }, 1);
     });
   }
 
@@ -133,8 +152,8 @@ export class ProjectPageComponent implements OnInit {
   }
 
   setActiveStepHeight() {
-    const activeStep = this.project?.steps.find(s => s.id === this.activeStepId);    
-    if (activeStep && activeStep.stepType === StepType.payment) {       
+    const activeStep = this.project()?.steps.find(s => s.id === this.activeStepId);
+    if (activeStep && activeStep.stepType === StepType.payment) {
       this.setDescriptionHeight(0, -20);
     }
   }
@@ -142,7 +161,7 @@ export class ProjectPageComponent implements OnInit {
   hoverStep(stepId: string | undefined, index: number) {
     this.hoverStepId = stepId;
 
-    const finishedSteps = this.project?.steps.filter(s => s.isComplete).length;
+    const finishedSteps = this.project()?.steps.filter(s => s.isComplete).length;
     if (finishedSteps !== undefined) {
       this.setDescriptionHeight(index - finishedSteps);
     }
@@ -152,7 +171,7 @@ export class ProjectPageComponent implements OnInit {
     const element = this.descriptions.get(index);
     if (element) {
       const currentHeight = Number.parseInt(element.nativeElement.style.height);
-      
+
       if (Number.isNaN(currentHeight) || currentHeight < element.nativeElement.scrollHeight) {
         element.nativeElement.style.height = element.nativeElement.scrollHeight + epsilon + "px";
       }
@@ -160,25 +179,25 @@ export class ProjectPageComponent implements OnInit {
   }
 
   updateStepsPosition() {
-    if (this.project?.steps) {
-      for (let index = 0; index < this.project?.steps.length; index++) {
-        this.project.steps[index].positionInList = index;
+    if (this.project()?.steps) {
+      for (let index = 0; index < this.project()?.steps.length; index++) {
+        this.project().steps[index].positionInList = index;
       }
     }
   }
 
   dropStep(event: CdkDragDrop<string[]>) {
-    if (this.project?.steps) {
-      moveItemInArray(this.project.steps, event.previousIndex, event.currentIndex);
+    if (this.project()?.steps) {
+      moveItemInArray(this.project().steps, event.previousIndex, event.currentIndex);
       this.updateStepsPosition();
       this.animationHackFlag = false;
       setTimeout(() => { // stupid angular animation
         this.animationHackFlag = true;
-        this.activeStepId = this.project?.steps?.find(s => !s.isComplete)?.id;
+        this.activeStepId = this.project()?.steps?.find(s => !s.isComplete)?.id;
       });
 
       this.animationsService.changeIsloading(true);
-      this.httpService.updateSteps(this.project.steps).subscribe(res => {
+      this.httpService.updateSteps(this.project().steps).subscribe(res => {
         this.setActiveStepHeight();
         this.animationsService.changeIsloading(false);
       })
@@ -190,9 +209,9 @@ export class ProjectPageComponent implements OnInit {
       this.animationsService.changeIsloading(true);
       this.httpService.getProject(this.projectId).subscribe(res => {
         if (res.steps) {
-          this.project = res;
-          if (this.project?.steps) {
-            this.project.steps = this.project.steps.sort((a, b) => a.positionInList - b.positionInList);
+          this.project.set(res);
+          if (this.project()?.steps) {
+            this.project().steps = this.project().steps.sort((a, b) => a.positionInList - b.positionInList);
           }
           this.activeStepId = res.steps.find(s => !s.isComplete)?.id;
           this.animationsService.changeIsloading(false);
@@ -204,7 +223,7 @@ export class ProjectPageComponent implements OnInit {
   calculatePayments() {
     this.baseProjectPrice = 0;
     this.paidMoney = 0;
-    this.project?.steps?.forEach(step => {
+    this.project()?.steps?.forEach(step => {
       if (step.stepType === StepType.payment) {
         this.baseProjectPrice += step.price;
         if (step.isComplete) {
@@ -216,7 +235,7 @@ export class ProjectPageComponent implements OnInit {
 
   updateCient() {
     if (this.project) {
-      this.project.updateClient = !this.project.updateClient;
+      this.project().updateClient = !this.project().updateClient;
     }
   }
 
@@ -227,8 +246,8 @@ export class ProjectPageComponent implements OnInit {
       if (this.project) {
         let finishedSteps = 0;
         let notFinishedSteps = 0;
-        for (let index = 0; index < this.project.steps.length; index++) {
-          const currentStep = this.project.steps[index];
+        for (let index = 0; index < this.project().steps.length; index++) {
+          const currentStep = this.project().steps[index];
           if (currentStep.isComplete) {
             if (currentStep.id !== step.id) {
               finishedSteps++;
@@ -240,7 +259,7 @@ export class ProjectPageComponent implements OnInit {
           }
         }
 
-        moveItemInArray(this.project.steps, finishedSteps + notFinishedSteps, finishedSteps);
+        moveItemInArray(this.project().steps, finishedSteps + notFinishedSteps, finishedSteps);
         this.updateStepsPosition();
 
       }
@@ -250,8 +269,8 @@ export class ProjectPageComponent implements OnInit {
       let stepsToMove = 0;
       let currentIndex = 0;
       if (this.project) {
-        for (let index = 0; index < this.project.steps.length; index++) {
-          const currentStep = this.project.steps[index];
+        for (let index = 0; index < this.project().steps.length; index++) {
+          const currentStep = this.project().steps[index];
           if (currentStep.id === step.id) {
             passedStep = true;
             currentIndex = index;
@@ -265,7 +284,7 @@ export class ProjectPageComponent implements OnInit {
             }
           }
         }
-        moveItemInArray(this.project.steps, currentIndex, currentIndex + stepsToMove);
+        moveItemInArray(this.project().steps, currentIndex, currentIndex + stepsToMove);
         this.updateStepsPosition();
       }
     }
@@ -276,35 +295,36 @@ export class ProjectPageComponent implements OnInit {
   updateStep(step: Step) {
     this.animationsService.changeIsloading(true);
     this.httpService.updateSteps([step]).subscribe(res => {
-      if (this.project && this.project.steps) {
-        this.project.steps = this.project?.steps?.map(step =>
+      if (this.project().steps) {
+        this.project().steps = this.project()?.steps?.map(step =>
           step.id === res[0].id ? res[0] : step
         )
       }
       this.editStepId = '';
-      this.activeStepId = this.project?.steps?.find(s => !s.isComplete)?.id;
+      this.activeStepId = this.project()?.steps?.find(s => !s.isComplete)?.id;
       this.calculatePayments();
       setTimeout(() => {
         this.setActiveStepHeight();
       }, 1);
+      // update
       this.animationsService.changeIsloading(false);
       this.isFinishProject();
     })
   }
 
   isFinishProject() {
-    const stepsInProgress = this.project?.steps.filter(s => !s.isComplete).length;
+    const stepsInProgress = this.project()?.steps.filter(s => !s.isComplete).length;
     if (stepsInProgress === 0) {
       this.animationsService.showFinishProject();
     }
   }
 
   openProjectModal() {
-    const dialogRef = this.dialog.open(ProjectModalComponent, { data: { project: this.project } });
+    const dialogRef = this.dialog.open(ProjectModalComponent, { data: { project: this.project() } });
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
-        this.project = res;
-        this.projectUpdated.emit(res);
+        this.project.set(res);
+        //this.projectUpdated.emit(res);
       }
     })
   }
@@ -324,10 +344,10 @@ export class ProjectPageComponent implements OnInit {
 
   createNewStep(step: Step) {
     this.animationsService.changeIsloading(true);
-    step.projectId = this.project?.id;
-    step.positionInList = (this.project?.steps?.length ?? 0) + 1;
+    step.projectId = this.project()?.id;
+    step.positionInList = (this.project()?.steps?.length ?? 0) + 1;
     this.httpService.createStep(step).subscribe(res => {
-      this.project?.steps?.push(res);
+      this.project()?.steps?.push(res);
       this.isShowNewStep = false;
       this.calculatePayments();
       this.animationsService.changeIsloading(false);
@@ -343,10 +363,10 @@ export class ProjectPageComponent implements OnInit {
     if (step.id) {
       this.animationsService.changeIsloading(true);
       this.httpService.deleteStep(step.id).subscribe(res => {
-        const stepIndex = this.project?.steps?.indexOf(step);
+        const stepIndex = this.project()?.steps?.indexOf(step);
         if (stepIndex !== undefined) {
           this.calculatePayments();
-          this.project?.steps?.splice(stepIndex, 1);
+          this.project()?.steps?.splice(stepIndex, 1);
         }
         this.animationsService.changeIsloading(false);
       });

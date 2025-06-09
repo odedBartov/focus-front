@@ -6,7 +6,7 @@
         </div>
     </div>
     <div cdkDropList (cdkDropListDropped)="drop($event)" *ngIf="activeTab === 1">
-        <div class="project-drag" *ngFor="let project of projects" cdkDrag>
+        <div class="project-drag" *ngFor="let project of projects()" cdkDrag>
             <div class="project" (click)="selectProject(project)">
                 <img class="priority" (click)="togglePriority($event, project)"
                     [src]="`assets/icons/${project.isPriority?'star_full' :'star_empty'}.svg`" />
@@ -57,6 +57,6 @@
         </div>
     </div>
     <div class="today-tasks" *ngIf="activeTab === 2">
-        <app-today-tasks [tasksInput]="getTasks()" (selectProjectEmitter)="selectProject($event)" (stepsUpdatedEmitter)="stepsUpdated($event)"></app-today-tasks>
+        <app-today-tasks (selectProjectEmitter)="selectProject($event)" (stepsUpdatedEmitter)="stepsUpdated($event)"></app-today-tasks>
     </div>
 </div>

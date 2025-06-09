@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
 import { Step } from '../../models/step';
 import { Project } from '../../models/project';
 import { CommonModule } from '@angular/common';
@@ -10,6 +10,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { Task } from '../../models/task';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { StandAloneStepsService } from '../../services/stand-alone-steps.service';
+import { ProjectsService } from '../../services/projects.service';
 
 @Component({
   selector: 'app-today-tasks',
@@ -43,10 +44,13 @@ export class TodayTasksComponent implements OnInit {
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
   standAloneStepsService = inject(StandAloneStepsService);
+  projectsService = inject(ProjectsService);
   stepTypeEnum = StepType;
   editDiv?: HTMLDivElement;
   hoverStepId: string | undefined = '';
   editStepId: string | undefined = '';
+  projects: WritableSignal<Project[]>;
+  noProject: WritableSignal<Project>
   tasks: Task[] = [];
   creatingNewStep = false;
 
@@ -78,8 +82,13 @@ export class TodayTasksComponent implements OnInit {
     }
   }
 
+  constructor() {
+    this.projects = this.projectsService.getActiveProjects();
+    this.noProject = this.projectsService.getNoProjects();
+  }
+
   ngOnInit(): void {
-    this.tasks = this.tasksInput;
+    this.tasks = this.initTasks();//this.tasksInput;
     setTimeout(() => {
       for (let index = 0; index < this.tasks.length; index++) {
         let epsilon = 0;
@@ -89,6 +98,32 @@ export class TodayTasksComponent implements OnInit {
         this.setDescriptionHeight(index, epsilon);
       }
     }, 1);
+  }
+
+  initTasks() {
+    const projectsAndSteps: Task[] = [];
+    this.projects().forEach(project => {
+      if (project?.steps) {
+        const currentStep = project.steps.find(s => !s.isComplete);
+        if (currentStep && (!currentStep.hideTaskDate || !this.isWithinLastDay(currentStep.hideTaskDate))) {
+          projectsAndSteps.push({ project: project, step: currentStep });
+        }
+      }
+    })
+
+    this.noProject().steps?.forEach(step => {
+      const newTask: Task = { project: this.noProject(), step: step };
+      projectsAndSteps.push(newTask);
+    })
+    return projectsAndSteps;
+  }
+
+  isWithinLastDay(date: Date) {
+    const today = new Date();
+    const dateToCheck = new Date(date);
+    return today.getFullYear() === dateToCheck.getFullYear() &&
+      today.getMonth() === dateToCheck.getMonth() &&
+      today.getDay() === dateToCheck.getDay()
   }
 
   setDescriptionHeight(index: number, epsilon = 0) {

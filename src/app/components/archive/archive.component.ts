@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, WritableSignal } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { AnimationsService } from '../../services/animations.service';
 import { Project } from '../../models/project';
@@ -9,6 +9,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ProjectsService } from '../../services/projects.service';
 
 @Component({
   selector: 'app-archive',
@@ -19,19 +20,26 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class ArchiveComponent {
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
-  @Output() unActiveProjectsEmitter = new EventEmitter<Project[]>();
-  @Input() projects!: Project[];
+  projectsService = inject(ProjectsService);
+  projects: WritableSignal<Project[]>;
   projectStatusEnum = ProjectStatus;
 
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.projects, event.previousIndex, event.currentIndex);
-    this.updateProjectsPosition();
-    this.updateProjects(this.projects).subscribe(res => { });
+  constructor() {
+    this.projects = this.projectsService.getUnActiveProjects();
   }
 
-  updateProjectsPosition() {
-    for (let index = 0; index < this.projects.length; index++) {
-      this.projects[index].positionInList = index;
+  drop(event: CdkDragDrop<string[]>) {
+    const projects = [...this.projects()];
+    moveItemInArray(projects, event.previousIndex, event.currentIndex);
+    this.updateProjectsPosition(projects);
+    this.updateProjects(this.projects()).subscribe(res => {
+      this.projects.set(projects);
+    });
+  }
+
+  updateProjectsPosition(projects: Project[]) {
+    for (let index = 0; index < projects.length; index++) {
+      projects[index].positionInList = index;
     }
   }
 
@@ -44,7 +52,12 @@ export class ArchiveComponent {
     project.status = ProjectStatus.active;
     project.positionInList += 99999;
     this.updateProjects([project]).subscribe(res => {
-      this.projects?.splice(this.projects.indexOf(project), 1);
+      const projectIndex = this.projects().indexOf(project);
+      const projects = [...this.projects()];
+      projects.splice(projectIndex, 1);
+      const activeProjects = this.projectsService.getActiveProjects();
+      activeProjects.set(activeProjects().concat(project));
+      this.projects.set(projects);
     });
   }
 
@@ -54,8 +67,7 @@ export class ArchiveComponent {
     clonedProject.id = undefined;
     clonedProject.startDate = new Date();
     this.httpService.createProject(clonedProject).subscribe(res => {
-      this.projects.push(res);
-      this.unActiveProjectsEmitter.emit(this.projects);
+      this.projects.set(this.projects().concat(res))
       this.animationsService.changeIsloading(false);
     })
   }
@@ -64,9 +76,8 @@ export class ArchiveComponent {
     if (project.id) {
       this.animationsService.changeIsloading(true);
       this.httpService.deleteProject(project.id).subscribe(res => {
-        const projectIndex = this.projects.indexOf(project);
-        this.projects.splice(projectIndex, 1);
-        this.unActiveProjectsEmitter.emit(this.projects);
+        const projectIndex = this.projects().indexOf(project);
+        this.projects().splice(projectIndex, 1);
         this.animationsService.changeIsloading(false);
       })
     }
@@ -75,7 +86,6 @@ export class ArchiveComponent {
   updateProjects(projects: Project[]) {
     this.animationsService.changeIsloading(true);
     return this.httpService.updateProjects(projects).pipe(tap(res => {
-      this.unActiveProjectsEmitter.emit(this.projects);
       this.animationsService.changeIsloading(false);
     }));
   }

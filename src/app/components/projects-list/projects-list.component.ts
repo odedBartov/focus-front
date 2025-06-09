@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, WritableSignal } from '@angular/core';
 import { Project } from '../../models/project';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -13,8 +13,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { NewProjectComponent } from '../../modals/new-project/new-project.component';
 import { TodayTasksComponent } from "../today-tasks/today-tasks.component";
-import { Step } from '../../models/step';
 import { Task } from '../../models/task';
+import { ProjectsService } from '../../services/projects.service';
 
 @Component({
   selector: 'app-projects-list',
@@ -25,15 +25,18 @@ import { Task } from '../../models/task';
 export class ProjectsListComponent {
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
+  projectsService = inject(ProjectsService);
   dialog = inject(MatDialog);
-  @Input() projects!: Project[];
-  @Input() standAloneStepsProject?: Project;
   @Output() selectProjectEmitter = new EventEmitter<Project>();
-  @Output() activeProjectsEmitter = new EventEmitter<Project[]>();
   @Output() tasksUpatedEmitter = new EventEmitter<Project>();
+  projects: WritableSignal<Project[]>;
   router = inject(Router);
   projectStatusEnum = ProjectStatus;
   activeTab = 1;
+
+  constructor() {
+    this.projects = this.projectsService.getActiveProjects();
+  }
 
   getCurrentStep(project: Project) {
     return project.steps?.find(s => !s.isComplete);
@@ -64,8 +67,11 @@ export class ProjectsListComponent {
       this.animationsService.showFinishProject();
     }
     this.updateProjects([project]).subscribe(res => {
-      this.projects?.splice(this.projects.indexOf(project), 1);
-      this.activeProjectsEmitter.emit(this.projects);
+      const activeProjects = [...this.projects()]
+      activeProjects.splice(this.projects().indexOf(project), 1);
+
+      this.projectsService.getUnActiveProjects()().push(project)
+      this.projects.set(activeProjects);
     });
   }
 
@@ -73,9 +79,10 @@ export class ProjectsListComponent {
     if (project.id) {
       this.animationsService.changeIsloading(true);
       this.httpService.deleteProject(project.id).subscribe(res => {
-        const projectIndex = this.projects.indexOf(project);
-        this.projects.splice(projectIndex, 1);
-        this.activeProjectsEmitter.emit(this.projects);
+        const projectIndex = this.projects().indexOf(project);
+        const projects = [...this.projects()];
+        projects.splice(projectIndex, 1);
+        this.projects.set(projects);
         this.animationsService.changeIsloading(false);
       })
     }
@@ -87,8 +94,7 @@ export class ProjectsListComponent {
     clonedProject.id = undefined;
     clonedProject.startDate = new Date();
     this.httpService.createProject(clonedProject).subscribe(res => {
-      this.projects.push(res);
-      this.activeProjectsEmitter.emit(this.projects);
+      this.projects.set(this.projects().concat(res))
       this.animationsService.changeIsloading(false);
     })
   }
@@ -97,66 +103,43 @@ export class ProjectsListComponent {
     event.stopPropagation()
     project.isPriority = !project.isPriority;
     if (project.isPriority) {
-      const currentIndex = this.projects.indexOf(project);
-      moveItemInArray(this.projects, currentIndex, 0);
-      this.updateProjectsPosition();
+      const currentIndex = this.projects().indexOf(project);
+      moveItemInArray(this.projects(), currentIndex, 0);
+      // this.updateProjectsPosition();
     }
 
-    this.updateProjects(this.projects).subscribe(res => { });
+    this.updateProjects(this.projects()).subscribe(res => { });
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.projects, event.previousIndex, event.currentIndex);
-    this.updateProjectsPosition();
-    this.updateProjects(this.projects).subscribe(res => { });
+    const projects = [...this.projects()];
+    moveItemInArray(projects, event.previousIndex, event.currentIndex);
+    this.updateProjectsPosition(projects);
+    this.updateProjects(projects).subscribe(res => {
+      this.projects.set(projects)
+    });
   }
 
-  updateProjectsPosition() {
-    for (let index = 0; index < this.projects.length; index++) {
-      this.projects[index].positionInList = index;
+  updateProjectsPosition(projects: Project[]) {
+    for (let index = 0; index < projects.length; index++) {
+      projects[index].positionInList = index;
     }
   }
 
   updateProjects(projects: Project[]) {
     this.animationsService.changeIsloading(true);
     return this.httpService.updateProjects(projects).pipe(tap(res => {
-      this.activeProjectsEmitter.emit(this.projects);
       this.animationsService.changeIsloading(false);
     }));
   }
 
   stepsUpdated(project: Project) {
-    this.tasksUpatedEmitter.emit(project);
+    // this.tasksUpatedEmitter.emit(project);
   }
 
   selectProject(project: Project) {
+    this.projectsService.getCurrentProject().set(project);
     this.selectProjectEmitter.emit(project);
-  }
-
-  getTasks() {
-    const projectsAndSteps: Task[] = [];
-    this.projects.forEach(project => {
-      if (project?.steps) {
-        const currentStep = project.steps.find(s => !s.isComplete);
-        if (currentStep && (!currentStep.hideTaskDate || !this.isWithinLastDay(currentStep.hideTaskDate))) {
-          projectsAndSteps.push({ project: project, step: currentStep });
-        }
-      }
-    })
-
-    this.standAloneStepsProject?.steps?.forEach(step => {
-      const newTask: Task = { project: this.standAloneStepsProject, step: step };
-      projectsAndSteps.push(newTask);
-    })
-    return projectsAndSteps;
-  }
-
-  isWithinLastDay(date: Date) {
-    const today = new Date();
-    const dateToCheck = new Date(date);
-    return today.getFullYear() === dateToCheck.getFullYear() &&
-      today.getMonth() === dateToCheck.getMonth() &&
-      today.getDay() === dateToCheck.getDay()
   }
 
   openProjectModal() {
@@ -165,8 +148,7 @@ export class ProjectsListComponent {
       if (res) {
         this.animationsService.changeIsloading(true);
         this.httpService.createProject(res).subscribe(newProject => {
-          this.projects.push(newProject);
-          this.activeProjectsEmitter.emit(this.projects);
+          this.projects.set(this.projects().concat(newProject));
           this.animationsService.changeIsloading(false);
         })
       }

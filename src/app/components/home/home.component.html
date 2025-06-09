@@ -18,7 +18,7 @@
           <app-summary [projects]="projectsForPayment"></app-summary>
         </div>
         <div class="projects-list">
-          <app-projects-list [projects]="userProjects.activeProjects" [standAloneStepsProject]="userProjects.noProject" (selectProjectEmitter)="selectProject($event)"
+          <app-projects-list (selectProjectEmitter)="selectProject($event)"
             (activeProjectsEmitter)="refreshProjects()" (tasksUpatedEmitter)="tasksUpated($event)"></app-projects-list>
         </div>
         <div class="updates">
@@ -28,16 +28,16 @@
     </div>
 
     <div class="project-container" *ngIf="activeTab?.id !== tabs[0]?.id && activeTab.id !== archiveTab.id">
-      <app-project-page class="project-page" [projectInput]="selectedProject" (projectUpdated)="projectUpdated($event)" #projectPage></app-project-page>
+      <app-project-page class="project-page" #projectPage></app-project-page>
     </div>
 
     <div class="home-container" *ngIf="activeTab.id === archiveTab.id">
       <div class="home">
         <div class="summary">
-          <app-summary [projects]="userProjects.activeProjects"></app-summary>
+          <app-summary [projects]="activeProjects()"></app-summary>
         </div>
         <div class="projects-list">
-          <app-archive [projects]="userProjects.unActiveProjects"
+          <app-archive
             (unActiveProjectsEmitter)="refreshProjects()"></app-archive>
         </div>
         <div class="updates">
