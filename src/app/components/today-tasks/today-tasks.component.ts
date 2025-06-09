@@ -38,9 +38,7 @@ import { ProjectsService } from '../../services/projects.service';
 export class TodayTasksComponent implements OnInit {
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @ViewChildren('descriptions') descriptions!: QueryList<ElementRef<HTMLTextAreaElement>>;
-  @Input() tasksInput: Task[] = []
   @Output() selectProjectEmitter = new EventEmitter<Project>();
-  @Output() stepsUpdatedEmitter = new EventEmitter<Project>();
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
   standAloneStepsService = inject(StandAloneStepsService);
@@ -88,7 +86,7 @@ export class TodayTasksComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.tasks = this.initTasks();//this.tasksInput;
+    this.initTasks();
     setTimeout(() => {
       for (let index = 0; index < this.tasks.length; index++) {
         let epsilon = 0;
@@ -101,21 +99,19 @@ export class TodayTasksComponent implements OnInit {
   }
 
   initTasks() {
-    const projectsAndSteps: Task[] = [];
     this.projects().forEach(project => {
       if (project?.steps) {
         const currentStep = project.steps.find(s => !s.isComplete);
         if (currentStep && (!currentStep.hideTaskDate || !this.isWithinLastDay(currentStep.hideTaskDate))) {
-          projectsAndSteps.push({ project: project, step: currentStep });
+          this.tasks.push({ project: project, step: currentStep });
         }
       }
     })
 
     this.noProject().steps?.forEach(step => {
       const newTask: Task = { project: this.noProject(), step: step };
-      projectsAndSteps.push(newTask);
+      this.tasks.push(newTask);
     })
-    return projectsAndSteps;
   }
 
   isWithinLastDay(date: Date) {
@@ -143,17 +139,11 @@ export class TodayTasksComponent implements OnInit {
   }
 
   finishStep(task: Task) {
-    // todo - index
     task.step.isComplete = true;
+    task.step.dateCompleted = new Date();
     this.animationsService.changeIsloading(true);
     this.httpService.updateSteps([task.step]).subscribe(res => {
-      const nextStep = task.project?.steps.find(s => !s.isComplete);
-      if (nextStep) {
-        task.step = nextStep;
-      } else {
-        const taskIndex = this.tasks.indexOf(task);
-        this.tasks.splice(taskIndex, 1);
-      }
+      this.handleNextStep(task);
       this.animationsService.changeIsloading(false);
     });
   }
@@ -162,7 +152,7 @@ export class TodayTasksComponent implements OnInit {
     this.animationsService.changeIsloading(true);
     step.projectId = this.standAloneStepsService.noProjectId;
     this.httpService.createStep(step).subscribe(res => {
-      const newTask: Task = { project: undefined, step: res };
+      const newTask: Task = { project: this.noProject(), step: res };
       this.tasks.push(newTask);
       this.creatingNewStep = false;
       this.animationsService.changeIsloading(false);
@@ -183,17 +173,45 @@ export class TodayTasksComponent implements OnInit {
     this.selectProjectEmitter.emit(project);
   }
 
-  updateStep(project: Project | undefined, newStep: Step) {
+  deleteStep(task: Task) {
+    if (task.step.id) {
+      this.animationsService.changeIsloading(true);
+      this.httpService.deleteStep(task.step.id).subscribe(res => {
+        this.handleNextStep(task);
+        this.animationsService.changeIsloading(false);
+      });
+    }
+  }
+
+  handleNextStep(task: Task) {
+    const nextStep = task.project?.steps.find(s => !s.isComplete);
+    if (nextStep && task.project.id !== this.noProject().id) {
+      task.step = nextStep;
+    } else {
+      const taskIndex = this.tasks.indexOf(task);
+      this.tasks.splice(taskIndex, 1);
+    }
+    this.notifyProjectUpdated(task.project);
+  }
+
+  updateStep(project: Project, newStep: Step) {
     this.animationsService.changeIsloading(true);
     this.httpService.updateSteps([newStep]).subscribe(res => {
-      if (project) {
-        project.steps = project?.steps?.map(step =>
-          step.id === res[0].id ? res[0] : step
-        )
-        this.stepsUpdatedEmitter.emit(project);
-      }
+      project.steps = project?.steps?.map(step =>
+        step.id === res[0].id ? res[0] : step
+      )
+      this.notifyProjectUpdated(project);
       this.editStepId = '';
       this.animationsService.changeIsloading(false);
     })
+  }
+
+  notifyProjectUpdated(project: Project) {
+    if (project.id === this.noProject().id) {
+      this.noProject.set(project);
+    } else {
+      const updatedProjects = this.projects().map(p => p.id === project.id ? project : p);
+      this.projects.set(updatedProjects);
+    }
   }
 }

@@ -10,5 +10,6 @@ export class UserProjects {
         this.activeProjects = [];
         this.unActiveProjects = [];
         this.noProject = new Project();
+        this.noProject.name = "ללא פרויקט";
     }
 }

@@ -2,6 +2,6 @@ import { Project } from "./project";
 import { Step } from "./step";
 
 export class Task {
-    project?: Project;
+    project!: Project;
     step!: Step
 }

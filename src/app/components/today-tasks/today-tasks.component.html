@@ -6,13 +6,15 @@
             <div *ngIf="editStepId !== task.step.id" class="step-info">
                 <img class="priority" *ngIf="task.project?.isPriority" src="assets/icons/star_full.svg" />
                 <span class="title">
-                    {{task.project?.name ?? 'ללא פרויקט'}} | {{task.step.name}}
+                    {{task.project.name}} | {{task.step.name}}
                 </span>
                 <span class="description">
                     <textarea disabled="true" #descriptions>{{task.step.stepType === stepTypeEnum.payment? (task.step.price + ' ₪') : task.step.description}}</textarea>
                 </span>
                 <div class="buttons" [@expandCollapse]="(hoverStepId === task.step.id) ? 'expanded' : 'collapsed'">
                     <div class="actions">
+                        <img class="icon-garbage-can pointer"  matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                            matTooltip="מחיקה" (click)="deleteStep(task)" />
                         <img class="icon-pencil pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip"
                             matTooltip="עריכה" (click)="editStep(stepDiv, task.step.id)" />
                         <img class="icon-expand pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip"

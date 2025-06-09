@@ -3,6 +3,7 @@ import { StepType } from "./enums";
 export class Step {
     id?: string;
     projectId?: string;
+    userId: string;
     name?: string;
     description?: string;
     isComplete: boolean;
@@ -14,6 +15,7 @@ export class Step {
     hideTaskDate?: Date;
 
     constructor() {
+        this.userId = "newStep";
         this.isComplete = false;
         this.stepType = StepType.task;
         this.price = 0;

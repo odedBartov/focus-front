@@ -105,24 +105,25 @@ export class ProjectsListComponent {
     if (project.isPriority) {
       const currentIndex = this.projects().indexOf(project);
       moveItemInArray(this.projects(), currentIndex, 0);
-      // this.updateProjectsPosition();
+      this.updateProjectsPosition();
     }
 
-    this.updateProjects(this.projects()).subscribe(res => { });
-  }
-
-  drop(event: CdkDragDrop<string[]>) {
-    const projects = [...this.projects()];
-    moveItemInArray(projects, event.previousIndex, event.currentIndex);
-    this.updateProjectsPosition(projects);
-    this.updateProjects(projects).subscribe(res => {
-      this.projects.set(projects)
+    this.updateProjects(this.projects()).subscribe(res => {
+      this.projects.set([...this.projects()])
     });
   }
 
-  updateProjectsPosition(projects: Project[]) {
-    for (let index = 0; index < projects.length; index++) {
-      projects[index].positionInList = index;
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.projects(), event.previousIndex, event.currentIndex);
+    this.updateProjectsPosition();
+    this.updateProjects(this.projects()).subscribe(res => {
+      this.projects.set([...this.projects()])
+    });
+  }
+
+  updateProjectsPosition() {
+    for (let index = 0; index < this.projects().length; index++) {
+      this.projects()[index].positionInList = index;
     }
   }
 
@@ -131,10 +132,6 @@ export class ProjectsListComponent {
     return this.httpService.updateProjects(projects).pipe(tap(res => {
       this.animationsService.changeIsloading(false);
     }));
-  }
-
-  stepsUpdated(project: Project) {
-    // this.tasksUpatedEmitter.emit(project);
   }
 
   selectProject(project: Project) {
