@@ -28,7 +28,6 @@ export class ProjectsListComponent {
   projectsService = inject(ProjectsService);
   dialog = inject(MatDialog);
   @Output() selectProjectEmitter = new EventEmitter<Project>();
-  @Output() tasksUpatedEmitter = new EventEmitter<Project>();
   projects: WritableSignal<Project[]>;
   router = inject(Router);
   projectStatusEnum = ProjectStatus;

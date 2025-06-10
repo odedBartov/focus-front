@@ -135,11 +135,26 @@ export class HomeComponent implements OnInit {
       userProjects.activeProjects.forEach(project => {
         project.steps = project.steps.sort((a, b) => a.positionInList - b.positionInList);
       });
+      this.updateDateDueForPassedSteps(userProjects.activeProjects);
       this.activeProjects.set(userProjects.activeProjects);
       this.unActiveProjects.set(userProjects.unActiveProjects);
       this.noProject.set(userProjects.noProject);
       this.initTabs();
       this.animationsService.changeIsloading(false);
+    });
+  }
+
+  updateDateDueForPassedSteps(projects: Project[]) {
+    const today = new Date();
+    projects.forEach(project => {
+      project.steps.forEach(step => {
+        if (step.dateDue) {
+          const dateToCheck = new Date(step.dateDue);
+          if (dateToCheck.getFullYear() <= today.getFullYear() && dateToCheck.getMonth() < today.getMonth()) {
+            step.dateDue = today;
+          }
+        }
+      });
     });
   }
 
@@ -179,24 +194,6 @@ export class HomeComponent implements OnInit {
     }
     this.projectsForPayment = this.activeProjects().concat(this.noProject());
     this.initTabs();
-  }
-
-  tasksUpated(project: Project) {
-    // if (project.id === this.standAloneStepsService.noProjectId) {
-    //   this.userProjects.noProject = project;
-    // } else {
-    //   let projectIndex = -1;
-    //   for (let index = 0; index < this.userProjects.activeProjects.length; index++) {
-    //     if (this.userProjects.activeProjects[index].id === project.id) {
-    //       projectIndex = index;
-    //     }
-    //   }
-    //   if (projectIndex >= 0) {
-    //     this.userProjects.activeProjects[projectIndex] = project;
-    //   }
-    // }
-
-    // this.projectsForPayment = this.userProjects.activeProjects.concat(this.userProjects.noProject);
   }
 
   navigateToProfile() {

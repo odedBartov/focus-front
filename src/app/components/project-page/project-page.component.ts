@@ -318,7 +318,9 @@ export class ProjectPageComponent implements OnInit {
       this.calculatePayments();
       setTimeout(() => {
         this.hoverStepId = '';
-        this.setActiveStepHeight();
+        if (step.id === this.activeStepId) {
+          this.setActiveStepHeight();
+        }
       }, 1);
       // update
       this.animationsService.changeIsloading(false);

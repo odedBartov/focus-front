@@ -155,8 +155,17 @@ export class TodayTasksComponent implements OnInit {
         const newStepId = task.step.id;
         if (newStepId !== finishedStepId) {
           const taskIndex = this.tasks.indexOf(task);
+          // reset element to default height, then stretch
+          const description = task.step.description;
+          const price = task.step.price;
+          task.step.description = undefined;
+          task.step.price = 0;
           setTimeout(() => {
-            this.setDescriptionHeight(taskIndex);
+            task.step.description = description;
+            task.step.price = price;
+            setTimeout(() => {
+              this.setDescriptionHeight(taskIndex);
+            }, 1);
           }, 1);
         }
         this.animationsService.changeIsloading(false);
