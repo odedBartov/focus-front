@@ -8,15 +8,16 @@
                 <span class="title">
                     {{task.project.name? (task.project.name + ' | ') : ''}}{{task.step.name}}
                 </span>
-                    <textarea disabled="true" *ngIf="(task.step.stepType === stepTypeEnum.payment && task.step.price) || (task.step.stepType === stepTypeEnum.task && task.step.description)" #descriptions>{{task.step.stepType === stepTypeEnum.payment? (task.step.price + ' ₪') : task.step.description}}</textarea>
+                <textarea disabled="true"
+                    *ngIf="(task.step.stepType === stepTypeEnum.payment && task.step.price) || (task.step.stepType === stepTypeEnum.task && task.step.description)"
+                    #descriptions>{{task.step.stepType === stepTypeEnum.payment? (task.step.price + ' ₪') : task.step.description}}</textarea>
                 <div class="buttons" [@expandCollapse]="(hoverStepId === task.step.id) ? 'expanded' : 'collapsed'">
                     <div class="actions">
-                        <img class="icon-garbage-can pointer"  matTooltipPosition="above" matTooltipClass="custom-tooltip"
-                            matTooltip="מחיקה" (click)="deleteStep(task)" />
                         <img class="icon-pencil pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip"
                             matTooltip="עריכה" (click)="editStep(stepDiv, task.step.id)" />
                         <img class="icon-expand pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip"
-                            matTooltip="פתיחת פרויקט" (click)="openProject(task.project)" *ngIf="task.project.id !== noProject().id"/>
+                            matTooltip="פתיחת פרויקט" (click)="openProject(task.project)"
+                            *ngIf="task.project.id !== noProject().id" />
                         <img class="icon-history pointer" matTooltipPosition="above" matTooltipClass="custom-tooltip"
                             matTooltip="דחה למחר" (click)="hideStepForToday(task)" />
                     </div>
@@ -37,7 +38,8 @@
             + משימה חדשה
         </div>
         <div class="new-step-form" *ngIf="creatingNewStep" (mousedown)="$event.stopPropagation()" #newStepDiv>
-            <app-new-step class="new-step-component" [defaultType]="stepTypeEnum.task" (stepsEmitter)="createNewStep($event)"></app-new-step>
+            <app-new-step class="new-step-component" [defaultType]="stepTypeEnum.task"
+                (stepsEmitter)="createNewStep($event)"></app-new-step>
         </div>
     </div>
 </div>
