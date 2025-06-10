@@ -145,15 +145,14 @@
             @include mixins.step;
 
             .step-header {
+                // margin-bottom: 20px;
                 height: 28px;
                 align-items: center;
-                margin-bottom: 20px;
             }
         }
 
         .extra-not-finished {
             textarea {
-                height: 100%;
                 box-sizing: border-box;
                 border: none;
                 resize: none;
@@ -162,6 +161,8 @@
                 padding: 0;
                 overflow: hidden;
                 border-radius: 0px;
+                margin-top: 8px;
+                width: min-content;
 
                 &.active {
                     font-size: var(--font-size-2);
@@ -207,6 +208,23 @@
     background-color: var(--home-color);
     width: 15.25rem !important;
     height: auto !important;
+
+    .extra-not-finished {
+        textarea {
+            box-sizing: border-box;
+            border: none;
+            resize: none;
+            font-family: 'regular';
+            font-size: var(--font-size-1);
+            padding: 0;
+            overflow: hidden;
+            border-radius: 0px;
+
+            &.active {
+                font-size: var(--font-size-2);
+            }
+        }
+    }
 
     &.active-step {
         width: 20rem !important;

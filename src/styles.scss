@@ -114,13 +114,10 @@
         max-width: 320px;
         font-family: 'regular';
     }
-
-    input {
-        padding: 0.5rem 1rem;
-    }
-
+    
     input,
     textarea {
+        padding: 0.5rem 1rem;
         color: var(--default-black);
         outline: none;
         background-color: transparent;

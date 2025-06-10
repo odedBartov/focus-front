@@ -124,6 +124,9 @@ export class ProjectPageComponent implements OnInit {
 
     if (!this.editDiv?.contains(event.target as Node)) {
       this.editStepId = '';
+      setTimeout(() => {
+        this.setActiveStepHeight();
+      }, 1);
     }
 
     if (this.notesDiv?.nativeElement &&
@@ -153,7 +156,7 @@ export class ProjectPageComponent implements OnInit {
 
   setActiveStepHeight() {
     const activeStep = this.project()?.steps.find(s => s.id === this.activeStepId);
-    if (activeStep && activeStep.stepType === StepType.payment) {
+    if (activeStep) {
       this.setDescriptionHeight(0, -20);
     }
   }
