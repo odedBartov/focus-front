@@ -23,11 +23,13 @@ import { ProjectsService } from '../../services/projects.service';
         height: '0px',
         opacity: 0,
         overflow: 'hidden',
+        marginTop: '0px'
       })),
       state('expanded', style({
         height: '*',
         opacity: 1,
         overflow: 'hidden',
+        marginTop: '20px'
       })),
       transition('collapsed <=> expanded', [
         animate('300ms ease')
@@ -59,23 +61,7 @@ export class TodayTasksComponent implements OnInit {
     }
 
     if (!this.editDiv?.contains(event.target as Node)) {
-      let editingIndex = -1;
-      let epsilon = 0;
-      for (let index = 0; index < this.tasks.length; index++) {
-        const task = this.tasks[index];
-        if (task.step.id === this.editStepId) {
-          if (task.step.stepType === StepType.payment) {
-            epsilon = -10;
-          }
-          editingIndex = index;
-          break;
-        }
-      }
-      if (editingIndex >= 0) {
-        setTimeout(() => {
-          this.setDescriptionHeight(editingIndex, epsilon);
-        }, 1);
-      }
+      this.setEditedHeight();
       this.editStepId = '';
     }
   }
@@ -89,11 +75,7 @@ export class TodayTasksComponent implements OnInit {
     this.initTasks();
     setTimeout(() => {
       for (let index = 0; index < this.tasks.length; index++) {
-        let epsilon = 0;
-        if (this.tasks[index].step.stepType === StepType.payment) {
-          epsilon = -10;
-        }
-        this.setDescriptionHeight(index, epsilon);
+        this.setDescriptionHeight(index);
       }
     }, 1);
   }
@@ -122,14 +104,34 @@ export class TodayTasksComponent implements OnInit {
       today.getDay() === dateToCheck.getDay()
   }
 
-  setDescriptionHeight(index: number, epsilon = 0) {
+  setEditedHeight() {
+    let editingIndex = -1;
+    for (let index = 0; index < this.tasks.length; index++) {
+      const task = this.tasks[index];
+      if (task.step.id === this.editStepId) {
+        editingIndex = index;
+        break;
+      }
+    }
+    if (editingIndex >= 0) {
+      setTimeout(() => {
+        this.setDescriptionHeight(editingIndex);
+      }, 1);
+    }
+  }
+
+  setDescriptionHeight(index: number) {
     const element = this.descriptions.get(index);
     if (element) {
-      const currentHeight = Number.parseInt(element.nativeElement.style.height);
-
-      if (Number.isNaN(currentHeight) || currentHeight < element.nativeElement.scrollHeight) {
-        element.nativeElement.style.height = element.nativeElement.scrollHeight + epsilon + "px";
+      const scrollHeight = element.nativeElement.scrollHeight;
+      const actualHeight = element.nativeElement.clientHeight;
+      const gap = (actualHeight + 17) - scrollHeight;
+      let epsilon = 0;
+      if (gap > 0) {
+        epsilon = gap;
       }
+
+      element.nativeElement.style.height = element.nativeElement.scrollHeight - epsilon + "px";
     }
   }
 
@@ -143,7 +145,15 @@ export class TodayTasksComponent implements OnInit {
     task.step.dateCompleted = new Date();
     this.animationsService.changeIsloading(true);
     this.httpService.updateSteps([task.step]).subscribe(res => {
+      const finishedStepId = task.step.id;
       this.handleNextStep(task);
+      const newStepId = task.step.id;
+      if (newStepId !== finishedStepId) {
+        const taskIndex = this.tasks.indexOf(task);
+        setTimeout(() => {
+          this.setDescriptionHeight(taskIndex);
+        }, 1);
+      }
       this.animationsService.changeIsloading(false);
     });
   }
@@ -154,6 +164,9 @@ export class TodayTasksComponent implements OnInit {
     this.httpService.createStep(step).subscribe(res => {
       const newTask: Task = { project: this.noProject(), step: res };
       this.tasks.push(newTask);
+      setTimeout(() => {
+        this.setDescriptionHeight(this.tasks.length-1);
+      }, 1);
       this.creatingNewStep = false;
       this.animationsService.changeIsloading(false);
     })
@@ -201,6 +214,7 @@ export class TodayTasksComponent implements OnInit {
         step.id === res[0].id ? res[0] : step
       )
       this.notifyProjectUpdated(project);
+      this.setEditedHeight();
       this.editStepId = '';
       this.animationsService.changeIsloading(false);
     })

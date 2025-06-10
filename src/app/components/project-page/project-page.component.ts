@@ -123,10 +123,12 @@ export class ProjectPageComponent implements OnInit {
     }
 
     if (!this.editDiv?.contains(event.target as Node)) {
+      if (this.editStepId != '' && this.activeStepId === this.editStepId) {
+        setTimeout(() => {
+          this.setActiveStepHeight();
+        }, 1);
+      }
       this.editStepId = '';
-      setTimeout(() => {
-        this.setActiveStepHeight();
-      }, 1);
     }
 
     if (this.notesDiv?.nativeElement &&
@@ -155,9 +157,17 @@ export class ProjectPageComponent implements OnInit {
   }
 
   setActiveStepHeight() {
-    const activeStep = this.project()?.steps.find(s => s.id === this.activeStepId);
-    if (activeStep) {
-      this.setDescriptionHeight(0, -20);
+    const element = this.descriptions.get(0);
+    if (element) {
+      const scrollHeight = element.nativeElement.scrollHeight;
+      const actualHeight = element.nativeElement.clientHeight;
+      const gap = (actualHeight + 20) - scrollHeight;
+      let epsilon = 0;
+      if (gap > 0) {
+        epsilon = gap;
+      }
+
+      element.nativeElement.style.height = element.nativeElement.scrollHeight - epsilon + "px";
     }
   }
 
@@ -307,6 +317,7 @@ export class ProjectPageComponent implements OnInit {
       this.activeStepId = this.project()?.steps?.find(s => !s.isComplete)?.id;
       this.calculatePayments();
       setTimeout(() => {
+        this.hoverStepId = '';
         this.setActiveStepHeight();
       }, 1);
       // update
