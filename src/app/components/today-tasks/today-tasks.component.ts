@@ -91,8 +91,10 @@ export class TodayTasksComponent implements OnInit {
     })
 
     this.noProject().steps?.forEach(step => {
-      const newTask: Task = { project: this.noProject(), step: step };
-      this.tasks.push(newTask);
+      if (!step.hideTaskDate || !this.isWithinLastDay(step.hideTaskDate)) { 
+        const newTask: Task = { project: this.noProject(), step: step };
+        this.tasks.push(newTask);
+      }
     })
   }
 
@@ -143,19 +145,23 @@ export class TodayTasksComponent implements OnInit {
   finishStep(task: Task) {
     task.step.isComplete = true;
     task.step.dateCompleted = new Date();
-    this.animationsService.changeIsloading(true);
-    this.httpService.updateSteps([task.step]).subscribe(res => {
-      const finishedStepId = task.step.id;
-      this.handleNextStep(task);
-      const newStepId = task.step.id;
-      if (newStepId !== finishedStepId) {
-        const taskIndex = this.tasks.indexOf(task);
-        setTimeout(() => {
-          this.setDescriptionHeight(taskIndex);
-        }, 1);
-      }
-      this.animationsService.changeIsloading(false);
-    });
+    if (task.project.id === this.noProject().id) {
+      this.deleteStep(task);
+    } else {
+      this.animationsService.changeIsloading(true);
+      this.httpService.updateSteps([task.step]).subscribe(res => {
+        const finishedStepId = task.step.id;
+        this.handleNextStep(task);
+        const newStepId = task.step.id;
+        if (newStepId !== finishedStepId) {
+          const taskIndex = this.tasks.indexOf(task);
+          setTimeout(() => {
+            this.setDescriptionHeight(taskIndex);
+          }, 1);
+        }
+        this.animationsService.changeIsloading(false);
+      });
+    }
   }
 
   createNewStep(step: Step) {
@@ -165,7 +171,7 @@ export class TodayTasksComponent implements OnInit {
       const newTask: Task = { project: this.noProject(), step: res };
       this.tasks.push(newTask);
       setTimeout(() => {
-        this.setDescriptionHeight(this.tasks.length-1);
+        this.setDescriptionHeight(this.tasks.length - 1);
       }, 1);
       this.creatingNewStep = false;
       this.animationsService.changeIsloading(false);

@@ -8,7 +8,7 @@
                 <span class="title">
                     {{task.project.name? (task.project.name + ' | ') : ''}}{{task.step.name}}
                 </span>
-                    <textarea disabled="true" #descriptions>{{task.step.stepType === stepTypeEnum.payment? (task.step.price + ' ₪') : task.step.description}}</textarea>
+                    <textarea disabled="true" *ngIf="(task.step.stepType === stepTypeEnum.payment && task.step.price) || (task.step.stepType === stepTypeEnum.task && task.step.description)" #descriptions>{{task.step.stepType === stepTypeEnum.payment? (task.step.price + ' ₪') : task.step.description}}</textarea>
                 <div class="buttons" [@expandCollapse]="(hoverStepId === task.step.id) ? 'expanded' : 'collapsed'">
                     <div class="actions">
                         <img class="icon-garbage-can pointer"  matTooltipPosition="above" matTooltipClass="custom-tooltip"
