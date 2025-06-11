@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
+import { Component, effect, inject, OnInit, ViewChild, WritableSignal } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { Project } from '../../models/project';
 import { UserProjects } from '../../models/userProjects';
@@ -20,6 +20,7 @@ import { ArchiveComponent } from "../archive/archive.component";
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { StandAloneStepsService } from '../../services/stand-alone-steps.service';
 import { ProjectsService } from '../../services/projects.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -41,7 +42,7 @@ export class HomeComponent implements OnInit {
   projectsService = inject(ProjectsService);
   titleService = inject(Title);
   router = inject(Router);
-  // userProjects: UserProjects = new UserProjects();
+  route = inject(ActivatedRoute);
   activeProjects!: WritableSignal<Project[]>;
   unActiveProjects!: WritableSignal<Project[]>;
   noProject!: WritableSignal<Project>;
@@ -72,7 +73,12 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  setActive(tab: ProjectTab) {
+  setActiveTab(tab: ProjectTab) {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab: tab.id },
+      queryParamsHandling: 'merge'
+    });
     this.activeTab = tab;
     this.selectedProject.set(tab.project);
   }
@@ -84,7 +90,26 @@ export class HomeComponent implements OnInit {
     this.selectedProject = this.projectsService.getCurrentProject();
     this.initUserPicture();
     this.refreshProjects();
-    this.activeTab = this.homeTab;
+  }
+
+  listenToUrl() {
+    this.route.queryParams.subscribe(params => {
+      const tabId = params['tab'];
+
+      if (!tabId || tabId === 'main') {
+        this.activeTab = this.homeTab;
+      } else if (tabId === 'archive') {
+        this.activeTab = this.archiveTab;
+      } else {
+        const projectTab = this.tabs.find(t => t.id === tabId);
+        if (projectTab) {
+          this.activeTab = projectTab;
+          this.selectedProject.set(projectTab.project);
+        } else {
+          this.activeTab = this.homeTab;
+        }
+      }
+    });
   }
 
   initUserPicture() {
@@ -140,6 +165,9 @@ export class HomeComponent implements OnInit {
       this.unActiveProjects.set(userProjects.unActiveProjects);
       this.noProject.set(userProjects.noProject);
       this.initTabs();
+      setTimeout(() => {
+        this.listenToUrl();
+      }, 1);
       this.animationsService.changeIsloading(false);
     });
   }
@@ -176,7 +204,7 @@ export class HomeComponent implements OnInit {
   selectProject(project: Project) {
     const projectTab = this.tabs.find(t => t.id === project.id);
     if (projectTab) {
-      this.setActive(projectTab);
+      this.setActiveTab(projectTab);
     } else {
       this.activeTab = { id: 'none' };
       this.selectedProject?.set(project);
