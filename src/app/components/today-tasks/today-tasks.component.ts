@@ -178,6 +178,7 @@ export class TodayTasksComponent implements OnInit {
     step.projectId = this.standAloneStepsService.noProjectId;
     this.httpService.createStep(step).subscribe(res => {
       const newTask: Task = { project: this.noProject(), step: res };
+      this.noProject().steps.push(res);
       this.tasks.push(newTask);
       setTimeout(() => {
         this.setDescriptionHeight(this.tasks.length - 1);
@@ -216,6 +217,10 @@ export class TodayTasksComponent implements OnInit {
     if (nextStep && task.project.id !== this.noProject().id) {
       task.step = nextStep;
     } else {
+      if (task.project.id === this.noProject().id) {
+        const stepIndex = this.noProject().steps.indexOf(task.step);
+        this.noProject().steps.splice(stepIndex,1);
+      }
       const taskIndex = this.tasks.indexOf(task);
       this.tasks.splice(taskIndex, 1);
     }
