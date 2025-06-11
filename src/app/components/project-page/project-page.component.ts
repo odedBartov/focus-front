@@ -31,7 +31,7 @@ import { ProjectsService } from '../../services/projects.service';
       state('collapsed', style({
         height: '0px',
         opacity: 0,
-        overflow: 'hidden',
+        overflow: 'hidden'
       })),
       state('expanded', style({
         height: '*',
@@ -51,25 +51,13 @@ export class ProjectPageComponent implements OnInit {
   dialog = inject(MatDialog);
   projectHoverService = inject(ProjectHoverService);
   projectsService = inject(ProjectsService);
+  @Output() navigateToHomeEmitter = new EventEmitter<void>();
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
   @ViewChild('richTextDiv', { static: false }) richTextDiv?: ElementRef;
   @ViewChild('addStepDiv', { static: false }) addStepDiv!: ElementRef;
   @ViewChildren('descriptions') descriptions!: QueryList<ElementRef<HTMLTextAreaElement>>;
   editDiv?: HTMLDivElement;
-  // @Input() set projectInput(value: Project | undefined) {
-  //   this.project = value;
-  //   if (this.project?.steps) {
-  //     this.project.steps = this.project.steps.sort((a, b) => a.positionInList - b.positionInList);
-  //   }
-
-  //   this.activeStepId = this.project?.steps?.find(s => !s.isComplete)?.id;
-  //   this.calculatePayments();
-  //   setTimeout(() => {
-  //     this.setActiveStepHeight();
-  //   }, 1);
-  // };
-  // activeProject!: WritableSignal<Project>;
   stepTypeEnum = StepType;
   project!: WritableSignal<Project>;
   projectId: string | null = null;
@@ -156,12 +144,12 @@ export class ProjectPageComponent implements OnInit {
     }
   }
 
-  setActiveStepHeight() {
+  setActiveStepHeight(extraHeight = 20) {
     const element = this.descriptions.get(0);
     if (element) {
       const scrollHeight = element.nativeElement.scrollHeight;
       const actualHeight = element.nativeElement.clientHeight;
-      const gap = (actualHeight + 20) - scrollHeight;
+      const gap = (actualHeight + extraHeight) - scrollHeight;
       let epsilon = 0;
       if (gap > 0) {
         epsilon = gap;
@@ -180,13 +168,13 @@ export class ProjectPageComponent implements OnInit {
     }
   }
 
-  setDescriptionHeight(index: number, epsilon = 0) {
+  setDescriptionHeight(index: number) {
     const element = this.descriptions.get(index);
     if (element) {
       const currentHeight = Number.parseInt(element.nativeElement.style.height);
-
-      if (Number.isNaN(currentHeight) || currentHeight < element.nativeElement.scrollHeight) {
-        element.nativeElement.style.height = element.nativeElement.scrollHeight + epsilon + "px";
+      const scrollHeight = element.nativeElement.scrollHeight;
+      if (Number.isNaN(currentHeight) || currentHeight < scrollHeight || currentHeight > scrollHeight) {        
+        element.nativeElement.style.height = scrollHeight + "px";
       }
     }
   }
@@ -252,11 +240,11 @@ export class ProjectPageComponent implements OnInit {
     }
   }
 
-  changeStepStatus(step: Step, animation?: LottieComponent) {
+  changeStepStatus(step: Step) {
     step.isComplete = !step.isComplete;
     if (step.isComplete) {
       step.dateCompleted = new Date();
-      if (this.project) {
+      if (this.project()) {
         let finishedSteps = 0;
         let notFinishedSteps = 0;
         for (let index = 0; index < this.project().steps.length; index++) {
@@ -274,7 +262,6 @@ export class ProjectPageComponent implements OnInit {
 
         moveItemInArray(this.project().steps, finishedSteps + notFinishedSteps, finishedSteps);
         this.updateStepsPosition();
-
       }
     } else {
       step.dateCompleted = undefined;
@@ -305,7 +292,7 @@ export class ProjectPageComponent implements OnInit {
     this.updateStep(step);
   }
 
-  updateStep(step: Step) {
+  updateStep(step: Step) {    
     this.animationsService.changeIsloading(true);
     this.httpService.updateSteps([step]).subscribe(res => {
       if (this.project().steps) {
@@ -318,11 +305,10 @@ export class ProjectPageComponent implements OnInit {
       this.calculatePayments();
       setTimeout(() => {
         this.hoverStepId = '';
-        if (step.id === this.activeStepId) {
-          this.setActiveStepHeight();
+        if (step.id === this.activeStepId) {          
+          this.setActiveStepHeight(0);
         }
       }, 1);
-      // update
       this.animationsService.changeIsloading(false);
       this.isFinishProject();
     })
@@ -331,11 +317,20 @@ export class ProjectPageComponent implements OnInit {
   isFinishProject() {
     const stepsInProgress = this.project()?.steps.filter(s => !s.isComplete).length;
     if (stepsInProgress === 0) {
+      const updatedProject = { ...this.project() };
+      updatedProject.status = ProjectStatus.finished;
+      this.project.set(updatedProject);
       this.animationsService.showFinishProject();
-      this.project().status = ProjectStatus.finished;
-      this.project.set({...this.project()}); // is this working?
-      // update the server
-      // navigate to main
+      this.httpService.updateProjects([this.project()]).subscribe(res => {
+        const activeProjects = this.projectsService.getActiveProjects();
+        const unActiveProjects = this.projectsService.getUnActiveProjects();
+        const activeProjectIndex = activeProjects().indexOf(this.project());
+        if (activeProjectIndex > -1) {
+          unActiveProjects.set(unActiveProjects().concat(this.project()));
+          activeProjects().splice(activeProjectIndex, 1);
+        }
+        this.navigateToHomeEmitter.emit();
+      });
     }
   }
 

@@ -62,7 +62,9 @@
                 </div>
                 <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id) ? 'expanded' : 'collapsed'"
                     class="extra-not-finished" *ngIf="!step.isComplete">
-                    <textarea [ngClass]="{'active': activeStepId === step.id}" disabled="true" #descriptions>{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
+                    <textarea [ngClass]="{'active': activeStepId === step.id}" disabled="true"
+                        *ngIf="(step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description)"
+                        #descriptions>{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
                     <div class="step-icons">
                         <div class="edit-delete">
                             <img class="icon-garbage-can" (click)="deleteStep(step)" />
@@ -71,9 +73,9 @@
                         <div class="animation-container">
                             <div class="finish-step-animation"
                                 [style.display]="animatingItemId === step.id ? 'content' : 'none'">
-                                <ng-lottie [options]="lottieOptions" #finishStepAnimaton />
+                                <ng-lottie [options]="lottieOptions" />
                             </div>
-                            <img class="icon-confirm-circle" (click)="changeStepStatus(step, finishStepAnimaton)"
+                            <img class="icon-confirm-circle" (click)="changeStepStatus(step)"
                                 *ngIf="step.id !== animatingItemId" />
                         </div>
                     </div>
@@ -94,6 +96,7 @@
         <app-rich-text [project]="project()" [expanded]="true"></app-rich-text>
     </div>
     <div class="notes" #notesDiv>
-        <app-notes [project]="project()" [notesPopup]="showNotes" (showNotesEmitter)="showNotesPopup($event)"></app-notes>
+        <app-notes [project]="project()" [notesPopup]="showNotes"
+            (showNotesEmitter)="showNotesPopup($event)"></app-notes>
     </div>
 </div>
