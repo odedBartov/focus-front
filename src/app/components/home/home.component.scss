@@ -6,6 +6,13 @@
     z-index: 1;
 }
 
+@media (max-width: 1600px) {
+    .main-window {
+        height: 125vh;
+        zoom: 80%;
+    }
+}
+
 .tabs-container {
     background-color: var(--hover-color);
     display: flex;
