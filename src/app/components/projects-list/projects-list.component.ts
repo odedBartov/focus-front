@@ -47,14 +47,19 @@ export class ProjectsListComponent {
 
   }
 
-  getPaidMoney(project: Project) {
-    const steps = project.steps?.filter(s => s.isComplete && s.stepType === StepType.payment);
-    return steps?.reduce((sum, step) => sum + step.price, 0) ?? 0;
-  }
+  getRemainingPayment(project: Project) {
+    let base = 0;
+    let paid = 0;
+    project.steps.forEach(step => {
+      if (step.stepType === StepType.payment) {
+        base += step.price;
+        if (step.isComplete) {
+          paid += step.price;
+        }
+      }
+    });
 
-  getBasePrice(project: Project) {
-    const steps = project.steps?.filter(s => s.stepType === StepType.payment);
-    return steps?.reduce((sum, step) => sum + step.price, 0) ?? 0;
+    return base - paid;
   }
 
   changeProjectStatus(project: Project, status: ProjectStatus) {
