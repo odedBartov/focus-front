@@ -31,5 +31,5 @@ export const userProfessionsWithText: {profession: profession, text: string, ico
                                       {profession: profession.content, text: "תוכן, כתיבה ותרגום", icon: "assets/icons/keyboard.svg"},
                                       {profession: profession.selling, text: "שיווק ומכירות", icon: "assets/icons/chart_simple.svg"},
                                       {profession: profession.media, text: "צילום, וידאו וסאונד", icon: "assets/icons/camera_retro.svg"},
-                                      {profession: profession.management, text: "ייעוץ, ניהולך ותפעול", icon: "assets/icons/chair_office.svg"},
+                                      {profession: profession.management, text: "ייעוץ, ניהול ותפעול", icon: "assets/icons/chair_office.svg"},
 ]
