@@ -76,6 +76,8 @@ export class ProjectPageComponent implements OnInit {
   animatingItemId: string = '';
   hideProperties = this.projectHoverService.getSignal();
   animationHackFlag = true;
+  mouseDownInside = false;
+
   constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.project = this.projectsService.getCurrentProject();
     this.route.paramMap.subscribe(params => {
@@ -110,7 +112,7 @@ export class ProjectPageComponent implements OnInit {
       this.isShowNewStep = false;
     }
 
-    if (!this.editDiv?.contains(event.target as Node)) {
+    if (!this.editDiv?.contains(event.target as Node) && !this.mouseDownInside) {
       if (this.editStepId != '' && this.activeStepId === this.editStepId) {
         setTimeout(() => {
           this.setActiveStepHeight();
@@ -125,6 +127,8 @@ export class ProjectPageComponent implements OnInit {
       this.showNotes = false;
       this.projectHoverService.projectHover();
     }
+
+    this.mouseDownInside = false;
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -173,7 +177,7 @@ export class ProjectPageComponent implements OnInit {
     if (element) {
       const currentHeight = Number.parseInt(element.nativeElement.style.height);
       const scrollHeight = element.nativeElement.scrollHeight;
-      if (Number.isNaN(currentHeight) || currentHeight < scrollHeight || currentHeight > scrollHeight) {        
+      if (Number.isNaN(currentHeight) || currentHeight < scrollHeight || currentHeight > scrollHeight) {
         element.nativeElement.style.height = scrollHeight + "px";
       }
     }
@@ -292,7 +296,7 @@ export class ProjectPageComponent implements OnInit {
     this.updateStep(step);
   }
 
-  updateStep(step: Step) {    
+  updateStep(step: Step) {
     this.animationsService.changeIsloading(true);
     this.httpService.updateSteps([step]).subscribe(res => {
       if (this.project().steps) {
@@ -305,7 +309,7 @@ export class ProjectPageComponent implements OnInit {
       this.calculatePayments();
       setTimeout(() => {
         this.hoverStepId = '';
-        if (step.id === this.activeStepId) {          
+        if (step.id === this.activeStepId) {
           this.setActiveStepHeight(0);
         }
       }, 1);
