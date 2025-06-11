@@ -1,10 +1,12 @@
-import { Component, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Editor, NgxEditorModule } from 'ngx-editor';
 import { debounceTime, of, Subject, Subscription, switchMap } from 'rxjs';
 import { Project } from '../../models/project';
 import { HttpService } from '../../services/http.service';
 import { CommonModule } from '@angular/common';
+import { Plugin } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 
 @Component({
   selector: 'app-rich-text',
@@ -12,7 +14,8 @@ import { CommonModule } from '@angular/common';
   templateUrl: './rich-text.component.html',
   styleUrl: './rich-text.component.scss'
 })
-export class RichTextComponent implements OnDestroy, OnChanges, OnInit {
+export class RichTextComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit {
+  @ViewChild('editorWrapper', { read: ElementRef }) editorWrapper!: ElementRef;
   @Input() project?: Project;
   @Input() expanded?: boolean;
   httpService = inject(HttpService);
@@ -24,6 +27,24 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit {
   ngOnInit(): void {
     this.initEditor();
   }
+
+ngAfterViewInit(): void {
+  const plainTextPastePlugin = new Plugin({
+    props: {
+      handlePaste(view: EditorView, event: ClipboardEvent) {
+        const text = event.clipboardData?.getData('text/plain');
+        if (text) {
+          const { from, to } = view.state.selection;          
+          const tr = view.state.tr.insertText(text, from, to);
+          view.dispatch(tr);
+          return true; // ✅ Tell ProseMirror not to process the paste any further
+        }
+        return false;
+      }
+    }
+  });
+  this.editor.registerPlugin(plainTextPastePlugin);
+}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['project'] && this.project) {
@@ -113,8 +134,8 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit {
     command(this.editor.commands);
 
     // Reapply the preserved selection and dispatch
-    const newState = view.state.apply(transaction);
-    view.updateState(newState);
+    //const newState = view.state.apply(transaction);
+    //view.updateState(newState);
 
     view.focus();
   }
