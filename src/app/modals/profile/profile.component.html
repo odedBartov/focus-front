@@ -1,0 +1,56 @@
+<div class="container">
+    <div class="main">
+        <div class="details">
+            <div class="profile-picture-container">
+                <img class="profile-picture" [src]="getProfilePicture()" />
+            </div>
+            <div class="line">
+                <div class="text-and-input">
+                    <span class="text">שם פרטי</span>
+                    <input type="text" [(ngModel)]="user.firstName" (blur)="updateUser()">
+                </div>
+                <div class="text-and-input">
+                    <span class="text">שם משפחה</span>
+                    <input type="text" [(ngModel)]="user.lastName" (blur)="updateUser()">
+                </div>
+            </div>
+
+            <div class="line">
+                <div class="text-and-input">
+                    <span class="text">סטטוס</span>
+                    <select [(ngModel)]="user.status" (change)="selectStatus($event.target)">
+                        <option *ngFor="let status of userStatuses" [value]="status.status">
+                            {{ status.text }}
+                        </option>
+                    </select>
+                </div>
+                <div class="text-and-input">
+                    <span class="text">תחום</span>
+                    <select [ngModel]="user.profession" (change)="selectProfession($event.target)">
+                        <option *ngFor="let profession of userProfessions" [value]="profession.profession">
+                            {{ profession.text }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="email-conteinaer">
+                <div class="email">
+                    <div>
+                        <span>אימייל</span>
+                        <span class="address">{{user.email}}</span>
+                    </div>
+                    <span class="log-out" (click)="logOut()">התנתק</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="upgrade">
+            <span class="current-plan">תוכנית נוכחית</span>
+            <div class="button">+ שדרוג</div>
+        </div>
+
+        <div class="subscription">
+
+        </div>
+    </div>
+</div>

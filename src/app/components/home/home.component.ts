@@ -21,6 +21,8 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 import { StandAloneStepsService } from '../../services/stand-alone-steps.service';
 import { ProjectsService } from '../../services/projects.service';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ProfileComponent } from '../../modals/profile/profile.component';
 
 @Component({
   selector: 'app-home',
@@ -43,6 +45,7 @@ export class HomeComponent implements OnInit {
   titleService = inject(Title);
   router = inject(Router);
   route = inject(ActivatedRoute);
+  dialog = inject(MatDialog);
   activeProjects!: WritableSignal<Project[]>;
   unActiveProjects!: WritableSignal<Project[]>;
   noProject!: WritableSignal<Project>;
@@ -225,6 +228,9 @@ export class HomeComponent implements OnInit {
   }
 
   navigateToProfile() {
-    //this.router.navigate(['/profile']);
+    const dialogRef = this.dialog.open(ProfileComponent);
+    dialogRef.afterClosed().subscribe(res => {
+      // do something?
+    });
   }
 }

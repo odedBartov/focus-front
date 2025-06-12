@@ -1,0 +1,111 @@
+@use '../../../mixins.scss' as mixins;
+
+.container {
+    height: var(--big-window-height);
+
+    .main {
+        width: var(--big-window-width);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 100px;
+
+        .details {
+            @include mixins.regular-border;
+            width: 90%;
+            padding: 0 40px 35px;
+            margin-bottom: 60px;
+
+            .profile-picture-container {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+
+                .profile-picture {
+                    transform: translate(0, -50%);
+                    border-radius: 50%;
+                }
+            }
+
+            .line {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .text-and-input {
+                width: 40%;
+                margin-bottom: 20px;
+                display: flex;
+                flex-direction: column;
+
+                .text {
+                    font-family: 'regular';
+                    font-size: var(--font-size-1);
+                    margin-bottom: 0.2rem;
+                }
+
+                input,
+                select {
+                    padding: 8px;
+                    font-family: 'regular';
+                    font-size: var(--font-size-2);
+                    background-color: transparent;
+                    @include mixins.regular-border;
+                }
+            }
+
+            .email-conteinaer {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+
+                .email {
+                    display: flex;
+                    justify-content: space-between;
+                    font-family: 'regular';
+                    font-size: var(--font-size-1);
+                    width: 100%;
+                    // width: 90%;
+
+                    .address {
+                        font-size: var(--font-size-2);
+                        margin-right: 20px;
+                    }
+                }
+
+                .log-out {
+                    color: var(--disabled-text);
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .upgrade {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+
+            .current-plan {
+                font-family: 'black';
+                font-size: var(--font-size-3);
+            }
+
+            .button {
+                background-color: var(--main-color-not-active);
+                color: var(--default-white);
+                border-radius: 26px;
+                padding: 0.2rem 1rem 0.45rem;
+                transition: all 0.3s;
+                font-size: var(--font-size-1);
+                font-family: 'regular';
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: var(--main-color);
+                }
+            }
+        }
+    }
+}

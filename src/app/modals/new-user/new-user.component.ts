@@ -19,7 +19,7 @@ export class NewUserComponent {
   formSubmitted = false;
   currentProgress = 1;
   user: User;
-  statuses: { status: UserStatus, text: string, icon: string }[] = userStatusesWithText;
+  statuses = userStatusesWithText;
   professions = userProfessionsWithText;
 
   constructor() {

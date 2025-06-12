@@ -3,6 +3,7 @@ export class User {
     lastName = '';
     status?: UserStatus;
     profession?: profession;
+    email?: string;
 }
 
 export enum UserStatus {

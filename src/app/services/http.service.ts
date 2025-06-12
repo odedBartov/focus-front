@@ -100,4 +100,9 @@ export class HttpService {
   createInsight(text: string) {
     return this.httpClient.post(this.apiUrl + "Info/createInsight", { Text: text })
   }
+
+  getUser(): Observable<User> {
+    const headers = this.generateHeaders();
+    return this.httpClient.get<User>(this.apiUrl + 'Auth/getUser', headers)
+  }
 }

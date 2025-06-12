@@ -1,5 +1,5 @@
 
-import { Component, ElementRef, EventEmitter, inject, NgZone, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 declare global {
   interface Window {

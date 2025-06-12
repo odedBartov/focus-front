@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
+  router = inject(Router);
   userTokenKey = 'user-token';
   firstName = 'first-name';
   lastName = "last-name";
@@ -54,5 +56,10 @@ export class AuthenticationService {
 
   getUserPicture() {
     return localStorage.getItem(this.userPicture);
+  }
+
+  logOut() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
   }
 }
