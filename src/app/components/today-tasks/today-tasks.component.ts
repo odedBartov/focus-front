@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnIni
 import { Step } from '../../models/step';
 import { Project } from '../../models/project';
 import { CommonModule } from '@angular/common';
-import { StepType } from '../../models/enums';
+import { ProjectStatus, StepType } from '../../models/enums';
 import { HttpService } from '../../services/http.service';
 import { AnimationsService } from '../../services/animations.service';
 import { NewStepComponent } from '../new-step/new-step.component';
@@ -91,7 +91,7 @@ export class TodayTasksComponent implements OnInit {
     })
 
     this.noProject().steps?.forEach(step => {
-      if (!step.hideTaskDate || !this.isWithinLastDay(step.hideTaskDate)) { 
+      if (!step.hideTaskDate || !this.isWithinLastDay(step.hideTaskDate)) {
         const newTask: Task = { project: this.noProject(), step: step };
         this.tasks.push(newTask);
       }
@@ -167,6 +167,18 @@ export class TodayTasksComponent implements OnInit {
               this.setDescriptionHeight(taskIndex);
             }, 1);
           }, 1);
+        } else { // project was finished
+          task.project.status = ProjectStatus.finished;
+          this.httpService.updateProjects([task.project]).subscribe(res => {
+            const activeProjects = this.projectsService.getActiveProjects();
+            const unActiveProjects = this.projectsService.getUnActiveProjects();
+            const activeProjectIndex = activeProjects().indexOf(task.project);
+            if (activeProjectIndex > -1) {
+              unActiveProjects.set(unActiveProjects().concat(task.project));
+              activeProjects().splice(activeProjectIndex, 1);
+            }
+          });
+          this.animationsService.showFinishProject();
         }
         this.animationsService.changeIsloading(false);
       });
@@ -219,7 +231,7 @@ export class TodayTasksComponent implements OnInit {
     } else {
       if (task.project.id === this.noProject().id) {
         const stepIndex = this.noProject().steps.indexOf(task.step);
-        this.noProject().steps.splice(stepIndex,1);
+        this.noProject().steps.splice(stepIndex, 1);
       }
       const taskIndex = this.tasks.indexOf(task);
       this.tasks.splice(taskIndex, 1);
