@@ -56,6 +56,10 @@ export class ProfileComponent implements AfterViewInit {
     this.httpService.updateUser(this.user).subscribe(res => { });
   }
 
+  deleteAccount() {
+    
+  }
+
   logOut() {
     this.authenticationService.logOut();
     this.dialogRef.close();
