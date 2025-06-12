@@ -12,7 +12,7 @@
             @include mixins.regular-border;
             width: 90%;
             padding: 0 30px 30px;
-            margin-bottom: 60px;
+            margin: 60px 0;
 
             .profile-picture-container {
                 width: 100%;
@@ -32,7 +32,7 @@
             }
 
             .text-and-input {
-                width: 40%;
+                width: 47%;
                 margin-bottom: 20px;
                 display: flex;
                 flex-direction: column;
@@ -45,7 +45,7 @@
 
                 input,
                 select {
-                    padding: 8px;
+                    padding: 4px 14px;
                     font-family: 'regular';
                     font-size: var(--font-size-2);
                     background-color: transparent;
