@@ -70,6 +70,10 @@
         }
     }
 
+    .mat-mdc-menu-panel {
+        box-shadow: var(--common-shadow);
+    }
+
     .mat-mdc-menu-content {
         padding: 0;
         border-radius: 20px;
@@ -116,7 +120,7 @@
         max-width: 320px;
         font-family: 'regular';
     }
-    
+
     input,
     textarea {
         padding: 0.5rem 1rem;
