@@ -15,7 +15,7 @@ export enum UserStatus {
 export const userStatusesWithText: { status: UserStatus, text: string, icon: string }[] = [
                                    { status: UserStatus.exemptDealer, text: "עוסק פטור", icon: "assets/icons/laptop.svg" }, 
                                    { status: UserStatus.authorizedDealer, text: "עוסק מורשה", icon: "assets/icons/desktop.svg" }, 
-                                   { status: UserStatus.company, text: `חברה בע"ם`, icon: "assets/icons/robot_astromech.svg" }]
+                                   { status: UserStatus.company, text: `חברה בע"מ`, icon: "assets/icons/robot_astromech.svg" }]
 
 export enum profession {
     design,
