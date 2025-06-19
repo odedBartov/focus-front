@@ -60,7 +60,7 @@ export class AppComponent implements OnInit {
   }
 
   initHotJar() {
-    if (environment.production || true) {
+    if (environment.production) {
       const hotjarScript = document.createElement('script');
       hotjarScript.innerHTML = `
       (function(h,o,t,j,a,r){
