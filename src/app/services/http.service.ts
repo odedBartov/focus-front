@@ -5,8 +5,6 @@ import { Step } from '../models/step';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthenticationService } from './authentication.service';
 import { environment } from "../../environments/environment";
-import { Insight } from '../models/insight';
-import { Feature } from '../models/feature';
 import { InsightAndUpdates } from '../models/insightAndUpdates';
 import { User } from '../models/user';
 import { Title } from '@angular/platform-browser';

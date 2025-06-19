@@ -6,8 +6,9 @@ import { AnimationsService } from './services/animations.service';
 import { AuthenticationService } from './services/authentication.service';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 import { Title } from '@angular/platform-browser';
-import { BreakpointObserver, Breakpoints, LayoutModule } from '@angular/cdk/layout';
+import { BreakpointObserver, LayoutModule } from '@angular/cdk/layout';
 import { AnimationItem } from 'lottie-web';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ import { AnimationItem } from 'lottie-web';
   standalone: true
 })
 export class AppComponent implements OnInit {
+  hj: any;
   router = inject(Router);
   animationsService = inject(AnimationsService);
   authenticationService = inject(AuthenticationService);
@@ -53,6 +55,25 @@ export class AppComponent implements OnInit {
     this.animationsService.getFinishProject().subscribe(res => {
       this.showFinishProject = true;
     })
+
+    this.initHotJar();
+  }
+
+  initHotJar() {
+    if (environment.production || true) {
+      const hotjarScript = document.createElement('script');
+      hotjarScript.innerHTML = `
+      (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:6439691,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    `;
+      document.head.appendChild(hotjarScript);
+    }
   }
 
   animationCreated(animation: AnimationItem) {
