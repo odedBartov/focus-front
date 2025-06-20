@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
   constructor() {
     this.isLoading = this.animationsService.getIsLoading();
 
-    if (this.isMobileOrTablet() && false) {
+    if (this.isMobileOrTablet()) {
       this.router.navigate(['unsupportedDevice']);
     } else {
       const fullName = this.authenticationService.getUserName();
