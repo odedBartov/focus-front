@@ -3,7 +3,7 @@
         <div class="info">
             <div class="text-and-icon">
                 <span class="title">{{project().name}}</span>
-                <img class="pointer icon-expand" (click)="openProjectModal()" />
+                <img class="pointer icon-expand" (click)="openProjectModal()" *ngIf="!isReadOnly"/>
             </div>
             <span class="description" *ngIf="project()?.description">
                 {{project().description}}
@@ -14,12 +14,12 @@
                 <div class="cell date-value">{{project().startDate | date: 'dd.MM.yyyy'}}</div>
                 <div class="cell date-value">{{project().endDate | date: 'dd.MM.yyyy'}}</div>
             </div>
-            <div class="update-client">
+            <!-- <div class="update-client">
                 <div class="toggle-switch" [class.on]="project().updateClient" (click)="updateCient()">
                     <div class="switch-thumb"></div>
                 </div>
                 <span>הלקוח/ה {{project().updateClient? '' : ' לא'}} מקבל/ת עדכונים על התקדמות ושינויים</span>
-            </div>
+            </div> -->
         </div>
         <div class="price">
             <div class="text-and-icon">
@@ -52,7 +52,7 @@
             <div *ngIf="editStepId !== step.id && animationHackFlag">
                 <div class="step-header">
                     <span [ngClass]="{'step-name': step.id !== activeStepId}">{{step.name}}</span>
-                    <img class="pointer icon-confirm" (click)="changeStepStatus(step)" *ngIf="step.isComplete" />
+                    <img [class]="isReadOnly? 'finished-icon' : 'pointer icon-confirm'" (click)="isReadOnly? '' : changeStepStatus(step)" *ngIf="step.isComplete" />
                     <img [src]="`assets/icons/${step.stepType === stepTypeEnum.task? 'puzzle_piece' : 'dollar'}.svg`"
                         *ngIf="!step.isComplete" />
                 </div>
@@ -65,7 +65,7 @@
                     <textarea [ngClass]="{'active': activeStepId === step.id}" disabled="true"
                         *ngIf="(step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description)"
                         #descriptions>{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
-                    <div class="step-icons">
+                    <div class="step-icons" *ngIf="!isReadOnly">
                         <div class="edit-delete">
                             <img class="icon-garbage-can" (click)="deleteStep(step)" />
                             <img class="icon-pencil" (click)="editStep(stepDiv, step.id)" />
@@ -85,7 +85,7 @@
                 <app-new-step class="new-step" [steptInput]="step" (stepsEmitter)="updateStep($event)"></app-new-step>
             </div>
         </div>
-        <div class="add-step" *ngIf="!isShowNewStep">
+        <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly">
             <img (click)="showNewStep()" class="icon-plus" #addStepDiv tabindex="0" />
         </div>
         <div *ngIf="isShowNewStep" #newStepDiv>
@@ -93,10 +93,10 @@
         </div>
     </div>
     <div class="rich-text" *ngIf="showNotes" #richTextDiv>
-        <app-rich-text [project]="project()" [expanded]="true"></app-rich-text>
+        <app-rich-text [project]="project()" [expanded]="true" [isReadOnly]="isReadOnly"></app-rich-text>
     </div>
     <div class="notes" #notesDiv>
-        <app-notes [project]="project()" [notesPopup]="showNotes"
+        <app-notes [project]="project()" [notesPopup]="showNotes" [isReadOnly]="isReadOnly"
             (showNotesEmitter)="showNotesPopup($event)"></app-notes>
     </div>
 </div>

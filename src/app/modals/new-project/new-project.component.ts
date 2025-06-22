@@ -5,6 +5,7 @@ import { Project } from '../../models/project';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { parseDate } from '../../helpers/functions';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-new-project',
@@ -16,12 +17,14 @@ import { parseDate } from '../../helpers/functions';
 export class NewProjectComponent {
   dialogRef = inject(MatDialogRef<NewProjectComponent>);
   formBuilder = inject(FormBuilder);
+  authenticationService = inject(AuthenticationService);
   projectForm: FormGroup;
   project: Project;
   submitted = false;
 
   constructor() {
     this.project = new Project();
+    this.project.ownerPicture = this.authenticationService.getUserPicture() ?? undefined;
     const today = new Date();
     const dd = String(today.getDate()).padStart(2, '0');
     const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed

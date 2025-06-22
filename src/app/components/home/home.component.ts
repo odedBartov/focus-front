@@ -92,6 +92,17 @@ export class HomeComponent implements OnInit {
     this.noProject = this.projectsService.getNoProjects();
     this.selectedProject = this.projectsService.getCurrentProject();
     this.initUserPicture();
+
+    this.route.paramMap.subscribe(params => {
+      const tab = params.get('tab');
+      console.log(tab);
+      
+      if (tab && tab !== this.homeTab.label && tab !== this.archiveTab.label) {
+      }
+    });
+    //if load project
+    //
+    //else
     this.refreshProjects();
   }
 

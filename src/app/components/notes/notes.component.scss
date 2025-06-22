@@ -23,6 +23,10 @@
         color: #ACACBC;
         margin-bottom: 20px;
 
+        .icon-expand {
+            align-self: flex-start;
+        }
+
         .selected {
             color: var(--default-black);
             font-family: 'black';

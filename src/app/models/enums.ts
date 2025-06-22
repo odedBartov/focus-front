@@ -13,3 +13,8 @@ export enum ProjectStatus {
     frozen,
     finished
 }
+
+export enum subscriptionEnum {
+    free,
+    paid
+}

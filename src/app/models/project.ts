@@ -17,6 +17,7 @@ export class Project {
     clientMail: string;
     links:{name: string, url: string}[];
     notes: string;
+    ownerPicture?: string;
 
     constructor() {
         this.id = '';

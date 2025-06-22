@@ -18,6 +18,7 @@ import { RichTextComponent } from "../rich-text/rich-text.component";
 export class NotesComponent {
   @Input() project?: Project;
   @Input({ required: false }) notesPopup?: boolean;
+  @Input() isReadOnly?: boolean;
   @Output() showNotesEmitter: EventEmitter<boolean> = new EventEmitter();
   @ViewChild('newLinkDiv', { static: false }) newLinkDiv?: ElementRef;
   router = inject(Router);

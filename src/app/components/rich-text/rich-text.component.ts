@@ -18,6 +18,7 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit, AfterVie
   @ViewChild('editorWrapper', { read: ElementRef }) editorWrapper!: ElementRef;
   @Input() project?: Project;
   @Input() expanded?: boolean;
+  @Input() isReadOnly?: boolean;
   httpService = inject(HttpService);
   ritchTextSubject = new Subject<string>();
   editor = new Editor();

@@ -242,10 +242,16 @@
         justify-content: space-between;
         font-family: 'black';
 
+
         .step-name {
             font-size: var(--font-size-2);
         }
     }
+
+}
+
+.finished-icon {
+    content: url('../../../assets/icons/confirm_yes.svg');
 }
 
 .cdk-drag-placeholder {

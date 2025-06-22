@@ -1,9 +1,12 @@
+import { subscriptionEnum } from "./enums";
+
 export class User {
     firstName = '';
     lastName = '';
     status?: UserStatus;
     profession?: profession;
     email?: string;
+    subscription?: subscriptionEnum;
 }
 
 export enum UserStatus {

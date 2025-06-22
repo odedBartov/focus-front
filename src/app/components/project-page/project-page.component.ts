@@ -62,7 +62,7 @@ export class ProjectPageComponent implements OnInit {
   project!: WritableSignal<Project>;
   projectId: string | null = null;
   activeStepId? = '';
-  isReadOnly = false;
+  isReadOnly = true;
   isShowNewStep = false;
   editStepId: string | undefined = '';
   hoverStepId? = '';
@@ -74,16 +74,16 @@ export class ProjectPageComponent implements OnInit {
     loop: false,
   };
   animatingItemId: string = '';
-  hideProperties = this.projectHoverService.getSignal();
+    hideProperties = this.projectHoverService.getSignal();
   animationHackFlag = true;
   mouseDownInside = false;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.project = this.projectsService.getCurrentProject();
-    this.route.paramMap.subscribe(params => {
-      this.projectId = params.get('projectId');
-      this.isReadOnly = params.get('readOnly') == 'true';
-    });
+    // this.route.paramMap.subscribe(params => {
+    //   this.projectId = params.get('projectId');
+    //   this.isReadOnly = params.get('readOnly') == 'true';
+    // });
 
     effect(() => {
       const value = this.project();
@@ -343,7 +343,6 @@ export class ProjectPageComponent implements OnInit {
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
         this.project.set(res);
-        //this.projectUpdated.emit(res);
       }
     })
   }

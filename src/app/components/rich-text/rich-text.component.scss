@@ -45,6 +45,10 @@
         margin-bottom: 2rem;
         padding: 24px 28px 28px;
     }
+
+    .read-only {
+        pointer-events: none;
+    }
 }
 
 .shadow-and-background {
