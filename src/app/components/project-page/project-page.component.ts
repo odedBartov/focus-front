@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, HostListener, inject, OnInit, Output, QueryList, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../../models/project';
 import { HttpService } from '../../services/http.service';
@@ -18,8 +18,8 @@ import { NotesComponent } from '../notes/notes.component';
 import { ProjectHoverService } from '../../services/project-hover.service';
 import { RichTextComponent } from "../rich-text/rich-text.component";
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
-import { AnimationItem } from 'lottie-web';
 import { ProjectsService } from '../../services/projects.service';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-project-page',
@@ -51,6 +51,7 @@ export class ProjectPageComponent implements OnInit {
   dialog = inject(MatDialog);
   projectHoverService = inject(ProjectHoverService);
   projectsService = inject(ProjectsService);
+  authenticationService = inject(AuthenticationService);
   @Output() navigateToHomeEmitter = new EventEmitter<void>();
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
@@ -62,7 +63,7 @@ export class ProjectPageComponent implements OnInit {
   project!: WritableSignal<Project>;
   projectId: string | null = null;
   activeStepId? = '';
-  isReadOnly = true;
+  isReadOnly!: WritableSignal<boolean>;
   isShowNewStep = false;
   editStepId: string | undefined = '';
   hoverStepId? = '';
@@ -74,16 +75,12 @@ export class ProjectPageComponent implements OnInit {
     loop: false,
   };
   animatingItemId: string = '';
-    hideProperties = this.projectHoverService.getSignal();
+  hideProperties = this.projectHoverService.getSignal();
   animationHackFlag = true;
   mouseDownInside = false;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.project = this.projectsService.getCurrentProject();
-    // this.route.paramMap.subscribe(params => {
-    //   this.projectId = params.get('projectId');
-    //   this.isReadOnly = params.get('readOnly') == 'true';
-    // });
 
     effect(() => {
       const value = this.project();
@@ -104,6 +101,7 @@ export class ProjectPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProject();
+    this.isReadOnly = this.authenticationService.getIsReadOnly();
   }
 
   @HostListener('document:click', ['$event'])

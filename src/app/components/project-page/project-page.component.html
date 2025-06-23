@@ -52,7 +52,7 @@
             <div *ngIf="editStepId !== step.id && animationHackFlag">
                 <div class="step-header">
                     <span [ngClass]="{'step-name': step.id !== activeStepId}">{{step.name}}</span>
-                    <img [class]="isReadOnly? 'finished-icon' : 'pointer icon-confirm'" (click)="isReadOnly? '' : changeStepStatus(step)" *ngIf="step.isComplete" />
+                    <img [class]="isReadOnly()? 'finished-icon' : 'pointer icon-confirm'" (click)="isReadOnly()? '' : changeStepStatus(step)" *ngIf="step.isComplete" />
                     <img [src]="`assets/icons/${step.stepType === stepTypeEnum.task? 'puzzle_piece' : 'dollar'}.svg`"
                         *ngIf="!step.isComplete" />
                 </div>
@@ -85,7 +85,7 @@
                 <app-new-step class="new-step" [steptInput]="step" (stepsEmitter)="updateStep($event)"></app-new-step>
             </div>
         </div>
-        <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly">
+        <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly()">
             <img (click)="showNewStep()" class="icon-plus" #addStepDiv tabindex="0" />
         </div>
         <div *ngIf="isShowNewStep" #newStepDiv>
@@ -93,10 +93,10 @@
         </div>
     </div>
     <div class="rich-text" *ngIf="showNotes" #richTextDiv>
-        <app-rich-text [project]="project()" [expanded]="true" [isReadOnly]="isReadOnly"></app-rich-text>
+        <app-rich-text [project]="project()" [expanded]="true"></app-rich-text>
     </div>
     <div class="notes" #notesDiv>
-        <app-notes [project]="project()" [notesPopup]="showNotes" [isReadOnly]="isReadOnly"
+        <app-notes [project]="project()" [notesPopup]="showNotes"
             (showNotesEmitter)="showNotesPopup($event)"></app-notes>
     </div>
 </div>

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, WritableSignal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Editor, NgxEditorModule } from 'ngx-editor';
 import { debounceTime, of, Subject, Subscription, switchMap } from 'rxjs';
@@ -7,6 +7,7 @@ import { HttpService } from '../../services/http.service';
 import { CommonModule } from '@angular/common';
 import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-rich-text',
@@ -18,12 +19,17 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit, AfterVie
   @ViewChild('editorWrapper', { read: ElementRef }) editorWrapper!: ElementRef;
   @Input() project?: Project;
   @Input() expanded?: boolean;
-  @Input() isReadOnly?: boolean;
   httpService = inject(HttpService);
+  authenticationService = inject(AuthenticationService);
+  isReadOnly!: WritableSignal<boolean>;
   ritchTextSubject = new Subject<string>();
   editor = new Editor();
   editorControl = new FormControl('');
   private valueChangesSub!: Subscription;
+
+  constructor() {
+    this.isReadOnly = this.authenticationService.getIsReadOnly();
+  }
 
   ngOnInit(): void {
     this.initEditor();

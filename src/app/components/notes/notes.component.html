@@ -9,7 +9,7 @@
 
 <ng-template #editorTemplate>
     <div class="lists">
-        <app-rich-text [project]="project" [isReadOnly]="isReadOnly" style="height: 100%;"></app-rich-text>
+        <app-rich-text [project]="project" style="height: 100%;"></app-rich-text>
     </div>
 </ng-template>
 
@@ -25,9 +25,9 @@
                 <img [src]="`/assets/icons/${hoveredLink === link? 'link_yes' : 'link_not'}.svg`"
                     (click)="openLink(link.url)" />
             </div>
-            <img class="icon-garbage-can pointer" *ngIf="hoveredLink === link && !isReadOnly" (click)="deleteLink(link)"/>
+            <img class="icon-garbage-can pointer" *ngIf="hoveredLink === link && !isReadOnly()" (click)="deleteLink(link)"/>
         </div>
-        <div class="add-link" *ngIf="!isReadOnly">
+        <div class="add-link" *ngIf="!isReadOnly()">
             <span class="pointer" (click)="addingNewLink = true; resetLinkForm()" *ngIf="!addingNewLink">+ קישור
                 חדש</span>
         </div>

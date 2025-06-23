@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, inject, input, Input, OnChanges, OnDestroy, Output, output, SimpleChanges, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, HostListener, inject, input, Input, OnChanges, OnDestroy, Output, output, SimpleChanges, ViewChild, WritableSignal } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Project } from '../../models/project';
 import { AnimationsService } from '../../services/animations.service';
 import { HttpService } from '../../services/http.service';
-import { Editor, NgxEditorModule } from 'ngx-editor';
-import { debounceTime, Subscription } from 'rxjs';
+import { NgxEditorModule } from 'ngx-editor';
 import { RichTextComponent } from "../rich-text/rich-text.component";
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-notes',
@@ -18,13 +18,14 @@ import { RichTextComponent } from "../rich-text/rich-text.component";
 export class NotesComponent {
   @Input() project?: Project;
   @Input({ required: false }) notesPopup?: boolean;
-  @Input() isReadOnly?: boolean;
   @Output() showNotesEmitter: EventEmitter<boolean> = new EventEmitter();
   @ViewChild('newLinkDiv', { static: false }) newLinkDiv?: ElementRef;
   router = inject(Router);
   formBuilder = inject(FormBuilder);
   animationsService = inject(AnimationsService);
   httpService = inject(HttpService);
+  authenticationService = inject(AuthenticationService);
+  isReadOnly!: WritableSignal<boolean>;
   form: FormGroup;
   notesSelected = true;
   hoveredLink = undefined;
@@ -37,6 +38,7 @@ export class NotesComponent {
       name: ['', [Validators.required]],
       url: ['', [Validators.required]]
     });
+    this.isReadOnly = this.authenticationService.getIsReadOnly();
   }
 
   @HostListener('document:click', ['$event'])

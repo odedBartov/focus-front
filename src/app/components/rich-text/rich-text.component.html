@@ -3,7 +3,7 @@
         <span class="title">רשימות וסיכומים</span>
         <span class="sub-title">כל מי שצופה בפרויקט יכול לקרוא את הרשימות שלך</span>
     </div>
-    <div class="toolbar" *ngIf="!isReadOnly">
+    <div class="toolbar" *ngIf="!isReadOnly()">
         <img class="icon-ordered-list pointer" (click)="toggleOrderedList()" />
         <img class="icon-bullet-list pointer" (click)="toggleBulletList()" />
         <img class="icon-bold pointer" (click)="toggleBold()" />
@@ -12,5 +12,5 @@
         <img class="icon-h2 pointer" (click)="setHeading(2)" />
         <img class="icon-h1 pointer" (click)="setHeading(1)" />
     </div>
-    <ngx-editor class="editor" [ngClass]="{ 'big-fonts': expanded, 'read-only': isReadOnly }" (ngModelChange)="editorChanged($event)" [class.editor-border]="expanded" [class.shadow-and-background]="!expanded" [editor]="editor" [formControl]="editorControl" placeholder="הקלד כאן..."></ngx-editor>
+    <ngx-editor class="editor" [ngClass]="{ 'big-fonts': expanded, 'read-only': isReadOnly() }" (ngModelChange)="editorChanged($event)" [class.editor-border]="expanded" [class.shadow-and-background]="!expanded" [editor]="editor" [formControl]="editorControl" placeholder="הקלד כאן..."></ngx-editor>
 </div>

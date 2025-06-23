@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -11,6 +11,8 @@ export class AuthenticationService {
   lastName = "last-name";
   isNewUser = 'is-new-user';
   userPicture = "user-picture";
+  isReadOnly = "is-read-only";
+  isReadOnlySignal = signal<boolean>(false);
 
   getToken() {
     return localStorage.getItem(this.userTokenKey);
@@ -56,6 +58,14 @@ export class AuthenticationService {
 
   getUserPicture() {
     return localStorage.getItem(this.userPicture);
+  }
+
+  setIsReadOnly(isReadOnly: string) {
+    this.isReadOnlySignal.set(isReadOnly === 'true');
+  }
+
+  getIsReadOnly() {
+    return this.isReadOnlySignal;
   }
 
   logOut() {

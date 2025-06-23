@@ -12,7 +12,7 @@
   </div>
 
   <div class="main-content">
-    <div class="home-container" [ngClass]="{ 'show-before': isProjectHovered() }" *ngIf="activeTab?.id === tabs[0]?.id">
+    <div class="home-container" [ngClass]="{ 'show-before': isProjectHovered() }" *ngIf="activeTab?.id === homeTab?.id">
       <div class="home">
         <div class="summary">
           <app-summary [projects]="projectsForPayment"></app-summary>
@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <div class="project-container" *ngIf="activeTab?.id !== tabs[0]?.id && activeTab.id !== archiveTab.id">
+    <div class="project-container" *ngIf="activeTab?.id !== homeTab?.id && activeTab.id !== archiveTab.id">
       <app-project-page class="project-page" (navigateToHomeEmitter)="setActiveTab(tabs[0])" #projectPage></app-project-page>
     </div>
 

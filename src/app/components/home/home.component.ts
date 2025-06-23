@@ -92,18 +92,14 @@ export class HomeComponent implements OnInit {
     this.noProject = this.projectsService.getNoProjects();
     this.selectedProject = this.projectsService.getCurrentProject();
     this.initUserPicture();
-
-    this.route.paramMap.subscribe(params => {
+    let paramProjectId: string | null | undefined = '';
+    this.route.queryParamMap.subscribe(params => {
       const tab = params.get('tab');
-      console.log(tab);
-      
-      if (tab && tab !== this.homeTab.label && tab !== this.archiveTab.label) {
-      }
+      paramProjectId = (tab !== this.homeTab.id && tab !== this.archiveTab.id) ? tab : undefined;
     });
-    //if load project
-    //
-    //else
-    this.refreshProjects();
+    setTimeout(() => { // after query params loaded
+      this.refreshProjects(paramProjectId);
+    }, 1);
   }
 
   listenToUrl() {
@@ -133,7 +129,11 @@ export class HomeComponent implements OnInit {
   }
 
   initTabs() {
-    this.tabs = [this.homeTab];
+    if (this.authenticationService.getIsReadOnly()()) {
+      this.tabs = [];
+    } else {
+      this.tabs = [this.homeTab];
+    }
     const activeProjectTabs = this.activeProjects().map(p => { return { id: p.id ?? '', label: p.name, project: p } });
     this.tabs.push(...activeProjectTabs);
     if (this.unActiveProjects().length) {
@@ -163,25 +163,33 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  refreshProjects() {
+  refreshProjects(projectId?: string | null) {
     this.animationsService.changeIsloading(true);
-    this.httpService.getProjects().subscribe(res => {
-      const userProjects = this.sortProjects(res);
-      this.projectsForPayment = userProjects.activeProjects.concat(userProjects.noProject);
-      userProjects.activeProjects = userProjects.activeProjects.sort((a, b) => a.positionInList - b.positionInList);
-      userProjects.unActiveProjects = userProjects.unActiveProjects.sort((a, b) => a.positionInList - b.positionInList);
-      this.activeTab = this.homeTab;
-      userProjects.activeProjects.forEach(project => {
-        project.steps = project.steps.sort((a, b) => a.positionInList - b.positionInList);
-      });
-      this.updateDateDueForPassedSteps(userProjects.activeProjects);
-      this.activeProjects.set(userProjects.activeProjects);
-      this.unActiveProjects.set(userProjects.unActiveProjects);
-      this.noProject.set(userProjects.noProject);
-      this.initTabs();
-      setTimeout(() => {
-        this.listenToUrl();
-      }, 1);
+    this.httpService.getProjects(projectId).subscribe(res => {
+      if (this.authenticationService.getIsReadOnly()()) {
+        this.tabs = this.tabs.splice(0, 1);
+        this.activeProjects.set(res);
+        setTimeout(() => {
+          this.listenToUrl();
+        }, 1);
+      } else {
+        const userProjects = this.sortProjects(res);
+        this.projectsForPayment = userProjects.activeProjects.concat(userProjects.noProject);
+        userProjects.activeProjects = userProjects.activeProjects.sort((a, b) => a.positionInList - b.positionInList);
+        userProjects.unActiveProjects = userProjects.unActiveProjects.sort((a, b) => a.positionInList - b.positionInList);
+        this.activeTab = this.homeTab;
+        userProjects.activeProjects.forEach(project => {
+          project.steps = project.steps.sort((a, b) => a.positionInList - b.positionInList);
+        });
+        this.updateDateDueForPassedSteps(userProjects.activeProjects);
+        this.activeProjects.set(userProjects.activeProjects);
+        this.unActiveProjects.set(userProjects.unActiveProjects);
+        this.noProject.set(userProjects.noProject);
+        this.initTabs();
+        setTimeout(() => {
+          this.listenToUrl();
+        }, 1);
+      }
       this.animationsService.changeIsloading(false);
     });
   }
@@ -211,7 +219,7 @@ export class HomeComponent implements OnInit {
         } else {
           result.unActiveProjects.push(project);
         }
-    })
+    })    
     return result;
   }
 

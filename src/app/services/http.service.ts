@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 import { Project } from '../models/project';
 import { Step } from '../models/step';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -57,9 +57,13 @@ export class HttpService {
     return this.httpClient.get<Project>(`${this.apiUrl}Projects/getProject?projectId=${projectId}`, headers);
   }
 
-  getProjects(): Observable<Project[]> {
+  getProjects(projectId?: string | null): Observable<Project[]> {
     const headers = this.generateHeaders();
-    return this.httpClient.get<Project[]>(this.apiUrl + "Projects/getUserProjects", headers);
+    const singleProject = projectId ? `?singleProjectId=${projectId}` : "";
+    return this.httpClient.get<Project[]>(this.apiUrl + `Projects/getUserProjects${singleProject}`, { ...headers, observe: 'response' }).pipe(tap((res: any) => {
+      const isReadOnly = res.headers.get("isReadOnly");
+      this.authenticationService.setIsReadOnly(isReadOnly);
+    }), map(res => res.body as Project[]));
   }
 
   updateProjects(project: Project[]): Observable<Project[]> {
