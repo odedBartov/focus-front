@@ -61,8 +61,12 @@ export class HttpService {
     const headers = this.generateHeaders();
     const singleProject = projectId ? `?singleProjectId=${projectId}` : "";
     return this.httpClient.get<Project[]>(this.apiUrl + `Projects/getUserProjects${singleProject}`, { ...headers, observe: 'response' }).pipe(tap((res: any) => {
-      const isReadOnly = res.headers.get("isReadOnly");
+      const readOnlyHeader = res.headers.get("isReadOnly");
+      const isReadOnly = readOnlyHeader && readOnlyHeader === 'true';
       this.authenticationService.setIsReadOnly(isReadOnly);
+      if (isReadOnly) {
+        this.authenticationService.setUserPicture(res.body[0].ownerPicture);
+      }
     }), map(res => res.body as Project[]));
   }
 

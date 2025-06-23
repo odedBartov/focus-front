@@ -60,8 +60,8 @@ export class AuthenticationService {
     return localStorage.getItem(this.userPicture);
   }
 
-  setIsReadOnly(isReadOnly: string) {
-    this.isReadOnlySignal.set(isReadOnly === 'true');
+  setIsReadOnly(isReadOnly: boolean) {
+    this.isReadOnlySignal.set(isReadOnly);
   }
 
   getIsReadOnly() {
