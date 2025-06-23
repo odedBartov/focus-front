@@ -49,7 +49,8 @@ export class HomeComponent implements OnInit {
   activeProjects!: WritableSignal<Project[]>;
   unActiveProjects!: WritableSignal<Project[]>;
   noProject!: WritableSignal<Project>;
-  selectedProject!: WritableSignal<Project | undefined>;;
+  selectedProject!: WritableSignal<Project | undefined>;
+  isReadOnly!: WritableSignal<boolean>;
   isProjectHovered = this.projectHoverService.getSignal();
   userPicture: string | null = null;
   defaultUserPicture = "assets/icons/default_profile.svg"
@@ -74,6 +75,8 @@ export class HomeComponent implements OnInit {
         this.initTabs();
       }
     });
+
+    this.isReadOnly = this.authenticationService.getIsReadOnly();
   }
 
   setActiveTab(tab: ProjectTab) {
@@ -129,7 +132,7 @@ export class HomeComponent implements OnInit {
   }
 
   initTabs() {
-    if (this.authenticationService.getIsReadOnly()()) {
+    if (this.isReadOnly()) {
       this.tabs = [];
     } else {
       this.tabs = [this.homeTab];
@@ -166,7 +169,7 @@ export class HomeComponent implements OnInit {
   refreshProjects(projectId?: string | null) {
     this.animationsService.changeIsloading(true);
     this.httpService.getProjects(projectId).subscribe(res => {
-      if (this.authenticationService.getIsReadOnly()()) {
+      if (this.isReadOnly()) {
         this.tabs = this.tabs.splice(0, 1);
         this.activeProjects.set(res);
         setTimeout(() => {

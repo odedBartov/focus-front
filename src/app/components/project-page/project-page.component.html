@@ -3,7 +3,7 @@
         <div class="info">
             <div class="text-and-icon">
                 <span class="title">{{project().name}}</span>
-                <img class="pointer icon-expand" (click)="openProjectModal()" *ngIf="!isReadOnly"/>
+                <img class="pointer icon-expand" (click)="openProjectModal()" *ngIf="!isReadOnly()"/>
             </div>
             <span class="description" *ngIf="project()?.description">
                 {{project().description}}
@@ -65,7 +65,7 @@
                     <textarea [ngClass]="{'active': activeStepId === step.id}" disabled="true"
                         *ngIf="(step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description)"
                         #descriptions>{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
-                    <div class="step-icons" *ngIf="!isReadOnly">
+                    <div class="step-icons" *ngIf="!isReadOnly()">
                         <div class="edit-delete">
                             <img class="icon-garbage-can" (click)="deleteStep(step)" />
                             <img class="icon-pencil" (click)="editStep(stepDiv, step.id)" />

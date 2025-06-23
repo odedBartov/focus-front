@@ -8,7 +8,7 @@
         <img [src]="tab.icon" />
       </div>
     </div>
-    <img class="profile" [src]="userPicture" (click)="navigateToProfile()" />
+    <img class="profile" [ngClass]="{pointer: !isReadOnly()}" [src]="userPicture" (click)="isReadOnly()? '' : navigateToProfile()" />
   </div>
 
   <div class="main-content">
