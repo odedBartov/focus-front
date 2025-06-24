@@ -18,6 +18,12 @@ export class HttpService {
   authenticationService = inject(AuthenticationService);
   titleService = inject(Title);
 
+  constructor() {
+    setInterval(() => {
+      this.getInsightAndUpdates().subscribe(res => {})
+    }, 700000);
+  }
+
   generateHeaders() {
     const token = this.authenticationService.getToken();
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
