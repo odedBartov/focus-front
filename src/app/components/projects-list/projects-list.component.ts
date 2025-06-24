@@ -81,7 +81,7 @@ export class ProjectsListComponent {
 
   deleteProject(project: Project) {
     if (project.id) {
-      this.animationsService.changeIsloading(true);
+      this.animationsService.changeIsLoadingWithDelay();
       this.httpService.deleteProject(project.id).subscribe(res => {
         const projectIndex = this.projects().indexOf(project);
         const projects = [...this.projects()];
@@ -93,7 +93,7 @@ export class ProjectsListComponent {
   }
 
   cloneProject(project: Project) {
-    this.animationsService.changeIsloading(true);
+    this.animationsService.changeIsLoadingWithDelay();
     const clonedProject = { ...project };
     clonedProject.id = undefined;
     clonedProject.startDate = new Date();
@@ -132,7 +132,7 @@ export class ProjectsListComponent {
   }
 
   updateProjects(projects: Project[]) {
-    this.animationsService.changeIsloading(true);
+    this.animationsService.changeIsLoadingWithDelay();
     return this.httpService.updateProjects(projects).pipe(tap(res => {
       this.animationsService.changeIsloading(false);
     }));
@@ -147,7 +147,7 @@ export class ProjectsListComponent {
     const dialogRef = this.dialog.open(NewProjectComponent);
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
-        this.animationsService.changeIsloading(true);
+        this.animationsService.changeIsLoadingWithDelay();
         this.httpService.createProject(res).subscribe(newProject => {
           this.projects.set(this.projects().concat(newProject));
           this.animationsService.changeIsloading(false);

@@ -148,7 +148,7 @@ export class TodayTasksComponent implements OnInit {
     if (task.project.id === this.noProject().id) {
       this.deleteStep(task);
     } else {
-      this.animationsService.changeIsloading(true);
+      this.animationsService.changeIsLoadingWithDelay();
       this.httpService.updateSteps([task.step]).subscribe(res => {
         const finishedStepId = task.step.id;
         this.handleNextStep(task);
@@ -186,7 +186,7 @@ export class TodayTasksComponent implements OnInit {
   }
 
   createNewStep(step: Step) {
-    this.animationsService.changeIsloading(true);
+    this.animationsService.changeIsLoadingWithDelay();
     step.projectId = this.standAloneStepsService.noProjectId;
     this.httpService.createStep(step).subscribe(res => {
       const newTask: Task = { project: this.noProject(), step: res };
@@ -201,7 +201,7 @@ export class TodayTasksComponent implements OnInit {
   }
 
   hideStepForToday(task: Task) {
-    this.animationsService.changeIsloading(true);
+    this.animationsService.changeIsLoadingWithDelay();
     task.step.hideTaskDate = new Date();
     this.httpService.updateSteps([task.step]).subscribe(res => {
       const taskIndex = this.tasks.indexOf(task)
@@ -216,7 +216,7 @@ export class TodayTasksComponent implements OnInit {
 
   deleteStep(task: Task) {
     if (task.step.id) {
-      this.animationsService.changeIsloading(true);
+      this.animationsService.changeIsLoadingWithDelay();
       this.httpService.deleteStep(task.step.id).subscribe(res => {
         this.handleNextStep(task);
         this.animationsService.changeIsloading(false);
@@ -240,7 +240,7 @@ export class TodayTasksComponent implements OnInit {
   }
 
   updateStep(project: Project, newStep: Step) {
-    this.animationsService.changeIsloading(true);
+    this.animationsService.changeIsLoadingWithDelay();
     this.httpService.updateSteps([newStep]).subscribe(res => {
       project.steps = project?.steps?.map(step =>
         step.id === res[0].id ? res[0] : step

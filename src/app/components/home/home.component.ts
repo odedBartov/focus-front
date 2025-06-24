@@ -153,7 +153,7 @@ export class HomeComponent implements OnInit {
     moveItemInArray(this.tabs, event.previousIndex, event.currentIndex);
     moveItemInArray(this.activeProjects(), event.previousIndex - 1, event.currentIndex - 1)
     this.updateProjectsPosition();
-    this.animationsService.changeIsloading(true);
+    this.animationsService.changeIsLoadingWithDelay();
     this.httpService.updateProjects(this.activeProjects()).subscribe(res => {
       this.activeProjects.set(this.activeProjects().sort((a, b) => a.positionInList - b.positionInList));
       this.animationsService.changeIsloading(false);

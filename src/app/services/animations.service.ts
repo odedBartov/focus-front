@@ -8,6 +8,7 @@ export class AnimationsService {
   isLoading = signal<boolean>(false);
   finishProject = new Subject<void>();
   counter = 0;
+  averageRequestTime = 400;
   
   getIsLoading(): Signal<boolean> {
     return this.isLoading;
@@ -24,6 +25,12 @@ export class AnimationsService {
   changeIsloading(value: boolean): void {
     this.counter += value? 1 : -1;    
     this.isLoading.set(this.counter > 0);
+  }
+
+  changeIsLoadingWithDelay() {
+    setTimeout(() => {
+      this.counter++;
+    }, this.averageRequestTime);
   }
 
   hideIsLoading() {
