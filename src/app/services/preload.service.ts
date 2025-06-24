@@ -13,6 +13,8 @@ export class PreloadService {
             'assets/pictures/coffee_4.png',
             'assets/pictures/coffee_5.png',
             'assets/pictures/coffee_6.png',
+            'assets/icons/garbage_can_not.svg',
+            'assets/icons/garbage_can_yes.svg'
         ];
         this.preloadImages(paths);
         this.preloadImagesComplex(paths);
