@@ -62,7 +62,7 @@ export class NotesComponent {
     if (this.project) {
       const index = this.project.links.indexOf(link);
       this.project.links.splice(index, 1);
-      this.animationsService.changeIsloading(true);
+      this.animationsService.changeIsLoadingWithDelay();
       this.httpService.updateProjects([this.project]).subscribe(res => {
         this.animationsService.changeIsloading(false);
       })

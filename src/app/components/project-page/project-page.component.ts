@@ -199,7 +199,7 @@ export class ProjectPageComponent implements OnInit {
         this.activeStepId = this.project()?.steps?.find(s => !s.isComplete)?.id;
       });
 
-      this.animationsService.changeIsloading(true);
+      this.animationsService.changeIsLoadingWithDelay();
       this.httpService.updateSteps(this.project().steps).subscribe(res => {
         this.setActiveStepHeight();
         this.animationsService.changeIsloading(false);
@@ -295,7 +295,7 @@ export class ProjectPageComponent implements OnInit {
   }
 
   updateStep(step: Step) {
-    this.animationsService.changeIsloading(true);
+    this.animationsService.changeIsLoadingWithDelay();
     this.httpService.updateSteps([step]).subscribe(res => {
       if (this.project().steps) {
         this.project().steps = this.project()?.steps?.map(step =>
@@ -359,7 +359,7 @@ export class ProjectPageComponent implements OnInit {
   }
 
   createNewStep(step: Step) {
-    this.animationsService.changeIsloading(true);
+    this.animationsService.changeIsLoadingWithDelay();
     step.projectId = this.project()?.id;
     step.positionInList = (this.project()?.steps?.length ?? 0) + 1;
     this.httpService.createStep(step).subscribe(res => {
@@ -377,7 +377,7 @@ export class ProjectPageComponent implements OnInit {
 
   deleteStep(step: Step) {
     if (step.id) {
-      this.animationsService.changeIsloading(true);
+      this.animationsService.changeIsLoadingWithDelay();
       this.httpService.deleteStep(step.id).subscribe(res => {
         const stepIndex = this.project()?.steps?.indexOf(step);
         if (stepIndex !== undefined) {

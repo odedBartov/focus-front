@@ -84,7 +84,7 @@ export class ArchiveComponent {
   }
 
   updateProjects(projects: Project[]) {
-    this.animationsService.changeIsloading(true);
+    this.animationsService.changeIsLoadingWithDelay();
     return this.httpService.updateProjects(projects).pipe(tap(res => {
       this.animationsService.changeIsloading(false);
     }));
