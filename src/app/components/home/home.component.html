@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <div class="project-container" *ngIf="activeTab?.id !== homeTab?.id && activeTab.id !== archiveTab.id">
+    <div class="project-container" *ngIf="activeTab?.id !== 'none' && activeTab?.id !== homeTab?.id && activeTab.id !== archiveTab.id">
       <app-project-page class="project-page" (navigateToHomeEmitter)="setActiveTab(tabs[0])" #projectPage></app-project-page>
     </div>
 
