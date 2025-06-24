@@ -2,7 +2,7 @@ import { StepType } from "./enums";
 
 export class Step {
     id?: string;
-    projectId?: string;
+    projectId?: string | null;
     userId: string;
     name?: string;
     description?: string;
