@@ -9,6 +9,7 @@ import { Title } from '@angular/platform-browser';
 import { BreakpointObserver, LayoutModule } from '@angular/cdk/layout';
 import { AnimationItem } from 'lottie-web';
 import { environment } from '../environments/environment';
+import { PreloadService } from './services/preload.service';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent implements OnInit {
   titleService = inject(Title);
   breakpointObserver = inject(BreakpointObserver);
   ngZone = inject(NgZone);
+  preloadService = inject(PreloadService);
   isLoading: Signal<boolean>;
   loadingOptions: AnimationOptions = {
     path: '/assets/animations/loader.json',
@@ -57,6 +59,7 @@ export class AppComponent implements OnInit {
     })
 
     this.initHotJar();
+    this.preloadService.loadAll();
   }
 
   initHotJar() {
