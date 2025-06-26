@@ -71,7 +71,7 @@ export class HomeComponent implements OnInit {
     effect(() => {
       const activeProjects = this.activeProjects();
       if (activeProjects) {
-        this.projectsForPayment = this.activeProjects().concat(this.noProject());
+        this.projectsForPayment = this.activeProjects().concat(this.unActiveProjects()).concat(this.noProject());
         this.initTabs();
       }
     });
@@ -177,7 +177,7 @@ export class HomeComponent implements OnInit {
         }, 1);
       } else {
         const userProjects = this.sortProjects(res);
-        this.projectsForPayment = userProjects.activeProjects.concat(userProjects.noProject);
+        this.projectsForPayment = userProjects.activeProjects.concat(this.unActiveProjects()).concat(userProjects.noProject);
         userProjects.activeProjects = userProjects.activeProjects.sort((a, b) => a.positionInList - b.positionInList);
         userProjects.unActiveProjects = userProjects.unActiveProjects.sort((a, b) => a.positionInList - b.positionInList);
         this.activeTab = this.homeTab;
@@ -245,7 +245,7 @@ export class HomeComponent implements OnInit {
         this.activeProjects()[index] = project;
       }
     }
-    this.projectsForPayment = this.activeProjects().concat(this.noProject());
+    this.projectsForPayment = this.activeProjects().concat(this.unActiveProjects()).concat(this.noProject());
     this.initTabs();
   }
 

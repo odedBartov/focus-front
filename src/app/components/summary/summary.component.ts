@@ -3,7 +3,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { CommonModule } from '@angular/common';
 import { Project } from '../../models/project';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { StepType } from '../../models/enums';
+import { ProjectStatus, StepType } from '../../models/enums';
 import { Step } from '../../models/step';
 
 @Component({
@@ -16,7 +16,15 @@ export class SummaryComponent implements OnInit {
   authService = inject(AuthenticationService);
   @Input() steps: Step[] = [];
   @Input() set projects(projects: Project[]) {
-    this.steps = projects.map(p => p.steps).flat();
+    this.steps = [];
+    projects.forEach(project => {
+      if (project.status === ProjectStatus.active) {
+        this.steps = this.steps.concat(project.steps);
+      } else if (project.status === ProjectStatus.finished) {
+        const finishedSteps = project.steps.filter(s => s.isComplete);
+        this.steps = this.steps.concat(finishedSteps);
+      }
+    });
     this.initChart();
   }
   greetings: { hour: number, greeting: string }[] = [{ hour: 5, greeting: 'לילה טוב' },
