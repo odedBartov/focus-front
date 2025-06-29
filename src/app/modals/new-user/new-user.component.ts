@@ -1,6 +1,6 @@
-import { Component, ElementRef, HostListener, inject, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, HostListener, Inject, inject, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { User, userProfessionsWithText, UserStatus, userStatusesWithText } from '../../models/user';
 import { CommonModule } from '@angular/common';
 
@@ -22,8 +22,8 @@ export class NewUserComponent {
   statuses = userStatusesWithText;
   professions = userProfessionsWithText;
 
-  constructor() {
-    this.user = new User();
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { user: User }) {
+    this.user = data.user;    
     this.userForm = this.formBuilder.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]]

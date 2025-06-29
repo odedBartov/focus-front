@@ -36,8 +36,8 @@ export class HttpService {
       }
     }).pipe(tap((res: any) => {
       const isNewUser = res.headers.get("isNewUser");
-      this.authenticationService.setNewUser(isNewUser == "True");
-      this.authenticationService.setUserPicture(res.body.userPicture);
+      this.authenticationService.setNewUser(isNewUser == "True");      
+      this.authenticationService.setUserPicture(res.body.picture);
       this.authenticationService.setUserName(res.body.firstName, res.body.lastName);
       const fullName = this.authenticationService.getUserName();
       if (fullName) {

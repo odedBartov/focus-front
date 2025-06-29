@@ -21,12 +21,12 @@ export class AuthenticationComponent {
   dialog = inject(MatDialog);
 
   userSignedIn(jwt: string) {
-    this.animationsService.changeIsloading(true);
+    this.animationsService.changeIsloading(true);    
     this.httpService.loginWithGoogleToken(jwt).subscribe(
       res => {
         this.animationsService.changeIsloading(false);
         if (this.authenticationService.getIsNewUser()) {
-          const dialogRef = this.dialog.open(NewUserComponent);
+          const dialogRef = this.dialog.open(NewUserComponent, { data: { user: res.body } });
           dialogRef.afterClosed().subscribe(res => {
             if (res) {
               this.animationsService.changeIsloading(true);
