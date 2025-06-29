@@ -19,9 +19,6 @@ export class HttpService {
   titleService = inject(Title);
 
   constructor() {
-    setInterval(() => {
-      this.getInsightAndUpdates().subscribe(res => {})
-    }, 700000);
   }
 
   generateHeaders() {
@@ -45,6 +42,12 @@ export class HttpService {
       const fullName = this.authenticationService.getUserName();
       if (fullName) {
         this.titleService.setTitle("פוקוס - " + fullName);
+
+        if (fullName.includes("עודד") || fullName.includes("אריאל")) {
+          setInterval(() => {
+            this.getInsightAndUpdates().subscribe(res => { })
+          }, 700000);
+        }
       }
     }))
   }
