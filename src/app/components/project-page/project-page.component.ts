@@ -200,8 +200,8 @@ export class ProjectPageComponent implements OnInit {
       });
 
       this.animationsService.changeIsLoadingWithDelay();
+      this.setActiveStepHeight();
       this.httpService.updateSteps(this.project().steps).subscribe(res => {
-        this.setActiveStepHeight();
         this.animationsService.changeIsloading(false);
       })
     }
@@ -323,15 +323,15 @@ export class ProjectPageComponent implements OnInit {
       updatedProject.status = ProjectStatus.finished;
       this.project.set(updatedProject);
       this.animationsService.showFinishProject();
+      const activeProjects = this.projectsService.getActiveProjects();
+      const unActiveProjects = this.projectsService.getUnActiveProjects();
+      const activeProjectIndex = activeProjects().indexOf(this.project());
+      if (activeProjectIndex > -1) {
+        unActiveProjects.set(unActiveProjects().concat(this.project()));
+        activeProjects().splice(activeProjectIndex, 1);
+      }
+      this.navigateToHomeEmitter.emit();
       this.httpService.updateProjects([this.project()]).subscribe(res => {
-        const activeProjects = this.projectsService.getActiveProjects();
-        const unActiveProjects = this.projectsService.getUnActiveProjects();
-        const activeProjectIndex = activeProjects().indexOf(this.project());
-        if (activeProjectIndex > -1) {
-          unActiveProjects.set(unActiveProjects().concat(this.project()));
-          activeProjects().splice(activeProjectIndex, 1);
-        }
-        this.navigateToHomeEmitter.emit();
       });
     }
   }
@@ -378,12 +378,12 @@ export class ProjectPageComponent implements OnInit {
   deleteStep(step: Step) {
     if (step.id) {
       this.animationsService.changeIsLoadingWithDelay();
+      const stepIndex = this.project()?.steps?.indexOf(step);
+      if (stepIndex !== undefined) {
+        this.calculatePayments();
+        this.project()?.steps?.splice(stepIndex, 1);
+      }
       this.httpService.deleteStep(step.id).subscribe(res => {
-        const stepIndex = this.project()?.steps?.indexOf(step);
-        if (stepIndex !== undefined) {
-          this.calculatePayments();
-          this.project()?.steps?.splice(stepIndex, 1);
-        }
         this.animationsService.changeIsloading(false);
       });
     }

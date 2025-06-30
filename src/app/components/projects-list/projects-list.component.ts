@@ -82,11 +82,11 @@ export class ProjectsListComponent {
   deleteProject(project: Project) {
     if (project.id) {
       this.animationsService.changeIsLoadingWithDelay();
+      const projectIndex = this.projects().indexOf(project);
+      const projects = [...this.projects()];
+      projects.splice(projectIndex, 1);
+      this.projects.set(projects);
       this.httpService.deleteProject(project.id).subscribe(res => {
-        const projectIndex = this.projects().indexOf(project);
-        const projects = [...this.projects()];
-        projects.splice(projectIndex, 1);
-        this.projects.set(projects);
         this.animationsService.changeIsloading(false);
       })
     }
@@ -151,6 +151,9 @@ export class ProjectsListComponent {
         this.httpService.createProject(res).subscribe(newProject => {
           this.projects.set(this.projects().concat(newProject));
           this.animationsService.changeIsloading(false);
+          setTimeout(() => {
+            this.selectProject(newProject);
+          }, 1);
         })
       }
     })
