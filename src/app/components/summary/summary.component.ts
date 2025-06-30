@@ -20,7 +20,7 @@ export class SummaryComponent implements OnInit {
     projects.forEach(project => {
       if (project.status === ProjectStatus.active) {
         this.steps = this.steps.concat(project.steps);
-      } else if (project.status === ProjectStatus.finished) {
+      } else {
         const finishedSteps = project.steps.filter(s => s.isComplete);
         this.steps = this.steps.concat(finishedSteps);
       }
