@@ -101,7 +101,11 @@ export class HomeComponent implements OnInit {
       paramProjectId = (tab !== this.homeTab.id && tab !== this.archiveTab.id) ? tab : undefined;
     });
     setTimeout(() => { // after query params loaded
-      this.refreshProjects(paramProjectId);
+      if (!paramProjectId && !this.authenticationService.getToken()) {
+        this.router.navigate(['/login']);
+      } else {
+        this.refreshProjects(paramProjectId);
+      }
     }, 1);
   }
 
@@ -222,7 +226,7 @@ export class HomeComponent implements OnInit {
         } else {
           result.unActiveProjects.push(project);
         }
-    })    
+    })
     return result;
   }
 
