@@ -25,8 +25,10 @@ export class GoogleSigninComponent implements OnInit {
       client_id: '834564132220-5hncletadkegj4vaabrh2joj9rc586ai.apps.googleusercontent.com',
       scope: 'openid email profile',
       ux_mode: 'popup',
-      callback: (response: any) => {        
-        this.googleLoginEmitter.emit(response.code);
+      callback: (response: any) => {
+        if (response.code) {
+          this.googleLoginEmitter.emit(response.code);
+        }
       },
     });
   }
