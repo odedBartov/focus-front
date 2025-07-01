@@ -17,7 +17,7 @@ export class GoogleSigninComponent implements OnInit {
   @Output() googleLoginEmitter = new EventEmitter<string>();
   private codeClient: any;
   ngOnInit(): void {
-    this.initGoogleClient();
+    //this.initGoogleClient();
   }
 
   initGoogleClient() {
@@ -35,9 +35,9 @@ export class GoogleSigninComponent implements OnInit {
 
 
   onGoogleSignInClick(): void {
-    if (!this.codeClient) {
-      this.initGoogleClient();
-    }
+    console.log("click");
+    
+    this.initGoogleClient();
     this.codeClient.requestCode();
   }
 }
