@@ -359,7 +359,7 @@ export class ProjectPageComponent implements OnInit {
   }
 
   createNewStep(step: Step) {
-    this.animationsService.changeIsLoadingWithDelay();
+    this.animationsService.changeIsloading(true);
     step.projectId = this.project()?.id;
     step.positionInList = (this.project()?.steps?.length ?? 0) + 1;
     this.httpService.createStep(step).subscribe(res => {
