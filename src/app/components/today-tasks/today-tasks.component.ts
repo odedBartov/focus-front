@@ -186,7 +186,7 @@ export class TodayTasksComponent implements OnInit {
   }
 
   createNewStep(step: Step) {
-    this.animationsService.changeIsLoadingWithDelay();
+    this.animationsService.changeIsloading(true);
     step.projectId = this.standAloneStepsService.noProjectId;
     this.httpService.createStep(step).subscribe(res => {
       const newTask: Task = { project: this.noProject(), step: res };
@@ -203,9 +203,9 @@ export class TodayTasksComponent implements OnInit {
   hideStepForToday(task: Task) {
     this.animationsService.changeIsLoadingWithDelay();
     task.step.hideTaskDate = new Date();
+    const taskIndex = this.tasks.indexOf(task)
+    this.tasks.splice(taskIndex, 1);
     this.httpService.updateSteps([task.step]).subscribe(res => {
-      const taskIndex = this.tasks.indexOf(task)
-      this.tasks.splice(taskIndex, 1);
       this.animationsService.changeIsloading(false);
     })
   }
