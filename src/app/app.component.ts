@@ -9,7 +9,6 @@ import { Title } from '@angular/platform-browser';
 import { BreakpointObserver, LayoutModule } from '@angular/cdk/layout';
 import { AnimationItem } from 'lottie-web';
 import { environment } from '../environments/environment';
-import { PreloadService } from './services/preload.service';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +25,6 @@ export class AppComponent implements OnInit {
   titleService = inject(Title);
   breakpointObserver = inject(BreakpointObserver);
   ngZone = inject(NgZone);
-  preloadService = inject(PreloadService);
   isLoading: Signal<boolean>;
   loadingOptions: AnimationOptions = {
     path: '/assets/animations/loader.json',
@@ -59,25 +57,54 @@ export class AppComponent implements OnInit {
     })
 
     this.initHotJar();
-    this.preloadService.loadAll();
   }
 
   initHotJar() {
-    if (environment.production) {
+    if (!environment.production) {
       const hotjarScript = document.createElement('script');
-      hotjarScript.innerHTML = `
-      (function(h,o,t,j,a,r){
+      hotjarScript.innerHTML =
+        `(function(h,o,t,j,a,r){
         h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
         h._hjSettings={hjid:6439974,hjsv:6};
         a=o.getElementsByTagName('head')[0];
         r=o.createElement('script');r.async=1;
         r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
         a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-    `;
+      })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`;
       document.head.appendChild(hotjarScript);
     }
+
+    this.bindHotjarTriggers();
   }
+
+  bindHotjarTriggers() {
+    const hj = (window as any)['hj'];
+    const SNAPSHOT_INTERVAL_MS = 5 * 60 * 1000; // every 5 min
+
+    let snapshotInterval = setInterval(() => {
+      if (hj) {
+        hj('trigger', 'periodic_snapshot');
+        console.log('[Hotjar] Snapshot triggered');
+      }
+    }, SNAPSHOT_INTERVAL_MS);
+
+    // User activity restarts interval
+    const resetInterval = () => {
+      clearInterval(snapshotInterval);
+      snapshotInterval = setInterval(() => {
+        if (hj) {
+          hj('trigger', 'periodic_snapshot');
+          console.log('[Hotjar] Snapshot triggered');
+        }
+      }, SNAPSHOT_INTERVAL_MS);
+    };
+
+    ['mousemove', 'keydown', 'click'].forEach(event =>
+      document.addEventListener(event, resetInterval)
+    );
+  }
+
+
 
   animationCreated(animation: AnimationItem) {
     animation.addEventListener('complete', () => {
