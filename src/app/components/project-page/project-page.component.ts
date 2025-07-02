@@ -380,8 +380,8 @@ export class ProjectPageComponent implements OnInit {
       this.animationsService.changeIsLoadingWithDelay();
       const stepIndex = this.project()?.steps?.indexOf(step);
       if (stepIndex !== undefined) {
-        this.calculatePayments();
         this.project()?.steps?.splice(stepIndex, 1);
+        this.calculatePayments();
       }
       this.httpService.deleteStep(step.id).subscribe(res => {
         this.animationsService.changeIsloading(false);
