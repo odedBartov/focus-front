@@ -325,14 +325,21 @@ export class ProjectPageComponent implements OnInit {
       this.animationsService.showFinishProject();
       const activeProjects = this.projectsService.getActiveProjects();
       const unActiveProjects = this.projectsService.getUnActiveProjects();
-      const activeProjectIndex = activeProjects().indexOf(this.project());
+      let activeProjectIndex = -1;
+      for (let index = 0; index < activeProjects().length; index++) {
+        const element = activeProjects()[index];
+        if (element.id === this.project().id) {
+          activeProjectIndex = index;
+          break;
+        }
+      }
       if (activeProjectIndex > -1) {
         unActiveProjects.set(unActiveProjects().concat(this.project()));
         activeProjects().splice(activeProjectIndex, 1);
       }
-      this.navigateToHomeEmitter.emit();
       this.httpService.updateProjects([this.project()]).subscribe(res => {
       });
+      this.navigateToHomeEmitter.emit();
     }
   }
 
