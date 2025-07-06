@@ -60,7 +60,7 @@ export class AppComponent implements OnInit {
   }
 
   initHotJar() {
-    if (!environment.production) {
+    // if (!environment.production) {
       const hotjarScript = document.createElement('script');
       hotjarScript.innerHTML =
         `(function(h,o,t,j,a,r){
@@ -72,9 +72,9 @@ export class AppComponent implements OnInit {
         a.appendChild(r);
       })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`;
       document.head.appendChild(hotjarScript);
-    }
+    // }
 
-    this.bindHotjarTriggers();
+    //this.bindHotjarTriggers();
   }
 
   bindHotjarTriggers() {
@@ -103,8 +103,6 @@ export class AppComponent implements OnInit {
       document.addEventListener(event, resetInterval)
     );
   }
-
-
 
   animationCreated(animation: AnimationItem) {
     animation.addEventListener('complete', () => {
