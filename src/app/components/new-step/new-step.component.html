@@ -63,11 +63,11 @@
             </div>
 
             <div class="future-dates">
-                <span>מתי התשלום צפוי להכנס?</span>
+                <span>באיזה חודש התשלום צפוי להכנס?</span>
                 <div class="dates">
                     <span *ngFor="let date of futureDates; let i = index" (click)="selectDate(date)" tabindex="0"
                         [ngClass]="{'selected': newStep.dateDue.getFullYear() == date.getFullYear() && newStep.dateDue.getMonth() === date.getMonth()}">
-                        {{date | date: 'MM/yy'}}
+                        {{date | date: 'MM'}}
                     </span>
                 </div>
             </div>

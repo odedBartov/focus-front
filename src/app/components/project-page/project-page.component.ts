@@ -165,7 +165,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       if (lines > 2) { // if text is overflowing
         const description = this.descriptions.get(index)?.nativeElement;
         if (description) {
-          description.style.marginTop = '20px';
+          description.style.marginTop = 20*(lines - 1) +  'px';
         }
       }
     })

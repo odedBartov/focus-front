@@ -19,7 +19,8 @@
                     <span class="disabled-text">
                         שלב נוכחי
                     </span>
-                    <span class="small-text">
+                    <span class="small-text" #stepRef matTooltip="{{getCurrentStep(project)?.name}}" matTooltipPosition="above"
+                        matTooltipClass="custom-tooltip" [matTooltipDisabled]="stepRef.offsetWidth >= stepRef.scrollWidth">
                         {{getCurrentStep(project)?.name}}
                     </span>
                 </div>

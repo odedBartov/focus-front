@@ -91,6 +91,7 @@
         }
 
         .current-step {
+            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
