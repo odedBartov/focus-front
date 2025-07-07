@@ -51,7 +51,7 @@
             (mouseleave)="hoverStepId = undefined" cdkDrag>
             <div *ngIf="editStepId !== step.id && animationHackFlag">
                 <div class="step-header">
-                    <span [ngClass]="{'step-name': step.id !== activeStepId}">{{step.name}}</span>
+                    <span [ngClass]="{'step-name': step.id !== activeStepId}" #stepHeader>{{step.name}}</span>
                     <img [class]="isReadOnly()? 'finished-icon' : 'pointer icon-confirm'" (click)="isReadOnly()? '' : changeStepStatus(step)" *ngIf="step.isComplete" />
                     <img [src]="`assets/icons/${step.stepType === stepTypeEnum.task? 'puzzle_piece' : 'dollar'}.svg`"
                         *ngIf="!step.isComplete" />

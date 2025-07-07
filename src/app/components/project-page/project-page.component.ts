@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, HostListener, inject, OnInit, Output, QueryList, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, HostListener, inject, OnInit, Output, QueryList, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../../models/project';
 import { HttpService } from '../../services/http.service';
@@ -44,7 +44,7 @@ import { AuthenticationService } from '../../services/authentication.service';
     ])
   ]
 })
-export class ProjectPageComponent implements OnInit {
+export class ProjectPageComponent implements OnInit, AfterViewInit {
   route = inject(ActivatedRoute);
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
@@ -58,6 +58,7 @@ export class ProjectPageComponent implements OnInit {
   @ViewChild('richTextDiv', { static: false }) richTextDiv?: ElementRef;
   @ViewChild('addStepDiv', { static: false }) addStepDiv!: ElementRef;
   @ViewChildren('descriptions') descriptions!: QueryList<ElementRef<HTMLTextAreaElement>>;
+  @ViewChildren('stepHeader') stepHeaders!: QueryList<ElementRef<HTMLSpanElement>>;
   editDiv?: HTMLDivElement;
   stepTypeEnum = StepType;
   project!: WritableSignal<Project>;
@@ -104,6 +105,10 @@ export class ProjectPageComponent implements OnInit {
     this.isReadOnly = this.authenticationService.getIsReadOnly();
   }
 
+  ngAfterViewInit(): void {
+    this.setStepHeadersMargin();
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     if (this.newStepDiv?.nativeElement && !this.newStepDiv.nativeElement.contains(event.target)) {
@@ -144,6 +149,26 @@ export class ProjectPageComponent implements OnInit {
       }
       this.addStepDiv.nativeElement.focus();
     }
+  }
+
+  setStepHeadersMargin() {
+    this.stepHeaders.forEach((span, index) => {
+      const el = span.nativeElement;
+      const computedStyle = getComputedStyle(el);
+      let lineHeight = parseFloat(computedStyle.lineHeight);
+      if (isNaN(lineHeight)) {
+        const fontSize = parseFloat(computedStyle.fontSize);
+        lineHeight = fontSize * 1.2;
+      }
+
+      const lines = el.offsetHeight / lineHeight;
+      if (lines > 2) { // if text is overflowing
+        const description = this.descriptions.get(index)?.nativeElement;
+        if (description) {
+          description.style.marginTop = '20px';
+        }
+      }
+    })
   }
 
   setActiveStepHeight(extraHeight = 20) {
@@ -309,6 +334,7 @@ export class ProjectPageComponent implements OnInit {
         this.hoverStepId = '';
         if (step.id === this.activeStepId) {
           this.setActiveStepHeight(0);
+          this.setStepHeadersMargin()
         }
       }, 1);
       this.animationsService.changeIsloading(false);

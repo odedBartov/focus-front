@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
 import { Step } from '../../models/step';
 import { Project } from '../../models/project';
 import { CommonModule } from '@angular/common';
@@ -37,7 +37,7 @@ import { ProjectsService } from '../../services/projects.service';
     ])
   ]
 })
-export class TodayTasksComponent implements OnInit {
+export class TodayTasksComponent implements OnInit, AfterViewInit {
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @ViewChildren('descriptions') descriptions!: QueryList<ElementRef<HTMLTextAreaElement>>;
   @Output() selectProjectEmitter = new EventEmitter<Project>();
@@ -61,8 +61,10 @@ export class TodayTasksComponent implements OnInit {
     }
 
     if (!this.editDiv?.contains(event.target as Node)) {
-      this.setEditedHeight();
       this.editStepId = '';
+      setTimeout(() => {
+        this.setWidthForAllDescriptions();
+      }, 1);
     }
   }
 
@@ -71,13 +73,12 @@ export class TodayTasksComponent implements OnInit {
     this.noProject = this.projectsService.getNoProjects();
   }
 
+  ngAfterViewInit(): void {
+    this.setWidthForAllDescriptions();
+  }
+
   ngOnInit(): void {
     this.initTasks();
-    setTimeout(() => {
-      for (let index = 0; index < this.tasks.length; index++) {
-        this.setDescriptionHeight(index);
-      }
-    }, 1);
   }
 
   initTasks() {
@@ -106,35 +107,20 @@ export class TodayTasksComponent implements OnInit {
       today.getDay() === dateToCheck.getDay()
   }
 
-  setEditedHeight() {
-    let editingIndex = -1;
-    for (let index = 0; index < this.tasks.length; index++) {
-      const task = this.tasks[index];
-      if (task.step.id === this.editStepId) {
-        editingIndex = index;
-        break;
-      }
-    }
-    if (editingIndex >= 0) {
-      setTimeout(() => {
-        this.setDescriptionHeight(editingIndex);
-      }, 1);
-    }
-  }
-
-  setDescriptionHeight(index: number) {
-    const element = this.descriptions.get(index);
-    if (element) {
-      const scrollHeight = element.nativeElement.scrollHeight;
-      const actualHeight = element.nativeElement.clientHeight;
+  setWidthForAllDescriptions() {
+    this.descriptions.forEach((textareaRef) => {
+      const textarea = textareaRef.nativeElement;
+      const scrollHeight = textarea.scrollHeight;
+      const actualHeight = textarea.clientHeight;
       const gap = (actualHeight + 17) - scrollHeight;
       let epsilon = 0;
       if (gap > 0) {
         epsilon = gap;
       }
-
-      element.nativeElement.style.height = element.nativeElement.scrollHeight - epsilon + "px";
-    }
+      textarea.style.height = 'auto'; // Reset height
+      // Set height to scrollHeight minus a small epsilon to avoid overflow
+      textarea.style.height = textarea.scrollHeight - epsilon + "px";
+    });
   }
 
   editStep(div: HTMLDivElement, stepId: string | undefined) {
@@ -164,7 +150,7 @@ export class TodayTasksComponent implements OnInit {
             task.step.description = description;
             task.step.price = price;
             setTimeout(() => {
-              this.setDescriptionHeight(taskIndex);
+              this.setWidthForAllDescriptions();
             }, 1);
           }, 1);
         } else { // project was finished
@@ -193,7 +179,7 @@ export class TodayTasksComponent implements OnInit {
       this.noProject().steps.push(res);
       this.tasks.push(newTask);
       setTimeout(() => {
-        this.setDescriptionHeight(this.tasks.length - 1);
+        this.setWidthForAllDescriptions();
       }, 1);
       this.creatingNewStep = false;
       this.animationsService.changeIsloading(false);
@@ -246,7 +232,9 @@ export class TodayTasksComponent implements OnInit {
         step.id === res[0].id ? res[0] : step
       )
       this.notifyProjectUpdated(project);
-      this.setEditedHeight();
+      setTimeout(() => {
+        this.setWidthForAllDescriptions();
+      }, 1);
       this.editStepId = '';
       this.animationsService.changeIsloading(false);
     })
