@@ -122,6 +122,8 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         }, 1);
       }
       this.editStepId = '';
+    } else {
+      this.mouseDownInside = true;
     }
 
     if (this.notesDiv?.nativeElement &&
