@@ -152,37 +152,41 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   setStepHeadersMargin() {
-    this.stepHeaders.forEach((span, index) => {
-      const el = span.nativeElement;
-      const computedStyle = getComputedStyle(el);
-      let lineHeight = parseFloat(computedStyle.lineHeight);
-      if (isNaN(lineHeight)) {
-        const fontSize = parseFloat(computedStyle.fontSize);
-        lineHeight = fontSize * 1.2;
-      }
+    // this.stepHeaders.forEach((span, index) => {
+    //   const el = span.nativeElement;
+    //   const computedStyle = getComputedStyle(el);
+    //   let lineHeight = parseFloat(computedStyle.lineHeight);
+    //   if (isNaN(lineHeight)) {
+    //     const fontSize = parseFloat(computedStyle.fontSize);
+    //     lineHeight = fontSize * 1.2;
+    //   }
 
-      const lines = el.offsetHeight / lineHeight;
-      if (lines > 2) { // if text is overflowing
-        const description = this.descriptions.get(index)?.nativeElement;
-        if (description) {
-          description.style.marginTop = 20*(lines - 1) +  'px';
-        }
-      }
-    })
+    //   const lines = el.offsetHeight / lineHeight;
+    //   if (lines > 2) { // if text is overflowing
+    //     const finishedSteps = this.project().steps.filter(s => s.isComplete).length;
+    //     const description = this.descriptions.get(index-finishedSteps)?.nativeElement;
+    //     if (description) {
+          // setTimeout(() => {
+          //   console.log(description);
+          //   description.style.marginTop = 20 * (lines - 1) + 'px';
+          // }, 100);
+    //     }
+    //   }
+    // })
   }
 
   setActiveStepHeight(extraHeight = 20) {
-    const element = this.descriptions.get(0);
+    const element = this.descriptions.get(0);    
     if (element) {
       const scrollHeight = element.nativeElement.scrollHeight;
       const actualHeight = element.nativeElement.clientHeight;
       const gap = (actualHeight + extraHeight) - scrollHeight;
+      
       let epsilon = 0;
       if (gap > 0) {
         epsilon = gap;
       }
-
-      element.nativeElement.style.height = element.nativeElement.scrollHeight - epsilon + "px";
+        element.nativeElement.style.height = 20 + "px";
     }
   }
 
@@ -200,6 +204,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     if (element) {
       const currentHeight = Number.parseInt(element.nativeElement.style.height);
       const scrollHeight = element.nativeElement.scrollHeight;
+
       if (Number.isNaN(currentHeight) || currentHeight < scrollHeight || currentHeight > scrollHeight) {
         element.nativeElement.style.height = scrollHeight + "px";
       }
@@ -225,7 +230,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       });
 
       this.animationsService.changeIsLoadingWithDelay();
-      this.setActiveStepHeight();
+      setTimeout(() => {     
+        this.setActiveStepHeight();
+      }, 1);
       this.httpService.updateSteps(this.project().steps).subscribe(res => {
         this.animationsService.changeIsloading(false);
       })

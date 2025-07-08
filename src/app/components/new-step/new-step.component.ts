@@ -16,14 +16,7 @@ import { AnimationsService } from '../../services/animations.service';
   templateUrl: './new-step.component.html',
   styleUrl: './new-step.component.scss'
 })
-export class NewStepComponent implements OnInit, AfterViewInit {
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      if (this.defaultType !== undefined) {
-        this.selectType(this.defaultType);
-      };
-    }, 1);
-  }
+export class NewStepComponent implements AfterViewInit {
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
   datePipe = inject(DatePipe);
@@ -34,7 +27,7 @@ export class NewStepComponent implements OnInit, AfterViewInit {
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
-      value.dateDue = new Date(value.dateDue);
+      value.dateDue = value.dateDue ? new Date(value.dateDue) : value.dateDue;
       if (value.description) {
         this.isShowDescription = true;
       }
@@ -48,7 +41,7 @@ export class NewStepComponent implements OnInit, AfterViewInit {
   submitted = false;
   isEdit = false;
   isShowDescription = false;
-  futureDates: Date[] = [];
+  futureDates: (Date | undefined)[] = [];
 
   @HostListener('document:keydown.enter', ['$event'])
   handleEnterKey(event: KeyboardEvent) {
@@ -58,30 +51,31 @@ export class NewStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngOnInit(): void {
-    setTimeout(() => {
+  ngAfterViewInit(): void {
       if (this.stepNameInput?.nativeElement) {
         this.stepNameInput.nativeElement.focus()
       }
       if (this.taskOption?.nativeElement) {
         this.taskOption.nativeElement.focus();
       }
-    }, 1);
-
-    this.initFutureMonths();
+      this.initFutureMonths();
+      if (this.defaultType !== undefined) {
+        this.selectType(this.defaultType);
+      };
   }
 
   initFutureMonths() {
     const today = new Date();
-    for (let index = 0; index < 4; index++) {
+    for (let index = 0; index < 5; index++) {
       this.futureDates.push(new Date(today));
       today.setMonth(today.getMonth() + 1)
     }
+
+    this.futureDates.push(undefined);
   }
 
   selectType(type: StepType) {
     this.newStep = new Step();
-    this.newStep.dateDue = this.futureDates[0];
     this.newStep.stepType = type;
     setTimeout(() => {
       this.stepNameInput.nativeElement.focus()
@@ -95,7 +89,7 @@ export class NewStepComponent implements OnInit, AfterViewInit {
     }, 1);
   }
 
-  selectDate(date: Date) {
+  selectDate(date: Date | undefined) {
     this.newStep.dateDue = date;
   }
 

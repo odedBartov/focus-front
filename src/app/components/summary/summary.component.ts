@@ -68,11 +68,11 @@ export class SummaryComponent implements OnInit {
     const chartModel = this.steps;
     const paymentSteps = chartModel.filter(s => s && s.stepType === StepType.payment) as Step[];
     const filteredMonths = [];
-    filteredMonths[0] = paymentSteps.filter(s => this.compareYearAndMonth(s?.dateDue, twoMonthsFuture) && !s.isComplete);
-    filteredMonths[1] = paymentSteps.filter(s => this.compareYearAndMonth(s?.dateDue, oneMonthFuture) && !s.isComplete);
-    filteredMonths[2] = paymentSteps.filter(s => this.compareYearAndMonth(s?.dateCompleted, today) || (!s.isComplete && this.compareYearAndMonth(s?.dateDue, today)));
-    filteredMonths[3] = paymentSteps.filter(s => this.compareYearAndMonth(s?.dateCompleted, oneMonthAgo) && s.isComplete);
-    filteredMonths[4] = paymentSteps.filter(s => this.compareYearAndMonth(s?.dateCompleted, twoMonthsAgo) && s.isComplete);
+    filteredMonths[0] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateDue, twoMonthsFuture) && !s.isComplete);
+    filteredMonths[1] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateDue, oneMonthFuture) && !s.isComplete);
+    filteredMonths[2] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateCompleted, today) || (!s.isComplete && this.compareYearAndMonth(s?.dateDue, today)));
+    filteredMonths[3] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateCompleted, oneMonthAgo) && s.isComplete);
+    filteredMonths[4] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateCompleted, twoMonthsAgo) && s.isComplete);
 
     this.pastPayments[0] = 0;
     this.pastPayments[1] = 0;
@@ -89,7 +89,7 @@ export class SummaryComponent implements OnInit {
     this.calculateGraphScale();
   }
 
-  compareYearAndMonth(first: Date | undefined, second: Date) {
+  compareYearAndMonth(first: Date | undefined | null, second: Date) {
     if (first) {
       const firstDate = new Date(first);
       return firstDate.getFullYear() === second.getFullYear() &&

@@ -116,15 +116,16 @@
             font-family: 'regular';
 
             .dates {
+                margin-top: 10px;
                 display: flex;
                 align-items: flex-start;
+                justify-content: space-between;
 
                 span {
-                    margin-top: 0.2rem;
                     background-color: var(--hover-color);
                     border-radius: var(--common-radius);
                     text-align: center;
-                    padding: 0.5rem 1rem;
+                    padding: 0.3rem 0.75rem 0.5rem;
                     cursor: pointer;
                     margin-left: 0.5rem;
 
@@ -134,7 +135,8 @@
                     }
 
                     &.selected {
-                        background-color: var(--select-color);
+                        color: white;
+                        background-color: var(--main-color);
                     }
                 }
             }

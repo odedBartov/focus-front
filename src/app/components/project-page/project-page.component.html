@@ -63,7 +63,7 @@
                 <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id) ? 'expanded' : 'collapsed'"
                     class="extra-not-finished" *ngIf="!step.isComplete">
                     <textarea [ngClass]="{'active': activeStepId === step.id}" disabled="true"
-                        *ngIf="(step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description)"
+                    [style.visibility]="(step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description)? 'visible' : 'hidden'"
                         #descriptions>{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
                     <div class="step-icons" *ngIf="!isReadOnly()">
                         <div class="edit-delete">

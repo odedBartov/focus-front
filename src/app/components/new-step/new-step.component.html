@@ -2,7 +2,8 @@
     <div class="choose-type" *ngIf="!isEdit && (newStep == undefined || newStep.stepType === undefined)">
         <span class="header">שלב חדש</span>
         <div class="steps">
-            <div class="step-type" style="margin-left: 20px;" (click)="selectType(stepTypeEnum.task)" tabindex="0" #taskOption>
+            <div class="step-type" style="margin-left: 20px;" (click)="selectType(stepTypeEnum.task)" tabindex="0"
+                #taskOption>
                 <img [src]="`assets/icons/puzzle_piece.svg`" />
                 <span class="step-type-tite">{{stepTypeLabels[stepTypeEnum.task]}}</span>
             </div>
@@ -34,7 +35,8 @@
             </div>
             <div class="text-and-input" *ngIf="isShowDescription">
                 <span class="text">פירוט</span>
-                <textarea class="text" maxlength="100" [(ngModel)]="newStep.description" tabindex="4" #descriptionInput></textarea>
+                <textarea class="text" maxlength="100" [(ngModel)]="newStep.description" tabindex="4"
+                    #descriptionInput></textarea>
             </div>
         </div>
 
@@ -66,15 +68,18 @@
                 <span>באיזה חודש התשלום צפוי להכנס?</span>
                 <div class="dates">
                     <span *ngFor="let date of futureDates; let i = index" (click)="selectDate(date)" tabindex="0"
-                        [ngClass]="{'selected': newStep.dateDue.getFullYear() == date.getFullYear() && newStep.dateDue.getMonth() === date.getMonth()}">
-                        {{date | date: 'MM'}}
+                        [ngClass]="{'selected': newStep.dateDue !== null && newStep.dateDue?.getFullYear() == date?.getFullYear() && newStep.dateDue?.getMonth() === date?.getMonth()}">
+                        {{date? (date | date: 'MM') : 'לא ידוע'}}
                     </span>
+                </div>
+                <div class="error-container">
+                    <span *ngIf="submitted && newStep.dateDue === null" class="error">אנא בחרו תאריך</span>
                 </div>
             </div>
         </div>
 
         <div class="create-step" *ngIf="newStep && newStep?.stepType !== undefined">
-            <img class="icon-confirm-circle" (click)="createStep()" tabindex="0"/>
+            <img class="icon-confirm-circle" (click)="createStep()" tabindex="0" />
         </div>
     </div>
 </div>
