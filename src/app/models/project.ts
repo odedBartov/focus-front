@@ -7,7 +7,7 @@ export class Project {
     userId?: string;
     description: string;
     startDate: Date;
-    endDate: Date;
+    endDate?: Date;
     updateClient: boolean;
     status: ProjectStatus;
     isPriority: boolean;
@@ -24,7 +24,7 @@ export class Project {
         this.name = '';
         this.description = '';
         this.startDate = new Date();
-        this.endDate = new Date();
+        this.endDate = undefined;
         this.updateClient = true;
         this.status = ProjectStatus.active;
         this.isPriority = false;

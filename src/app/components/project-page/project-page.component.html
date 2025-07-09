@@ -10,7 +10,7 @@
             </span>
             <div class="dates">
                 <div class="cell date-heaeder">תאריך התחלה</div>
-                <div class="cell date-heaeder">תאריך סיום</div>
+                <div class="cell date-heaeder" [style.visibility]="project().endDate? 'visible' : 'hidden'">תאריך סיום</div>
                 <div class="cell date-value">{{project().startDate | date: 'dd.MM.yyyy'}}</div>
                 <div class="cell date-value">{{project().endDate | date: 'dd.MM.yyyy'}}</div>
             </div>
