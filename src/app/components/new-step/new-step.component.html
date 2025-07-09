@@ -68,7 +68,7 @@
                 <span>באיזה חודש התשלום צפוי להכנס?</span>
                 <div class="dates">
                     <span *ngFor="let date of futureDates; let i = index" (click)="selectDate(date)" tabindex="0"
-                        [ngClass]="{'selected': newStep.dateDue !== null && newStep.dateDue?.getFullYear() == date?.getFullYear() && newStep.dateDue?.getMonth() === date?.getMonth()}">
+                        [ngClass]="{'selected': newStep.dateDue == date || (newStep.dateDue !== null && newStep.dateDue?.getFullYear() == date?.getFullYear() && newStep.dateDue?.getMonth() === date?.getMonth())}">
                         {{date? (date | date: 'MM') : 'לא ידוע'}}
                     </span>
                 </div>
