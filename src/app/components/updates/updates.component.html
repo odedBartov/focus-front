@@ -1,28 +1,28 @@
 <div class="main">
     <div class="insight">
-        <div class="header">
+        <div class="header new-h2">
             <span>
                 תובנה יומית
             </span>
             <img src="assets/icons/light_bulb.svg"/>
         </div>
-        <span class="text">{{insight.text}}</span>
+        <span class="new-small">{{insight.text}}</span>
     </div>
-    <div class="updates">
-        <div class="header">
+    <div>
+        <div class="header new-h2">
             <span>
                 פיצ׳רים ותיקונים קרובים
             </span>
             <img src="assets/icons/stars.svg"/>
         </div>
-        <div class="text">
+        <div class="new-small">
             <ul>
                 <li *ngFor="let feature of features">{{feature.text}}</li>
             </ul>
         </div>
     </div>
     <div class="contact" (click)="openWhatsapp()">
-        <div class="text">
+        <div class="new-small">
             <span class="header">אנחנו כאן</span>
             <span>ונשמח לסייע בבעיות או לקבל פידבק. זו רק לחיצה אחת :)</span>
         </div>

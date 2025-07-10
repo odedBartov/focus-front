@@ -1,7 +1,7 @@
 <div class="main">
     <div class="header">
-        <span class="big-title">{{getGreeting()}}, {{userName}}</span>
-        <span class="sub-title">על מה עובדים היום?</span>
+        <span class="new-h1">{{getGreeting()}}, {{userName}}</span>
+        <span class="new-text">על מה עובדים היום?</span>
         <div class="coffee">
             <img [style.transform]="'rotate(' + coffeeRotation + 'deg)'" (click)="getRandomCoffee()"
                 [src]="coffeePicture" />
@@ -9,13 +9,13 @@
     </div>
     <div class="payments">
         <div class="text-and-icon">
-            <span class="title">הכנסות</span>
+            <span class="new-h2">מאזן</span>
             <img class="icon icon-info"
                 matTooltip="הכנסות בחודשים האחרונים וצפי להכנסות בחודשים הקרובים. הנתונים מבוססים על שלבי התשלום שבתוך הפרויקטים שלך."
                 matTooltipPosition="above" matTooltipClass="custom-tooltip" />
         </div>
         <div class="graph">
-            <div class="sums">
+            <div class="sums new-small">
                 <div style="align-items: flex-start;">{{maxGraphValue}}</div>
                 <div style="align-items: center;">{{(maxGraphValue/5)*3}}</div>
                 <div style="align-items: center;">{{maxGraphValue/5}}</div>
@@ -35,12 +35,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="months">
+                <div class="months new-small">
                     <span *ngFor="let month of graphMonths">{{month | number: '2.0'}}</span>
                 </div>
             </div>
         </div>
     </div>
-    <!-- <div class="resources">
-    </div> -->
 </div>

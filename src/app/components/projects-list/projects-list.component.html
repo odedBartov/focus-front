@@ -1,7 +1,7 @@
 <div class="projects-container">
     <div class="projects-list">
-        <div class="tab" [class.active]="activeTab === 1" (click)="activeTab = 1">פרויקטים פעילים</div>
-        <div class="tab" [class.active]="activeTab === 2" (click)="activeTab = 2">
+        <div class="tab new-h2" [class.active]="activeTab === 1" (click)="activeTab = 1">פרויקטים פעילים</div>
+        <div class="tab new-h2" [class.active]="activeTab === 2" (click)="activeTab = 2">
             משימות היום
         </div>
     </div>
@@ -11,11 +11,11 @@
                 <img class="priority" (click)="togglePriority($event, project)"
                     [src]="`assets/icons/${project.isPriority?'star_full' :'star_empty'}.svg`" />
                 <div class="project-description">
-                    <span class="project-name">
+                    <span class="new-text-bold">
                         {{project.name}}
                     </span>
                 </div>
-                <div class="current-step">
+                <div class="current-step new-small">
                     <span class="disabled-text">
                         שלב נוכחי
                     </span>
@@ -24,7 +24,7 @@
                         {{getCurrentStep(project)?.name}}
                     </span>
                 </div>
-                <div class="payment">
+                <div class="payment new-small">
                     <span class="disabled-text">
                         נשאר לתשלום
                     </span>
@@ -32,7 +32,7 @@
                         {{getRemainingPayment(project)}} ₪
                     </span>
                 </div>
-                <div class="small-text">
+                <div class="small-text new-small">
                     <div class="progress-bar">
                         <div class="progress-fill" [style.width.%]="getProjectProgress(project)"></div>
                     </div>
@@ -53,7 +53,7 @@
         </div>
     </div>
     <div class="line" *ngIf="activeTab === 1">
-        <div class="add-project" (click)="openProjectModal()">
+        <div class="add-project new-text-bold" (click)="openProjectModal()">
             + פרויקט חדש
         </div>
     </div>

@@ -6,8 +6,8 @@
 }
 
 @font-face {
-    font-family: 'medium';
-    src: url('assets/fonts/SimonaPro-Medium.woff2') format('woff2')
+    font-family: 'bold';
+    src: url('assets/fonts/SimonaPro-Bold.woff2') format('woff2')
 }
 
 @font-face {
@@ -16,11 +16,10 @@
 }
 
 :root {
-    --font-size-1: 1rem;
-    --font-size-2: 1.25rem;
-    --font-size-3: 1.5rem;
-    --font-size-4: 1.813rem;
-    --font-size-5: 2.188rem;
+    --font-size-1: 15px;
+    --font-size-2: 19px;
+    --font-size-3: 23px;
+    --font-size-4: 29px;
 
     --common-radius: 16px;
     --big-window-height: 84vh;
@@ -79,7 +78,7 @@
         border-radius: 20px;
 
         .menu-item {
-            font-family: 'medium' !important;
+            font-family: 'regular' !important;
             font-size: var(--font-size-1) !important;
             text-align: center;
         }
@@ -114,10 +113,10 @@
     .custom-tooltip {
         background-color: var(--default-black);
         color: var(--default-white);
-        font-size: var(--font-size-1);
         border-radius: 8px;
         padding: 12px;
         max-width: 320px;
+        font-size: var(--font-size-1);
         font-family: 'regular';
     }
 
@@ -129,6 +128,36 @@
         background-color: transparent;
         @include mixins.regular-border;
     }
+}
+
+.new-h1 {
+    font-size: var(--font-size-4);
+    font-family: 'black';
+}
+
+.new-h2 {
+    font-size: var(--font-size-3);
+    font-family: 'black';
+}
+
+.new-text {
+    font-size: var(--font-size-2);
+    font-family: 'regular';
+}
+
+.new-text-bold {
+    font-size: var(--font-size-2);
+    font-family: 'bold';
+}
+
+.new-small {
+    font-size: var(--font-size-1);
+    font-family: 'regular';
+}
+
+.new-small-bold {
+    font-size: var(--font-size-1);
+    font-family: 'bold';
 }
 
 .NgxEditor {

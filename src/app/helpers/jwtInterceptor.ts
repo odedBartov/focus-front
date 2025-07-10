@@ -6,6 +6,7 @@ import { Router } from "@angular/router";
 import { AnimationsService } from "../services/animations.service";
 import { MatDialog } from "@angular/material/dialog";
 import { ErrorComponent } from "../modals/error/error.component";
+import { environment } from "../../environments/environment";
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -33,6 +34,8 @@ export class TokenInterceptor implements HttpInterceptor {
                 if (err.status === 401) {
                     this.authenticationService.deleteToken();
                     this.router.navigate(['/login']);
+                } else if (err.status === 402) {
+                    window.location.href = environment.subscriptionUrl;
                 } else {
                     this.dialog.open(ErrorComponent);
                 }
