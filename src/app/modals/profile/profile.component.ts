@@ -58,7 +58,7 @@ export class ProfileComponent implements AfterViewInit {
   }
 
   navigateToSubscription() {
-    window.location.href = environment.subscriptionUrl;
+    //window.location.href = environment.subscriptionUrl;
   }
 
   deleteAccount() {

@@ -6,18 +6,18 @@
             </div>
             <div class="line">
                 <div class="text-and-input">
-                    <span class="text">שם פרטי</span>
-                    <input type="text" [(ngModel)]="user.firstName" (blur)="updateUser()">
+                    <span class="text new-small">שם פרטי</span>
+                    <input class="" type="text" [(ngModel)]="user.firstName" (blur)="updateUser()">
                 </div>
                 <div class="text-and-input">
-                    <span class="text">שם משפחה</span>
+                    <span class="text new-small">שם משפחה</span>
                     <input type="text" [(ngModel)]="user.lastName" (blur)="updateUser()">
                 </div>
             </div>
 
             <div class="line">
                 <div class="text-and-input">
-                    <span class="text">סטטוס</span>
+                    <span class="text new-small">סטטוס</span>
                     <select [(ngModel)]="user.status" (change)="selectStatus($event.target)">
                         <option *ngFor="let status of userStatuses" [value]="status.status">
                             {{ status.text }}
@@ -25,7 +25,7 @@
                     </select>
                 </div>
                 <div class="text-and-input">
-                    <span class="text">תחום</span>
+                    <span class="text new-small">תחום</span>
                     <select [ngModel]="user.profession" (change)="selectProfession($event.target)">
                         <option *ngFor="let profession of userProfessions" [value]="profession.profession">
                             {{ profession.text }}
@@ -36,24 +36,24 @@
             <div class="email-conteinaer">
                 <div class="email">
                     <div>
-                        <span>אימייל</span>
-                        <span class="address">{{user.email}}</span>
+                        <span class="new-small">אימייל</span>
+                        <span class="address new-text">{{user.email}}</span>
                     </div>
-                    <span class="log-out" (click)="logOut()">התנתק</span>
+                    <span class="log-out new-small" (click)="logOut()">התנתק</span>
                 </div>
             </div>
         </div>
 
         <div class="upgrade">
-            <span class="current-plan">תוכנית נוכחית</span>
-            <div class="button" (click)="navigateToSubscription()">+ שדרוג</div>
+            <span class="new-h2">תוכנית נוכחית</span>
+            <div class="button new-small" (click)="navigateToSubscription()">+ שדרוג</div>
         </div>
 
         <div class="subscription">
-            <span class="title">התחלה</span>
-            <span class="text">פרויקט פעיל אחד, ללא פיצ׳רים מתקדמים וללא תמיכה טכנית</span>
-            <span class="text">חינם</span>
-            <div class="delete">
+            <span class="new-text-bold">התחלה</span>
+            <span class="new-small">פרויקט פעיל אחד, ללא פיצ׳רים מתקדמים וללא תמיכה טכנית</span>
+            <span class="new-small">חינם</span>
+            <div class="delete new-small">
                 <span (click)="deleteAccount()">מחיקת חשבון</span>
             </div>
         </div>

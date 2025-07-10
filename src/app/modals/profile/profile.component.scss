@@ -39,16 +39,12 @@
                 flex-direction: column;
 
                 .text {
-                    font-family: 'regular';
-                    font-size: var(--font-size-1);
                     margin-bottom: 0.2rem;
                 }
 
                 input,
                 select {
                     padding: 4px 14px;
-                    font-family: 'regular';
-                    font-size: var(--font-size-2);
                     background-color: transparent;
                     @include mixins.regular-border;
                 }
@@ -65,10 +61,8 @@
                     font-family: 'regular';
                     font-size: var(--font-size-1);
                     width: 100%;
-                    // width: 90%;
 
                     .address {
-                        font-size: var(--font-size-2);
                         margin-right: 20px;
                     }
                 }
@@ -87,19 +81,12 @@
             width: 100%;
             margin-bottom: 10px;
 
-            .current-plan {
-                font-family: 'black';
-                font-size: var(--font-size-3);
-            }
-
             .button {
                 background-color: var(--main-color-not-active);
                 color: var(--default-white);
                 border-radius: 26px;
                 padding: 0.2rem 1rem 0.45rem;
                 transition: all 0.3s;
-                font-size: var(--font-size-1);
-                font-family: 'regular';
 
                 &:hover {
                     cursor: pointer;
@@ -116,20 +103,8 @@
             display: flex;
             flex-direction: column;
 
-            .title {
-                font-family: 'black';
-                font-size: var(--font-size-2);
-            }
-
-            .text {
-                font-family: 'regular';
-                font-size: var(--font-size-1);
-            }
-
             .delete {
                 text-align: end;
-                font-family: 'regular';
-                font-size: var(--font-size-1);
                 color: var(--disabled-text);
                 
                 span {
