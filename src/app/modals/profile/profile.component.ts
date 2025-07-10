@@ -6,6 +6,7 @@ import { profession, User, userProfessionsWithText, UserStatus, userStatusesWith
 import { CommonModule } from '@angular/common';
 import { AnimationsService } from '../../services/animations.service';
 import { MatDialogRef } from '@angular/material/dialog';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-profile',
@@ -54,6 +55,10 @@ export class ProfileComponent implements AfterViewInit {
 
   updateUser() {
     this.httpService.updateUser(this.user).subscribe(res => { });
+  }
+
+  navigateToSubscription() {
+    window.location.href = environment.subscriptionUrl;
   }
 
   deleteAccount() {
