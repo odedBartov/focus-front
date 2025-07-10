@@ -22,8 +22,7 @@ export class ErrorComponent implements AfterViewInit {
   }
 
   openWhatsapp() {
-    const message = `הי, זה ${this.fullName}. אני משתמש בפוקוס ונתקלתי בבעיה.
-    הנה הסבר מפורט של התקלה והצעדים שעשיתי שהובילו אליה:
+    const message = `הי, זה ${this.fullName}. אני משתמש בפוקוס ונתקלתי בבעיה. הנה הסבר מפורט של התקלה והצעדים שעשיתי שהובילו אליה:
     `;
     const url = `https://wa.me/${this.OdedsNumber}?text=${message}`;
     window.open(url, '_blank');
