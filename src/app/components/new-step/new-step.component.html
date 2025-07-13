@@ -1,15 +1,17 @@
-<div class="main">
+<div class="main" [ngClass]="{'border': newStep != undefined}">
     <div class="choose-type" *ngIf="!isEdit && (newStep == undefined || newStep.stepType === undefined)">
-        <span class="new-text-bold">שלב חדש</span>
+        <span *ngIf="newStep" class="new-text-bold">שלב חדש</span>
         <div class="steps">
-            <div class="step-type" style="margin-left: 20px;" (click)="selectType(stepTypeEnum.task)" tabindex="0"
+            <div class="step-type" (click)="selectType(stepTypeEnum.task)" tabindex="0"
                 #taskOption>
-                <img [src]="`assets/icons/puzzle_piece.svg`" />
-                <span class="step-type-tite">{{stepTypeLabels[stepTypeEnum.task]}}</span>
+                <div class="new-text-bold">
+                    + שלב
+                </div>
             </div>
             <div class="step-type" (click)="selectType(stepTypeEnum.payment)" tabindex="0">
-                <img [src]="`assets/icons/dollar.svg`" />
-                <span class="step-type-tite">{{stepTypeLabels[stepTypeEnum.payment]}}</span>
+                <div class="new-text-bold">
+                    + תשלום
+                </div>
             </div>
         </div>
     </div>
@@ -28,15 +30,27 @@
                     <span *ngIf="submitted && !newStep.name" class="error">אנא הזינו שם</span>
                 </div>
             </div>
-            <div class="add-description" *ngIf="!isShowDescription">
+            <div class="add-description" *ngIf="!isShowDescription && !isShowTasks">
                 <button class="button" (click)="showDescription()" tabindex="3">
-                    + הוספת פירוט
+                    + פירוט
+                </button>
+                <button class="button" (click)="showTasks()" tabindex="4">
+                    + רשימת משימות
                 </button>
             </div>
             <div class="text-and-input" *ngIf="isShowDescription">
                 <span class="text">פירוט</span>
-                <textarea class="text" maxlength="100" [(ngModel)]="newStep.description" tabindex="4"
+                <textarea class="text" maxlength="100" [(ngModel)]="newStep.description" tabindex="5"
                     #descriptionInput></textarea>
+            </div>
+            <div class="text-and-input" *ngIf="isShowTasks">
+                <span class="text">משימות</span>
+                <div class="task-list">
+                    <div class="task">
+                        <!-- toggle -->
+                         <input type="text" class="text" tabindex="5"/>
+                    </div>
+                </div>
             </div>
         </div>
 

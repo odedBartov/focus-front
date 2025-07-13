@@ -1,7 +1,9 @@
 @use '../../../mixins.scss' as mixins;
 
-.main {
+.border {
     @include mixins.regular-border;
+}
+.main {
     width: 100%;
 
     .choose-type {
@@ -12,29 +14,15 @@
         .steps {
             margin-top: 20px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 15px;
 
             .step-type {
-                cursor: pointer;
-                @include mixins.regular-border;
+                width: 80px;
                 padding: 12px 20px;
-                display: flex;
-                align-items: center;
-
-                &:hover,
-                &:focus {
-                    background-color: var(--hover-color);
-                }
-
-                img {
-                    margin-left: 16px;
-                    height: 24px;
-                    width: 24px;
-                }
+                @include mixins.confirm-button;
 
                 .step-type-tite {
-                    font-family: 'black';
-                    font-size: var(--font-size-2);
                     margin-bottom: 4px;
                 }
             }
@@ -84,6 +72,7 @@
                 transition: all 0.2s;
                 width: fit-content;
                 padding: 0.3rem 1rem;
+                margin-left: 15px;
                 border-radius: var(--common-radius);
                 font-size: var(--font-size-1);
                 font-family: 'regular';
@@ -144,7 +133,7 @@
     }
 }
 
-.text {
-    font-family: 'regular';
-    font-size: var(--font-size-1);
-}
+// .text {
+//     font-family: 'regular';
+//     font-size: var(--font-size-1);
+// }

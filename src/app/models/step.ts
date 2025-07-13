@@ -1,4 +1,5 @@
 import { StepType } from "./enums";
+import { StepTask } from "./stepTask";
 
 export class Step {
     id?: string;
@@ -13,6 +14,7 @@ export class Step {
     dateDue?: Date | null;
     positionInList: number;
     hideTaskDate?: Date;
+    tasks?: StepTask[];
 
     constructor() {
         this.userId = "newStep";

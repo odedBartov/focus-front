@@ -30,6 +30,8 @@ export class NewStepComponent implements AfterViewInit {
       value.dateDue = value.dateDue ? new Date(value.dateDue) : value.dateDue;
       if (value.description) {
         this.isShowDescription = true;
+      } else if (value.tasks && value.tasks.length > 0) {
+        this.isShowTasks = true;
       }
       this.newStep = value;
     }
@@ -41,6 +43,7 @@ export class NewStepComponent implements AfterViewInit {
   submitted = false;
   isEdit = false;
   isShowDescription = false;
+  isShowTasks = false;
   futureDates: (Date | undefined)[] = [];
 
   @HostListener('document:keydown.enter', ['$event'])
@@ -52,16 +55,16 @@ export class NewStepComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-      if (this.stepNameInput?.nativeElement) {
-        this.stepNameInput.nativeElement.focus()
-      }
-      if (this.taskOption?.nativeElement) {
-        this.taskOption.nativeElement.focus();
-      }
-      this.initFutureMonths();
-      if (this.defaultType !== undefined) {
-        this.selectType(this.defaultType);
-      };
+    if (this.stepNameInput?.nativeElement) {
+      this.stepNameInput.nativeElement.focus()
+    }
+    if (this.taskOption?.nativeElement) {
+      this.taskOption.nativeElement.focus();
+    }
+    this.initFutureMonths();
+    if (this.defaultType !== undefined) {
+      this.selectType(this.defaultType);
+    };
   }
 
   initFutureMonths() {
@@ -87,6 +90,10 @@ export class NewStepComponent implements AfterViewInit {
     setTimeout(() => {
       this.descriptionInput.nativeElement.focus();
     }, 1);
+  }
+
+  showTasks() {
+    this.isShowTasks = true;
   }
 
   selectDate(date: Date | undefined) {
