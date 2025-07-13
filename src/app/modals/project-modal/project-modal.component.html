@@ -1,29 +1,29 @@
 <div class="main">
     <div class="content">
-        <div class="header">פרטי הפרויקט</div>
+        <div class="header new-h2">פרטי הפרויקט</div>
         <form class="form" [formGroup]="form">
             <div class="project">
                 <div class="text-and-input">
-                    <span>כותרת ראשית</span>
-                    <input type="text" formControlName="projectName">
+                    <span class="new-small">כותרת ראשית</span>
+                    <input class="new-text" type="text" formControlName="projectName">
                     <div class="error-container">
                         <span *ngIf="submitted && form.get('projectName')?.errors" class="error">אנא הזינו שם
                             פרויקט</span>
                     </div>
                 </div>
                 <div class="text-and-input">
-                    <span>תיאור</span>
-                    <textarea formControlName="description"></textarea>
+                    <span class="new-small">תיאור</span>
+                    <textarea class="new-text" formControlName="description"></textarea>
                 </div>
                 <div class="dates">
                     <div class="text-and-input">
-                        <span>תאריך התחלה</span>
-                        <input class="date" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _"
+                        <span class="new-small">תאריך התחלה</span>
+                        <input class="date new-text" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _"
                             formControlName="startDate" [dropSpecialCharacters]="false" />
                     </div>
                     <div class="text-and-input">
-                        <span>תאריך סיום משוער</span>
-                        <input class="date" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _"
+                        <span class="new-small">תאריך סיום משוער</span>
+                        <input class="date new-text" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _"
                             formControlName="endDate" [dropSpecialCharacters]="false" />
                     </div>
                 </div>
