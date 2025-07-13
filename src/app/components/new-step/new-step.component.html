@@ -1,6 +1,6 @@
 <div class="main" [ngClass]="{'border': newStep != undefined}">
     <div class="choose-type" *ngIf="!isEdit && (newStep == undefined || newStep.stepType === undefined)">
-        <span *ngIf="newStep" class="new-text-bold">שלב חדש</span>
+        <!-- <span *ngIf="newStep" class="new-text-bold">שלב חדש</span> -->
         <div class="steps">
             <div class="step-type" (click)="selectType(stepTypeEnum.task)" tabindex="0"
                 #taskOption>
@@ -24,9 +24,9 @@
                 <img src="assets/icons/puzzle_piece.svg" />
             </div>
             <div class="text-and-input">
-                <span class="text">שם המשימה</span>
-                <input class="text" type="text" [(ngModel)]="newStep.name" #stepNameInput tabindex="2">
-                <div class="error-container">
+                <span class="text new-small">שם המשימה</span>
+                <input class="text new-text" type="text" [(ngModel)]="newStep.name" #stepNameInput tabindex="2">
+                <div class="error-container new-small">
                     <span *ngIf="submitted && !newStep.name" class="error">אנא הזינו שם</span>
                 </div>
             </div>
@@ -39,15 +39,15 @@
                 </button>
             </div>
             <div class="text-and-input" *ngIf="isShowDescription">
-                <span class="text">פירוט</span>
-                <textarea class="text" maxlength="100" [(ngModel)]="newStep.description" tabindex="5"
+                <span class="text new-small">פירוט</span>
+                <textarea class="text new-text" maxlength="100" [(ngModel)]="newStep.description" tabindex="5"
                     #descriptionInput></textarea>
             </div>
             <div class="text-and-input" *ngIf="isShowTasks">
-                <span class="text">משימות</span>
-                <div class="task-list">
+                <span class="text new-small">משימות</span>
+                <div class="task-list" *ngFor="let task of newStep.tasks; let i = index">
                     <div class="task">
-                        <!-- toggle -->
+                        <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')" (click)="task.isComplete = !task.isComplete"></div>
                          <input type="text" class="text" tabindex="5"/>
                     </div>
                 </div>

@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNgxMask } from 'ngx-mask';
 import { HttpService } from '../../services/http.service';
 import { AnimationsService } from '../../services/animations.service';
+import { StepTask } from '../../models/stepTask';
 
 @Component({
   selector: 'app-new-step',
@@ -94,6 +95,7 @@ export class NewStepComponent implements AfterViewInit {
 
   showTasks() {
     this.isShowTasks = true;
+    this.newStep.tasks = this.newStep.tasks || [new StepTask()];
   }
 
   selectDate(date: Date | undefined) {

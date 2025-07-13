@@ -87,6 +87,37 @@
             }
         }
 
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            .task {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                .radio-button {
+                    border-radius: 100%;
+                    height: 10px;
+                    width: 10px;
+                }
+
+                .checked-circle {
+                    background-color: blue;
+                }
+
+                .empty-circle {
+                    background-color: red;
+                }
+
+                input {
+                    width: 100%;
+                    @include mixins.regular-border;
+                }
+            }
+        }
+
         .create-step {
             display: flex;
             width: 100%;
