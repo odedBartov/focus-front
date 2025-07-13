@@ -1,18 +1,18 @@
 <div class="projects-container">
-    <div class="title">
-        <span>פרויקטים בארכיון</span>
+    <div class="title new-h2">
+        <span>ארכיון פרויקטים</span>
     </div>
     <div cdkDropList (cdkDropListDropped)="drop($event)">
         <div class="project-drag" *ngFor="let project of projects()" cdkDrag>
             <div class="project">
                 <img class="status-icon"
                     [src]="`assets/icons/${project.status === projectStatusEnum.frozen?'hourglass' : 'confirm_yes'}.svg`" />
-                <span class="project-name" [matTooltipDisabled]="projectName.clientWidth >= projectName.scrollWidth"
+                <span class="project-name new-text-bold" [matTooltipDisabled]="projectName.clientWidth >= projectName.scrollWidth"
                     matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltip]="project.description"
                     #projectName>
                     {{project.name}}
                 </span>
-                <div class="title-and-text">
+                <div class="title-and-text new-small">
                     <span class="disabled-text">
                         תאריכים
                     </span>
@@ -20,7 +20,7 @@
                         {{`${project.startDate | date: 'dd.MM.yyyy'} - ${project.endDate | date: 'dd.MM.yyyy'}`}}
                     </span>
                 </div>
-                <div class="title-and-text">
+                <div class="title-and-text new-small">
                     <span class="disabled-text">
                         תקציב
                     </span>

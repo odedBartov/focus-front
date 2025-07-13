@@ -10,8 +10,6 @@
         display: flex;
         margin-bottom: 10px;
         margin-right: 30px;
-        font-size: var(--font-size-3);
-        font-family: 'black';
     }
 }
 
@@ -38,11 +36,6 @@
             height: 32px;
         }
 
-        .project-name {
-            font-family: 'black';
-            font-size: var(--font-size-2);
-        }
-
         .title-and-text {
             display: flex;
             flex-direction: column;
@@ -55,16 +48,12 @@
 
         .disabled-text {
             color: var(--disabled-text);
-            font-family: 'regular';
-            font-size: var(--font-size-1);
         }
 
         .small-text {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-family: 'medium';
-            font-size: var(--font-size-1);
         }
     }
 }

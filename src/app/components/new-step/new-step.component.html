@@ -1,6 +1,6 @@
 <div class="main">
     <div class="choose-type" *ngIf="!isEdit && (newStep == undefined || newStep.stepType === undefined)">
-        <span class="header">שלב חדש</span>
+        <span class="new-text-bold">שלב חדש</span>
         <div class="steps">
             <div class="step-type" style="margin-left: 20px;" (click)="selectType(stepTypeEnum.task)" tabindex="0"
                 #taskOption>
@@ -16,7 +16,7 @@
     <div *ngIf="newStep?.stepType !== undefined" class="details">
         <div class="task" *ngIf="newStep?.stepType === stepTypeEnum.task">
             <div class="title">
-                <div class="header">
+                <div class="new-text-bold">
                     <span *ngIf="isEdit">עריכת שלב </span>משימה <span></span><span *ngIf="!isEdit">חדשה</span>
                 </div>
                 <img src="assets/icons/puzzle_piece.svg" />
@@ -42,7 +42,7 @@
 
         <div class="payment" *ngIf="newStep?.stepType === stepTypeEnum.payment">
             <div class="title">
-                <div class="header">
+                <div class="new-text-bold">
                     <span *ngIf="isEdit">עריכת שלב </span>תשלום <span></span><span *ngIf="!isEdit">חדש</span>
                 </div>
                 <img src="assets/icons/dollar.svg" />

@@ -40,16 +40,12 @@
             justify-content: space-between;
 
             .title {
-                font-family: 'black';
-                font-size: var(--font-size-5);
                 z-index: 2;
                 margin-bottom: 20px;
             }
 
             .description {
                 margin-bottom: 20px;
-                font-family: 'regular';
-                font-size: var(--font-size-1);
             }
 
             .dates {
@@ -61,27 +57,6 @@
                     align-items: center;
                     justify-content: flex-start;
                 }
-
-                .date-heaeder {
-                    font-size: var(--font-size-1);
-                    font-family: 'medium';
-                }
-
-                .date-value {
-                    font-size: var(--font-size-3);
-                    font-family: 'black';
-                }
-            }
-
-            .update-client {
-                display: flex;
-                margin-top: 1rem;
-
-                span {
-                    margin-right: 1rem;
-                    font-family: 'medium';
-                    font-size: var(--font-size-1);
-                }
             }
         }
 
@@ -89,13 +64,6 @@
             .title {
                 display: flex;
                 flex-direction: column;
-                font-family: 'regular';
-                font-size: var(--font-size-1);
-            }
-
-            .base-price {
-                font-family: 'black';
-                font-size: var(--font-size-3);
             }
 
             .progress-bar {
@@ -111,8 +79,6 @@
                     display: flex;
                     flex-direction: column;
                     align-items: start;
-                    font-size: var(--font-size-1);
-                    font-family: 'medium';
 
                     .title {
                         color: var(--disabled-text);

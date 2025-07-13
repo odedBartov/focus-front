@@ -1,58 +1,56 @@
 <div class="template">
     <div class="main">
-        <div>
             <div class="header">
-                <span class="title">פרויקט חדש</span>
-                <span class="sub-title">איזה כיף! אתגר חדש בדרך</span>
+                <span class="new-h1">פרויקט חדש</span>
+                <span class="new-small">איזה כיף! אתגר חדש בדרך</span>
             </div>
             <Form [formGroup]="projectForm">
                 <div class="line">
-                    <div class="text-and-input">
+                    <div class="text-and-input new-small">
                         <span>שם הפרויקט</span>
-                        <input type="text" formControlName="projectName" />
+                        <input type="text" formControlName="projectName" class="new-text"/>
                         <div class="error-container">
                             <span *ngIf="submitted && projectForm.get('projectName')?.errors" class="error">אנא
                                 הזינו כותרת</span>
                         </div>
                     </div>
-                    <div class="description">
+                    <div class="description new-small">
                         <span>רוב המשתמשים מעדיפים לקרוא לפרויקט בשם הלקוח</span>
                     </div>
                 </div>
                 <div class="line">
-                    <div class="text-and-input">
+                    <div class="text-and-input new-small">
                         <span>בריף קצר</span>
-                        <textarea formControlName="description"></textarea>
+                        <textarea formControlName="description" class="new-text"></textarea>
                     </div>
-                    <div class="description">
+                    <div class="description new-small">
                         <span>לא חובה, אבל כדאי. הבריף מוצג במיקום מרכזי במסך הפרויקט, ומטרתו לעזור לך להיכנס לעניינים
                             ולזכור את
                             הדברים החשובים.</span>
                     </div>
                 </div>
                 <div class="line">
-                    <div class="dates">
+                    <div class="dates new-small">
                         <div class="text-and-input">
                             <span>תאריך התחלה</span>
                             <div>
-                                <input type="text" formControlName="startDate" mask="00/00/00" placeholder="_ _/_ _/_ _"
+                                <input class="new-text" type="text" formControlName="startDate" mask="00/00/00" placeholder="_ _/_ _/_ _"
                                     [dropSpecialCharacters]="false" />
                             </div>
                         </div>
                         <div class="text-and-input">
                             <span>תאריך סיום</span>
                             <div>
-                                <input type="text" formControlName="endDate" mask="00/00/00" placeholder="_ _/_ _/_ _"
+                                <input class="new-text" type="text" formControlName="endDate" mask="00/00/00" placeholder="_ _/_ _/_ _"
                                     [dropSpecialCharacters]="false" />
                             </div>
                         </div>
                     </div>
-                    <div class="description">
+                    <div class="description new-small">
                         <span>חשוב לתחום את הפרויקט בתאריכים, כדי לצפות את לוחות הזמנים וההכנסות.</span>
                     </div>
                 </div>
             </Form>
-        </div>
         <div class="confirm">
             <button class="confirm-button" (click)="submit()">
                 <img src="assets/icons/confirm_white.svg" />

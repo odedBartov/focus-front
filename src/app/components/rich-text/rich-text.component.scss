@@ -12,16 +12,6 @@
         display: flex;
         flex-direction: column;
         margin-top: 1rem;
-
-        .title {
-            font-family: 'black';
-            font-size: var(--font-size-4);
-        }
-
-        .sub-title {
-            font-family: 'regular';
-            font-size: var(--font-size-1);
-        }
     }
 
     .toolbar {
@@ -39,8 +29,6 @@
 
     .editor {
         overflow: auto;
-        font-family: 'regular';
-        font-size: var(--font-size-1);
         height: 100%;
         margin-bottom: 2rem;
         padding: 24px 28px 10px;

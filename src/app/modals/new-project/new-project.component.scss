@@ -11,6 +11,8 @@
         display: flex;
         flex-direction: column;
         border-radius: var(--common-radius);
+        height: 90%;
+        justify-content: space-between;
 
         Form {
             height: 30rem;
@@ -24,16 +26,6 @@
             flex-direction: column;
             margin-top: 2rem;
             width: 45rem;
-
-            .title {
-                font-family: 'black';
-                font-size: var(--font-size-4);
-            }
-
-            .sub-title {
-                font-family: 'regular';
-                font-size: var(--font-size-1);
-            }
         }
 
         .line {
@@ -63,14 +55,10 @@
                 flex-direction: column;
                 flex: 4;
                 margin-left: 4rem;
-                font-family: 'regular';
-                font-size: var(--font-size-1);
 
                 textarea,
                 input {
                     margin-top: 0.2rem;
-                    font-family: 'regular';
-                    font-size: var(--font-size-2);
                 }
 
                 textarea {
@@ -80,8 +68,6 @@
 
             .description {
                 flex: 3;
-                font-family: 'regular';
-                font-size: var(--font-size-1);
             }
         }
 
