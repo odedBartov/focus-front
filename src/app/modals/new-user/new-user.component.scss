@@ -5,24 +5,15 @@
     padding: 6rem;
 
     .header {
-        font-family: 'black';
-        font-size: var(--font-size-4);
         display: block;
         margin: 2rem 0;
     }
 
     .form {
         .text-and-input {
-            font-family: 'regular';
-            font-size: var(--font-size-1);
             display: flex;
             flex-direction: column;
             margin-bottom: 2rem;
-
-            input {
-                font-family: 'regular';
-                font-size: var(--font-size-1);
-            }
         }
     }
 
@@ -39,8 +30,6 @@
             display: flex;
             align-items: flex-start;
             background-color: var(--home-color);
-            font-family: 'regular';
-            font-size: var(--font-size-2);
             align-items: center;
             justify-content: start;
 

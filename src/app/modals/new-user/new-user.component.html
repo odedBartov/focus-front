@@ -5,33 +5,33 @@
         </div>
     </div>
     <Form class="form" [formGroup]="userForm" *ngIf="currentProgress === 1">
-        <span class="header">כמה פרטים ומתחילים</span>
-        <div class="text-and-input">
+        <span class="header new-h2">כמה פרטים ומתחילים</span>
+        <div class="text-and-input new-small">
             <span>שם פרטי</span>
-            <input formControlName="firstName" />
+            <input class="new-small" formControlName="firstName" />
             <div class="error-container">
                 <span *ngIf="formSubmitted && userForm.get('firstName')?.errors" class="error">אנא הזינו מחיר</span>
             </div>
         </div>
-        <div class="text-and-input">
+        <div class="text-and-input new-small">
             <span>שם משפחה</span>
-            <input formControlName="lastName" />
+            <input class="new-small" formControlName="lastName"/>
             <div class="error-container">
                 <span *ngIf="formSubmitted && userForm.get('lastName')?.errors" class="error">אנא הזינו מחיר</span>
             </div>
         </div>
     </Form>
     <div class="statuses" *ngIf="currentProgress === 2">
-        <span class="header">מהו הסטטוס שלך?</span>
-        <div *ngFor="let status of statuses" class="option" (click)="user.status = status.status" tabindex="0"
+        <span class="header new-h2">מהו הסטטוס שלך?</span>
+        <div *ngFor="let status of statuses" class="option new-text" (click)="user.status = status.status" tabindex="0"
             [ngClass]="{selected: user.status === status.status}" #statusesDiv>
             <img [src]="status.icon" />
             <span>{{status.text}}</span>
         </div>
     </div>
      <div class="statuses" *ngIf="currentProgress === 3">
-        <span class="header">מהו התחום שלך?</span>
-        <div *ngFor="let profession of professions" class="option" (click)="user.profession = profession.profession"
+        <span class="header new-h2">מהו התחום שלך?</span>
+        <div *ngFor="let profession of professions" class="option new-text" (click)="user.profession = profession.profession"
             [ngClass]="{selected: user.profession === profession.profession}" tabindex="0" #professionsDiv>
             <img [src]="profession.icon" />
             <span>{{profession.text}}</span>

@@ -121,8 +121,6 @@
                 box-sizing: border-box;
                 border: none;
                 resize: none;
-                font-family: 'regular';
-                font-size: var(--font-size-1);
                 padding: 0;
                 overflow: hidden;
                 border-radius: 0px;
@@ -179,8 +177,6 @@
             box-sizing: border-box;
             border: none;
             resize: none;
-            font-family: 'regular';
-            font-size: var(--font-size-1);
             padding: 0;
             overflow: hidden;
             border-radius: 0px;
@@ -197,16 +193,14 @@
         background-color: var(--default-white) !important;
         border: none !important;
         box-shadow: var(--common-shadow) !important;
-        // padding: 32px 40px 40px !important;
     }
 
     .step-header {
-        width: 100%;
-        display: flex;
-        align-items: center !important;
-        justify-content: space-between;
-        font-family: 'black';
-
+        // width: 100%;
+        // display: flex;
+        // align-items: center !important;
+        // justify-content: space-between;
+        // font-family: 'black';
 
         .step-name {
             font-size: var(--font-size-2);
