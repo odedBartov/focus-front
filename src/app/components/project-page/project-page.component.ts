@@ -20,10 +20,11 @@ import { RichTextComponent } from "../rich-text/rich-text.component";
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
 import { ProjectsService } from '../../services/projects.service';
 import { AuthenticationService } from '../../services/authentication.service';
+import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, RichTextComponent, LottieComponent],
+  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, RichTextComponent, LottieComponent, AutoResizeInputDirective],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss',
   animations: [

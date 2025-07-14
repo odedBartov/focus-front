@@ -126,11 +126,6 @@ export class NewStepComponent implements AfterViewInit {
       if (nextTask?.nativeElement) {
         nextTask.nativeElement.focus();
       }
-      // const textareas = document.querySelectorAll('textarea');
-
-      // if (nextIndex < textareas.length) {
-      //   (textareas[nextIndex] as HTMLTextAreaElement).focus();
-      // }
     }
   }
 
