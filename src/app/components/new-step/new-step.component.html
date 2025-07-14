@@ -2,7 +2,7 @@
     <div class="choose-type" *ngIf="!isEdit && (newStep == undefined || newStep.stepType === undefined)">
         <!-- <span *ngIf="newStep" class="new-text-bold">שלב חדש</span> -->
         <div class="steps">
-            <div class="step-type" (click)="selectType(stepTypeEnum.task)" tabindex="0" #taskOption>
+            <div class="step-type" (click)="selectType(stepTypeEnum.task)" tabindex="0">
                 <div class="new-text-bold">
                     + שלב
                 </div>

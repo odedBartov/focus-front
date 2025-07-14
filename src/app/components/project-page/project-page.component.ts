@@ -21,6 +21,7 @@ import { AnimationOptions, LottieComponent } from 'ngx-lottie';
 import { ProjectsService } from '../../services/projects.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
+import { StepTask } from '../../models/stepTask';
 
 @Component({
   selector: 'app-project-page',
@@ -350,6 +351,11 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.animationsService.changeIsloading(false);
       this.isFinishProject();
     })
+  }
+
+  toggleTask(step: Step, task: StepTask) {
+    task.isComplete = !task.isComplete;
+    this.updateStep(step);
   }
 
   isFinishProject() {

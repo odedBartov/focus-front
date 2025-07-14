@@ -45,7 +45,8 @@
             (mouseleave)="hoverStepId = undefined" cdkDrag>
             <div *ngIf="editStepId !== step.id && animationHackFlag">
                 <div class="step-header">
-                    <span [ngClass]="{'step-name': step.id !== activeStepId}" #stepHeader>{{step.name}}</span>
+                    <span [class]="step.id === activeStepId? 'new-h2' : 'new-text-bold'"
+                        #stepHeader>{{step.name}}</span>
                     <img [class]="isReadOnly()? 'finished-icon' : 'pointer icon-confirm'"
                         (click)="isReadOnly()? '' : changeStepStatus(step)" *ngIf="step.isComplete" />
                     <img [src]="`assets/icons/${step.stepType === stepTypeEnum.task? 'puzzle_piece' : 'dollar'}.svg`"
@@ -64,12 +65,13 @@
                         <div class="task-list">
                             <div class="task" *ngFor="let task of step.tasks; let i = index">
                                 <div *ngIf="i < step.tasks.length-1" style="display: flex;">
-                                    <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')">
-                                        <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg" />
+                                    <div
+                                        [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')" (click)="toggleTask(step, task)">
+                                        <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg"/>
                                     </div>
                                     <textarea [class]="activeStepId === step.id? 'new-text' : 'new-small'"
-                                    [(ngModel)]="task.text" placeholder="משימה חדשה..." disabled class="new-small"
-                                    #taskText></textarea>
+                                        [(ngModel)]="task.text" autoResize defaultHeight="20px" disabled
+                                        class="new-small" #taskText></textarea>
                                 </div>
                             </div>
                         </div>

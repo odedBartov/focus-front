@@ -23,7 +23,6 @@ export class NewStepComponent implements AfterViewInit {
   animationsService = inject(AnimationsService);
   datePipe = inject(DatePipe);
   @ViewChild('stepNameInput') stepNameInput!: ElementRef;
-  @ViewChild('taskOption') taskOption!: ElementRef;
   @ViewChild('descriptionInput') descriptionInput!: ElementRef;
   @ViewChildren('taskText') tasksTexts!: QueryList<ElementRef<HTMLTextAreaElement>>;
   @Input() defaultType?: StepType;
@@ -60,9 +59,6 @@ export class NewStepComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     if (this.stepNameInput?.nativeElement) {
       this.stepNameInput.nativeElement.focus()
-    }
-    if (this.taskOption?.nativeElement) {
-      this.taskOption.nativeElement.focus();
     }
     this.initFutureMonths();
     if (this.defaultType !== undefined) {

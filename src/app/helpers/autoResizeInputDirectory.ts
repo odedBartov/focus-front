@@ -1,9 +1,11 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 @Directive({
   selector: '[autoResize]'
 })
 export class AutoResizeInputDirective {
+  @Input() defaultHeight: string = 'auto';
+
   constructor(private element: ElementRef) {}
 
   @HostListener('input')
@@ -15,9 +17,9 @@ export class AutoResizeInputDirective {
     this.resize();
   }
 
-  private resize(): void {
+  private resize(): void {    
     const textarea = this.element.nativeElement as HTMLTextAreaElement;
-    textarea.style.height = 'auto';  // Reset to shrink if text was removed
+    textarea.style.height = this.defaultHeight;  // Reset to shrink if text was removed
     textarea.style.height = textarea.scrollHeight + 'px';
   }
 }
