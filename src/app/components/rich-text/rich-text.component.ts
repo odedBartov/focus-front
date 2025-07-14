@@ -24,11 +24,12 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit, AfterVie
   isReadOnly!: WritableSignal<boolean>;
   ritchTextSubject = new Subject<string>();
   editor = new Editor();
-  editorControl = new FormControl('');
+  editorControl: FormControl;
   private valueChangesSub!: Subscription;
 
   constructor() {
     this.isReadOnly = this.authenticationService.getIsReadOnly();
+    this.editorControl = new FormControl({ value: 'Initial content', disabled: this.isReadOnly() });
   }
 
   ngOnInit(): void {
