@@ -57,9 +57,23 @@
                 </div>
                 <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id) ? 'expanded' : 'collapsed'"
                     class="extra-not-finished" *ngIf="!step.isComplete">
-                    <textarea [ngClass]="{'active': activeStepId === step.id}" class="new-small" disabled="true"
-                        [style.visibility]="(step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description)? 'visible' : 'hidden'"
+                    <textarea [class]="activeStepId === step.id? 'new-text' : 'new-small'" disabled="true"
+                        *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
                         #descriptions>{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
+                    <div class="tasks" *ngIf="step.tasks">
+                        <div class="task-list">
+                            <div class="task" *ngFor="let task of step.tasks; let i = index">
+                                <div *ngIf="i < step.tasks.length-1" style="display: flex;">
+                                    <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')">
+                                        <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg" />
+                                    </div>
+                                    <textarea [class]="activeStepId === step.id? 'new-text' : 'new-small'"
+                                    [(ngModel)]="task.text" placeholder="משימה חדשה..." disabled class="new-small"
+                                    #taskText></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="step-icons" *ngIf="!isReadOnly()">
                         <div class="edit-delete">
                             <img class="icon-garbage-can" (click)="deleteStep(step)" />
