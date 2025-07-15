@@ -25,6 +25,7 @@ export class NewStepComponent implements AfterViewInit {
   @ViewChild('stepNameInput') stepNameInput!: ElementRef;
   @ViewChild('descriptionInput') descriptionInput!: ElementRef;
   @ViewChildren('taskText') tasksTexts!: QueryList<ElementRef<HTMLTextAreaElement>>;
+  @Output() scrollToBottom = new EventEmitter<void>();
   @Input() defaultType?: StepType;
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
@@ -79,6 +80,7 @@ export class NewStepComponent implements AfterViewInit {
   selectType(type: StepType) {
     this.newStep = new Step();
     this.newStep.stepType = type;
+    this.scrollToBottom.emit();
     setTimeout(() => {
       this.stepNameInput.nativeElement.focus()
     }, 0);
@@ -86,6 +88,7 @@ export class NewStepComponent implements AfterViewInit {
 
   showDescription() {
     this.isShowDescription = true;
+    this.scrollToBottom.emit();
     setTimeout(() => {
       this.descriptionInput.nativeElement.focus();
     }, 1);
@@ -94,6 +97,7 @@ export class NewStepComponent implements AfterViewInit {
   showTasks() {
     this.isShowTasks = true;
     this.newStep.tasks = this.newStep.tasks || [new StepTask()];
+    this.scrollToBottom.emit();
     setTimeout(() => {
       this.tasksTexts.first.nativeElement.focus();
     }, 1);
