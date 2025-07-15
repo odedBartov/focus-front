@@ -55,6 +55,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   projectsService = inject(ProjectsService);
   authenticationService = inject(AuthenticationService);
   @Output() navigateToHomeEmitter = new EventEmitter<void>();
+  @ViewChild('stepsContainer', {static: false}) stepsContainer?: ElementRef;
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
   @ViewChild('richTextDiv', { static: false }) richTextDiv?: ElementRef;
@@ -395,7 +396,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   showNewStep() {
-    this.isShowNewStep = true;
+   this.isShowNewStep = true;
+    const container = this.stepsContainer?.nativeElement;
+    container.scrollTop = container.scrollHeight;
   }
 
   showDeleteStepModal(step: Step) {

@@ -38,7 +38,7 @@
             </div>
         </div>
     </div>
-    <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)" *ngIf="!showNotes">
+    <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)" *ngIf="!showNotes" #stepsContainer>
         <div [class]="step.isComplete? 'finished' : 'not-finished'" #stepDiv
             [ngClass]="{'step' : editStepId !== step.id, 'active-step': step.id === activeStepId && step.id !== editStepId}"
             *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
