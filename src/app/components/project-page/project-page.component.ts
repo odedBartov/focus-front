@@ -55,7 +55,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   projectsService = inject(ProjectsService);
   authenticationService = inject(AuthenticationService);
   @Output() navigateToHomeEmitter = new EventEmitter<void>();
-  @ViewChild('stepsContainer', {static: false}) stepsContainer?: ElementRef;
+  @ViewChild('stepsContainer', { static: false }) stepsContainer?: ElementRef;
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
   @ViewChild('richTextDiv', { static: false }) richTextDiv?: ElementRef;
@@ -110,6 +110,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.setStepHeadersMargin();
+    this.setActiveStepHeight();
   }
 
   @HostListener('document:click', ['$event'])
@@ -181,17 +182,20 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   setActiveStepHeight(extraHeight = 20) {
-    const element = this.descriptions.get(0);
+    const element = this.descriptions.get(0)?.nativeElement as HTMLTextAreaElement;
     if (element) {
-      const scrollHeight = element.nativeElement.scrollHeight;
-      const actualHeight = element.nativeElement.clientHeight;
-      const gap = (actualHeight + extraHeight) - scrollHeight;
+      // const scrollHeight = element.nativeElement.scrollHeight;
+      // const actualHeight = element.nativeElement.clientHeight;
+      // const gap = (actualHeight + extraHeight) - scrollHeight;
 
-      let epsilon = 0;
-      if (gap > 0) {
-        epsilon = gap;
-      }
-      element.nativeElement.style.height = 20 + "px";
+      // let epsilon = 0;
+      // if (gap > 0) {
+      //   epsilon = gap;
+      // }
+      element.style.height = 'auto';
+      // element.nativeElement.style.height = 20 + "px";
+      element.style.height = element.scrollHeight + 'px';
+      ;
     }
   }
 
@@ -396,9 +400,8 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   showNewStep() {
-   this.isShowNewStep = true;
-    const container = this.stepsContainer?.nativeElement;
-    container.scrollTop = container.scrollHeight;
+    this.isShowNewStep = true;
+    this.scrollToBottom();
   }
 
   showDeleteStepModal(step: Step) {
@@ -444,5 +447,12 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   showNotesPopup(show: boolean) {
     this.showNotes = show;
     this.projectHoverService.projectHover('empty');
+  }
+
+  scrollToBottom() {
+    const container = this.stepsContainer?.nativeElement;
+    setTimeout(() => {
+      container.scrollTop = container.scrollHeight;
+    }, 1);
   }
 }

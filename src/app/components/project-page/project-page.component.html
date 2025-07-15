@@ -58,7 +58,7 @@
                 </div>
                 <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id) ? 'expanded' : 'collapsed'"
                     class="extra-not-finished" *ngIf="!step.isComplete">
-                    <textarea [class]="activeStepId === step.id? 'new-text' : 'new-small'" disabled="true" autoResize
+                    <textarea [class]="activeStepId === step.id? 'new-text' : 'new-small'" disabled="true" 
                         *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
                         #descriptions>{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
                     <div class="tasks" *ngIf="step.tasks">
