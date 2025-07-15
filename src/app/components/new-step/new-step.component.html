@@ -18,12 +18,14 @@
         <div class="task" *ngIf="newStep?.stepType === stepTypeEnum.task">
             <div class="title">
                 <div class="new-text-bold">
-                    <span *ngIf="isEdit">עריכת שלב </span>משימה <span></span><span *ngIf="!isEdit">חדשה</span>
+                    <!-- <span *ngIf="isEdit">עריכת שלב </span>משימה <span></span><span *ngIf="!isEdit">חדשה</span> -->
+                     <span *ngIf="isEdit">עריכת שלב משימה</span>
+                     <span *ngIf="!isEdit">שלב חדש</span>
                 </div>
                 <img src="assets/icons/puzzle_piece.svg" />
             </div>
             <div class="text-and-input">
-                <span class="text new-small">שם המשימה</span>
+                <span class="text new-small">שם השלב</span>
                 <input class="text new-text" type="text" [(ngModel)]="newStep.name" #stepNameInput tabindex="2">
                 <div class="error-container new-small">
                     <span *ngIf="submitted && !newStep.name" class="error">אנא הזינו שם</span>
