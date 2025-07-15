@@ -46,7 +46,7 @@ export class NewStepComponent implements AfterViewInit {
   isEdit = false;
   isShowDescription = false;
   isShowTasks = false;
-  futureDates: (Date | undefined)[] = [];
+  futureDates: (Date | undefined | null)[] = [];
 
   @HostListener('document:keydown.enter', ['$event'])
   handleEnterKey(event: KeyboardEvent) {
@@ -73,7 +73,7 @@ export class NewStepComponent implements AfterViewInit {
       today.setMonth(today.getMonth() + 1)
     }
 
-    this.futureDates.push(undefined);
+    this.futureDates.push(null);
   }
 
   selectType(type: StepType) {
@@ -125,7 +125,7 @@ export class NewStepComponent implements AfterViewInit {
     }
   }
 
-  selectDate(date: Date | undefined) {
+  selectDate(date?: Date | null) {
     this.newStep.dateDue = date;
   }
 

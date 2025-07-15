@@ -21,7 +21,7 @@ export class Step {
         this.isComplete = false;
         this.stepType = StepType.task;
         this.price = 0;
-        this.dateDue = null;
+        this.dateDue = undefined;
         this.positionInList = 0;
     }
 }

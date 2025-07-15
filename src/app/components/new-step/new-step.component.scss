@@ -19,7 +19,6 @@
 
             .step-type {
                 width: 80px;
-                padding: 12px 20px;
                 @include mixins.confirm-button;
 
                 .step-type-tite {
