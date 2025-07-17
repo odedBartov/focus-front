@@ -41,7 +41,7 @@ export class SummaryComponent implements OnInit {
     'assets/pictures/coffee_5.png',
     'assets/pictures/coffee_6.png',
   ]
-  coffeePicture = this.coffeePictures[0];
+  coffeePicture = '';
   userName: string | null = '';
   coffeeRotation = 0;
   pastPayments: number[] = [];
@@ -52,6 +52,7 @@ export class SummaryComponent implements OnInit {
   graphScales: number[] = [5, 10, 20, 40, 50, 80, 100, 250, 300, 700, 1000, 3000, 5000, 10000, 20000, 40000, 50000, 80000, 100000, 200000, 300000, 500000];
 
   ngOnInit(): void {
+    this.getRandomCoffee();
     this.userName = this.authService.getFirstName();
     this.calculateCoffeeRotation();
     this.initChart();
