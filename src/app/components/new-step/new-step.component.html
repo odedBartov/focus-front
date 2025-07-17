@@ -50,7 +50,7 @@
                         <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')"
                             (click)="task.isComplete = !task.isComplete"><img *ngIf="task.isComplete"
                                 src="assets\icons\confirm_white.svg" /></div>
-                        <textarea [(ngModel)]="task.text" placeholder="משימה חדשה..." autoResize class="new-small" (input)="taskTextUpdates(task)" (keydown)="handleEnter($event, i)" #taskText></textarea>
+                        <textarea [(ngModel)]="task.text" placeholder="משימה חדשה..." autoResize defaultHeight="20px" class="new-small" (input)="taskTextUpdates(task)" (keydown)="handleEnter($event, i)" #taskText></textarea>
                     </div>
                 </div>
             </div>
