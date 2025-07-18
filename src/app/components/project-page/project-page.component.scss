@@ -12,7 +12,6 @@
     }
 
     .animation-container {
-        margin-top: 20px;
         position: relative;
     }
 
@@ -112,16 +111,25 @@
         .step {
             @include mixins.step;
 
-            .step-header {
+            .active {
                 align-items: center;
                 margin-bottom: 20px;
             }
+
+            .future {
+                align-items: center;
+                margin-bottom: 16px;
+            }
+
         }
 
         .extra-not-finished {
             .task-list {
                 display: flex;
                 flex-direction: column;
+                .active {
+                    margin-bottom: 16px;
+                }
 
                 .task {
                     display: flex;
@@ -163,7 +171,13 @@
                         border-radius: 0px;
                         margin-right: 6px;
                         margin-top: 0;
-                        margin-bottom: 20px;
+                        &.active {
+                            margin-bottom: 20px;
+                        }
+
+                        .future {
+                            margin-bottom: 16px;
+                        }
                     }
                 }
             }
@@ -175,7 +189,6 @@
                 padding: 0;
                 overflow: hidden;
                 border-radius: 0px;
-                margin-top: 8px;
                 width: 100%;
             }
         }
