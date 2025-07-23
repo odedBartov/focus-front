@@ -33,12 +33,14 @@ import { StepTask } from '../../models/stepTask';
       state('collapsed', style({
         height: '0px',
         opacity: 0,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        marginTop: '0px'
       })),
       state('expanded', style({
         height: '*',
         opacity: 1,
         overflow: 'hidden',
+        marginTop: '16px'
       })),
       transition('collapsed <=> expanded', [
         animate('300ms ease')

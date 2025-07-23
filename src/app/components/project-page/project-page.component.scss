@@ -116,10 +116,7 @@
                 margin-bottom: 20px;
             }
 
-            .future {
-                align-items: center;
-                margin-bottom: 16px;
-            }
+
 
         }
 
@@ -127,6 +124,7 @@
             .task-list {
                 display: flex;
                 flex-direction: column;
+
                 .active {
                     margin-bottom: 16px;
                 }
@@ -171,6 +169,7 @@
                         border-radius: 0px;
                         margin-right: 6px;
                         margin-top: 0;
+
                         &.active {
                             margin-bottom: 20px;
                         }
@@ -190,6 +189,7 @@
                 overflow: hidden;
                 border-radius: 0px;
                 width: 100%;
+                margin-bottom: 16px;
             }
         }
 
