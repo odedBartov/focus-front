@@ -8,7 +8,7 @@
     width: 100%;
 
     .choose-type {
-        padding: 0 2rem;
+        padding: 0;
         display: flex;
         flex-direction: column;
 
@@ -20,17 +20,15 @@
             .step-type {
                 width: 80px;
                 @include mixins.confirm-button;
-
-                .step-type-tite {
-                    margin-bottom: 4px;
-                }
             }
         }
     }
 
-    .details {
+    .details-padding {
         padding: 20px 28px 24px;
+    }
 
+    .details {
         .title {
             display: flex;
             align-items: center;
@@ -106,7 +104,7 @@
                     align-items: center;
                     justify-content: center;
                     color: var(--default-white);
-                    
+
                     img {
                         height: 70%;
                         user-select: none;

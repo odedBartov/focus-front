@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="newStep?.stepType !== undefined" class="details">
+    <div *ngIf="newStep?.stepType !== undefined" class="details" [ngClass]="{'details-padding': newStep && newStep.stepType !== undefined}">
         <div class="task" *ngIf="newStep?.stepType === stepTypeEnum.task">
             <div class="title">
                 <div class="new-text-bold">

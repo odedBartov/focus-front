@@ -7,6 +7,12 @@
     gap: 80px;
     background-color: var(--home-color);
 
+    textarea[autoResize] {
+        transition: height 0.15s ease;
+        overflow-y: hidden;
+        resize: none;
+    }
+
     .pointer {
         cursor: pointer;
     }
@@ -198,13 +204,15 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            margin-bottom: 200px;
+
+            img {
+                height: 41px;
+            }
         }
 
         .new-step {
             display: flex;
             width: 24rem;
-            margin-bottom: 2rem;
         }
     }
 
