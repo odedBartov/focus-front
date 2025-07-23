@@ -7,18 +7,18 @@
             <div class="line">
                 <div class="text-and-input">
                     <span class="text new-small">שם פרטי</span>
-                    <input class="" type="text" [(ngModel)]="user.firstName" (blur)="updateUser()">
+                    <input class="new-text" type="text" [(ngModel)]="user.firstName" (blur)="updateUser()">
                 </div>
                 <div class="text-and-input">
                     <span class="text new-small">שם משפחה</span>
-                    <input type="text" [(ngModel)]="user.lastName" (blur)="updateUser()">
+                    <input class="new-text" type="text" [(ngModel)]="user.lastName" (blur)="updateUser()">
                 </div>
             </div>
 
             <div class="line">
                 <div class="text-and-input">
                     <span class="text new-small">סטטוס</span>
-                    <select [(ngModel)]="user.status" (change)="selectStatus($event.target)">
+                    <select [(ngModel)]="user.status" (change)="selectStatus($event.target)" class="new-text">
                         <option *ngFor="let status of userStatuses" [value]="status.status">
                             {{ status.text }}
                         </option>
@@ -26,7 +26,7 @@
                 </div>
                 <div class="text-and-input">
                     <span class="text new-small">תחום</span>
-                    <select [ngModel]="user.profession" (change)="selectProfession($event.target)">
+                    <select [ngModel]="user.profession" (change)="selectProfession($event.target)" class="new-text">
                         <option *ngFor="let profession of userProfessions" [value]="profession.profession">
                             {{ profession.text }}
                         </option>

@@ -10,14 +10,14 @@
             <span>שם פרטי</span>
             <input class="new-small" formControlName="firstName" />
             <div class="error-container">
-                <span *ngIf="formSubmitted && userForm.get('firstName')?.errors" class="error">אנא הזינו מחיר</span>
+                <span *ngIf="formSubmitted && userForm.get('firstName')?.errors" class="error">אנא הזינו שם פרטי</span>
             </div>
         </div>
         <div class="text-and-input new-small">
             <span>שם משפחה</span>
             <input class="new-small" formControlName="lastName"/>
             <div class="error-container">
-                <span *ngIf="formSubmitted && userForm.get('lastName')?.errors" class="error">אנא הזינו מחיר</span>
+                <span *ngIf="formSubmitted && userForm.get('lastName')?.errors" class="error">אנא הזינו שם משפחה</span>
             </div>
         </div>
     </Form>
