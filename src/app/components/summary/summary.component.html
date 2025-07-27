@@ -28,7 +28,7 @@
                                 matTooltipPosition="above" matTooltipClass="custom-tooltip"
                                 [matTooltipDisabled]="isPayedHovered">
                                 <div class="progress-fill-vertical" [style.height.%]="getPastGraphValue(i)"
-                                    (mouseenter)="isPayedHovered = true" (mouseleave)="isPayedHovered = false"
+                                    (mouseenter)="onInnerEnter()" (mouseleave)="onInnerLeave()"
                                     [matTooltip]="'הכנסות: '+pastPayments[i]+' ₪'" matTooltipPosition="above"
                                     matTooltipClass="custom-tooltip"></div>
                             </div>

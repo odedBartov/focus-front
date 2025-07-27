@@ -49,6 +49,7 @@ export class SummaryComponent implements OnInit {
   maxGraphValue = 1;
   graphMonths: number[] = [];
   isPayedHovered = false;
+  hoverTimeout: any;
   graphScales: number[] = [5, 10, 20, 40, 50, 80, 100, 250, 300, 700, 1000, 3000, 5000, 10000, 20000, 40000, 50000, 80000, 100000, 200000, 300000, 500000];
 
   ngOnInit(): void {
@@ -146,5 +147,18 @@ export class SummaryComponent implements OnInit {
     const currentHour = new Date().getHours();
     const greeting = this.greetings.find(g => g.hour > currentHour)?.greeting;
     return greeting;
+  }
+
+  onInnerEnter() {
+      this.isPayedHovered = true;
+      if (this.hoverTimeout) {
+        clearTimeout(this.hoverTimeout);
+      }
+  }
+
+  onInnerLeave() {
+    this.hoverTimeout = setTimeout(() => {
+      this.isPayedHovered = false;
+    }, 1);
   }
 }
