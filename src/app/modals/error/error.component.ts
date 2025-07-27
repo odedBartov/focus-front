@@ -11,7 +11,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 export class ErrorComponent implements AfterViewInit {
   dialogRef = inject(MatDialogRef<ErrorComponent>);
   authenticationService = inject(AuthenticationService);
-  OdedsNumber = "972584046213";
+  OdedsNumber = "972503664101";
   fullName = "משתמש ללא שם";
   
   ngAfterViewInit(): void {

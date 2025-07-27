@@ -24,10 +24,12 @@ export class ProfileComponent implements AfterViewInit {
   userStatuses = userStatusesWithText;
   userProfessions = userProfessionsWithText;
   defaultPicture = "assets/icons/default_profile.svg";
+  arielsNumber = "972584046213";
+  fullName = "משתמש ללא שם";
   user: User = new User();
   userSubscriptions: UserSubscription[] = [
     { title: 'פוקוס בקטנה', subscription: subscriptionEnum.free, text: 'פרויקט פעיל אחד, ללא פיצ׳רים מתקדמים וללא תמיכה טכנית' },
-    { title: 'פוקוס בצמיחה', subscription: subscriptionEnum.partial, text: 'בלה בלה בלה', price: 9 },
+    { title: 'פוקוס בצמיחה', subscription: subscriptionEnum.partial, text: 'עד 3 פרויקטים פעילים, ללא מנטור AI ואינטגרציות חכמות', price: 10 },
     { title: 'פוקוס על מלא', subscription: subscriptionEnum.full, text: 'ללא מגבלת פרויקטים, פיצ׳רים מתקדמים ותמיכה טכנית', price: 29 }
   ]
   currentUserSubscription: UserSubscription = this.userSubscriptions[0];
@@ -72,11 +74,14 @@ export class ProfileComponent implements AfterViewInit {
   }
 
   navigateToSubscription() {
-    //window.location.href = environment.subscriptionUrl;
+    window.location.href = environment.subscriptionUrl;
   }
 
-  deleteAccount() {
-    
+  unSubscribe() {
+    this.fullName = this.user.firstName + ' ' + this.user.lastName;
+    const message = `הי, זה ${this.fullName}.%0A כתובת המייל שלי היא ${this.user.email}.%0A אני משתמש בפוקוס ורוצה לבטל את המנוי שלי`;
+    const url = `https://wa.me/${this.arielsNumber}?text=${message}`;
+    window.open(url, '_blank');
   }
 
   logOut() {
