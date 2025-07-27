@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { AnimationsService } from '../../services/animations.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { environment } from '../../../environments/environment';
+import { subscriptionEnum } from '../../models/enums';
+import { UserSubscription } from '../../models/userSubscription';
 
 @Component({
   selector: 'app-profile',
@@ -23,8 +25,15 @@ export class ProfileComponent implements AfterViewInit {
   userProfessions = userProfessionsWithText;
   defaultPicture = "assets/icons/default_profile.svg";
   user: User = new User();
+  userSubscriptions: UserSubscription[] = [
+    { title: 'פוקוס בקטנה', subscription: subscriptionEnum.free, text: 'פרויקט פעיל אחד, ללא פיצ׳רים מתקדמים וללא תמיכה טכנית' },
+    { title: 'פוקוס בצמיחה', subscription: subscriptionEnum.partial, text: 'בלה בלה בלה', price: 9 },
+    { title: 'פוקוס על מלא', subscription: subscriptionEnum.full, text: 'ללא מגבלת פרויקטים, פיצ׳רים מתקדמים ותמיכה טכנית', price: 29 }
+  ]
+  currentUserSubscription: UserSubscription = this.userSubscriptions[0];
 
   ngAfterViewInit(): void {
+    this.getUserSubscription();
     this.animationsService.changeIsloading(true);
     this.httpService.getUser().subscribe(user => {
       this.user = user;      
@@ -39,6 +48,11 @@ export class ProfileComponent implements AfterViewInit {
     }
 
     return this.defaultPicture;
+  }
+
+  getUserSubscription() {
+    const subscription = this.authenticationService.getSubscription();
+    this.currentUserSubscription = this.userSubscriptions.find(sub => sub.subscription === subscription) || this.userSubscriptions[0];
   }
 
   selectStatus(status: any) {

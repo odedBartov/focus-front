@@ -50,11 +50,11 @@
         </div>
 
         <div class="subscription">
-            <span class="new-text-bold">התחלה</span>
-            <span class="new-small">פרויקט פעיל אחד, ללא פיצ׳רים מתקדמים וללא תמיכה טכנית</span>
-            <span class="new-small">חינם</span>
+            <span class="new-text-bold">{{currentUserSubscription.title}}</span>
+            <span class="new-small">{{currentUserSubscription.text}}</span>
+            <span class="new-small">{{currentUserSubscription.price? currentUserSubscription.price + ' ₪ + מע״מ לחודש' :  'חינם'}}</span>
             <div class="delete new-small">
-                <span (click)="deleteAccount()">מחיקת חשבון</span>
+                <span (click)="deleteAccount()">ביטול התכנית</span>
             </div>
         </div>
     </div>

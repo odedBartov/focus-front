@@ -39,6 +39,7 @@ export class HttpService {
       this.authenticationService.setNewUser(isNewUser == "True");
       this.authenticationService.setUserPicture(res.body.picture);
       this.authenticationService.setUserName(res.body.firstName, res.body.lastName);
+      this.authenticationService.setSubscription(res.body.subscription);
       const fullName = this.authenticationService.getUserName();
       if (fullName) {
         this.titleService.setTitle("פוקוס - " + fullName);

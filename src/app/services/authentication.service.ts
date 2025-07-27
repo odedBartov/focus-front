@@ -1,5 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { subscriptionEnum } from '../models/enums';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class AuthenticationService {
   isNewUser = 'is-new-user';
   userPicture = "user-picture";
   isReadOnly = "is-read-only";
+  subscription = "subscription";
   isReadOnlySignal = signal<boolean>(false);
 
   getToken() {
@@ -66,6 +68,19 @@ export class AuthenticationService {
 
   getIsReadOnly() {
     return this.isReadOnlySignal;
+  }
+
+  setSubscription(subscription: number) {
+    localStorage.setItem(this.subscription, subscription.toString());
+  }
+
+  getSubscription(): subscriptionEnum {
+    const subscriptionString = localStorage.getItem(this.subscription);
+    if (subscriptionString) {
+      const subscriptionValue = parseInt(subscriptionString, 10);
+      return subscriptionValue as subscriptionEnum;
+    }
+    return subscriptionEnum.free; // Default to free if not set
   }
 
   logOut() {
