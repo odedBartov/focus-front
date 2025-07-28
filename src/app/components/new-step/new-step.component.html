@@ -2,8 +2,7 @@
     <div class="choose-type" *ngIf="!isEdit && (newStep == undefined || newStep.stepType === undefined)">
         <!-- <span *ngIf="newStep" class="new-text-bold">שלב חדש</span> -->
         <div class="steps">
-            <div class="step-type" (click)="selectType(stepTypeEnum.task)" tabindex="0"
-                #taskOption>
+            <div class="step-type" (click)="selectType(stepTypeEnum.task)" tabindex="0" #taskOption>
                 <div class="new-text-bold">
                     + שלב
                 </div>
@@ -45,10 +44,12 @@
             </div>
             <div class="text-and-input" *ngIf="isShowTasks">
                 <span class="text new-small">משימות</span>
-                <div class="task-list" *ngFor="let task of newStep.tasks; let i = index">
-                    <div class="task">
-                        <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')" (click)="task.isComplete = !task.isComplete"></div>
-                         <input type="text" class="text" tabindex="5"/>
+                <div class="task-list">
+                    <div class="task" *ngFor="let task of newStep.tasks; let i = index">
+                        <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')"
+                            (click)="task.isComplete = !task.isComplete"><img *ngIf="task.isComplete"
+                                src="assets\icons\confirm_white.svg" /></div>
+                        <textarea [(ngModel)]="task.text" placeholder="משימה חדשה..." autoResize class="new-small" (input)="taskTextUpdates(task)" (keydown)="handleEnter($event, i)" #taskText></textarea>
                     </div>
                 </div>
             </div>
@@ -62,17 +63,17 @@
                 <img src="assets/icons/dollar.svg" />
             </div>
             <div class="text-and-input">
-                <span class="text">שם התשלום</span>
-                <input class="text" type="text" [(ngModel)]="newStep.name" #stepNameInput>
+                <span class="text new-small">שם התשלום</span>
+                <input class="text new-text" type="text" [(ngModel)]="newStep.name" #stepNameInput>
                 <div class="error-container">
-                    <span *ngIf="submitted && !newStep.name" class="error">אנא הזינו שם</span>
+                    <span *ngIf="submitted && !newStep.name" class="error new-small">אנא הזינו שם</span>
                 </div>
             </div>
 
             <div class="text-and-input">
-                <span class="text">סכום (לא כולל מע"מ)</span>
-                <input class="text" type="number" [(ngModel)]="newStep.price">
-                <div class="error-container">
+                <span class="text new-small">סכום (לא כולל מע"מ)</span>
+                <input class="text new-text" type="number" [(ngModel)]="newStep.price">
+                <div class="error-container new-small">
                     <span *ngIf="submitted && newStep.price <= 0 || newStep.price === undefined" class="error">אנא הזינו
                         סכום</span>
                 </div>

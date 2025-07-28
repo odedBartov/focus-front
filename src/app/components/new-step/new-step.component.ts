@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, viewChild, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, viewChild, ViewChild, ViewChildren } from '@angular/core';
 import { StepType, stepTypeLabels } from '../../models/enums';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -9,10 +9,11 @@ import { provideNgxMask } from 'ngx-mask';
 import { HttpService } from '../../services/http.service';
 import { AnimationsService } from '../../services/animations.service';
 import { StepTask } from '../../models/stepTask';
+import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
 
 @Component({
   selector: 'app-new-step',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule, AutoResizeInputDirective],
   providers: [provideNgxMask(), DatePipe],
   templateUrl: './new-step.component.html',
   styleUrl: './new-step.component.scss'
@@ -24,6 +25,7 @@ export class NewStepComponent implements AfterViewInit {
   @ViewChild('stepNameInput') stepNameInput!: ElementRef;
   @ViewChild('taskOption') taskOption!: ElementRef;
   @ViewChild('descriptionInput') descriptionInput!: ElementRef;
+  @ViewChildren('taskText') tasksTexts!: QueryList<ElementRef<HTMLTextAreaElement>>;
   @Input() defaultType?: StepType;
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
@@ -96,6 +98,40 @@ export class NewStepComponent implements AfterViewInit {
   showTasks() {
     this.isShowTasks = true;
     this.newStep.tasks = this.newStep.tasks || [new StepTask()];
+    setTimeout(() => {
+      this.tasksTexts.first.nativeElement.focus();
+    }, 1);
+  }
+
+  taskTextUpdates(task: StepTask) {
+    if (task.text) {
+      const tasksLength = this.newStep.tasks?.length;
+      if (this.newStep.tasks && tasksLength) {
+        const lastTask = this.newStep.tasks[tasksLength - 1];
+        if (lastTask.text) {
+          this.newStep.tasks.push(new StepTask());
+        }
+      }
+    } else {
+      this.newStep.tasks?.pop();
+    }
+  }
+
+  handleEnter(event: KeyboardEvent, index: number) {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // stop line break
+
+      const nextIndex = index + 1;
+      const nextTask = this.tasksTexts.get(nextIndex);
+      if (nextTask?.nativeElement) {
+        nextTask.nativeElement.focus();
+      }
+      // const textareas = document.querySelectorAll('textarea');
+
+      // if (nextIndex < textareas.length) {
+      //   (textareas[nextIndex] as HTMLTextAreaElement).focus();
+      // }
+    }
   }
 
   selectDate(date: Date | undefined) {
