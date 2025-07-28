@@ -86,6 +86,8 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   mouseDownInside = false;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
+    console.log("to delete");
+    
     this.project = this.projectsService.getCurrentProject();
 
     effect(() => {
