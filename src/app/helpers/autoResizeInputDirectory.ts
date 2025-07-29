@@ -36,7 +36,7 @@ export class AutoResizeInputDirective {
     textarea.style.height = textarea.scrollHeight + 'px';
 
     // Restore scroll position
-    if (scrollableParent && scrollTop !== undefined) {
+    if (scrollableParent && scrollTop !== undefined && scrollableParent.scrollTop !== scrollTop) {
       scrollableParent.scrollTop = scrollTop;
     }
   }
