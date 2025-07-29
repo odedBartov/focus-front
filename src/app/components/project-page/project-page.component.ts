@@ -35,13 +35,15 @@ import { AnimationItem } from 'lottie-web';
         height: '0px',
         opacity: 0,
         // overflow: 'hidden',
-        marginTop: '0px'
+        marginTop: '0px',
+        pointerEvents: 'none'
       })),
       state('expanded', style({
         height: '*',
         opacity: 1,
         // overflow: 'hidden', i removed this for animation
-        marginTop: '16px'
+        marginTop: '16px',
+        pointerEvents: 'auto'
       })),
       transition('collapsed <=> expanded', [
         animate('200ms ease')
