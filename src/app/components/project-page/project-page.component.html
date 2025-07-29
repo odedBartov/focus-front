@@ -58,16 +58,17 @@
                 </div>
                 <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id) ? 'expanded' : 'collapsed'"
                     class="extra-not-finished" *ngIf="!step.isComplete">
-                    <textarea [class]="activeStepId === step.id? 'new-text active' : 'new-small future'" disabled="true" 
+                    <textarea [class]="activeStepId === step.id? 'new-text active' : 'new-small future'" disabled="true"
                         *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
-                        #descriptions autoResize defaultHeight="20px">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
+                        #descriptions autoResize
+                        defaultHeight="20px">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
                     <div class="tasks" *ngIf="step.tasks">
                         <div class="task-list">
                             <div class="task" *ngFor="let task of step.tasks; let i = index">
                                 <div *ngIf="i < step.tasks.length-1" style="display: flex;">
-                                    <div
-                                        [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')" (click)="toggleTask(step, task)">
-                                        <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg"/>
+                                    <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')"
+                                        (click)="toggleTask(step, task)">
+                                        <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg" />
                                     </div>
                                     <textarea [class]="activeStepId === step.id? 'new-text active' : 'new-small future'"
                                         [(ngModel)]="task.text" autoResize defaultHeight="20px" disabled
@@ -82,12 +83,10 @@
                             <img class="icon-pencil" (click)="editStep(stepDiv, step.id)" />
                         </div>
                         <div class="animation-container">
-                            <div class="finish-step-animation"
-                                [style.display]="animatingItemId === step.id ? 'content' : 'none'">
-                                <ng-lottie [options]="lottieOptions" />
+                            <div class="finish-step-animation" *ngIf="step.id === animatingItemId">
+                                <ng-lottie [options]="lottieOptions" (animationCreated)="finishStepAnimationCreated($event)"/>
                             </div>
-                            <img class="icon-confirm-circle" (click)="changeStepStatus(step)"
-                                *ngIf="step.id !== animatingItemId" />
+                            <img class="icon-confirm-circle" (click)="changeStepStatus(step)"/>
                         </div>
                     </div>
                 </div>
@@ -100,7 +99,8 @@
             <img (click)="showNewStep()" class="icon-plus" #addStepDiv tabindex="0" />
         </div>
         <div *ngIf="isShowNewStep" #newStepDiv>
-            <app-new-step class="new-step" (stepsEmitter)="createNewStep($event)" (scrollToBottom)="scrollToBottom()"></app-new-step>
+            <app-new-step class="new-step" (stepsEmitter)="createNewStep($event)"
+                (scrollToBottom)="scrollToBottom()"></app-new-step>
         </div>
     </div>
     <div class="rich-text" *ngIf="showNotes" #richTextDiv>

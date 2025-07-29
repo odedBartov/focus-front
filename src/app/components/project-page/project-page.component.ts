@@ -22,6 +22,7 @@ import { ProjectsService } from '../../services/projects.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
 import { StepTask } from '../../models/stepTask';
+import { AnimationItem } from 'lottie-web';
 
 @Component({
   selector: 'app-project-page',
@@ -33,17 +34,17 @@ import { StepTask } from '../../models/stepTask';
       state('collapsed', style({
         height: '0px',
         opacity: 0,
-        overflow: 'hidden',
+        // overflow: 'hidden',
         marginTop: '0px'
       })),
       state('expanded', style({
         height: '*',
         opacity: 1,
-        overflow: 'hidden',
+        // overflow: 'hidden', i removed this for animation
         marginTop: '16px'
       })),
       transition('collapsed <=> expanded', [
-        animate('300ms ease')
+        animate('200ms ease')
       ]),
     ])
   ]
@@ -77,10 +78,11 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   baseProjectPrice = 0;
   paidMoney = 0;
   lottieOptions: AnimationOptions = {
-    path: '/assets/animations/step-end.json',
+    path: '/assets/animations/stage-end.json',
     loop: false,
   };
-  animatingItemId: string = '';
+  finishStepAnimationItem?: AnimationItem;
+  animatingItemId?: string = '';
   hideProperties = this.projectHoverService.getSignal();
   animationHackFlag = true;
   mouseDownInside = false;
@@ -159,6 +161,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       }
       this.addStepDiv.nativeElement.focus();
     }
+  }
+
+  finishStepAnimationCreated(animation: AnimationItem) {
+    this.finishStepAnimationItem = animation;
   }
 
   setStepHeadersMargin() {
@@ -288,55 +294,63 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   changeStepStatus(step: Step) {
-    step.isComplete = !step.isComplete;
-    if (step.isComplete) {
-      step.dateCompleted = new Date();
-      if (this.project()) {
-        let finishedSteps = 0;
-        let notFinishedSteps = 0;
-        for (let index = 0; index < this.project().steps.length; index++) {
-          const currentStep = this.project().steps[index];
-          if (currentStep.isComplete) {
-            if (currentStep.id !== step.id) {
-              finishedSteps++;
-            } else {
-              break;
-            }
-          } else {
-            notFinishedSteps++;
-          }
-        }
-
-        moveItemInArray(this.project().steps, finishedSteps + notFinishedSteps, finishedSteps);
-        this.updateStepsPosition();
-      }
-    } else {
-      step.dateCompleted = undefined;
-      let passedStep = false;
-      let stepsToMove = 0;
-      let currentIndex = 0;
-      if (this.project) {
-        for (let index = 0; index < this.project().steps.length; index++) {
-          const currentStep = this.project().steps[index];
-          if (currentStep.id === step.id) {
-            passedStep = true;
-            currentIndex = index;
-          } else {
-            if (currentStep.isComplete) {
-              if (passedStep) {
-                stepsToMove++;
+    this.animatingItemId = !step.isComplete ? step.id : undefined;
+    this.changeDetectorRef.detectChanges(); // Ensure the view is updated before the animation starts
+    setTimeout(() => {
+      this.playLottieAnimation().then(() => {
+        this.animatingItemId = '';
+        step.isComplete = !step.isComplete;
+        if (step.isComplete) {
+          step.dateCompleted = new Date();
+          if (this.project()) {
+            let finishedSteps = 0;
+            let notFinishedSteps = 0;
+            for (let index = 0; index < this.project().steps.length; index++) {
+              const currentStep = this.project().steps[index];
+              if (currentStep.isComplete) {
+                if (currentStep.id !== step.id) {
+                  finishedSteps++;
+                } else {
+                  break;
+                }
+              } else {
+                notFinishedSteps++;
               }
-            } else {
-              break;
             }
+
+            moveItemInArray(this.project().steps, finishedSteps + notFinishedSteps, finishedSteps);
+            this.updateStepsPosition();
+          }
+        } else {
+          step.dateCompleted = undefined;
+          let passedStep = false;
+          let stepsToMove = 0;
+          let currentIndex = 0;
+          if (this.project) {
+            for (let index = 0; index < this.project().steps.length; index++) {
+              const currentStep = this.project().steps[index];
+              if (currentStep.id === step.id) {
+                passedStep = true;
+                currentIndex = index;
+              } else {
+                if (currentStep.isComplete) {
+                  if (passedStep) {
+                    stepsToMove++;
+                  }
+                } else {
+                  break;
+                }
+              }
+            }
+            moveItemInArray(this.project().steps, currentIndex, currentIndex + stepsToMove);
+            this.updateStepsPosition();
           }
         }
-        moveItemInArray(this.project().steps, currentIndex, currentIndex + stepsToMove);
-        this.updateStepsPosition();
-      }
-    }
 
-    this.updateStep(step);
+        this.activeStepId = this.project()?.steps?.find(s => !s.isComplete)?.id;
+        this.updateStep(step);
+      })
+    }, 1);
   }
 
   updateStep(step: Step) {
@@ -348,7 +362,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         )
       }
       this.editStepId = '';
-      this.activeStepId = this.project()?.steps?.find(s => !s.isComplete)?.id;
       this.calculatePayments();
       setTimeout(() => {
         this.hoverStepId = '';
@@ -361,6 +374,28 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.isFinishProject();
     })
   }
+
+  playLottieAnimation(): Promise<void> {
+    return new Promise((resolve) => {
+      if (!this.finishStepAnimationItem) {
+        resolve();
+        return;
+      }
+
+      const onComplete = () => {
+        this.finishStepAnimationItem?.removeEventListener('complete', onComplete);
+        resolve();
+      };
+
+      if (!this.animatingItemId) {
+        resolve();
+        return;
+      }
+      this.finishStepAnimationItem.addEventListener('complete', onComplete);
+      this.finishStepAnimationItem.play();
+    });
+  }
+
 
   toggleTask(step: Step, task: StepTask) {
     task.isComplete = !task.isComplete;

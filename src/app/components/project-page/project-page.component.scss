@@ -22,9 +22,8 @@
     }
 
     .finish-step-animation {
-        position: relative;
-        height: 95px;
-        transform: translate(-32%, 28%);
+        position: absolute;
+        transform: scale(4);
     }
 
     .summurize {
@@ -121,9 +120,6 @@
                 align-items: center;
                 margin-bottom: 20px;
             }
-
-
-
         }
 
         .extra-not-finished {
