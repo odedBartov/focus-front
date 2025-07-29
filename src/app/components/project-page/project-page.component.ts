@@ -44,7 +44,7 @@ import { AnimationItem } from 'lottie-web';
         marginTop: '16px'
       })),
       transition('collapsed <=> expanded', [
-        animate('300ms ease')
+        animate('200ms ease')
       ]),
     ])
   ]
@@ -300,7 +300,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         step.isComplete = !step.isComplete;
         if (step.isComplete) {
           step.dateCompleted = new Date();
-
           if (this.project()) {
             let finishedSteps = 0;
             let notFinishedSteps = 0;
@@ -346,6 +345,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
           }
         }
 
+        this.activeStepId = this.project()?.steps?.find(s => !s.isComplete)?.id;
         this.updateStep(step);
       })
     }, 1);
@@ -360,7 +360,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         )
       }
       this.editStepId = '';
-      this.activeStepId = this.project()?.steps?.find(s => !s.isComplete)?.id;
       this.calculatePayments();
       setTimeout(() => {
         this.hoverStepId = '';
@@ -386,9 +385,11 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         resolve();
       };
 
-      if (this.finishStepAnimationItem && this.animatingItemId) {
-        this.finishStepAnimationItem.addEventListener('complete', onComplete);
+      if (!this.animatingItemId) {
+        resolve();
+        return;
       }
+      this.finishStepAnimationItem.addEventListener('complete', onComplete);
       this.finishStepAnimationItem.play();
     });
   }
