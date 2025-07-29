@@ -1,0 +1,42 @@
+.modal {
+    width: 320px;
+    height: 312px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .main {
+        width: 240px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+
+        .crown {
+            height: 80px;
+            width: 90px;
+        }
+
+        .text {
+            margin: 15px 0;
+        }
+
+        .confirm {
+            cursor: pointer;
+            background-color: var(--main-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 109px;
+            height: 40px;
+            border-radius: 20px;
+            color: var(--default-white);
+            margin-bottom: 10px;
+        }
+
+        .refuse {
+            cursor: pointer;
+        }
+    }
+}

@@ -7,6 +7,7 @@ import { AnimationsService } from "../services/animations.service";
 import { MatDialog } from "@angular/material/dialog";
 import { ErrorComponent } from "../modals/error/error.component";
 import { environment } from "../../environments/environment";
+import { PaidFeatureModalComponent } from "../modals/paid-feature-modal/paid-feature-modal.component";
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -35,7 +36,8 @@ export class TokenInterceptor implements HttpInterceptor {
                     this.authenticationService.deleteToken();
                     this.router.navigate(['/login']);
                 } else if (err.status === 402) {
-                    window.location.href = environment.subscriptionUrl;
+                    // window.location.href = environment.subscriptionUrl;
+                    this.dialog.open(PaidFeatureModalComponent);
                 } else {
                     this.dialog.open(ErrorComponent);
                 }
