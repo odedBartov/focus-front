@@ -23,13 +23,14 @@ import { ProjectsService } from '../../services/projects.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileComponent } from '../../modals/profile/profile.component';
+import { WeeklyTasksComponent } from '../weekly-tasks/weekly-tasks.component';
 
 @Component({
   selector: 'app-home',
   imports: [RouterModule, MatExpansionModule, CommonModule,
     ProjectsListComponent, ProjectsListComponent,
     MatMenuModule, SummaryComponent, UpdatesComponent,
-    ProjectPageComponent, ArchiveComponent, DragDropModule],
+    ProjectPageComponent, ArchiveComponent, DragDropModule, WeeklyTasksComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   standalone: true
@@ -55,8 +56,9 @@ export class HomeComponent implements OnInit {
   userPicture: string | null = null;
   defaultUserPicture = "assets/icons/default_profile.svg"
   homeTab: ProjectTab = { id: 'home', icon: 'assets/icons/home.svg' };
+  tasksTab: ProjectTab = { id: 'tasks', icon: 'assets/icons/tasks.svg' };
+  archiveTab: ProjectTab = { id: "archive", label: "ארכיון", projects: [] };
   activeTab: ProjectTab = { id: 'none' };
-  archiveTab: ProjectTab = { id: "archive", label: "ארכיון", projects: [] }
   tabs: ProjectTab[] = [];
   projectsForPayment: Project[] = [];
 
@@ -98,7 +100,7 @@ export class HomeComponent implements OnInit {
     let paramProjectId: string | null | undefined = '';
     this.route.queryParamMap.subscribe(params => {
       const tab = params.get('tab');
-      paramProjectId = (tab !== this.homeTab.id && tab !== this.archiveTab.id) ? tab : undefined;
+      paramProjectId = (tab !== this.homeTab.id && tab !== this.archiveTab.id && tab !== this.tasksTab.id) ? tab : undefined;
     });
     setTimeout(() => { // after query params loaded
       if (!paramProjectId && !this.authenticationService.getToken()) {
@@ -115,6 +117,8 @@ export class HomeComponent implements OnInit {
 
       if (!tabId || tabId === 'main') {
         this.activeTab = this.homeTab;
+      } else if (tabId === 'tasks') {
+        this.activeTab = this.tasksTab;
       } else if (tabId === 'archive') {
         this.activeTab = this.archiveTab;
       } else {
@@ -139,7 +143,7 @@ export class HomeComponent implements OnInit {
     if (this.isReadOnly()) {
       this.tabs = [];
     } else {
-      this.tabs = [this.homeTab];
+      this.tabs = [this.homeTab, this.tasksTab];
     }
     const activeProjectTabs = this.activeProjects().map(p => { return { id: p.id ?? '', label: p.name, project: p } });
     this.tabs.push(...activeProjectTabs);
