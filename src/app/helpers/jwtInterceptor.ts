@@ -6,7 +6,6 @@ import { Router } from "@angular/router";
 import { AnimationsService } from "../services/animations.service";
 import { MatDialog } from "@angular/material/dialog";
 import { ErrorComponent } from "../modals/error/error.component";
-import { environment } from "../../environments/environment";
 import { PaidFeatureModalComponent } from "../modals/paid-feature-modal/paid-feature-modal.component";
 
 @Injectable()

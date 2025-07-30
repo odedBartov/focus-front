@@ -67,7 +67,7 @@
                             <div class="task" *ngFor="let task of step.tasks; let i = index">
                                 <div *ngIf="i < step.tasks.length-1" style="display: flex;">
                                     <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')"
-                                        (click)="toggleTask(step, task)">
+                                        (click)="toggleTask(step, task)" [style.pointer-events]="isReadOnly() ? 'none' : 'auto'">
                                         <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg" />
                                     </div>
                                     <textarea [class]="activeStepId === step.id? 'new-text active' : 'new-small future'"
