@@ -1,5 +1,5 @@
 import { Injectable, Signal, signal } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +9,7 @@ export class AnimationsService {
   finishProject = new Subject<void>();
   counter = 0;
   averageRequestTime = 400;
+  animationDelay?: any;
   
   getIsLoading(): Signal<boolean> {
     return this.isLoading;
@@ -28,12 +29,13 @@ export class AnimationsService {
   }
 
   changeIsLoadingWithDelay() {
-    setTimeout(() => {
+    this.animationDelay = setTimeout(() => {
       this.counter++;
     }, this.averageRequestTime);
   }
 
   hideIsLoading() {
+    clearTimeout(this.animationDelay);
     this.counter = 0;
     this.isLoading.set(false);
   }

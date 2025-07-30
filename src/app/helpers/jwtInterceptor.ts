@@ -36,8 +36,7 @@ export class TokenInterceptor implements HttpInterceptor {
                     this.authenticationService.deleteToken();
                     this.router.navigate(['/login']);
                 } else if (err.status === 402) {
-                    // window.location.href = environment.subscriptionUrl;
-                    this.dialog.open(PaidFeatureModalComponent);
+                    this.dialog.open(PaidFeatureModalComponent, { data: { subscription: err.error.requiredSubscription } });
                 } else {
                     this.dialog.open(ErrorComponent);
                 }

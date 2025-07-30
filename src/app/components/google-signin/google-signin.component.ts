@@ -35,8 +35,6 @@ export class GoogleSigninComponent implements OnInit {
 
 
   onGoogleSignInClick(): void {
-    console.log("click on google");
-    
     this.initGoogleClient();
     this.codeClient.requestCode();
   }
