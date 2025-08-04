@@ -3,4 +3,21 @@
         <span (click)="prevWeek()" class="new-small-bold">&lt; לשבוע הקודם</span>
         <span (click)="nextWeek()" class="new-small-bold">לשבוע הבא ></span>
     </div>
-</div>
+    <div class="calendar">
+        <div *ngFor="let day of presentedDays; let i = index" style="display: flex; width: 100%;">
+            <div class="weekly-day">
+                <div class="day-header">
+                    <span class="new-small-bold">{{ (day.date) | date: 'dd/MM' }}</span>
+                    <span>{{getHebrewDay(day.date)}}</span>
+                </div>
+                <div class="tasks-list">
+                    <div class="task" *ngFor="let task of presentedDays[i].tasks">{{task}}</div>
+                </div>
+            </div>
+            <div class="line" *ngIf="i < 6"></div>
+        </div>
+
+        <div class="unassignTasks">
+
+        </div>
+    </div>

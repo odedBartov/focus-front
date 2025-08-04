@@ -6,10 +6,12 @@ import { WeeklyDay } from '../../models/weeklyDay';
 import { StepType } from '../../models/enums';
 import { StepTask } from '../../models/stepTask';
 import { Step } from '../../models/step';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-weekly-tasks',
-  imports: [],
+  imports: [FormsModule, CommonModule],
   templateUrl: './weekly-tasks.component.html',
   styleUrl: './weekly-tasks.component.scss'
 })
@@ -21,6 +23,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
   currentAndFutureTasks: { project: Project, tasks: StepOrTask[] }[] = []; // without date, no matter if active or not
   presentedDays: WeeklyDay[] = [];
   showAllTasks: boolean = false;
+  deltaDays: number = 0; // used to show previous or next week
 
   constructor() {
     this.projects = this.projectsService.getActiveProjects();
@@ -30,14 +33,20 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.initTasks();
+    console.log(this.tasksWithDate);
+
+    this.initPresentedDays();
   }
 
   prevWeek() {
-
+    this.deltaDays -= 7;
+    this.initPresentedDays();
   }
 
   nextWeek() {
-
+    this.deltaDays += 7;
+    this.initPresentedDays();
   }
 
   initTasks() {
@@ -80,7 +89,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
 
     this.tasksWithDate = this.tasksWithDate.sort((a, b) => this.sortTasksAndSteps(a, b));
     this.tasksWithoutDate = this.tasksWithoutDate.sort((a, b) => this.sortTasksAndSteps(a, b));
-    this.initPresentedDays();
   }
 
   insertTaskToList(list: StepOrTask[], parentStep: Step, task?: StepTask, step?: Step) {
@@ -100,24 +108,43 @@ export class WeeklyTasksComponent implements AfterViewInit {
     this.insertTaskToList(currentProject.tasks, parentStep, task, step);
   }
 
-  initPresentedDays(deltaDays: number = 0) {
+  initPresentedDays() {
     this.presentedDays = [];
     const now = new Date();
     const currentDay = new Date(now);
     currentDay.setDate(now.getDate() - now.getDay());
     for (let i = 0; i < 7; i++) {
       const day = new Date(currentDay);
-      day.setDate(currentDay.getDate() + i + deltaDays);
+      day.setDate(currentDay.getDate() + i + this.deltaDays);
       const weeklyDay = new WeeklyDay();
       weeklyDay.date = day;
       this.presentedDays.push(weeklyDay);
     }
+
+    this.assignTasksToDays();
+  }
+
+  assignTasksToDays() {
+    this.tasksWithDate.forEach(taskOrStep => {
+      const taskDate = taskOrStep.task?.dateOnWeekly || taskOrStep.step?.dateOnWeekly;
+      for (const day of this.presentedDays) {
+        if (taskDate && day.date.toDateString() === taskDate.toDateString()) {
+          day.tasks.push(taskOrStep);
+          return; // stop searching once we found the right day
+        }
+      }
+    });
   }
 
   sortTasksAndSteps(first: StepOrTask, second: StepOrTask): number {
     const firstPosition = first.task?.positionInWeeklyList ?? first.step?.positionInWeeklyList ?? 0;
     const secondPosition = second.task?.positionInWeeklyList ?? second.step?.positionInWeeklyList ?? 0;
     return firstPosition - secondPosition;
+  }
+
+  getHebrewDay(date: Date): string {
+    const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+    return days[date.getDay()];
   }
 
   updatePositionInList() {

@@ -8,17 +8,38 @@
     .dates-navigation {
         display: flex;
         justify-content: space-between;
+        margin-bottom: 20px;
 
         span {
             cursor: pointer;
         }
     }
 
-    .tasks-list {
+    .calendar {
+        display: flex;
+        justify-content: space-between;
 
-    }
+        .weekly-day {
+            width: 100%;
+            height: 610px;
+            margin: 0 20px;
+            background-color: azure;
 
-    .stand-alone-tasks {
+            .day-header {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+            }
 
+            .tasks-list {}
+
+        }
+
+        .line {
+            width: 2px;
+            height: 100%;
+            background-color: var(--border-color);
+            padding: 10px 0;
+        }
     }
 }
