@@ -36,7 +36,7 @@ export class NewStepComponent implements AfterViewInit {
       } else if (value.tasks && value.tasks.length > 0) {
         this.isShowTasks = true;
       }
-      this.newStep = value;
+      this.newStep = structuredClone(value);
     }
   }
   @Output() stepsEmitter = new EventEmitter<Step>();
@@ -113,7 +113,10 @@ export class NewStepComponent implements AfterViewInit {
         }
       }
     } else {
-      this.newStep.tasks?.pop();
+      const taskIndex = this.newStep.tasks?.findIndex(t => t.id === task.id);
+      if (taskIndex !== undefined && taskIndex >= 0) {
+        this.newStep.tasks?.splice(taskIndex, 1);
+      }
     }
   }
 
