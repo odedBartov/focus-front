@@ -115,7 +115,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.setStepHeadersMargin();
+    //this.setStepHeadersMargin();
     this.setActiveStepHeight();
   }
 
@@ -367,7 +367,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         this.hoverStepId = '';
         if (step.id === this.activeStepId) {
           this.setActiveStepHeight(0);
-          this.setStepHeadersMargin()
+          //this.setStepHeadersMargin()
         }
       }, 1);
       this.animationsService.changeIsloading(false);
