@@ -8,6 +8,10 @@
     .dates-navigation {
         display: flex;
         justify-content: space-between;
+
+        span {
+            cursor: pointer;
+        }
     }
 
     .tasks-list {
