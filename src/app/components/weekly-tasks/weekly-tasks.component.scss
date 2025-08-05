@@ -19,27 +19,88 @@
         display: flex;
         justify-content: space-between;
 
-        .weekly-day {
+        .day-container {
             width: 100%;
-            height: 610px;
-            margin: 0 20px;
-            background-color: azure;
+            display: flex;
 
-            .day-header {
+            .weekly-day {
                 width: 100%;
-                display: flex;
-                justify-content: space-between;
+                height: 610px;
+                margin: 0 20px;
+
+                .day-header {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                }
+
+                .tasks-list {
+                    background-color: aliceblue;
+                    height: 100%;
+                }
+
             }
 
-            .tasks-list {}
-
-        }
-
-        .line {
-            width: 2px;
-            height: 100%;
-            background-color: var(--border-color);
-            padding: 10px 0;
+            .line {
+                width: 1.5px;
+                height: 100%;
+                background-color: var(--border-color);
+                padding-top: 10px;
+            }
         }
     }
+
+    .unAssignTasks {
+        height: 250px;
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        .line {
+            width: 100%;
+            height: 1.5px;
+            background-color: var(--border-color);
+            margin-bottom: 10px;
+        }
+
+        .header {
+            margin-bottom: 20px;
+
+            .new-small {
+                cursor: pointer;
+                color: var(--default-gray);
+                margin-right: 30px;
+            }
+        }
+
+        .tasks-list {
+            display: flex;
+            // flex-flow: column wrap;
+            gap: 12px 16px;
+            align-content: flex-start;
+            overflow-x: auto;
+
+
+        }
+    }
+}
+
+.task {
+    .task-header {
+        display: flex;
+        align-items: center;
+        color: var(--default-gray);
+
+        img {
+            height: 12px;
+            width: 12px;
+            margin-left: 5px;
+        }
+    }
+
+    padding: 9px;
+    width: 233px;
+    background-color: var(--default-white);
+    border-radius: var(--common-radius);
 }

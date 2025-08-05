@@ -4,20 +4,45 @@
         <span (click)="nextWeek()" class="new-small-bold">לשבוע הבא ></span>
     </div>
     <div class="calendar">
-        <div *ngFor="let day of presentedDays; let i = index" style="display: flex; width: 100%;">
+        <div *ngFor="let day of presentedDays; let i = index" class="day-container">
             <div class="weekly-day">
-                <div class="day-header">
-                    <span class="new-small-bold">{{ (day.date) | date: 'dd/MM' }}</span>
+                <div class="day-header new-text"
+                    [ngClass]="{'new-text': !compareDates(day.date), 'new-text-bold': compareDates(day.date)}">
+                    <span>{{ (day.date) | date: 'dd/MM' }}</span>
                     <span>{{getHebrewDay(day.date)}}</span>
                 </div>
-                <div class="tasks-list">
-                    <div class="task" *ngFor="let task of presentedDays[i].tasks">{{task}}</div>
+                <div class="tasks-list" cdkDropList [cdkDropListData]="day.tasks" [id]="'day-' + i"
+                    [cdkDropListConnectedTo]="allDropListIds" (cdkDropListDropped)="dropTask($event)">
+                    <div class="task" *ngFor="let task of presentedDays[i].tasks" cdkDrag>
+                        <div class="task-header new-small">
+                            <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
+                            <span>{{task.project?.name}}</span>
+                        </div>
+                        <span class="new-small">{{getTextForTask(task)}}</span>
+                    </div>
                 </div>
             </div>
-            <div class="line" *ngIf="i < 6"></div>
-        </div>
-
-        <div class="unassignTasks">
-
+            <div class="line"
+                [ngStyle]="{'background-color': (compareDates(day.date) || compareDates(day.date, undefined, 1)) ? 'var(--default-black)' : 'var(--border-color)'}"
+                *ngIf="i < 6"></div>
         </div>
     </div>
+    <div class="unAssignTasks">
+        <div class="line"></div>
+        <div class="header">
+            <span class="new-h2">משימות לשיבוץ</span>
+            <span class="new-small">הצגת כל המשימות</span>
+        </div>
+        <div class="tasks-list" cdkDropList id="unAssigned" [cdkDropListData]="tasksWithoutDate"
+            [cdkDropListConnectedTo]="allDropListIds" (cdkDropListDropped)="dropTask($event)"
+            cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropTask($event)">
+            <div class="task" *ngFor="let task of tasksWithoutDate" cdkDrag>
+                <div class="task-header new-small">
+                    <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
+                    <span>{{task.project?.name}}</span>
+                </div>
+                <span class="new-small">{{getTextForTask(task)}}</span>
+            </div>
+        </div>
+    </div>
+</div>

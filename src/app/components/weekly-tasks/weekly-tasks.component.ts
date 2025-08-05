@@ -8,10 +8,11 @@ import { StepTask } from '../../models/stepTask';
 import { Step } from '../../models/step';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-weekly-tasks',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, DragDropModule],
   templateUrl: './weekly-tasks.component.html',
   styleUrl: './weekly-tasks.component.scss'
 })
@@ -33,10 +34,13 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.initTasks();
-    console.log(this.tasksWithDate);
-
+    // this.initTasks();
     this.initPresentedDays();
+  }
+
+  get allDropListIds(): string[] {
+    const ids = this.presentedDays.map((_, i) => `day-${i}`);
+    return [...ids, 'unAssigned'];
   }
 
   prevWeek() {
@@ -56,30 +60,30 @@ export class WeeklyTasksComponent implements AfterViewInit {
     this.tasksWithoutDate = [];
     this.currentAndFutureTasks = [];
 
+    // also load stand alone tasks
+
     projects.forEach(project => {
       project.steps.sort((a, b) => a.positionInList - b.positionInList);
       let foundActiveStep = false;
       project.steps.forEach(step => {
-        if (step.stepType === StepType.task) {
-          if (step.tasks?.length) {
-            step.tasks.forEach(task => {
-              if (task.dateOnWeekly) {
-                this.insertTaskToList(this.tasksWithDate, step, task, undefined);
-              } else if (!task.isComplete) {
-                this.insertTaskToFutueTasks(project, step, task, undefined);
-                if (!foundActiveStep) { // this is the first not complete step, so its the active one
-                  this.insertTaskToList(this.tasksWithoutDate, step, task, undefined);
-                }
-              }
-            });
-          } else {
-            if (step.dateOnWeekly) {
-              this.insertTaskToList(this.tasksWithDate, step, undefined, step);
-            } else if (!step.isComplete) {
-              this.insertTaskToFutueTasks(project, step, undefined, step);
+        if (step.tasks?.length) {
+          step.tasks.forEach(task => {
+            if (task.dateOnWeekly) {
+              this.insertTaskToList(this.tasksWithDate, step, project, task, undefined);
+            } else if (!task.isComplete) {
+              this.insertTaskToFutueTasks(project, step, task, undefined);
               if (!foundActiveStep) { // this is the first not complete step, so its the active one
-                this.insertTaskToList(this.tasksWithoutDate, step, undefined, step);
+                this.insertTaskToList(this.tasksWithoutDate, step, project, task, undefined);
               }
+            }
+          });
+        } else {
+          if (step.dateOnWeekly) {
+            this.insertTaskToList(this.tasksWithDate, step, project, undefined, step);
+          } else if (!step.isComplete) {
+            this.insertTaskToFutueTasks(project, step, undefined, step);
+            if (!foundActiveStep) { // this is the first not complete step, so its the active one
+              this.insertTaskToList(this.tasksWithoutDate, step, project, undefined, step);
             }
           }
         }
@@ -91,11 +95,12 @@ export class WeeklyTasksComponent implements AfterViewInit {
     this.tasksWithoutDate = this.tasksWithoutDate.sort((a, b) => this.sortTasksAndSteps(a, b));
   }
 
-  insertTaskToList(list: StepOrTask[], parentStep: Step, task?: StepTask, step?: Step) {
+  insertTaskToList(list: StepOrTask[], parentStep: Step, project?: Project, task?: StepTask, step?: Step) {
     const taskOrStep = new StepOrTask();
     taskOrStep.task = task;
     taskOrStep.step = step;
     taskOrStep.parentStep = parentStep;
+    taskOrStep.project = project;
     list.push(taskOrStep);
   }
 
@@ -105,30 +110,32 @@ export class WeeklyTasksComponent implements AfterViewInit {
       currentProject = { project, tasks: [] };
       this.currentAndFutureTasks.push({ project, tasks: [] });
     }
-    this.insertTaskToList(currentProject.tasks, parentStep, task, step);
+    this.insertTaskToList(currentProject.tasks, parentStep, project, task, step);
   }
 
   initPresentedDays() {
-    this.presentedDays = [];
-    const now = new Date();
-    const currentDay = new Date(now);
-    currentDay.setDate(now.getDate() - now.getDay());
-    for (let i = 0; i < 7; i++) {
-      const day = new Date(currentDay);
-      day.setDate(currentDay.getDate() + i + this.deltaDays);
-      const weeklyDay = new WeeklyDay();
-      weeklyDay.date = day;
-      this.presentedDays.push(weeklyDay);
-    }
+    setTimeout(() => {
+      this.presentedDays = [];
+      const now = new Date();
+      const currentDay = new Date(now);
+      currentDay.setDate(now.getDate() - now.getDay());
+      for (let i = 0; i < 7; i++) {
+        const day = new Date(currentDay);
+        day.setDate(currentDay.getDate() + i + this.deltaDays);
+        const weeklyDay = new WeeklyDay();
+        weeklyDay.date = day;
+        this.presentedDays.push(weeklyDay);
+      }
 
-    this.assignTasksToDays();
+      this.assignTasksToDays();
+    }, 1);
   }
 
   assignTasksToDays() {
     this.tasksWithDate.forEach(taskOrStep => {
       const taskDate = taskOrStep.task?.dateOnWeekly || taskOrStep.step?.dateOnWeekly;
       for (const day of this.presentedDays) {
-        if (taskDate && day.date.toDateString() === taskDate.toDateString()) {
+        if (taskDate && this.compareDates(day.date, new Date(taskDate))) {
           day.tasks.push(taskOrStep);
           return; // stop searching once we found the right day
         }
@@ -147,9 +154,35 @@ export class WeeklyTasksComponent implements AfterViewInit {
     return days[date.getDay()];
   }
 
+  dropTask(event: CdkDragDrop<any[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    }
+  }
+
   updatePositionInList() {
     // update position in list of tasks
     // this is used to sort tasks in the UI
+  }
+
+  compareDates(first: Date, second = new Date(), daysDelta = 0) {
+    return first.getDate() + daysDelta === second.getDate() && first.getMonth() === second.getMonth() && first.getFullYear() === second.getFullYear();
+  }
+
+  getTextForTask(task: StepOrTask): string | undefined {
+    if (task.task) {
+      return task.task.text;
+    } else if (task.step?.stepType === StepType.payment) {
+      return task.step.price + ' ₪';
+    }
+    return task.step?.description;
   }
 
   showHideAllTasks() {

@@ -37,6 +37,9 @@ export class NewStepComponent implements AfterViewInit {
         this.isShowTasks = true;
       }
       this.newStep = structuredClone(value);
+      if (this.newStep.tasks && this.newStep.tasks?.[this.newStep.tasks.length-1]?.text) {
+        this.newStep.tasks.push(new StepTask());
+      }
     }
   }
   @Output() stepsEmitter = new EventEmitter<Step>();
@@ -138,6 +141,9 @@ export class NewStepComponent implements AfterViewInit {
 
   createStep() {
     if (this.validateStep()) {
+      if (this.newStep.tasks && !this.newStep.tasks?.[this.newStep.tasks.length-1]?.text) {
+        this.newStep.tasks.pop(); // remove empty task
+      }
       this.stepsEmitter.emit(this.newStep);
     }
   }
