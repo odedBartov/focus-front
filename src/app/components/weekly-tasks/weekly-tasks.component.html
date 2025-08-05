@@ -12,7 +12,7 @@
                     <span>{{getHebrewDay(day.date)}}</span>
                 </div>
                 <div class="tasks-list" cdkDropList [cdkDropListData]="day.tasks" [id]="'day-' + i"
-                    [cdkDropListConnectedTo]="allDropListIds" (cdkDropListDropped)="dropTask($event)">
+                    [cdkDropListConnectedTo]="allDropListIds" (cdkDropListDropped)="dropTask($event, day.date)">
                     <div class="task" *ngFor="let task of presentedDays[i].tasks" cdkDrag>
                         <div class="task-header new-small">
                             <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
@@ -35,7 +35,7 @@
         </div>
         <div class="tasks-list" cdkDropList id="unAssigned" [cdkDropListData]="tasksWithoutDate"
             [cdkDropListConnectedTo]="allDropListIds" (cdkDropListDropped)="dropTask($event)"
-            cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropTask($event)">
+            cdkDropListOrientation="mixed">
             <div class="task" *ngFor="let task of tasksWithoutDate" cdkDrag>
                 <div class="task-header new-small">
                     <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />

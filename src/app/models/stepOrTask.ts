@@ -5,6 +5,6 @@ import { StepTask } from "./stepTask";
 export class StepOrTask {
     task?: StepTask;
     step?: Step;
-    parentStep?: Step;
+    parentStep!: Step;
     project?: Project;
 }

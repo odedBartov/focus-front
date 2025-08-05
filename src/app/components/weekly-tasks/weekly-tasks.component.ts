@@ -9,6 +9,7 @@ import { Step } from '../../models/step';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { HttpService } from '../../services/http.service';
 
 @Component({
   selector: 'app-weekly-tasks',
@@ -18,6 +19,7 @@ import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from 
 })
 export class WeeklyTasksComponent implements AfterViewInit {
   projectsService = inject(ProjectsService);
+  httpService = inject(HttpService);
   projects: WritableSignal<Project[] | undefined>;
   tasksWithDate: StepOrTask[] = [];
   tasksWithoutDate: StepOrTask[] = []; // without date and are active
@@ -34,7 +36,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // this.initTasks();
     this.initPresentedDays();
   }
 
@@ -154,9 +155,10 @@ export class WeeklyTasksComponent implements AfterViewInit {
     return days[date.getDay()];
   }
 
-  dropTask(event: CdkDragDrop<any[]>) {
+  dropTask(event: CdkDragDrop<any[]>, date?: Date) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      this.updateTasksPosition(event.container.data);
     } else {
       transferArrayItem(
         event.previousContainer.data,
@@ -164,12 +166,49 @@ export class WeeklyTasksComponent implements AfterViewInit {
         event.previousIndex,
         event.currentIndex
       );
+      const item = event.container.data[event.currentIndex];
+      if (item.task) {
+        item.task.dateOnWeekly = date;
+      } else if (item.step) {
+        item.step.dateOnWeekly = date;
+      }
+      this.updateTasksPosition(event.container.data);
+      this.updateTasksPosition(event.previousContainer.data);
     }
+
+    this.updateTasks(event.previousContainer.data, event.container.data);
   }
 
-  updatePositionInList() {
-    // update position in list of tasks
-    // this is used to sort tasks in the UI
+  updateTasksPosition(list: StepOrTask[]) {
+      for (let index = 0; index < list.length; index++) {
+        const task = list[index];
+        if (task.task) {
+          task.task.positionInWeeklyList = index;
+        } else {
+          task.step!.positionInWeeklyList = index;
+        }
+      }
+  }
+
+  updateTasks(fromList?: StepOrTask[], toList?: StepOrTask[]) {
+    const stepsToUpdate: Step[] = [];
+    if (fromList && fromList.length) {
+      fromList.forEach(taskOrStep => {
+        if (!stepsToUpdate.find(s => s.id === taskOrStep.parentStep.id)) {
+          stepsToUpdate.push(taskOrStep.parentStep);
+        }
+      });
+    }
+
+    if (toList && toList.length) {
+      toList.forEach(taskOrStep => {
+        if (!stepsToUpdate.find(s => s.id === taskOrStep.parentStep.id)) {
+          stepsToUpdate.push(taskOrStep.parentStep);
+        }
+      });
+    }
+
+    this.httpService.updateSteps(stepsToUpdate).subscribe(res => {});
   }
 
   compareDates(first: Date, second = new Date(), daysDelta = 0) {
