@@ -1,0 +1,10 @@
+<div class="main" #newStepDiv [ngClass]="{'border': isShowNewStep}">
+    <div class="button" *ngIf="!isShowNewStep">
+        <img (click)="isShowNewStep = true" class="icon-plus" />
+    </div>
+    <div *ngIf="isShowNewStep" class="new-task">
+        <span class="new-small">משימה חדשה</span>
+        <input tclass="new-text" [(ngModel)]="newTask.text" tabindex="0"/>
+        <img class="icon-confirm-circle" (click)="createTask()"/>
+    </div>
+</div>

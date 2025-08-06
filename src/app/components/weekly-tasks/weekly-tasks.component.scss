@@ -44,12 +44,16 @@
                     .task {
                         width: 90%;
                     }
+
+                    .new-task {
+                        margin-top: 10px;
+                    }
                 }
 
             }
 
             .line {
-                width: 1.5px;
+                width: 1px;
                 height: 100%;
                 background-color: var(--border-color);
                 padding-top: 10px;
@@ -66,7 +70,7 @@
 
         .line {
             width: 100%;
-            height: 1.5px;
+            height: 1px;
             background-color: var(--border-color);
             margin-bottom: 10px;
         }
@@ -106,7 +110,7 @@
 
     box-shadow: var(--common-shadow);
     padding: 10px;
-    margin: 8px;
+    margin: 10px;
     width: 220px;
     background-color: var(--default-white);
     border-radius: var(--common-radius);

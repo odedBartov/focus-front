@@ -1,0 +1,30 @@
+@use '../../../mixins.scss' as mixins;
+
+.border {
+    @include mixins.regular-border;
+}
+
+.main {
+    .button {
+        img {
+            cursor: pointer;
+        }
+    }
+
+    .new-task {
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        span {
+            align-self: flex-start;
+            margin-bottom: 10px;
+        }
+
+        img {
+            margin-top: 15px;
+            cursor: pointer;
+        }
+    }
+}

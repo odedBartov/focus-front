@@ -10,10 +10,11 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { HttpService } from '../../services/http.service';
+import { NewTaskComponent } from '../new-task/new-task.component';
 
 @Component({
   selector: 'app-weekly-tasks',
-  imports: [FormsModule, CommonModule, DragDropModule],
+  imports: [FormsModule, CommonModule, DragDropModule, NewTaskComponent],
   templateUrl: './weekly-tasks.component.html',
   styleUrl: './weekly-tasks.component.scss'
 })
@@ -25,6 +26,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
   tasksWithoutDate: StepOrTask[] = []; // without date and are active
   currentAndFutureTasks: { project: Project, tasks: StepOrTask[] }[] = []; // without date, no matter if active or not
   presentedDays: WeeklyDay[] = [];
+  isShowingNewSteps: boolean[] = [];
   showAllTasks: boolean = false;
   deltaDays: number = 0; // used to show previous or next week
 
@@ -222,6 +224,11 @@ export class WeeklyTasksComponent implements AfterViewInit {
       return task.step.price + ' ₪';
     }
     return task.step?.description;
+  }
+
+  createNewTask(task: StepTask) {
+    // const newTask = new StepOrTask();
+    // newTask.task = task;
   }
 
   showHideAllTasks() {

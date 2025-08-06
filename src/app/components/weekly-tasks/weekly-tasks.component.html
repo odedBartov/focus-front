@@ -20,6 +20,9 @@
                         </div>
                         <span class="new-small">{{getTextForTask(task)}}</span>
                     </div>
+                    <div class="new-task">
+                        <app-new-task (createNewTask)="createNewTask($event)"></app-new-task>
+                    </div>
                 </div>
             </div>
             <div class="line"
