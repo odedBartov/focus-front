@@ -147,6 +147,8 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   assignTasksToDays() {
+    this.tasksWithDate = this.tasksWithDate.sort((a, b) => this.sortTasksAndSteps(a, b));
+
     this.tasksWithDate.forEach(taskOrStep => {
       const taskDate = taskOrStep.task?.dateOnWeekly || taskOrStep.step?.dateOnWeekly;
       for (const day of this.presentedDays) {
@@ -181,14 +183,18 @@ export class WeeklyTasksComponent implements AfterViewInit {
         event.currentIndex
       );
       const item = event.container.data[event.currentIndex];
-      if (item.task) {
-        // if (!item.task.dateOnWeekly) {
-        //   this.tasksWithDate.push(item);
-        // }
-        item.task.dateOnWeekly = date;
-      } else if (item.step) {
-        item.step.dateOnWeekly = date;
+      let stepOrTask = item.task || item.step;
+      if (!stepOrTask.dateOnWeekly) {
+        stepOrTask.positionInWeeklyList = event.currentIndex;
+        this.tasksWithDate.push(item);
+      } else if (!date) {
+        const index = this.tasksWithDate.findIndex(t => t.task?.id === stepOrTask.id);
+        if (index !== -1) {
+          this.tasksWithDate.splice(index, 1);
+        }
       }
+      stepOrTask.dateOnWeekly = date;
+
       this.updateTasksPosition(event.container.data);
       this.updateTasksPosition(event.previousContainer.data);
     }
@@ -261,7 +267,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
       });
     } else {
       tasksStep.tasks?.push(task);
-      this.httpService.updateSteps([tasksStep]).subscribe(res => {});
+      this.httpService.updateSteps([tasksStep]).subscribe(res => { });
     }
     const newTask = new StepOrTask();
     newTask.task = task;
