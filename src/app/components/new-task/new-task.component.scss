@@ -8,14 +8,19 @@
     .button {
         img {
             cursor: pointer;
+            height: 24px;
         }
     }
 
     .new-task {
-        padding: 15px;
+        padding: 13px;
         display: flex;
         flex-direction: column;
         align-items: center;
+
+        textarea {
+            resize: none;
+        }
 
         span {
             align-self: flex-start;
@@ -23,7 +28,8 @@
         }
 
         img {
-            margin-top: 15px;
+            margin-top: 20px;
+            height: 24px;
             cursor: pointer;
         }
     }

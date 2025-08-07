@@ -13,16 +13,28 @@
                 </div>
                 <div class="tasks-list-container">
                     <div class="tasks-list" cdkDropList [cdkDropListData]="day.tasks" [id]="'day-' + i"
-                        [cdkDropListConnectedTo]="allDropListIds" (cdkDropListDropped)="dropTask($event, day.date)">
-                        <div class="task" *ngFor="let task of presentedDays[i].tasks" cdkDrag>
-                            <div class="task-header new-small">
-                                <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
-                                <span>{{task.project?.name}}</span>
-                            </div>
-                            <span class="new-small">{{getTextForTask(task)}}</span>
-                            <div class="buttons">
-                                <img class="icon-expand" *ngIf="task.step" (click)="openProject(task.project)"/>
-                                <img class="icon-confirm-circle"/>
+                        cdkDropListOrientation="mixed" [cdkDropListConnectedTo]="allDropListIds"
+                        (cdkDropListDropped)="dropTask($event, day.date)">
+                        <div class="task" *ngFor="let task of presentedDays[i].tasks" cdkDrag
+                            (mouseenter)="hoverTaskId = task.step?.id ?? task.task?.id"
+                            (mouseleave)="hoverTaskId = undefined">
+                            <span *ngIf="editTaskId !== task.task?.id">
+                                <div class="task-header new-small">
+                                    <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
+                                    <span>{{task.project?.name}}</span>
+                                </div>
+                                <span class="new-small">{{getTextForTask(task)}}</span>
+                                <div class="buttons"
+                                    [@expandCollapse]="(hoverTaskId && (hoverTaskId === task.step?.id || hoverTaskId === task.task?.id)) ? 'expanded' : 'collapsed'">
+                                    <img class="icon-expand" style="width: 16px;" *ngIf="task.step"
+                                        (click)="openProject(task.project)" />
+                                    <img class="icon-pencil" style="width: 16px;" (click)="editTaskId = task.task?.id" *ngIf="task.task" />
+                                    <img class="icon-confirm-circle" style="width: 24px;"
+                                        (click)="completeTask(task)" />
+                                </div>
+                            </span>
+                            <div *ngIf="editTaskId === task.task?.id">
+                                <app-new-task (createNewTask)="createNewTask($event, day)" [taskInput]="task.task"></app-new-task>
                             </div>
                         </div>
                     </div>

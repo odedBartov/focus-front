@@ -11,12 +11,26 @@ import { CommonModule } from '@angular/common';
 import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { HttpService } from '../../services/http.service';
 import { NewTaskComponent } from '../new-task/new-task.component';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-weekly-tasks',
   imports: [FormsModule, CommonModule, DragDropModule, NewTaskComponent],
   templateUrl: './weekly-tasks.component.html',
-  styleUrl: './weekly-tasks.component.scss'
+  styleUrl: './weekly-tasks.component.scss',
+  animations: [
+    trigger('expandCollapse', [
+      state('collapsed', style({
+        height: '0px'
+      })),
+      state('expanded', style({
+        height: '*'
+      })),
+      transition('collapsed <=> expanded', [
+        animate('200ms ease')
+      ]),
+    ])
+  ]
 })
 export class WeeklyTasksComponent implements AfterViewInit {
   projectsService = inject(ProjectsService);
@@ -31,6 +45,8 @@ export class WeeklyTasksComponent implements AfterViewInit {
   isShowingNewSteps: boolean[] = [];
   showAllTasks: boolean = false;
   deltaDays: number = 0; // used to show previous or next week
+  hoverTaskId?: string;
+  editTaskId?: string;
 
   constructor() {
     this.projects = this.projectsService.getActiveProjects();
@@ -300,6 +316,13 @@ export class WeeklyTasksComponent implements AfterViewInit {
   openProject(project?: Project) {
     if (project) {
       this.selectProject.emit(project);
+    }
+  }
+
+  completeTask(task: StepOrTask) {
+    const index = task.parentStep.tasks?.findIndex(t => t.id === task.task?.id)
+    if (index && index > 0) {
+      task.parentStep.tasks?.splice(index, 1);
     }
   }
 

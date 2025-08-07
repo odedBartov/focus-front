@@ -34,14 +34,12 @@ import { AnimationItem } from 'lottie-web';
       state('collapsed', style({
         height: '0px',
         opacity: 0,
-        // overflow: 'hidden',
         marginTop: '0px',
         pointerEvents: 'none'
       })),
       state('expanded', style({
         height: '*',
         opacity: 1,
-        // overflow: 'hidden', i removed this for animation
         marginTop: '16px',
         pointerEvents: 'auto'
       })),
