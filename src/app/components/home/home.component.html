@@ -32,7 +32,7 @@
     </div>
 
     <div class="weekly-tasks-container" *ngIf="activeTab?.id === tasksTab.id">
-      <app-weekly-tasks class="weekly-tasks"></app-weekly-tasks>
+      <app-weekly-tasks class="weekly-tasks" (selectProject)="selectProject($event)"></app-weekly-tasks>
     </div>
 
     <div class="home-container" *ngIf="activeTab.id === archiveTab.id">

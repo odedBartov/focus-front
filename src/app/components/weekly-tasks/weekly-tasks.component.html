@@ -20,6 +20,10 @@
                                 <span>{{task.project?.name}}</span>
                             </div>
                             <span class="new-small">{{getTextForTask(task)}}</span>
+                            <div class="buttons">
+                                <img class="icon-expand" *ngIf="task.step" (click)="openProject(task.project)"/>
+                                <img class="icon-confirm-circle"/>
+                            </div>
                         </div>
                     </div>
                     <div class="new-task">

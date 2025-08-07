@@ -43,7 +43,7 @@
 
                 .tasks-list-container {
                     .tasks-list {
-                        min-height: 20px;
+                        min-height: 30px;
                         display: flex;
                         flex-direction: column;
                         align-items: center;
@@ -51,7 +51,7 @@
                         height: 100%;
 
                         .task {
-                            padding: 10px;
+                            padding: 15px 20px;
                             width: 90%;
                         }
                     }
@@ -61,6 +61,16 @@
                         justify-content: center;
                         margin-top: 10px;
                     }
+                }
+            }
+
+            .buttons {
+                margin-top: 10px;
+                display: flex;
+                justify-content: space-between;
+
+                img {
+                    cursor: pointer;
                 }
             }
 
@@ -123,7 +133,7 @@
     box-shadow: var(--common-shadow);
     padding: 10px;
     margin: 10px;
-    width: 220px;
+    width: 12%;
     background-color: var(--default-white);
     border-radius: var(--common-radius);
 }

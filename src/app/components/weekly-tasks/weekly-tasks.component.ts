@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, effect, inject, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, effect, EventEmitter, inject, Output, WritableSignal } from '@angular/core';
 import { Project } from '../../models/project';
 import { ProjectsService } from '../../services/projects.service';
 import { StepOrTask } from '../../models/stepOrTask';
@@ -21,6 +21,7 @@ import { NewTaskComponent } from '../new-task/new-task.component';
 export class WeeklyTasksComponent implements AfterViewInit {
   projectsService = inject(ProjectsService);
   httpService = inject(HttpService);
+  @Output() selectProject = new EventEmitter<Project>();
   projects: WritableSignal<Project[]>;
   noProject: WritableSignal<Project>;
   tasksWithDate: StepOrTask[] = [];
@@ -182,25 +183,38 @@ export class WeeklyTasksComponent implements AfterViewInit {
         event.previousIndex,
         event.currentIndex
       );
+
       const item = event.container.data[event.currentIndex];
-      let stepOrTask = item.task || item.step;
-      if (!stepOrTask.dateOnWeekly) {
-        stepOrTask.positionInWeeklyList = event.currentIndex;
-        this.tasksWithDate.push(item);
-      } else if (!date) {
-        const index = this.tasksWithDate.findIndex(t => t.task?.id === stepOrTask.id);
-        if (index !== -1) {
-          this.tasksWithDate.splice(index, 1);
+      if (item.task) {
+        if (!item.task.dateOnWeekly) {
+          item.positionInWeeklyList = event.currentIndex;
+          this.tasksWithDate.push(item);
+        } else if (!date) {
+          const index = this.tasksWithDate.findIndex(t => t.task?.id === item.task.id);
+          if (index !== -1) {
+            this.tasksWithDate.splice(index, 1);
+          }
         }
+        item.task.dateOnWeekly = date;
+      } else if (item.step) {
+        if (!item.step.dateOnWeekly) {
+          item.positionInWeeklyList = event.currentIndex;
+          this.tasksWithDate.push(item);
+        } else if (!date) {
+          const index = this.tasksWithDate.findIndex(t => t.step?.id === item.step.id);
+          if (index !== -1) {
+            this.tasksWithDate.splice(index, 1);
+          }
+        }
+        item.step.dateOnWeekly = date;
       }
-      stepOrTask.dateOnWeekly = date;
 
       this.updateTasksPosition(event.container.data);
       this.updateTasksPosition(event.previousContainer.data);
     }
 
     this.initPresentedDays();
-    this.updateTasks(event.previousContainer.data, event.container.data);
+    this.updateTasks(event.previousContainer === event.container ? [] : event.previousContainer.data, event.container.data);
   }
 
   updateTasksPosition(list: StepOrTask[]) {
@@ -219,6 +233,9 @@ export class WeeklyTasksComponent implements AfterViewInit {
     if (fromList && fromList.length) {
       fromList.forEach(taskOrStep => {
         if (!stepsToUpdate.find(s => s.id === taskOrStep.parentStep.id)) {
+          if (taskOrStep.step) {
+            taskOrStep.parentStep = taskOrStep.step;
+          }
           stepsToUpdate.push(taskOrStep.parentStep);
         }
       });
@@ -227,6 +244,9 @@ export class WeeklyTasksComponent implements AfterViewInit {
     if (toList && toList.length) {
       toList.forEach(taskOrStep => {
         if (!stepsToUpdate.find(s => s.id === taskOrStep.parentStep.id)) {
+          if (taskOrStep.step) {
+            taskOrStep.parentStep = taskOrStep.step;
+          }
           stepsToUpdate.push(taskOrStep.parentStep);
         }
       });
@@ -275,6 +295,12 @@ export class WeeklyTasksComponent implements AfterViewInit {
     newTask.project = this.noProject();
     day.tasks.push(newTask);
     this.tasksWithDate.push(newTask);
+  }
+
+  openProject(project?: Project) {
+    if (project) {
+      this.selectProject.emit(project);
+    }
   }
 
   showHideAllTasks() {
