@@ -115,7 +115,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    //this.setStepHeadersMargin();
     this.setActiveStepHeight();
   }
 
@@ -191,19 +190,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     // })
   }
 
-  setActiveStepHeight(extraHeight = 20) {
+  setActiveStepHeight() {
     const element = this.descriptions.get(0)?.nativeElement as HTMLTextAreaElement;
     if (element) {
-      // const scrollHeight = element.nativeElement.scrollHeight;
-      // const actualHeight = element.nativeElement.clientHeight;
-      // const gap = (actualHeight + extraHeight) - scrollHeight;
-
-      // let epsilon = 0;
-      // if (gap > 0) {
-      //   epsilon = gap;
-      // }
       element.style.height = 'auto';
-      // element.nativeElement.style.height = 20 + "px";
       element.style.height = element.scrollHeight + 'px';
       ;
     }
@@ -366,8 +356,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       setTimeout(() => {
         this.hoverStepId = '';
         if (step.id === this.activeStepId) {
-          this.setActiveStepHeight(0);
-          //this.setStepHeadersMargin()
+          this.setActiveStepHeight();
         }
       }, 1);
       this.animationsService.changeIsloading(false);

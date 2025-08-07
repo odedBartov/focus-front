@@ -11,17 +11,19 @@
                     <span>{{ (day.date) | date: 'dd/MM' }}</span>
                     <span>{{getHebrewDay(day.date)}}</span>
                 </div>
-                <div class="tasks-list" cdkDropList [cdkDropListData]="day.tasks" [id]="'day-' + i"
-                    [cdkDropListConnectedTo]="allDropListIds" (cdkDropListDropped)="dropTask($event, day.date)">
-                    <div class="task" *ngFor="let task of presentedDays[i].tasks" cdkDrag>
-                        <div class="task-header new-small">
-                            <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
-                            <span>{{task.project?.name}}</span>
+                <div class="tasks-list-container">
+                    <div class="tasks-list" cdkDropList [cdkDropListData]="day.tasks" [id]="'day-' + i"
+                        [cdkDropListConnectedTo]="allDropListIds" (cdkDropListDropped)="dropTask($event, day.date)">
+                        <div class="task" *ngFor="let task of presentedDays[i].tasks" cdkDrag>
+                            <div class="task-header new-small">
+                                <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
+                                <span>{{task.project?.name}}</span>
+                            </div>
+                            <span class="new-small">{{getTextForTask(task)}}</span>
                         </div>
-                        <span class="new-small">{{getTextForTask(task)}}</span>
                     </div>
                     <div class="new-task">
-                        <app-new-task (createNewTask)="createNewTask($event)"></app-new-task>
+                        <app-new-task (createNewTask)="createNewTask($event, day)"></app-new-task>
                     </div>
                 </div>
             </div>

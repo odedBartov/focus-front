@@ -21,7 +21,8 @@ import { NewTaskComponent } from '../new-task/new-task.component';
 export class WeeklyTasksComponent implements AfterViewInit {
   projectsService = inject(ProjectsService);
   httpService = inject(HttpService);
-  projects: WritableSignal<Project[] | undefined>;
+  projects: WritableSignal<Project[]>;
+  noProject: WritableSignal<Project>;
   tasksWithDate: StepOrTask[] = [];
   tasksWithoutDate: StepOrTask[] = []; // without date and are active
   currentAndFutureTasks: { project: Project, tasks: StepOrTask[] }[] = []; // without date, no matter if active or not
@@ -32,6 +33,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
 
   constructor() {
     this.projects = this.projectsService.getActiveProjects();
+    this.noProject = this.projectsService.getNoProject();
     effect(() => {
       this.initTasks();
     })
@@ -63,8 +65,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
     this.tasksWithoutDate = [];
     this.currentAndFutureTasks = [];
 
-    // also load stand alone tasks
-
     projects.forEach(project => {
       project.steps.sort((a, b) => a.positionInList - b.positionInList);
       let foundActiveStep = false;
@@ -93,6 +93,18 @@ export class WeeklyTasksComponent implements AfterViewInit {
         if (!step.isComplete) foundActiveStep = true;
       })
     })
+
+    const weeklyTasksStep = this.noProject().steps.find(s => s.name === 'weeklyTasks');
+    if (weeklyTasksStep) {
+      weeklyTasksStep.tasks?.forEach(task => {
+        if (task.dateOnWeekly) {
+          this.insertTaskToList(this.tasksWithDate, weeklyTasksStep, this.noProject(), task, undefined);
+        } else {
+          this.insertTaskToFutueTasks(this.noProject(), weeklyTasksStep, task, undefined);
+          this.insertTaskToList(this.tasksWithoutDate, weeklyTasksStep, this.noProject(), task, undefined);
+        }
+      });
+    }
 
     this.tasksWithDate = this.tasksWithDate.sort((a, b) => this.sortTasksAndSteps(a, b));
     this.tasksWithoutDate = this.tasksWithoutDate.sort((a, b) => this.sortTasksAndSteps(a, b));
@@ -170,6 +182,9 @@ export class WeeklyTasksComponent implements AfterViewInit {
       );
       const item = event.container.data[event.currentIndex];
       if (item.task) {
+        // if (!item.task.dateOnWeekly) {
+        //   this.tasksWithDate.push(item);
+        // }
         item.task.dateOnWeekly = date;
       } else if (item.step) {
         item.step.dateOnWeekly = date;
@@ -178,18 +193,19 @@ export class WeeklyTasksComponent implements AfterViewInit {
       this.updateTasksPosition(event.previousContainer.data);
     }
 
+    this.initPresentedDays();
     this.updateTasks(event.previousContainer.data, event.container.data);
   }
 
   updateTasksPosition(list: StepOrTask[]) {
-      for (let index = 0; index < list.length; index++) {
-        const task = list[index];
-        if (task.task) {
-          task.task.positionInWeeklyList = index;
-        } else {
-          task.step!.positionInWeeklyList = index;
-        }
+    for (let index = 0; index < list.length; index++) {
+      const task = list[index];
+      if (task.task) {
+        task.task.positionInWeeklyList = index;
+      } else {
+        task.step!.positionInWeeklyList = index;
       }
+    }
   }
 
   updateTasks(fromList?: StepOrTask[], toList?: StepOrTask[]) {
@@ -210,7 +226,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
       });
     }
 
-    this.httpService.updateSteps(stepsToUpdate).subscribe(res => {});
+    this.httpService.updateSteps(stepsToUpdate).subscribe(res => { });
   }
 
   compareDates(first: Date, second = new Date(), daysDelta = 0) {
@@ -226,9 +242,33 @@ export class WeeklyTasksComponent implements AfterViewInit {
     return task.step?.description;
   }
 
-  createNewTask(task: StepTask) {
-    // const newTask = new StepOrTask();
-    // newTask.task = task;
+  createNewTask(task: StepTask, day: WeeklyDay) {
+    task.positionInWeeklyList = day.tasks.length;
+    task.dateOnWeekly = day.date;
+    let tasksStep = this.noProject().steps.find(s => s.name === 'weeklyTasks');
+    if (!tasksStep) {
+      tasksStep = new Step();
+      tasksStep.projectId = this.noProject().id;
+      tasksStep.name = 'weeklyTasks';
+      tasksStep.stepType = StepType.task;
+      tasksStep.tasks = [task];
+      this.noProject().steps.push(tasksStep);
+      this.noProject().steps = [...this.noProject().steps];
+      this.httpService.createStep(tasksStep).subscribe(res => {
+        if (tasksStep) {
+          tasksStep.id = res.id;
+        }
+      });
+    } else {
+      tasksStep.tasks?.push(task);
+      this.httpService.updateSteps([tasksStep]).subscribe(res => {});
+    }
+    const newTask = new StepOrTask();
+    newTask.task = task;
+    newTask.parentStep = tasksStep;
+    newTask.project = this.noProject();
+    day.tasks.push(newTask);
+    this.tasksWithDate.push(newTask);
   }
 
   showHideAllTasks() {

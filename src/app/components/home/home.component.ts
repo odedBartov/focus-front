@@ -94,7 +94,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.activeProjects = this.projectsService.getActiveProjects();
     this.unActiveProjects = this.projectsService.getUnActiveProjects();
-    this.noProject = this.projectsService.getNoProjects();
+    this.noProject = this.projectsService.getNoProject();
     this.selectedProject = this.projectsService.getCurrentProject();
     this.initUserPicture();
     let paramProjectId: string | null | undefined = '';
