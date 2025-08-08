@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, effect, ElementRef, EventEmitter, inject, Output, QueryList, ViewChildren, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, EventEmitter, inject, NgZone, Output, QueryList, ViewChildren, WritableSignal } from '@angular/core';
 import { Project } from '../../models/project';
 import { ProjectsService } from '../../services/projects.service';
 import { StepOrTask } from '../../models/stepOrTask';
@@ -35,7 +35,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
   showAllTasks: boolean = false;
   deltaDays: number = 0; // used to show previous or next week
 
-  constructor() {
+  constructor(private ngZone: NgZone) {
     this.projects = this.projectsService.getActiveProjects();
     this.noProject = this.projectsService.getNoProject();
     effect(() => {
@@ -45,10 +45,10 @@ export class WeeklyTasksComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initPresentedDays();
-    setTimeout(() => {
+    this.ngZone.onStable.asObservable().pipe().subscribe(() => {
       const width = this.days.first.nativeElement.offsetWidth;
-      document.documentElement.style.setProperty('--task-width', width + 'px');
-    }, 1);
+      document.documentElement.style.setProperty('--task-width', `${width}px`);
+    });
   }
 
   get allDropListIds(): string[] {
