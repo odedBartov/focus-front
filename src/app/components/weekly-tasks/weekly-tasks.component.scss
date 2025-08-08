@@ -132,6 +132,7 @@
 
 .cdk-drag-placeholder,
 .cdk-drag-preview {
+    overflow-y: hidden;
     .buttons {
         height: 0;
         display: none;
