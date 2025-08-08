@@ -26,8 +26,7 @@ export class NewTaskComponent {
   newTask: StepTask = new StepTask();
   showError = false;
   isEdit = false;
-
-  constructor() { }
+  mouseDownInside = false;
 
   startNewTask() {
     this.isShowNewStep = true;
@@ -40,11 +39,12 @@ export class NewTaskComponent {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    if (this.newTaskDiv?.nativeElement && !this.newTaskDiv.nativeElement.contains(event.target)) {
+    if (this.newTaskDiv?.nativeElement && !this.newTaskDiv.nativeElement.contains(event.target) && !this.mouseDownInside) {
       this.isShowNewStep = false;
     } else {
-      event.stopPropagation();
+      this.mouseDownInside = true;
     }
+    this.mouseDownInside = false;
   }
 
   @HostListener('document:keydown.enter', ['$event'])

@@ -1,4 +1,4 @@
-<div class="main" cdkDrag draggable="false"
+<div class="main" cdkDrag draggable="false" [cdkDragDisabled]="isEditing" (mousedown)="mouseDownInside = true"
     (mouseenter)="isHovering = true" (mouseleave)="isHovering = false" #weeklyDayTaskDiv>
     <div *ngIf="!isEditing" class="task">
         <div class="task-header new-small">
@@ -13,7 +13,7 @@
             <img class="icon-confirm-circle" style="width: 24px;" (click)="completeTask.emit()" />
         </div>
     </div>
-    <div *ngIf="isEditing" draggable="false">
+    <div *ngIf="isEditing">
         <app-new-task (createNewTask)="updateTask($event)" [taskInput]="task.task"></app-new-task>
     </div>
 </div>

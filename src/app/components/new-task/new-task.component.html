@@ -1,12 +1,12 @@
-<div class="main" #newTaskDiv [ngClass]="{'border': isShowNewStep}">
+<div class="main" #newTaskDiv [ngClass]="{'border': isShowNewStep}" (mousedown)="mouseDownInside = true">
     <div class="button" *ngIf="!isShowNewStep">
         <img (click)="startNewTask()" class="icon-plus" />
     </div>
     <div *ngIf="isShowNewStep" class="new-task">
-        <span class="new-small">משימה חדשה</span>
+        <span class="new-small">{{isEdit? 'עריכת משימה' : 'משימה חדשה'}}</span>
         <textarea class="new-text" [(ngModel)]="newTask.text" tabindex="0" #taskText autoResize></textarea>
         <div class="error-container new-small" style="width: 100%;">
-            <span *ngIf="showError && !newTask.text" class="error">אנא הזינו משימה חדשה</span>
+            <span *ngIf="showError && !newTask.text" class="error">אנא הזינו משימה</span>
         </div>
         <img class="icon-confirm-circle" (click)="createTask()" tabindex="0" />
     </div>
