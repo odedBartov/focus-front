@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, effect, EventEmitter, inject, Output, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, EventEmitter, inject, Output, QueryList, ViewChildren, WritableSignal } from '@angular/core';
 import { Project } from '../../models/project';
 import { ProjectsService } from '../../services/projects.service';
 import { StepOrTask } from '../../models/stepOrTask';
@@ -12,30 +12,19 @@ import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from 
 import { HttpService } from '../../services/http.service';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
 
 @Component({
   selector: 'app-weekly-tasks',
-  imports: [FormsModule, CommonModule, DragDropModule, NewTaskComponent],
+  imports: [FormsModule, CommonModule, DragDropModule, NewTaskComponent, WeeklyDayTaskComponent],
   templateUrl: './weekly-tasks.component.html',
-  styleUrl: './weekly-tasks.component.scss',
-  animations: [
-    trigger('expandCollapse', [
-      state('collapsed', style({
-        height: '0px'
-      })),
-      state('expanded', style({
-        height: '*'
-      })),
-      transition('collapsed <=> expanded', [
-        animate('200ms ease')
-      ]),
-    ])
-  ]
+  styleUrl: './weekly-tasks.component.scss'
 })
 export class WeeklyTasksComponent implements AfterViewInit {
   projectsService = inject(ProjectsService);
   httpService = inject(HttpService);
   @Output() selectProject = new EventEmitter<Project>();
+  @ViewChildren('days') days!: QueryList<ElementRef<HTMLDivElement>>;
   projects: WritableSignal<Project[]>;
   noProject: WritableSignal<Project>;
   tasksWithDate: StepOrTask[] = [];
@@ -45,8 +34,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
   isShowingNewSteps: boolean[] = [];
   showAllTasks: boolean = false;
   deltaDays: number = 0; // used to show previous or next week
-  hoverTaskId?: string;
-  editTaskId?: string;
 
   constructor() {
     this.projects = this.projectsService.getActiveProjects();
@@ -58,6 +45,10 @@ export class WeeklyTasksComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initPresentedDays();
+    setTimeout(() => {
+      const width = this.days.first.nativeElement.offsetWidth;
+      document.documentElement.style.setProperty('--task-width', width + 'px');
+    }, 1);
   }
 
   get allDropListIds(): string[] {
@@ -311,6 +302,16 @@ export class WeeklyTasksComponent implements AfterViewInit {
     newTask.project = this.noProject();
     day.tasks.push(newTask);
     this.tasksWithDate.push(newTask);
+  }
+
+  updateTaskText(task: StepTask, step: Step) {
+    if (step.tasks) {
+      const index = step.tasks.findIndex(t => t.id === task.id);
+      if (index > -1) {
+        step.tasks[index] = task;
+        this.httpService.updateSteps([step]).subscribe();
+      }
+    }
   }
 
   openProject(project?: Project) {

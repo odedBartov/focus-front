@@ -19,6 +19,7 @@ export class NewTaskComponent {
     if (value) {
       this.isEdit = true;
       this.newTask = structuredClone(value);
+      this.startNewTask();
     }
   }
   isShowNewStep = false;

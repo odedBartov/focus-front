@@ -50,9 +50,8 @@
                         justify-content: flex-start;
                         height: 100%;
 
-                        .task {
-                            padding: 15px 20px;
-                            width: 90%;
+                        .weekly-day-task {
+                            width: 100%;
                         }
                     }
 
@@ -64,17 +63,7 @@
                 }
             }
 
-            .buttons {
-                overflow: hidden;
-                margin-top: 10px;
-                display: flex;
-                justify-content: space-between;
 
-                img {
-                    height: fit-content;
-                    cursor: pointer;
-                }
-            }
 
             .line {
                 width: 1px;
@@ -110,6 +99,7 @@
         }
 
         .tasks-list {
+            gap: 15px;
             padding: 15px;
             display: flex;
             flex-flow: column wrap;
@@ -132,16 +122,16 @@
         }
     }
 
-    box-shadow: var(--common-shadow);
     padding: 10px;
-    margin: 10px;
-    width: 12%;
+    box-sizing: border-box;
+    box-shadow: var(--common-shadow);
+    width: var(--task-width);
     background-color: var(--default-white);
     border-radius: var(--common-radius);
 }
 
-.cdk-drag-placeholder, .cdk-drag-preview {
-    height: 60px !important;
+.cdk-drag-placeholder,
+.cdk-drag-preview {
     .buttons {
         height: 0;
         display: none;

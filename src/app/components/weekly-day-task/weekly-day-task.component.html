@@ -1,0 +1,19 @@
+<div class="main" cdkDrag draggable="false"
+    (mouseenter)="isHovering = true" (mouseleave)="isHovering = false" #weeklyDayTaskDiv>
+    <div *ngIf="!isEditing" class="task">
+        <div class="task-header new-small">
+            <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
+            <span>{{task.project?.name}}</span>
+        </div>
+        <span class="new-small">{{getTextForTask(task)}}</span>
+        <div class="buttons"
+            [@expandCollapse]="isHovering ? 'expanded' : 'collapsed'">
+            <img class="icon-expand" style="width: 16px;" *ngIf="task.step" (click)="openProject.emit(task.project)" />
+            <img class="icon-pencil" style="width: 16px;" (click)="isEditing = true" *ngIf="task.task" />
+            <img class="icon-confirm-circle" style="width: 24px;" (click)="completeTask.emit()" />
+        </div>
+    </div>
+    <div *ngIf="isEditing" draggable="false">
+        <app-new-task (createNewTask)="updateTask($event)" [taskInput]="task.task"></app-new-task>
+    </div>
+</div>
