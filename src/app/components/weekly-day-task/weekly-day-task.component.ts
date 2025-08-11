@@ -36,9 +36,9 @@ export class WeeklyDayTaskComponent {
   isHovering = false;
   isEditing = false;
   mouseDownInside = false;
-  
+
   @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {    
+  onDocumentClick(event: MouseEvent) {
     if (this.weeklyDayTaskDiv?.nativeElement && !this.weeklyDayTaskDiv.nativeElement.contains(event.target) && !this.mouseDownInside) {
       this.isEditing = false;
     } else {
@@ -47,6 +47,16 @@ export class WeeklyDayTaskComponent {
     }
 
     this.mouseDownInside = false;
+  }
+
+  isStepOrTaskComplete(task: StepOrTask) {
+    if (task.task) {
+      return task.task.isComplete;
+    } else if (task.step) {
+      return task.step.isComplete;
+    }
+
+    return false;
   }
 
   getTextForTask(task: StepOrTask): string | undefined {

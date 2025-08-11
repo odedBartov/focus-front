@@ -321,10 +321,17 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   completeTask(task: StepOrTask) {
-    const index = task.parentStep.tasks?.findIndex(t => t.id === task.task?.id)
-    if (index && index > 0) {
-      task.parentStep.tasks?.splice(index, 1);
+    // const index = task.parentStep.tasks?.findIndex(t => t.id === task.task?.id)
+    // if (index && index > 0) {
+    //   task.parentStep.tasks?.splice(index, 1);
+    // }
+    if (task.task) {
+      task.task.isComplete = true;
+    } else if (task.step) {
+      task.step.isComplete = true;
     }
+
+    this.httpService.updateSteps([task.parentStep]).subscribe();
   }
 
   showHideAllTasks() {

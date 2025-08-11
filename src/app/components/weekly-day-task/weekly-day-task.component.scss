@@ -30,6 +30,14 @@
             }
         }
     }
+
+    .completed-task {
+        text-decoration: line-through;
+        padding: 10px 15px;
+        margin: 10px 0;
+        color: var(--default-gray);
+        
+    }
 }
 
 .cdk-drag-placeholder,
