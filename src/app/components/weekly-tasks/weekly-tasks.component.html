@@ -16,7 +16,9 @@
                         cdkDropListOrientation="mixed" [cdkDropListConnectedTo]="allDropListIds"
                         (cdkDropListDropped)="dropTask($event, day.date)">
                         <div class="weekly-day-task" *ngFor="let task of presentedDays[i].tasks" #days>
-                            <app-weekly-day-task [task]="task" (openProject)="openProject(task.project)" (createNewTaskEmitter)="updateTaskText($event, task.parentStep)" (completeTask)="completeTask(task)"></app-weekly-day-task>
+                            <app-weekly-day-task [task]="task" (openProject)="openProject(task.project)"
+                                (createNewTaskEmitter)="updateTaskText($event, task.parentStep)"
+                                (completeTask)="completeTask(task)"></app-weekly-day-task>
                         </div>
                     </div>
                     <div class="new-task">
@@ -29,22 +31,35 @@
                 *ngIf="i < 6"></div>
         </div>
     </div>
-    <div class="unAssignTasks" [@expandUnassignTasks]="showAllTasks() ? 'expanded' : 'collapsed'">
+    <div class="unAssignTasks" [@expandUnassignTasks]="showAllTasks ? 'expanded' : 'collapsed'">
         <div class="line"></div>
         <div class="header">
             <span class="new-h2">משימות לשיבוץ</span>
-            {{showAllTasks()}}
-            <span class="new-small" (click)="showHideAllTasks()">{{showAllTasks()? 'הצגת משימות נוכחיות בלבד' :  'הצגת כל המשימות'}}</span>
+            <span class="new-small" (click)="showAllTasks = !showAllTasks" *ngIf="!showAllTasks">{{'הצגת כל
+                המשימות'}}</span>
+            <span class="new-small" (click)="showAllTasks = !showAllTasks" *ngIf="showAllTasks">{{'הצגת משימות נוכחיות
+                בלבד'}}</span>
         </div>
         <div class="tasks-list" cdkDropList id="unAssigned" [cdkDropListData]="tasksWithoutDate"
             [cdkDropListConnectedTo]="allDropListIds" (cdkDropListDropped)="dropTask($event)"
-            cdkDropListOrientation="mixed">
+            cdkDropListOrientation="mixed" *ngIf="!showAllTasks">
             <div class="task" *ngFor="let task of tasksWithoutDate" cdkDrag>
                 <div class="task-header new-small">
                     <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
                     <span>{{task.project?.name}}</span>
                 </div>
                 <span class="new-small">{{getTextForTask(task)}}</span>
+            </div>
+        </div>
+        <div class="project-tasks" *ngIf="showAllTasks">
+            <div class="project-task" *ngFor="let project of currentAndFutureTasks">
+                <div class="task" *ngFor="let task of project.tasks">
+                    <div class="task-header new-small">
+                        <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
+                        <span>{{task.project?.name}}</span>
+                    </div>
+                    <span class="new-small">{{getTextForTask(task)}}</span>
+                </div>
             </div>
         </div>
     </div>

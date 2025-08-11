@@ -45,15 +45,16 @@ export class WeeklyTasksComponent implements AfterViewInit {
   currentAndFutureTasks: { project: Project, tasks: StepOrTask[] }[] = []; // without date, no matter if active or not
   presentedDays: WeeklyDay[] = [];
   isShowingNewSteps: boolean[] = [];
-  showAllTasks: WritableSignal<boolean>;
+  showAllTasks = false;
   deltaDays: number = 0; // used to show previous or next week
 
   constructor(private ngZone: NgZone, private cdr: ChangeDetectorRef) {
-    this.showAllTasks = signal<boolean>(false);
     this.projects = this.projectsService.getActiveProjects();
     this.noProject = this.projectsService.getNoProject();
     effect(() => {
       this.initTasks();
+      console.log(this.tasksWithoutDate);
+      
     })
   }
 
@@ -61,7 +62,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
     this.initPresentedDays();
     this.ngZone.onStable.asObservable().pipe().subscribe(() => {
       setTimeout(() => {
-
         const width = this.days.first.nativeElement.offsetWidth;
         document.documentElement.style.setProperty('--task-width', `${width}px`);
       }, 1);
@@ -286,10 +286,8 @@ export class WeeklyTasksComponent implements AfterViewInit {
   getTextForTask(task: StepOrTask): string | undefined {
     if (task.task) {
       return task.task.text;
-    } else if (task.step?.stepType === StepType.payment) {
-      return task.step.price + ' ₪';
-    }
-    return task.step?.description;
+    } else
+      return task.step?.name;
   }
 
   createNewTask(task: StepTask, day: WeeklyDay) {
@@ -345,13 +343,5 @@ export class WeeklyTasksComponent implements AfterViewInit {
     }
 
     this.httpService.updateSteps([task.parentStep]).subscribe();
-  }
-
-  showHideAllTasks() {
-    this.ngZone.run(() => {
-      this.showAllTasks.set(!this.showAllTasks());
-      this.cdr.markForCheck();
-      this.cdr.detectChanges();
-    });
   }
 }
