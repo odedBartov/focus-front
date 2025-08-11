@@ -29,11 +29,12 @@
                 *ngIf="i < 6"></div>
         </div>
     </div>
-    <div class="unAssignTasks">
+    <div class="unAssignTasks" [@expandUnassignTasks]="showAllTasks() ? 'expanded' : 'collapsed'">
         <div class="line"></div>
         <div class="header">
             <span class="new-h2">משימות לשיבוץ</span>
-            <span class="new-small">הצגת כל המשימות</span>
+            {{showAllTasks()}}
+            <span class="new-small" (click)="showHideAllTasks()">{{showAllTasks()? 'הצגת משימות נוכחיות בלבד' :  'הצגת כל המשימות'}}</span>
         </div>
         <div class="tasks-list" cdkDropList id="unAssigned" [cdkDropListData]="tasksWithoutDate"
             [cdkDropListConnectedTo]="allDropListIds" (cdkDropListDropped)="dropTask($event)"

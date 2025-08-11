@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, effect, ElementRef, EventEmitter, inject, NgZone, Output, QueryList, ViewChildren, WritableSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, inject, NgZone, Output, QueryList, signal, ViewChildren, WritableSignal } from '@angular/core';
 import { Project } from '../../models/project';
 import { ProjectsService } from '../../services/projects.service';
 import { StepOrTask } from '../../models/stepOrTask';
@@ -18,7 +18,20 @@ import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.compo
   selector: 'app-weekly-tasks',
   imports: [FormsModule, CommonModule, DragDropModule, NewTaskComponent, WeeklyDayTaskComponent],
   templateUrl: './weekly-tasks.component.html',
-  styleUrl: './weekly-tasks.component.scss'
+  styleUrl: './weekly-tasks.component.scss',
+  animations: [
+    trigger('expandUnassignTasks', [
+      state('collapsed', style({
+        flex: '1'
+      })),
+      state('expanded', style({
+        flex: '3'
+      })),
+      transition('collapsed <=> expanded', [
+        animate('200ms ease')
+      ]),
+    ])
+  ]
 })
 export class WeeklyTasksComponent implements AfterViewInit {
   projectsService = inject(ProjectsService);
@@ -32,10 +45,11 @@ export class WeeklyTasksComponent implements AfterViewInit {
   currentAndFutureTasks: { project: Project, tasks: StepOrTask[] }[] = []; // without date, no matter if active or not
   presentedDays: WeeklyDay[] = [];
   isShowingNewSteps: boolean[] = [];
-  showAllTasks: boolean = false;
+  showAllTasks: WritableSignal<boolean>;
   deltaDays: number = 0; // used to show previous or next week
 
-  constructor(private ngZone: NgZone) {
+  constructor(private ngZone: NgZone, private cdr: ChangeDetectorRef) {
+    this.showAllTasks = signal<boolean>(false);
     this.projects = this.projectsService.getActiveProjects();
     this.noProject = this.projectsService.getNoProject();
     effect(() => {
@@ -46,8 +60,11 @@ export class WeeklyTasksComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.initPresentedDays();
     this.ngZone.onStable.asObservable().pipe().subscribe(() => {
-      const width = this.days.first.nativeElement.offsetWidth;
-      document.documentElement.style.setProperty('--task-width', `${width}px`);
+      setTimeout(() => {
+
+        const width = this.days.first.nativeElement.offsetWidth;
+        document.documentElement.style.setProperty('--task-width', `${width}px`);
+      }, 1);
     });
   }
 
@@ -321,10 +338,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   completeTask(task: StepOrTask) {
-    // const index = task.parentStep.tasks?.findIndex(t => t.id === task.task?.id)
-    // if (index && index > 0) {
-    //   task.parentStep.tasks?.splice(index, 1);
-    // }
     if (task.task) {
       task.task.isComplete = true;
     } else if (task.step) {
@@ -335,6 +348,10 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   showHideAllTasks() {
-    this.showAllTasks = !this.showAllTasks;
+    this.ngZone.run(() => {
+      this.showAllTasks.set(!this.showAllTasks());
+      this.cdr.markForCheck();
+      this.cdr.detectChanges();
+    });
   }
 }
