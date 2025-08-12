@@ -15,7 +15,7 @@
                     <div class="tasks-list" cdkDropList [cdkDropListData]="day.tasks" [id]="'day-' + i"
                         cdkDropListOrientation="mixed" [cdkDropListConnectedTo]="allDropListIds"
                         (cdkDropListDropped)="dropTask($event, day.date)">
-                        <div class="weekly-day-task" *ngFor="let task of presentedDays[i].tasks" #days>
+                        <div class="weekly-day-task" *ngFor="let task of day.tasks" #days>
                             <app-weekly-day-task [task]="task" (openProject)="openProject(task.project)"
                                 (createNewTaskEmitter)="updateTaskText($event, task.parentStep)"
                                 (completeTask)="completeTask(task)"></app-weekly-day-task>
@@ -53,12 +53,15 @@
         </div>
         <div class="project-tasks" *ngIf="showAllTasks">
             <div class="project-task" *ngFor="let project of currentAndFutureTasks">
-                <div class="task" *ngFor="let task of project.tasks">
-                    <div class="task-header new-small">
-                        <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
-                        <span>{{task.project?.name}}</span>
+                <div cdkDropList [id]="project.project.id ?? 'project'" [cdkDropListData]="project.tasks"
+                    [cdkDropListConnectedTo]="daysDropListsIds" (cdkDropListDropped)="dropTask($event)">
+                    <div class="task" *ngFor="let task of project.tasks" cdkDrag>
+                        <div class="task-header new-small">
+                            <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
+                            <span>{{task.project?.name}}</span>
+                        </div>
+                        <span class="new-small">{{getTextForTask(task)}}</span>
                     </div>
-                    <span class="new-small">{{getTextForTask(task)}}</span>
                 </div>
             </div>
         </div>

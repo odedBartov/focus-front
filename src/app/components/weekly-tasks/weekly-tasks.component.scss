@@ -64,8 +64,6 @@
                 }
             }
 
-
-
             .line {
                 width: 1px;
                 height: 100%;
@@ -77,6 +75,7 @@
 
     .unAssignTasks {
         margin-top: 15px;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -108,15 +107,21 @@
         }
 
         .project-tasks {
-            display: flex;
             gap: 15px;
             padding: 15px;
+            display: flex;
             overflow-x: auto;
 
-            .project-task {
+            // .project-task {
+            //     display: flex;
+            //     flex-direction: column;
+            //     gap: 15px;
+            // }
+
+            .project-task>[cdkDropList] {
                 display: flex;
                 flex-direction: column;
-                gap: 15px;
+                gap: 15px; // vertical gap between .task items
             }
         }
     }

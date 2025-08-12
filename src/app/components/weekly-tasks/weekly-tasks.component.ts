@@ -28,7 +28,7 @@ import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.compo
         flex: '3'
       })),
       transition('collapsed <=> expanded', [
-        animate('200ms ease')
+        animate('300ms ease')
       ]),
     ])
   ]
@@ -53,8 +53,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
     this.noProject = this.projectsService.getNoProject();
     effect(() => {
       this.initTasks();
-      console.log(this.tasksWithoutDate);
-      
     })
   }
 
@@ -70,7 +68,13 @@ export class WeeklyTasksComponent implements AfterViewInit {
 
   get allDropListIds(): string[] {
     const ids = this.presentedDays.map((_, i) => `day-${i}`);
-    return [...ids, 'unAssigned'];
+    const noDateIds = this.currentAndFutureTasks.map((p) => p.project.id ?? 'project');
+    return [...ids, ...noDateIds, 'unAssigned'];
+  }
+
+  get daysDropListsIds() {
+    const ids = this.presentedDays.map((_, i) => `day-${i}`);
+    return ids;
   }
 
   prevWeek() {
@@ -89,6 +93,18 @@ export class WeeklyTasksComponent implements AfterViewInit {
     this.tasksWithDate = [];
     this.tasksWithoutDate = [];
     this.currentAndFutureTasks = [];
+
+    const weeklyTasksStep = this.noProject().steps.find(s => s.name === 'weeklyTasks');
+    if (weeklyTasksStep) {
+      weeklyTasksStep.tasks?.forEach(task => {
+        if (task.dateOnWeekly) {
+          this.insertTaskToList(this.tasksWithDate, weeklyTasksStep, this.noProject(), task, undefined);
+        } else {
+          this.insertTaskToFutueTasks(this.noProject(), weeklyTasksStep, task, undefined);
+          this.insertTaskToList(this.tasksWithoutDate, weeklyTasksStep, this.noProject(), task, undefined);
+        }
+      });
+    }
 
     projects.forEach(project => {
       project.steps.sort((a, b) => a.positionInList - b.positionInList);
@@ -119,18 +135,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
       })
     })
 
-    const weeklyTasksStep = this.noProject().steps.find(s => s.name === 'weeklyTasks');
-    if (weeklyTasksStep) {
-      weeklyTasksStep.tasks?.forEach(task => {
-        if (task.dateOnWeekly) {
-          this.insertTaskToList(this.tasksWithDate, weeklyTasksStep, this.noProject(), task, undefined);
-        } else {
-          this.insertTaskToFutueTasks(this.noProject(), weeklyTasksStep, task, undefined);
-          this.insertTaskToList(this.tasksWithoutDate, weeklyTasksStep, this.noProject(), task, undefined);
-        }
-      });
-    }
-
     this.tasksWithDate = this.tasksWithDate.sort((a, b) => this.sortTasksAndSteps(a, b));
     this.tasksWithoutDate = this.tasksWithoutDate.sort((a, b) => this.sortTasksAndSteps(a, b));
   }
@@ -148,9 +152,9 @@ export class WeeklyTasksComponent implements AfterViewInit {
     let currentProject = this.currentAndFutureTasks.find(p => p.project.id === project.id);
     if (!currentProject) {
       currentProject = { project, tasks: [] };
-      this.currentAndFutureTasks.push({ project, tasks: [] });
+      this.currentAndFutureTasks.push(currentProject);
     }
-    this.insertTaskToList(currentProject.tasks, parentStep, project, task, step);
+    this.insertTaskToList(currentProject.tasks, parentStep, currentProject.project, task, step);
   }
 
   initPresentedDays() {
