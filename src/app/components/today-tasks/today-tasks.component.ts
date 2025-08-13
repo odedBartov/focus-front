@@ -70,7 +70,7 @@ export class TodayTasksComponent implements OnInit, AfterViewInit {
 
   constructor() {
     this.projects = this.projectsService.getActiveProjects();
-    this.noProject = this.projectsService.getNoProjects();
+    this.noProject = this.projectsService.getNoProject();
   }
 
   ngAfterViewInit(): void {

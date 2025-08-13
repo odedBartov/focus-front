@@ -1,1 +1,73 @@
-<p>weekly-tasks works!</p>
+<div class="main">
+    <div class="dates-navigation">
+        <span (click)="prevWeek()" class="new-small-bold">&lt; לשבוע הקודם</span>
+        <span (click)="nextWeek()" class="new-small-bold">לשבוע הבא ></span>
+    </div>
+    <div class="calendar">
+        <div *ngFor="let day of presentedDays; let i = index" class="day-container">
+            <div class="weekly-day">
+                <div class="day-header new-text"
+                    [ngClass]="{'new-text': !compareDates(day.date), 'new-text-bold': compareDates(day.date)}">
+                    <span>{{ (day.date) | date: 'dd/MM' }}</span>
+                    <span>{{getHebrewDay(day.date)}}</span>
+                </div>
+                <div class="tasks-list-container">
+                    <div class="tasks-list" cdkDropList [cdkDropListData]="day.tasks" [id]="'day-' + i"
+                        cdkDropListOrientation="mixed" [cdkDropListConnectedTo]="allDropListIds"
+                        (cdkDropListDropped)="dropTask($event, day.date)">
+                        <div class="weekly-day-task" *ngFor="let task of day.tasks" #days>
+                            <app-weekly-day-task [task]="task" [isDragging]="isDragging" (openProject)="openProject(task.project)"
+                                (createNewTaskEmitter)="updateTaskText($event, task.parentStep)"
+                                (completeTask)="completeTask(task)"
+                                [shouldHidePlaceHolder]="isDraggingTaskToProjects"></app-weekly-day-task>
+                        </div>
+                    </div>
+                    <div class="new-task">
+                        <app-new-task (createNewTask)="createNewTask($event, day)"></app-new-task>
+                    </div>
+                </div>
+            </div>
+            <div class="line"
+                [ngStyle]="{'background-color': (compareDates(day.date) || compareDates(day.date, undefined, 1)) ? 'var(--default-black)' : 'var(--border-color)'}"
+                *ngIf="i < 6"></div>
+        </div>
+    </div>
+    <div class="unAssignTasks" [@expandUnassignTasks]="showAllTasks ? 'expanded' : 'collapsed'">
+        <div class="line"></div>
+        <div class="header">
+            <span class="new-h2">משימות לשיבוץ</span>
+            <span class="new-small" (click)="showAllTasks = !showAllTasks" *ngIf="!showAllTasks">{{'הצגת כל
+                המשימות'}}</span>
+            <span class="new-small" (click)="showAllTasks = !showAllTasks" *ngIf="showAllTasks">{{'הצגת משימות נוכחיות
+                בלבד'}}</span>
+        </div>
+        <div class="tasks-list" cdkDropList id="unAssigned" [cdkDropListData]="tasksWithoutDate"
+            [cdkDropListConnectedTo]="allDropListIds" (cdkDropListDropped)="dropTask($event)"
+            cdkDropListOrientation="mixed" *ngIf="!showAllTasks">
+            <div class="task" *ngFor="let task of tasksWithoutDate" cdkDrag (cdkDragStarted)="isDragging = true" (cdkDragEnded)="isDragging = false">
+                <div class="task-header new-small">
+                    <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
+                    <span>{{task.project?.name}}</span>
+                </div>
+                <span class="new-small">{{getTextForTask(task)}}</span>
+            </div>
+        </div>
+        <div class="project-tasks" [ngClass]="{'dragging-in': isDraggingTaskToProjects}" *ngIf="showAllTasks">
+            <div class="project-task" *ngFor="let project of currentAndFutureTasks">
+                <div cdkDropList [cdkDropListConnectedTo]="daysDropListsIds" [cdkDropListData]="project.tasks"
+                    (cdkDropListDropped)="dropTaskInProjectsList($event)"
+                    (cdkDropListEntered)="isDraggingTaskToProjects = true"
+                    (cdkDropListExited)="isDraggingTaskToProjects = false" [cdkDropListSortingDisabled]="true"
+                    [id]="project.project.id ?? 'project'">
+                    <div class="task" *ngFor="let task of project.tasks" cdkDrag (cdkDragStarted)="isDragging = true" (cdkDragEnded)="isDragging = false">
+                        <div class="task-header new-small">
+                            <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
+                            <span>{{task.project?.name}}</span>
+                        </div>
+                        <span class="new-small">{{getTextForTask(task)}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,7 +3,7 @@
     <div class="tab-list" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
       <img src="assets/focus_logo.svg" class="logo" />
       <div *ngFor="let tab of tabs" [class.active]="tab.id === activeTab.id" class="tab new-small" (click)="setActiveTab(tab)"
-        cdkDrag [cdkDragDisabled]="tab.id === homeTab.id || tab.id === archiveTab.id">
+        cdkDrag [cdkDragDisabled]="tab.id === homeTab.id || tab.id === archiveTab.id || tab.id === tasksTab.id">
         <span>{{ tab.label }}</span>
         <img [src]="tab.icon" />
       </div>
@@ -27,8 +27,12 @@
       </div>
     </div>
 
-    <div class="project-container" *ngIf="activeTab?.id !== 'none' && activeTab?.id !== homeTab?.id && activeTab.id !== archiveTab.id">
+    <div class="project-container" *ngIf="activeTab?.id !== 'none' && activeTab?.id !== homeTab?.id && activeTab.id !== archiveTab.id && activeTab.id !== tasksTab.id">
       <app-project-page class="project-page" (navigateToHomeEmitter)="setActiveTab(tabs[0])" #projectPage></app-project-page>
+    </div>
+
+    <div class="weekly-tasks-container" *ngIf="activeTab?.id === tasksTab.id">
+      <app-weekly-tasks class="weekly-tasks" (selectProject)="selectProject($event)"></app-weekly-tasks>
     </div>
 
     <div class="home-container" *ngIf="activeTab.id === archiveTab.id">

@@ -1,0 +1,159 @@
+@use '../../../mixins.scss' as mixins;
+
+.main {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .dates-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+
+        span {
+            cursor: pointer;
+        }
+    }
+
+    .calendar {
+        flex: 2;
+        display: flex;
+        justify-content: space-between;
+        min-height: 0;
+
+        .day-container {
+            flex: 1;
+            display: flex;
+
+            .weekly-day {
+                width: 100%;
+                padding: 0 20px;
+                overflow-y: auto;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .day-header {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                }
+
+                .tasks-list-container {
+                    .tasks-list {
+                        min-height: 40px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: flex-start;
+                        height: 100%;
+
+                        .weekly-day-task {
+                            width: 100%;
+                        }
+                    }
+
+                    .new-task {
+                        display: flex;
+                        justify-content: center;
+                        margin-top: 10px;
+                    }
+                }
+            }
+
+            .line {
+                width: 1px;
+                height: 100%;
+                background-color: var(--border-color);
+                padding-top: 10px;
+            }
+        }
+    }
+
+    .unAssignTasks {
+        margin-top: 15px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        .line {
+            width: 100%;
+            height: 1px;
+            background-color: var(--border-color);
+            margin-bottom: 10px;
+        }
+
+        .header {
+            margin-right: 26px;
+
+            .new-small {
+                cursor: pointer;
+                color: var(--default-gray);
+                margin-right: 30px;
+            }
+        }
+
+        .tasks-list {
+            gap: 15px;
+            padding: 15px;
+            display: flex;
+            flex-flow: column wrap;
+            align-content: flex-start;
+            overflow-x: auto;
+        }
+
+        .project-tasks {
+            gap: 15px;
+            padding: 15px;
+            display: flex;
+            overflow-x: auto;
+
+            &.dragging-in {
+                background-color: red;
+                opacity: 0.5;
+            }
+
+            
+            .project-task>[cdkDropList] {
+                display: flex;
+                flex-direction: column;
+                gap: 15px; // vertical gap between .task items
+            }
+        }
+    }
+}
+
+.task {
+    .task-header {
+        display: flex;
+        align-items: center;
+        color: var(--default-gray);
+        
+        img {
+            height: 12px;
+            width: 12px;
+            margin-left: 5px;
+        }
+    }
+    
+    padding: 10px;
+    box-sizing: border-box;
+    box-shadow: var(--common-shadow);
+    width: var(--task-width);
+    background-color: var(--default-white);
+    border-radius: var(--common-radius);
+}
+
+.cdk-drag-placeholder,
+.cdk-drag-preview {
+    margin-top: 10px;
+    
+    .buttons {
+        height: 0;
+        display: none;
+    }
+}

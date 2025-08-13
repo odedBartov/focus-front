@@ -1,0 +1,55 @@
+.main {
+    .task {
+        box-shadow: var(--common-shadow);
+        padding: 10px 15px;
+        margin: 10px 0;
+        background-color: var(--default-white);
+        border-radius: var(--common-radius);
+
+        .task-header {
+            display: flex;
+            align-items: center;
+            color: var(--default-gray);
+
+            img {
+                height: 12px;
+                width: 12px;
+                margin-left: 5px;
+            }
+        }
+
+        .buttons {
+            overflow: hidden;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+
+            img {
+                height: fit-content;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .completed-task {
+        text-decoration: line-through;
+        padding: 10px 15px;
+        color: var(--default-gray);
+    }
+}
+
+.cdk-drag-placeholder,
+.cdk-drag-preview {
+    display: flex;
+    justify-content: center;
+    width: var(--task-width);
+
+    .task {
+        width: var(--task-width);
+    }
+
+    .buttons {
+        height: 0;
+        display: none;
+    }
+}

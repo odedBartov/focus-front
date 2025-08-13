@@ -20,7 +20,7 @@ export class ProjectsService {
     return this.unActiveProjects;
   }
 
-  getNoProjects() {
+  getNoProject() {
     return this.noProject;
   }
 
