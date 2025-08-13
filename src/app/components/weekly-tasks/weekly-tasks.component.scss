@@ -127,10 +127,6 @@
     }
 }
 
-// .cdk-drag-placeholder {
-//     display: none !important;
-// }
-
 .task {
     .task-header {
         display: flex;
@@ -154,6 +150,8 @@
 
 .cdk-drag-placeholder,
 .cdk-drag-preview {
+    margin-top: 10px;
+    
     .buttons {
         height: 0;
         display: none;

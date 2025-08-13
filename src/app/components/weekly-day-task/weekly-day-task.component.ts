@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, Renderer2, ViewChild } from '@angular/core';
 import { StepOrTask } from '../../models/stepOrTask';
 import { StepType } from '../../models/enums';
 import { trigger, state, style, animate, transition } from '@angular/animations';
@@ -33,9 +33,19 @@ export class WeeklyDayTaskComponent {
   @Output() completeTask = new EventEmitter();
   @Output() createNewTaskEmitter = new EventEmitter<StepTask>();
   @Input() task!: StepOrTask;
+  @Input() isDragging?: boolean;
+  @Input() set shouldHidePlaceHolder(value: boolean) {
+    const placeholder = document.querySelector('.cdk-drag-placeholder');
+    if (placeholder) {
+      this.renderer.setStyle(placeholder, 'display', value? 'none' : 'flex');
+    }
+  }
+  test = true;
   isHovering = false;
   isEditing = false;
   mouseDownInside = false;
+
+  constructor(private renderer: Renderer2) {}
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
@@ -62,10 +72,8 @@ export class WeeklyDayTaskComponent {
   getTextForTask(task: StepOrTask): string | undefined {
     if (task.task) {
       return task.task.text;
-    } else if (task.step?.stepType === StepType.payment) {
-      return task.step.price + ' ₪';
-    }
-    return task.step?.description;
+    } else
+      return task.step?.name;
   }
 
   updateTask(task: StepTask) {

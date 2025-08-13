@@ -45,9 +45,10 @@ export class WeeklyTasksComponent implements AfterViewInit {
   currentAndFutureTasks: { project: Project, tasks: StepOrTask[] }[] = []; // without date, no matter if active or not
   presentedDays: WeeklyDay[] = [];
   isShowingNewSteps: boolean[] = [];
-  showAllTasks = true;
+  showAllTasks = false;
   deltaDays: number = 0; // used to show previous or next week
   isDraggingTaskToProjects = false;
+  isDragging = false;
 
   constructor(private ngZone: NgZone, private cdr: ChangeDetectorRef) {
     this.projects = this.projectsService.getActiveProjects();
@@ -202,9 +203,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   dropTask(event: CdkDragDrop<any[]>, date?: Date) {
-    let data = event.previousContainer;
-    console.log(data);
-    
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.updateTasksPosition(event.container.data);
@@ -250,8 +248,38 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   dropTaskInProjectsList(event: CdkDragDrop<any[]>) {
-console.log("here");
+    this.isDraggingTaskToProjects = false;
+    if (event.previousContainer !== event.container) {
+      const data: StepOrTask = event.item.data;
+      let projectList = this.currentAndFutureTasks.find(p => p.project.id === data.project?.id);
+      if (!projectList && data.project) {
+        projectList = { project: data.project, tasks: [] };
+      }
 
+      if (projectList) {
+        transferArrayItem(
+          event.previousContainer.data,
+          projectList.tasks,
+          event.previousIndex - 1,
+          projectList.tasks.length
+        );
+        let index = -1;
+        if (data.task) {
+          data.task.dateOnWeekly = undefined;
+          data.task.positionInWeeklyList = -1;
+          index = this.tasksWithDate.findIndex(t => t.task?.id === data.task?.id);
+        } else if (data.step) {
+          data.step.dateOnWeekly = undefined;
+          data.step.positionInWeeklyList = -1;
+          index = this.tasksWithDate.findIndex(t => t.task?.id === data.task?.id);
+        }
+      }
+
+      this.initTasks();
+      this.updateTasksPosition(event.previousContainer.data);
+      this.initPresentedDays();
+      this.updateTasks(event.previousContainer.data, event.container.data);
+    }
   }
 
   updateTasksPosition(list: StepOrTask[]) {
