@@ -9,13 +9,13 @@
         <div class="buttons" [@expandCollapse]="(isHovering && !isDragging) ? 'expanded' : 'collapsed'">
             <img class="icon-expand" style="width: 16px;" *ngIf="task.step" (click)="openProject.emit(task.project)" />
             <img class="icon-pencil" style="width: 16px;" (click)="isEditing = true" *ngIf="task.task" />
-            <img class="icon-confirm-circle" style="width: 24px;" (click)="completeTask.emit()" />
+            <img class="icon-confirm-circle" style="width: 24px;" (click)="changeTaskStatus(true)" />
         </div>
     </div>
     <div *ngIf="isEditing">
         <app-new-task (createNewTask)="updateTask($event)" [taskInput]="task.task"></app-new-task>
     </div>
-    <div class="completed-task" *ngIf="isStepOrTaskComplete(task)">
+    <div class="completed-task" *ngIf="isStepOrTaskComplete(task)" (click)="changeTaskStatus(false)">
         <div class="new-small">{{task.project?.name}}</div>
         <div class="new-small">{{getTextForTask(task)}}</div>
     </div>

@@ -30,7 +30,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 export class WeeklyDayTaskComponent {
   @ViewChild('weeklyDayTaskDiv', { static: false }) weeklyDayTaskDiv?: ElementRef;
   @Output() openProject = new EventEmitter<Project>();
-  @Output() completeTask = new EventEmitter();
+  @Output() completeTask = new EventEmitter<StepOrTask>();
   @Output() createNewTaskEmitter = new EventEmitter<StepTask>();
   @Input() task!: StepOrTask;
   @Input() isDragging?: boolean;
@@ -80,5 +80,15 @@ export class WeeklyDayTaskComponent {
     this.isEditing = false;
     this.task.task = task;
     this.createNewTaskEmitter.emit(task);
+  }
+
+  changeTaskStatus(isComplete: boolean) {
+    if (this.task.task) {
+      this.task.task.isComplete = isComplete;
+    } else if (this.task.step) {
+      this.task.step.isComplete = isComplete;
+    }
+
+    this.completeTask.emit(this.task);
   }
 }

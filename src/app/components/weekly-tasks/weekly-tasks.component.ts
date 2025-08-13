@@ -377,12 +377,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   completeTask(task: StepOrTask) {
-    if (task.task) {
-      task.task.isComplete = true;
-    } else if (task.step) {
-      task.step.isComplete = true;
-    }
-
     this.httpService.updateSteps([task.parentStep]).subscribe();
   }
 }

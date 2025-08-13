@@ -33,6 +33,7 @@
     }
 
     .completed-task {
+        cursor: pointer;
         text-decoration: line-through;
         padding: 10px 15px;
         color: var(--default-gray);
