@@ -112,12 +112,12 @@
             display: flex;
             overflow-x: auto;
 
-            // .project-task {
-            //     display: flex;
-            //     flex-direction: column;
-            //     gap: 15px;
-            // }
+            &.dragging-in {
+                background-color: red;
+                opacity: 0.5;
+            }
 
+            
             .project-task>[cdkDropList] {
                 display: flex;
                 flex-direction: column;
@@ -127,19 +127,23 @@
     }
 }
 
+// .cdk-drag-placeholder {
+//     display: none !important;
+// }
+
 .task {
     .task-header {
         display: flex;
         align-items: center;
         color: var(--default-gray);
-
+        
         img {
             height: 12px;
             width: 12px;
             margin-left: 5px;
         }
     }
-
+    
     padding: 10px;
     box-sizing: border-box;
     box-shadow: var(--common-shadow);
@@ -150,8 +154,6 @@
 
 .cdk-drag-placeholder,
 .cdk-drag-preview {
-    overflow-y: hidden;
-
     .buttons {
         height: 0;
         display: none;
