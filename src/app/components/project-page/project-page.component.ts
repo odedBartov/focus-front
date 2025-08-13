@@ -40,7 +40,7 @@ import { AnimationItem } from 'lottie-web';
       state('expanded', style({
         height: '*',
         opacity: 1,
-        marginTop: '16px',
+        // marginTop: '16px',
         pointerEvents: 'auto'
       })),
       transition('collapsed <=> expanded', [
