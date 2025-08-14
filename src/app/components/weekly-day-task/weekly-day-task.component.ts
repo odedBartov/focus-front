@@ -16,9 +16,11 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   animations: [
     trigger('expandCollapse', [
       state('collapsed', style({
-        height: '0px'
+        height: '0px',
+        marginTop: '0px'
       })),
       state('expanded', style({
+        marginTop: '10px',
         height: '*'
       })),
       transition('collapsed <=> expanded', [
