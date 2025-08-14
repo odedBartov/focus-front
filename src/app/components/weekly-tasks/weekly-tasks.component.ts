@@ -254,6 +254,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
 
     this.initPresentedDays();
     this.updateTasks(event.previousContainer === event.container ? [] : event.previousContainer.data, event.container.data);
+    this.initTasks()
   }
 
   dropTaskInProjectsList(event: CdkDragDrop<any[]>) {
