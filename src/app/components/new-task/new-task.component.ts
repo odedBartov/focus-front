@@ -48,10 +48,7 @@ export class NewTaskComponent {
 
   @HostListener('document:keydown.enter', ['$event'])
   handleEnterKey(event: KeyboardEvent) {
-    const active = document.activeElement as HTMLElement;
-    if (active && this.newTaskDiv?.nativeElement.contains(active)) {
-      active.click();
-    }
+    this.createTask();
   }
 
   createTask() {
