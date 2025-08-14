@@ -1,3 +1,5 @@
+import { StepOrTask } from "../models/stepOrTask";
+
 export function parseDate(input?: string): Date | null {
   if (input) {
     const parts = input.split('/');
@@ -14,4 +16,16 @@ export function parseDate(input?: string): Date | null {
     return isNaN(date.getTime()) ? null : date;
   }
   return null;
+}
+
+export function isDateBeforeToday(date: Date) {
+  const today = new Date();
+  return date.getFullYear() < today.getFullYear() || date.getMonth() < today.getMonth() || date.getDate() < today.getDate();
+}
+
+export function getTextForTask(task: StepOrTask): string | undefined {
+  if (task.task) {
+    return task.task.text;
+  } else
+    return task.step?.name;
 }

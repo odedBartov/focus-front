@@ -1,4 +1,5 @@
-<div class="main" cdkDrag [cdkDragData]="task" [cdkDragDisabled]="isEditing || isStepOrTaskComplete(task)" (mousedown)="mouseDownInside = true"
+<div class="main" cdkDrag [cdkDragData]="task" [cdkDragDisabled]="isEditing || isStepOrTaskComplete(task)"
+    (cdkDragStarted)="isDragging = true" (cdkDragEnded)="isDragging = false" (mousedown)="mouseDownInside = true"
     (mouseenter)="isHovering = true" (mouseleave)="isHovering = false" #weeklyDayTaskDiv>
     <div *ngIf="!isEditing && !isStepOrTaskComplete(task)" class="task">
         <div class="task-header new-small">
@@ -15,7 +16,8 @@
     <div *ngIf="isEditing">
         <app-new-task (createNewTask)="updateTask($event)" [taskInput]="task.task"></app-new-task>
     </div>
-    <div class="completed-task" *ngIf="isStepOrTaskComplete(task)" (click)="changeTaskStatus(false)">
+    <div class="completed-task" *ngIf="isStepOrTaskComplete(task)" (click)="changeTaskStatus(false)"
+        [ngClass]="{'pointer': isDateBeforeToday()}">
         <div class="new-small">{{task.project?.name}}</div>
         <div class="new-small">{{getTextForTask(task)}}</div>
     </div>

@@ -13,7 +13,7 @@
                 </div>
                 <div class="tasks-list-container">
                     <div class="tasks-list" cdkDropList [cdkDropListData]="day.tasks" [id]="'day-' + i"
-                        cdkDropListOrientation="mixed" [cdkDropListConnectedTo]="allDropListIds"
+                        cdkDropListOrientation="vertical" [cdkDropListConnectedTo]="allDropListIds" [cdkDropListEnterPredicate]="dropPredicateFor(day)"
                         (cdkDropListDropped)="dropTask($event, day.date)">
                         <div class="weekly-day-task" *ngFor="let task of day.tasks" #days>
                             <app-weekly-day-task [task]="task" [isDragging]="isDragging"
@@ -22,7 +22,7 @@
                                 (completeTask)="completeTask($event)"
                                 [shouldHidePlaceHolder]="isDraggingTaskToProjects"></app-weekly-day-task>
                         </div>
-                        <div class="new-task">
+                        <div class="new-task" *ngIf="!isDateBeforeToday(day.date)">
                             <app-new-task (createNewTask)="createNewTask($event, day)"></app-new-task>
                         </div>
                     </div>

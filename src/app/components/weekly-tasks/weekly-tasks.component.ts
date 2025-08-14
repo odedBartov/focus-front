@@ -8,11 +8,12 @@ import { StepTask } from '../../models/stepTask';
 import { Step } from '../../models/step';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { HttpService } from '../../services/http.service';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
+import { getTextForTask, isDateBeforeToday } from '../../helpers/functions';
 
 @Component({
   selector: 'app-weekly-tasks',
@@ -40,6 +41,8 @@ export class WeeklyTasksComponent implements AfterViewInit {
   @ViewChildren('days') days!: QueryList<ElementRef<HTMLDivElement>>;
   projects: WritableSignal<Project[]>;
   noProject: WritableSignal<Project>;
+  isDateBeforeToday = isDateBeforeToday;
+  getTextForTask = getTextForTask;
   tasksWithDate: StepOrTask[] = [];
   tasksWithoutDate: StepOrTask[] = []; // without date and are active
   currentAndFutureTasks: { project: Project, tasks: StepOrTask[] }[] = []; // without date, no matter if active or not
@@ -77,6 +80,12 @@ export class WeeklyTasksComponent implements AfterViewInit {
   get daysDropListsIds() {
     const ids = this.presentedDays.map((_, i) => `day-${i}`);
     return ids;
+  }
+
+  dropPredicateFor(day: any) {
+    return () => {
+      return !this.isDateBeforeToday(day.date);
+    };
   }
 
   prevWeek() {
@@ -322,13 +331,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
 
   compareDates(first: Date, second = new Date(), daysDelta = 0) {
     return first.getDate() + daysDelta === second.getDate() && first.getMonth() === second.getMonth() && first.getFullYear() === second.getFullYear();
-  }
-
-  getTextForTask(task: StepOrTask): string | undefined {
-    if (task.task) {
-      return task.task.text;
-    } else
-      return task.step?.name;
   }
 
   createNewTask(task: StepTask, day: WeeklyDay) {

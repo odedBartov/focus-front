@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output, Renderer2, ViewChild } from '@angular/core';
 import { StepOrTask } from '../../models/stepOrTask';
-import { StepType } from '../../models/enums';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { Project } from '../../models/project';
 import { StepTask } from '../../models/stepTask';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { getTextForTask, isDateBeforeToday } from '../../helpers/functions';
 
 @Component({
   selector: 'app-weekly-day-task',
@@ -39,15 +39,17 @@ export class WeeklyDayTaskComponent {
   @Input() set shouldHidePlaceHolder(value: boolean) {
     const placeholder = document.querySelector('.cdk-drag-placeholder');
     if (placeholder) {
-      this.renderer.setStyle(placeholder, 'display', value? 'none' : 'flex');
+      this.renderer.setStyle(placeholder, 'display', value ? 'none' : 'flex');
     }
   }
+
+  getTextForTask = getTextForTask;
   test = true;
   isHovering = false;
   isEditing = false;
   mouseDownInside = false;
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2) { }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
@@ -71,26 +73,26 @@ export class WeeklyDayTaskComponent {
     return false;
   }
 
-  getTextForTask(task: StepOrTask): string | undefined {
-    if (task.task) {
-      return task.task.text;
-    } else
-      return task.step?.name;
-  }
-
   updateTask(task: StepTask) {
     this.isEditing = false;
     this.task.task = task;
     this.createNewTaskEmitter.emit(task);
   }
 
-  changeTaskStatus(isComplete: boolean) {
-    if (this.task.task) {
-      this.task.task.isComplete = isComplete;
-    } else if (this.task.step) {
-      this.task.step.isComplete = isComplete;
-    }
+  isDateBeforeToday() {
+    const taskDate = this.task.task ? this.task.task.dateOnWeekly : this.task.step?.dateOnWeekly;
+    return taskDate && isDateBeforeToday(new Date (taskDate));
+  }
 
-    this.completeTask.emit(this.task);
+  changeTaskStatus(isComplete: boolean) {
+    if (!this.isDateBeforeToday()) {
+      if (this.task.task) {
+        this.task.task.isComplete = isComplete;
+      } else if (this.task.step) {
+        this.task.step.isComplete = isComplete;
+      }
+
+      this.completeTask.emit(this.task);
+    }
   }
 }
