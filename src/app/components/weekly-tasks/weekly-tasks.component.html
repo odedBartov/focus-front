@@ -22,9 +22,9 @@
                                 (completeTask)="completeTask($event)"
                                 [shouldHidePlaceHolder]="isDraggingTaskToProjects"></app-weekly-day-task>
                         </div>
-                    </div>
-                    <div class="new-task">
-                        <app-new-task (createNewTask)="createNewTask($event, day)"></app-new-task>
+                        <div class="new-task">
+                            <app-new-task (createNewTask)="createNewTask($event, day)"></app-new-task>
+                        </div>
                     </div>
                 </div>
             </div>
