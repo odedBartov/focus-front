@@ -66,7 +66,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
     this.ngZone.onStable.asObservable().pipe().subscribe(() => {
       setTimeout(() => {
         const width = this.days.first.nativeElement.offsetWidth;
-        document.documentElement.style.setProperty('--task-width', `${width}px`);
+        document.documentElement.style.setProperty('--task-width', `${width-30}px`);
       }, 1);
     });
   }

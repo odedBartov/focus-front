@@ -4,8 +4,9 @@
         <span (click)="nextWeek()" class="new-small-bold">לשבוע הבא ></span>
     </div>
     <div class="calendar">
-        <div *ngFor="let day of presentedDays; let i = index" class="day-container">
-            <div class="weekly-day">
+        <div *ngFor="let day of presentedDays; let i = index" class="day-container" #days>
+            <div class="weekly-day"
+                [style.border-color]="(compareDates(day.date) || compareDates(day.date, undefined, 1)) ? 'var(--default-black)' : 'var(--border-color)'">
                 <div class="day-header new-text"
                     [ngClass]="{'new-text': !compareDates(day.date), 'new-text-bold': compareDates(day.date), 'gray-text': !compareDates(day.date)}">
                     <span>{{ (day.date) | date: 'dd/MM' }}</span>
@@ -16,7 +17,7 @@
                         cdkDropListOrientation="vertical" [cdkDropListConnectedTo]="allDropListIds"
                         [cdkDropListEnterPredicate]="dropPredicateFor(day)"
                         (cdkDropListDropped)="dropTask($event, day.date)">
-                        <div class="weekly-day-task" *ngFor="let task of day.tasks" #days>
+                        <div class="weekly-day-task" *ngFor="let task of day.tasks">
                             <app-weekly-day-task [task]="task" [isDragging]="isDragging"
                                 (openProject)="openProject(task.project)"
                                 (createNewTaskEmitter)="updateTaskText($event, task.parentStep)"
@@ -29,9 +30,6 @@
                     </div>
                 </div>
             </div>
-            <div class="line"
-                [ngStyle]="{'background-color': (compareDates(day.date) || compareDates(day.date, undefined, 1)) ? 'var(--default-black)' : 'var(--border-color)'}"
-                *ngIf="i < 6"></div>
         </div>
     </div>
     <div class="unAssignTasks" [@expandUnassignTasks]="showAllTasks ? 'expanded' : 'collapsed'">

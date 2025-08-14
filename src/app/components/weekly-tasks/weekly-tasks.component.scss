@@ -27,6 +27,7 @@
             display: flex;
 
             .weekly-day {
+                border-right: 1px solid;
                 width: 100%;
                 padding: 0 20px;
                 overflow-y: auto;
@@ -67,11 +68,8 @@
                 }
             }
 
-            .line {
-                width: 1px;
-                height: 100%;
-                background-color: var(--border-color);
-                padding-top: 10px;
+            &:first-child .weekly-day {
+                border-right: none;
             }
         }
     }
@@ -156,6 +154,7 @@
 
 .cdk-drag-placeholder {
     opacity: 0 !important;
+    width: 1px; // its invisible, so i only need it as a place holder
 }
 
 .gray-text {
