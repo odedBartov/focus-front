@@ -7,7 +7,7 @@
         <div *ngFor="let day of presentedDays; let i = index" class="day-container">
             <div class="weekly-day">
                 <div class="day-header new-text"
-                    [ngClass]="{'new-text': !compareDates(day.date), 'new-text-bold': compareDates(day.date)}">
+                    [ngClass]="{'new-text': !compareDates(day.date), 'new-text-bold': compareDates(day.date), 'gray-text': !compareDates(day.date)}">
                     <span>{{ (day.date) | date: 'dd/MM' }}</span>
                     <span>{{getHebrewDay(day.date)}}</span>
                 </div>

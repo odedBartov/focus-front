@@ -116,7 +116,7 @@
                 opacity: 0.3;
             }
 
-            
+
             .project-task>[cdkDropList] {
                 display: flex;
                 flex-direction: column;
@@ -131,14 +131,14 @@
         display: flex;
         align-items: center;
         color: var(--default-gray);
-        
+
         img {
             height: 12px;
             width: 12px;
             margin-left: 5px;
         }
     }
-    
+
     padding: 10px;
     box-sizing: border-box;
     box-shadow: var(--common-shadow);
@@ -150,9 +150,13 @@
 .cdk-drag-placeholder,
 .cdk-drag-preview {
     margin-top: 10px;
-    
+
     .buttons {
         height: 0;
         display: none;
     }
+}
+
+.gray-text {
+    color: var(--default-gray);
 }
