@@ -51,7 +51,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
   showAllTasks = false;
   deltaDays: number = 0; // used to show previous or next week
   isDraggingTaskToProjects = false;
-  isDragging = false;
+  isDragging = {dragging: false};
 
   constructor(private ngZone: NgZone, private cdr: ChangeDetectorRef) {
     this.projects = this.projectsService.getActiveProjects();

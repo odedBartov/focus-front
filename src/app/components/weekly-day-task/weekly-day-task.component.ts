@@ -35,7 +35,7 @@ export class WeeklyDayTaskComponent {
   @Output() completeTask = new EventEmitter<StepOrTask>();
   @Output() createNewTaskEmitter = new EventEmitter<StepTask>();
   @Input() task!: StepOrTask;
-  @Input() isDragging?: boolean;
+  @Input() isDragging!: {dragging: boolean};
   @Input() set shouldHidePlaceHolder(value: boolean) {
     const placeholder = document.querySelector('.cdk-drag-placeholder');
     if (placeholder) {

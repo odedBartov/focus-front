@@ -1,5 +1,5 @@
 <div class="main" cdkDrag [cdkDragData]="task" [cdkDragDisabled]="isEditing || isStepOrTaskComplete(task)"
-    (cdkDragStarted)="isDragging = true" (cdkDragEnded)="isDragging = false" (mousedown)="mouseDownInside = true"
+    (cdkDragStarted)="isDragging.dragging = true" (cdkDragEnded)="isDragging.dragging= false" (mousedown)="mouseDownInside = true"
     (mouseenter)="isHovering = true" (mouseleave)="isHovering = false" #weeklyDayTaskDiv>
     <div *ngIf="!isEditing && !isStepOrTaskComplete(task)" class="task">
         <div class="task-header new-small">
@@ -7,7 +7,7 @@
             <span>{{task.project?.name}}</span>
         </div>
         <span class="new-small">{{getTextForTask(task)}}</span>
-        <div class="buttons" [@expandCollapse]="(isHovering && !isDragging) ? 'expanded' : 'collapsed'">
+        <div class="buttons" [@expandCollapse]="(isHovering && !isDragging.dragging) ? 'expanded' : 'collapsed'">
             <img class="icon-expand" style="width: 16px;" *ngIf="task.step" (click)="openProject.emit(task.project)" />
             <img class="icon-pencil" style="width: 16px;" (click)="isEditing = true" *ngIf="task.task" />
             <img class="icon-confirm-circle" style="width: 24px;" (click)="changeTaskStatus(true)" />

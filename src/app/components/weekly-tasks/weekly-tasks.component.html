@@ -45,8 +45,8 @@
         <div class="tasks-list" cdkDropList id="unAssigned" [cdkDropListData]="tasksWithoutDate"
             [cdkDropListConnectedTo]="allDropListIds" (cdkDropListDropped)="dropTask($event)"
             cdkDropListOrientation="mixed" *ngIf="!showAllTasks">
-            <div class="task" *ngFor="let task of tasksWithoutDate" cdkDrag (cdkDragStarted)="isDragging = true"
-                (cdkDragEnded)="isDragging = false">
+            <div class="task" *ngFor="let task of tasksWithoutDate" cdkDrag (cdkDragStarted)="isDragging.dragging= true"
+                (cdkDragEnded)="isDragging.dragging= false">
                 <div class="task-header new-small">
                     <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
                     <span>{{task.project?.name}}</span>
@@ -61,8 +61,8 @@
                     (cdkDropListEntered)="isDraggingTaskToProjects = true"
                     (cdkDropListExited)="isDraggingTaskToProjects = false" [cdkDropListSortingDisabled]="true"
                     [id]="project.project.id ?? 'project'">
-                    <div class="task" *ngFor="let task of project.tasks" cdkDrag (cdkDragStarted)="isDragging = true"
-                        (cdkDragEnded)="isDragging = false">
+                    <div class="task" *ngFor="let task of project.tasks" cdkDrag (cdkDragStarted)="isDragging.dragging= true"
+                        (cdkDragEnded)="isDragging.dragging = false">
                         <div class="task-header new-small">
                             <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
                             <span>{{task.project?.name}}</span>
