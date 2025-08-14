@@ -51,7 +51,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
   showAllTasks = false;
   deltaDays: number = 0; // used to show previous or next week
   isDraggingTaskToProjects = false;
-  isDragging = {dragging: false};
+  isDragging = { dragging: false };
 
   constructor(private ngZone: NgZone, private cdr: ChangeDetectorRef) {
     this.projects = this.projectsService.getActiveProjects();
@@ -212,10 +212,14 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   dropTask(event: CdkDragDrop<any[]>, date?: Date) {
+    this.isDraggingTaskToProjects = false;
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.updateTasksPosition(event.container.data);
     } else {
+      if (!date) {
+        event.currentIndex = event.container.data.length;
+      }
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,

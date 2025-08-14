@@ -45,6 +45,7 @@
 
                 .tasks-list-container {
                     height: 100%;
+
                     .tasks-list {
                         min-height: 40px;
                         display: flex;
@@ -114,11 +115,6 @@
             display: flex;
             overflow-x: auto;
 
-            &.dragging-in {
-                opacity: 0.3;
-            }
-
-
             .project-task>[cdkDropList] {
                 display: flex;
                 flex-direction: column;
@@ -164,4 +160,8 @@
 
 .gray-text {
     color: var(--default-gray);
+}
+
+.dragging-in {
+    opacity: 0.3;
 }

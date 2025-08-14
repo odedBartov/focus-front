@@ -17,7 +17,7 @@
         <app-new-task (createNewTask)="updateTask($event)" [taskInput]="task.task"></app-new-task>
     </div>
     <div class="completed-task" *ngIf="isStepOrTaskComplete(task)" (click)="changeTaskStatus(false)"
-        [ngClass]="{'pointer': isDateBeforeToday()}">
+        [ngClass]="{'pointer': !isDateBeforeToday()}">
         <div class="new-small">{{task.project?.name}}</div>
         <div class="new-small">{{getTextForTask(task)}}</div>
     </div>
