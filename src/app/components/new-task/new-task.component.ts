@@ -2,12 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { StepTask } from '../../models/stepTask';
 import { FormsModule } from '@angular/forms';
-import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
-import { Task } from '../../models/task';
 
 @Component({
   selector: 'app-new-task',
-  imports: [CommonModule, FormsModule, AutoResizeInputDirective],
+  imports: [CommonModule, FormsModule],
   templateUrl: './new-task.component.html',
   styleUrl: './new-task.component.scss'
 })
