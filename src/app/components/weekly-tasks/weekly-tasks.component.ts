@@ -66,7 +66,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
     this.ngZone.onStable.asObservable().pipe().subscribe(() => {
       setTimeout(() => {
         const width = this.days.first.nativeElement.offsetWidth;
-        document.documentElement.style.setProperty('--task-width', `${width-30}px`);
+        document.documentElement.style.setProperty('--task-width', `${width - 30}px`);
       }, 1);
     });
   }
@@ -383,7 +383,23 @@ export class WeeklyTasksComponent implements AfterViewInit {
     }
   }
 
-  completeTask(task: StepOrTask) {
-    this.httpService.updateSteps([task.parentStep]).subscribe();
+  completeTask(task: StepOrTask, container: StepOrTask[]) {
+    let previousIndex: number | undefined = undefined;
+    if (task.task) {
+      if (task.task.isComplete) {
+        previousIndex = task.task.positionInWeeklyList;
+      }
+    } else if (task.step) {
+      if (task.step.isComplete) {
+        previousIndex = task.step?.positionInWeeklyList;
+      }
+    }
+
+    if (previousIndex !== undefined) {
+      moveItemInArray(container, previousIndex, 0)
+      this.updateTasksPosition(container);
+    }
+
+    this.updateTasks(container)
   }
 }
