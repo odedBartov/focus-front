@@ -20,6 +20,7 @@ export class NewTaskComponent {
       this.startNewTask();
     }
   }
+  
   isShowNewStep = false;
   newTask: StepTask = new StepTask();
   showError = false;
@@ -56,7 +57,8 @@ export class NewTaskComponent {
   createTask() {
     if (this.newTask.text) {
       this.isShowNewStep = false;
-      this.createNewTask.emit(this.newTask);
+      this.createNewTask.emit({...this.newTask});
+      this.newTask = new StepTask();
     } else {
       this.showError = true;
     }
