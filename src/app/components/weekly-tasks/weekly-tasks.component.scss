@@ -149,7 +149,6 @@
     border-radius: var(--common-radius);
 }
 
-.cdk-drag-placeholder,
 .cdk-drag-preview {
     margin-top: 10px;
 
@@ -157,6 +156,10 @@
         height: 0;
         display: none;
     }
+}
+
+.cdk-drag-placeholder {
+    opacity: 0 !important;
 }
 
 .gray-text {

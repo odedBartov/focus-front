@@ -38,8 +38,8 @@
     }
 }
 
-.cdk-drag-placeholder,
 .cdk-drag-preview {
+    padding: 10px 15px 10px 0;
     display: flex;
     justify-content: center;
     width: var(--task-width);
@@ -52,6 +52,10 @@
         height: 0;
         display: none;
     }
+}
+
+.cdk-drag-placeholder {
+    opacity: 0 !important;
 }
 
 .pointer {
