@@ -107,7 +107,7 @@
         <app-rich-text [project]="project()" [expanded]="true"></app-rich-text>
     </div>
     <div class="notes" #notesDiv>
-        <app-notes [project]="project()" [notesPopup]="showNotes"
+        <app-notes [project]="project" [notesPopup]="showNotes"
             (showNotesEmitter)="showNotesPopup($event)"></app-notes>
     </div>
 </div>

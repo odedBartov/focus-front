@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, inject, input, Input, OnChanges, OnDestroy, Output, output, SimpleChanges, ViewChild, WritableSignal } from '@angular/core';
+import { Component, effect, ElementRef, EventEmitter, HostListener, inject, input, Input, OnChanges, OnDestroy, Output, output, SimpleChanges, ViewChild, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Project } from '../../models/project';
@@ -16,7 +16,7 @@ import { AuthenticationService } from '../../services/authentication.service';
   styleUrl: './notes.component.scss'
 })
 export class NotesComponent {
-  @Input() project?: Project;
+  @Input() project!:  WritableSignal<Project>;
   @Input({ required: false }) notesPopup?: boolean;
   @Output() showNotesEmitter: EventEmitter<boolean> = new EventEmitter();
   @ViewChild('newLinkDiv', { static: false }) newLinkDiv?: ElementRef;
@@ -39,6 +39,11 @@ export class NotesComponent {
       url: ['', [Validators.required]]
     });
     this.isReadOnly = this.authenticationService.getIsReadOnly();
+
+    effect(() => {
+      this.project();
+      this.notesSelected = true;
+    });
   }
 
   @HostListener('document:click', ['$event'])
@@ -59,11 +64,11 @@ export class NotesComponent {
   }
 
   deleteLink(link: { name: string, url: string }) {
-    if (this.project) {
-      const index = this.project.links.indexOf(link);
-      this.project.links.splice(index, 1);
+    if (this.project()) {
+      const index = this.project().links.indexOf(link);
+      this.project().links.splice(index, 1);
       this.animationsService.changeIsLoadingWithDelay();
-      this.httpService.updateProjects([this.project]).subscribe(res => {
+      this.httpService.updateProjects([this.project()]).subscribe(res => {
         this.animationsService.changeIsloading(false);
       })
     }
@@ -83,12 +88,12 @@ export class NotesComponent {
     if (this.form.valid && this.project) {
       const name = this.form.get("name")?.value;
       const url = this.form.get("url")?.value;
-      if (!this.project.links) {
-        this.project.links = [];
+      if (!this.project().links) {
+        this.project().links = [];
       }
-      this.project.links.push({ name: name, url: url });
+      this.project().links.push({ name: name, url: url });
       this.animationsService.changeIsloading(true);
-      this.httpService.updateProjects([this.project]).subscribe(res => {
+      this.httpService.updateProjects([this.project()]).subscribe(res => {
         this.animationsService.changeIsloading(false);
         this.addingNewLink = false;
         this.resetLinkForm();

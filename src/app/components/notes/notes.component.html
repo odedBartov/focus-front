@@ -9,7 +9,7 @@
 
 <ng-template #editorTemplate>
     <div class="lists">
-        <app-rich-text [project]="project" style="height: 100%;"></app-rich-text>
+        <app-rich-text [project]="project()" style="height: 100%;"></app-rich-text>
     </div>
 </ng-template>
 
@@ -18,7 +18,7 @@
         <div *ngIf="notesPopup" class="new-h2">
             <span>קישורים</span>
         </div>
-        <div class="link new-text" *ngFor="let link of project?.links" #link (mouseenter)="hoverLink(link)"
+        <div class="link new-text" *ngFor="let link of project()?.links" #link (mouseenter)="hoverLink(link)"
             (mouseleave)="leaveLink()">
             <div class="pointer">
                 <span (click)="openLink(link.url)">{{link.name}}</span>
