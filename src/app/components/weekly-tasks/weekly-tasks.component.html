@@ -6,7 +6,7 @@
     <div class="calendar">
         <div *ngFor="let day of presentedDays; let i = index" class="day-container" #days>
             <div class="weekly-day"
-                [style.border-color]="(compareDates(day.date) || compareDates(day.date, undefined, 1)) ? 'var(--default-black)' : 'var(--border-color)'">
+                [style.border-color]="(compareDates(day.date) || compareDates(day.date, undefined, -1)) ? 'var(--default-black)' : 'var(--border-color)'">
                 <div class="day-header new-text"
                     [ngClass]="{'new-text': !compareDates(day.date), 'new-text-bold': compareDates(day.date), 'gray-text': !compareDates(day.date)}">
                     <span>{{ (day.date) | date: 'dd/MM' }}</span>
