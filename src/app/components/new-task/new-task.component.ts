@@ -39,6 +39,7 @@ export class NewTaskComponent {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     if (this.newTaskDiv?.nativeElement && !this.newTaskDiv.nativeElement.contains(event.target) && !this.mouseDownInside) {
+      this.newTask = new StepTask();
       this.isShowNewStep = false;
     } else {
       this.mouseDownInside = true;
