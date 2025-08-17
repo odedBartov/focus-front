@@ -26,7 +26,7 @@ import { getTextForTask, isDateBeforeToday } from '../../helpers/functions';
         flex: '1'
       })),
       state('expanded', style({
-        flex: '3'
+        flex: '4'
       })),
       transition('collapsed <=> expanded', [
         animate('300ms ease')
