@@ -23,8 +23,7 @@
 
         textarea {
             white-space: nowrap;
-            overflow-x: auto;
-            overflow-y: hidden;
+            overflow: hidden;
             width: 80%;
             resize: none;
             height: 15px;
