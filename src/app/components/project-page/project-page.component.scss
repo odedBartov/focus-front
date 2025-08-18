@@ -120,6 +120,10 @@
                 align-items: center;
                 margin-bottom: 20px;
             }
+
+            .future {
+                margin-bottom: 16px;
+            }
         }
 
         .extra-not-finished {
@@ -179,7 +183,7 @@
                     }
                 }
             }
-            
+
             textarea {
                 box-sizing: border-box;
                 border: none;
@@ -189,10 +193,6 @@
                 border-radius: 0px;
                 width: 100%;
                 margin-bottom: 16px;
-                
-                &.future {
-                    margin-top: 16px;
-                }
             }
         }
 

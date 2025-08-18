@@ -163,56 +163,54 @@
 
 .NgxEditor {
     p {
-        font-family: 'regular';
-        font-size: var(--font-size-1);
+        @extend .new-small;
     }
 
     strong {
-        font-family: 'black';
-        font-size: var(--font-size-1);
+        @extend .new-small-bold;
+        font-weight: normal;
     }
 
     h1 {
-        font-family: 'black';
-        font-size: var(--font-size-3);
+        @extend .new-h2;
+        font-weight: normal;
     }
 
     h2 {
-        font-family: 'black';
-        font-size: var(--font-size-2);
+        @extend .new-text-bold;
+        font-weight: normal;
     }
 
     h3 {
-        font-family: 'black';
-        font-size: var(--font-size-1);
+        @extend .new-small-bold;
+        font-weight: normal;
     }
 }
 
 .big-fonts {
     .NgxEditor {
         p {
-            font-family: 'regular';
-            font-size: var(--font-size-2);
+            @extend .new-text;
         }
 
         strong {
-            font-family: 'black';
-            font-size: var(--font-size-2);
+            @extend .new-text-bold;
+            font-weight: normal;
         }
 
         h1 {
-            font-family: 'black';
-            font-size: var(--font-size-4);
+            @extend .new-h1;
+            font-weight: normal;
         }
 
         h2 {
-            font-family: 'black';
-            font-size: var(--font-size-3);
+            @extend .new-h2;
+            font-weight: normal;
         }
 
         h3 {
-            font-family: 'black';
-            font-size: var(--font-size-2);
+            @extend .new-text-bold;
+            font-weight: normal;
         }
     }
 }
@@ -447,3 +445,16 @@ input::-webkit-inner-spin-button {
         content: url('/assets/icons/paragraph_yes.svg');
     }
 }
+
+
+// h1 {
+//     @extend .new-h1;
+// }
+
+// h2 {
+//     @extend .new-h2;
+// }
+
+// h3 {
+//     @extend .new-text-bold;
+// }

@@ -44,7 +44,7 @@
             *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
             (mouseleave)="hoverStepId = undefined" cdkDrag>
             <div *ngIf="editStepId !== step.id && animationHackFlag">
-                <div [class]="'step-header ' + (activeStepId === step.id? 'active' :  'future')">
+                <div [class]="'step-header ' + (!step.isComplete?(activeStepId === step.id? 'active' :  'future') : '')">
                     <span [class]="step.id === activeStepId? 'new-h2' : 'new-text-bold'"
                         #stepHeader>{{step.name}}</span>
                     <img [class]="isReadOnly()? 'finished-icon' : 'pointer icon-confirm'"
@@ -60,8 +60,7 @@
                     class="extra-not-finished" *ngIf="!step.isComplete">
                     <textarea [class]="activeStepId === step.id? 'new-text active' : 'new-small future'" disabled="true"
                         *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
-                        #descriptions autoResize
-                        defaultHeight="20px">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
+                        #descriptions autoResize rows="1">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
                     <div class="tasks" *ngIf="step.tasks">
                         <div class="task-list">
                             <div class="task" *ngFor="let task of step.tasks; let i = index">
