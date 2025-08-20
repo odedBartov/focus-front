@@ -18,10 +18,14 @@ export function parseDate(input?: string): Date | null {
   return null;
 }
 
-export function isDateBeforeToday(date: Date) {
+export function isDateBeforeToday(date: Date): boolean {
   const today = new Date();
-  return date.getFullYear() < today.getFullYear() || date.getMonth() < today.getMonth() || date.getDate() < today.getDate();
+  today.setHours(0, 0, 0, 0); // midnight, ignore time
+  const given = new Date(date);
+  given.setHours(0, 0, 0, 0);
+  return given < today;
 }
+
 
 export function getTextForTask(task: StepOrTask): string | undefined {
   if (task.task) {

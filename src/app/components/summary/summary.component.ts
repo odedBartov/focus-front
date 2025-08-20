@@ -36,12 +36,12 @@ export class SummaryComponent implements OnInit {
   coffeePictures = [
     'assets/pictures/coffee_1.png',
     'assets/pictures/coffee_2.png',
-    'assets/pictures/coffee_3.png',
     'assets/pictures/coffee_4.png',
     'assets/pictures/coffee_5.png',
     'assets/pictures/coffee_6.png',
   ]
-  coffeePicture = '';
+  static coffeePicture = '';
+  static lastCoffeeTime?: Date;
   userName: string | null = '';
   coffeeRotation = 0;
   pastPayments: number[] = [];
@@ -53,7 +53,7 @@ export class SummaryComponent implements OnInit {
   graphScales: number[] = [5, 10, 20, 40, 50, 80, 100, 250, 300, 700, 1000, 3000, 5000, 10000, 20000, 40000, 50000, 80000, 100000, 200000, 300000, 500000];
 
   ngOnInit(): void {
-    this.getRandomCoffee();
+    this.initCoffeePicture();
     this.userName = this.authService.getFirstName();
     this.calculateCoffeeRotation();
     this.initChart();
@@ -89,6 +89,17 @@ export class SummaryComponent implements OnInit {
     this.futurePayments[4] = 0;
 
     this.calculateGraphScale();
+  }
+
+  initCoffeePicture() {
+    const today = new Date();
+    if (!SummaryComponent.lastCoffeeTime || (today.getDate() > SummaryComponent.lastCoffeeTime.getDate() && today.getMonth() >= SummaryComponent.lastCoffeeTime.getMonth())) {
+      this.getRandomCoffee();
+    }
+  }
+
+  get getCoffeePicture() {
+    return SummaryComponent.coffeePicture;
   }
 
   compareYearAndMonth(first: Date | undefined | null, second: Date) {
@@ -136,10 +147,11 @@ export class SummaryComponent implements OnInit {
   }
 
   getRandomCoffee() {
-    const oldCoffee = this.coffeePicture;
-    while (oldCoffee === this.coffeePicture) {
+    SummaryComponent.lastCoffeeTime = new Date();
+    const oldCoffee = SummaryComponent.coffeePicture;
+    while (oldCoffee === SummaryComponent.coffeePicture) {
       const randomcoffee = this.coffeePictures[Math.floor(Math.random() * this.coffeePictures.length)];
-      this.coffeePicture = randomcoffee;
+      SummaryComponent.coffeePicture = randomcoffee;
     }
   }
 
@@ -150,10 +162,10 @@ export class SummaryComponent implements OnInit {
   }
 
   onInnerEnter() {
-      this.isPayedHovered = true;
-      if (this.hoverTimeout) {
-        clearTimeout(this.hoverTimeout);
-      }
+    this.isPayedHovered = true;
+    if (this.hoverTimeout) {
+      clearTimeout(this.hoverTimeout);
+    }
   }
 
   onInnerLeave() {
