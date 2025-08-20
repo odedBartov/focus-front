@@ -46,7 +46,7 @@
 
         <div class="upgrade">
             <span class="new-h2">תוכנית נוכחית</span>
-            <div class="button new-small" (click)="navigateToSubscription()">+ שדרוג</div>
+            <div class="button new-small" (click)="navigateToSubscription()" *ngIf="currentUserSubscription.subscription != subscriptionEnum.full">+ שדרוג</div>
         </div>
 
         <div class="subscription">

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { FormsModule } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
@@ -21,12 +21,14 @@ export class ProfileComponent implements AfterViewInit {
   authenticationService = inject(AuthenticationService);
   animationsService = inject(AnimationsService);
   dialogRef = inject(MatDialogRef<ProfileComponent>);
+  cd = inject(ChangeDetectorRef);
   userStatuses = userStatusesWithText;
   userProfessions = userProfessionsWithText;
   defaultPicture = "assets/icons/default_profile.svg";
   arielsNumber = "972584046213";
   fullName = "משתמש ללא שם";
   user: User = new User();
+  subscriptionEnum = subscriptionEnum;
   userSubscriptions: UserSubscription[] = [
     { title: 'פוקוס בקטנה', subscription: subscriptionEnum.free, text: 'פרויקט פעיל אחד, ללא פיצ׳רים מתקדמים וללא תמיכה טכנית' },
     { title: 'פוקוס בצמיחה', subscription: subscriptionEnum.partial, text: 'עד 3 פרויקטים פעילים, ללא מנטור AI ואינטגרציות חכמות', price: 10 },
@@ -55,6 +57,7 @@ export class ProfileComponent implements AfterViewInit {
   getUserSubscription() {
     const subscription = this.authenticationService.getSubscription();
     this.currentUserSubscription = this.userSubscriptions.find(sub => sub.subscription === subscription) || this.userSubscriptions[0];
+    this.cd.detectChanges();
   }
 
   selectStatus(status: any) {

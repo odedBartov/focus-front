@@ -28,6 +28,11 @@ export class TokenInterceptor implements HttpInterceptor {
                     if (newToken) {
                         this.authenticationService.setToken(newToken);
                     }
+
+                    const userSubscription = event.headers.get('user-subscription');                    
+                    if (userSubscription) {
+                        this.authenticationService.setSubscription(parseInt(userSubscription));
+                    }
                 }
             }), catchError((err: HttpErrorResponse) => {
                 this.animationsService.hideIsLoading();
