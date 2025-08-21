@@ -5,7 +5,7 @@
       <div *ngFor="let tab of tabs" [class.active]="tab.id === activeTab.id" class="tab new-small" (click)="setActiveTab(tab)"
         cdkDrag [cdkDragDisabled]="tab.id === homeTab.id || tab.id === archiveTab.id || tab.id === tasksTab.id">
         <span>{{ tab.label }}</span>
-        <img [src]="tab.icon" />
+        <img [src]="tab.id === activeTab.id ?tab.icon : tab.disabledIcon" />
       </div>
     </div>
     <img class="profile" [ngClass]="{pointer: !isReadOnly()}" [src]="userPicture" (click)="isReadOnly()? '' : navigateToProfile()" />

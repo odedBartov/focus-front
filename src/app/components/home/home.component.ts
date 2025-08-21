@@ -55,8 +55,8 @@ export class HomeComponent implements OnInit {
   isProjectHovered = this.projectHoverService.getSignal();
   userPicture: string | null = null;
   defaultUserPicture = "assets/icons/default_profile.svg"
-  homeTab: ProjectTab = { id: 'home', icon: 'assets/icons/home.svg' };
-  tasksTab: ProjectTab = { id: 'tasks', icon: 'assets/icons/tasks.svg' };
+  homeTab: ProjectTab = { id: 'home', icon: 'assets/icons/home.svg', disabledIcon: 'assets/icons/home_disabled.svg' };
+  tasksTab: ProjectTab = { id: 'tasks', icon: 'assets/icons/tasks.svg', disabledIcon: 'assets/icons/tasks_disabled.svg' };
   archiveTab: ProjectTab = { id: "archive", label: "ארכיון", projects: [] };
   activeTab: ProjectTab = { id: 'none' };
   tabs: ProjectTab[] = [];
