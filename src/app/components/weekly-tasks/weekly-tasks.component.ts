@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, inject, NgZone, Output, QueryList, signal, ViewChildren, WritableSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, HostListener, inject, NgZone, Output, QueryList, signal, ViewChildren, WritableSignal } from '@angular/core';
 import { Project } from '../../models/project';
 import { ProjectsService } from '../../services/projects.service';
 import { StepOrTask } from '../../models/stepOrTask';
@@ -48,10 +48,12 @@ export class WeeklyTasksComponent implements AfterViewInit {
   currentAndFutureTasks: { project: Project, tasks: StepOrTask[] }[] = []; // without date, no matter if active or not
   presentedDays: WeeklyDay[] = [];
   isShowingNewSteps: boolean[] = [];
-  showAllTasks = false;
+  showAllTasks = true;
   deltaDays: number = 0; // used to show previous or next week
   isDraggingTaskToProjects = false;
   isDragging = { dragging: false };
+  previousEvents: any[] = []; // history stack
+
 
   constructor(private ngZone: NgZone, private cdr: ChangeDetectorRef) {
     this.projects = this.projectsService.getActiveProjects();
@@ -69,6 +71,24 @@ export class WeeklyTasksComponent implements AfterViewInit {
         document.documentElement.style.setProperty('--task-width', `${width - 30}px`);
       }, 1);
     });
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key.toLowerCase() === 'z') {
+      const target = event.target as HTMLElement;
+
+      // Skip if typing in input/textarea or contenteditable element
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+
+      this.undoDrop();
+    }
   }
 
   get allDropListIds(): string[] {
@@ -211,8 +231,20 @@ export class WeeklyTasksComponent implements AfterViewInit {
     return days[date.getDay()];
   }
 
-  dropTask(event: CdkDragDrop<any[]>, date?: Date) {
+  dropTask(event: CdkDragDrop<any[]>, date?: Date, addEvent = true) {
+    console.log("drop");
+
     this.isDraggingTaskToProjects = false;
+    if (addEvent) {
+      this.previousEvents.push({
+        item: event.item.data,
+        fromContainer: event.previousContainer.id,
+        toContainer: event.container.id,
+        fromIndex: event.previousIndex,
+        toIndex: event.currentIndex,
+        originalDate: event.item.data?.task?.dateOnWeekly
+      });
+    }
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.updateTasksPosition(event.container.data);
@@ -261,7 +293,21 @@ export class WeeklyTasksComponent implements AfterViewInit {
     this.initTasks()
   }
 
-  dropTaskInProjectsList(event: CdkDragDrop<any[]>) {
+  dropTaskInProjectsList(event: CdkDragDrop<any[]>, addEvent = true) {
+    console.log("drop in projects");
+
+    const clonedEvent: CdkDragDrop<any[]> = {
+      ...event,
+      previousIndex: event.previousIndex - 1, // preserve your special offset
+    };
+    if (addEvent) {
+      this.previousEvents.push({ item: event.item.data,
+        fromContainer: event.previousContainer.id,
+        toContainer: event.container.id,
+        fromIndex: event.previousIndex,
+        toIndex: event.currentIndex,
+        originalDate: event.item.data.task?.dateOnWeekly });
+    }
     this.isDraggingTaskToProjects = false;
     if (event.previousContainer !== event.container) {
       const data: StepOrTask = event.item.data;
@@ -295,6 +341,49 @@ export class WeeklyTasksComponent implements AfterViewInit {
       this.updateTasks(event.previousContainer.data, event.container.data);
     }
   }
+
+  undoDrop() {
+    const lastEvent = this.previousEvents.pop();
+    if (!lastEvent) return;
+
+    const { item, fromContainer, toContainer, fromIndex, toIndex, originalDate } = lastEvent;
+
+    // Identify source and target arrays
+    const fromArray = this.getContainerArray(fromContainer);
+    const toArray = this.getContainerArray(toContainer);
+
+    // Remove from target
+    toArray.splice(toIndex, 1);
+
+    // Put it back to source
+    fromArray.splice(fromIndex, 0, item);
+
+    // Restore date if it’s a calendar task
+    if (item.task) {
+      item.task.dateOnWeekly = originalDate;
+    } else if (item.step) {
+      item.step.dateOnWeekly = originalDate;
+    }
+
+    // Update positions
+    this.updateTasksPosition(fromArray);
+    this.updateTasksPosition(toArray);
+
+    // Refresh calendar if needed
+    this.initPresentedDays();
+    this.initTasks();
+  }
+
+  getContainerArray(id: string): StepOrTask[] {
+    if (id === 'unAssigned') return this.tasksWithoutDate;
+    if (id.startsWith('day-')) {
+      const dayIndex = +id.split('-')[1];
+      return this.presentedDays[dayIndex].tasks;
+    }
+    const project = this.currentAndFutureTasks.find(p => p.project.id === id);
+    return project ? project.tasks : [];
+  }
+
 
   updateTasksPosition(list: StepOrTask[]) {
     for (let index = 0; index < list.length; index++) {
