@@ -86,7 +86,8 @@
     }
 
     .cdk-overlay-dark-backdrop {
-        background-color: var(--blur);
+        background-color: var(--default-black);
+        opacity: 0.8;
     }
 
     .mat-mdc-menu-panel {
