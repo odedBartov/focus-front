@@ -42,11 +42,9 @@ export class TokenInterceptor implements HttpInterceptor {
                 } else if (err.status === 402) {
                     if (this.authenticationService.getSubscription() === subscriptionEnum.trial) {
                         return this.dialog.open(FreeTrialEndComponent, { disableClose: true }).afterClosed().pipe(switchMap(() => {
-                            const newReq = req.clone();
                             this.animationsService.changeIsloading(true);
-                            return next.handle(newReq).pipe(tap(event => {
-                                this.animationsService.hideIsLoading();
-                            }));
+                            const newReq = req.clone();
+                            return next.handle(newReq);
                         }));
                     } else {
                         this.dialog.open(PaidFeatureModalComponent, { data: { subscription: err.error.requiredSubscription } });
