@@ -6,6 +6,7 @@ import { AnimationsService } from '../../services/animations.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NewUserComponent } from '../../modals/new-user/new-user.component';
+import { FreeTrialStartComponent } from '../../modals/free-trial-start/free-trial-start.component';
 
 @Component({
   selector: 'app-authentication',
@@ -21,7 +22,7 @@ export class AuthenticationComponent {
   dialog = inject(MatDialog);
 
   userSignedIn(jwt: string) {
-    this.animationsService.changeIsloading(true);    
+    this.animationsService.changeIsloading(true);
     this.httpService.loginWithGoogleToken(jwt).subscribe(
       res => {
         this.animationsService.changeIsloading(false);
@@ -34,7 +35,13 @@ export class AuthenticationComponent {
                 this.animationsService.changeIsloading(false);
                 this.authenticationService.setNewUser(false);
                 this.authenticationService.setUserName(newUser.firstName, newUser.lastName);
-                this.router.navigate(['/home']);
+                if (this.authenticationService.getIsNewUser()) {
+                  this.dialog.open(FreeTrialStartComponent).afterClosed().subscribe(() => {
+                    this.router.navigate(['/home']);
+                  });
+                } else {
+                  this.router.navigate(['/home']);
+                }
               })
             }
           })

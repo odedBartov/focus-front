@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-free-trial-start',
@@ -7,5 +8,10 @@ import { Component } from '@angular/core';
   styleUrl: './free-trial-start.component.scss'
 })
 export class FreeTrialStartComponent {
+  dialogRef = inject(MatDialogRef<FreeTrialStartComponent>);
 
+
+  close() {
+    this.dialogRef.close();
+  }
 }

@@ -28,3 +28,8 @@
         }
     }
 }
+
+.cdk-overlay-dark-backdrop {
+        background-color: var(--default-black);
+        opacity: 0.8;
+    }

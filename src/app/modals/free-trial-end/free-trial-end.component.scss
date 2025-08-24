@@ -1,23 +1,47 @@
 @use '../../../mixins.scss' as mixins;
 
 .main {
+    width: 600px !important;
+    height: 515px !important;
     width: 24rem;
     box-shadow: var(--common-shadow);
     background-color: var(--default-white);
     padding: 2rem;
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-direction: column;
 
     img {
         height: 90px;
+        margin-bottom: 20px;
     }
 
-    // .header {
-    //     display: flex;
-    //     flex-direction: column;
-    //     align-items: center;
-    //     width: 100%;
-    //     margin-bottom: 2rem;
-    // }
+    .header {
+        margin-bottom: 20px;
+    }
+
+    span {
+        text-align: right;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .subscribe {
+        height: 21px;
+        @include mixins.confirm-button;
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+
+        img {
+            margin: 0 0 0 10px !important;
+            width: 18px;
+            height: 16px;
+        }
+    }
+}
+
+::ng-deep .cdk-overlay-dark-backdrop {
+    background-color: var(--default-black);
 }

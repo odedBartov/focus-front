@@ -1,12 +1,14 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from "@angular/common/http";
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest, HttpResponse } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { catchError, Observable, tap, throwError } from "rxjs";
+import { catchError, Observable, switchMap, tap, throwError } from "rxjs";
 import { AuthenticationService } from "../services/authentication.service";
 import { Router } from "@angular/router";
 import { AnimationsService } from "../services/animations.service";
 import { MatDialog } from "@angular/material/dialog";
 import { ErrorComponent } from "../modals/error/error.component";
 import { PaidFeatureModalComponent } from "../modals/paid-feature-modal/paid-feature-modal.component";
+import { subscriptionEnum } from "../models/enums";
+import { FreeTrialEndComponent } from "../modals/free-trial-end/free-trial-end.component";
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -29,23 +31,38 @@ export class TokenInterceptor implements HttpInterceptor {
                         this.authenticationService.setToken(newToken);
                     }
 
-                    const userSubscription = event.headers.get('user-subscription');                    
-                    if (userSubscription) {
-                        this.authenticationService.setSubscription(parseInt(userSubscription));
-                    }
+                    this.updateSubscription(event.headers);
                 }
             }), catchError((err: HttpErrorResponse) => {
                 this.animationsService.hideIsLoading();
+                this.updateSubscription(err.headers);
                 if (err.status === 401) {
                     this.authenticationService.deleteToken();
                     this.router.navigate(['/login']);
                 } else if (err.status === 402) {
-                    this.dialog.open(PaidFeatureModalComponent, { data: { subscription: err.error.requiredSubscription } });
+                    if (this.authenticationService.getSubscription() === subscriptionEnum.trial) {
+                        return this.dialog.open(FreeTrialEndComponent, { disableClose: true }).afterClosed().pipe(switchMap(() => {
+                            const newReq = req.clone();
+                            this.animationsService.changeIsloading(true);
+                            return next.handle(newReq).pipe(tap(event => {
+                                this.animationsService.hideIsLoading();
+                            }));
+                        }));
+                    } else {
+                        this.dialog.open(PaidFeatureModalComponent, { data: { subscription: err.error.requiredSubscription } });
+                    }
                 } else {
                     this.dialog.open(ErrorComponent);
                 }
                 return throwError(() => err);
             })
         );
+    }
+
+    updateSubscription(headers: HttpHeaders): void {
+        const userSubscription = headers.get('user-subscription');
+        if (userSubscription) {
+            this.authenticationService.setSubscription(parseInt(userSubscription));
+        }
     }
 }

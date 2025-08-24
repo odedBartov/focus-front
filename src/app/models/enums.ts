@@ -15,8 +15,8 @@ export enum ProjectStatus {
 }
 
 export enum subscriptionEnum {
-    free,
-    partial,
-    full,
-    trial
+    free = 1,
+    partial = 2,
+    full = 3,
+    trial = 4
 }
