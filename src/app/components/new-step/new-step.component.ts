@@ -37,7 +37,7 @@ export class NewStepComponent implements AfterViewInit {
         this.isShowTasks = true;
       }
       this.newStep = structuredClone(value);
-      if (this.newStep.tasks && this.newStep.tasks?.[this.newStep.tasks.length-1]?.text) {
+      if (this.newStep.tasks && this.newStep.tasks?.[this.newStep.tasks.length - 1]?.text) {
         this.newStep.tasks.push(new StepTask());
       }
     }
@@ -57,6 +57,15 @@ export class NewStepComponent implements AfterViewInit {
     const active = document.activeElement as HTMLElement;
     if (active) {
       active.click();
+    }
+    if (this.stepNameInput?.nativeElement === document.activeElement) {
+      if (this.isShowDescription) {
+        this.descriptionInput.nativeElement.focus();
+      } else if (this.isShowTasks) {
+        this.handleEnter(event, -1);
+      } else {
+        this.createStep();
+      }
     }
   }
 
@@ -141,7 +150,7 @@ export class NewStepComponent implements AfterViewInit {
 
   createStep() {
     if (this.validateStep()) {
-      if (this.newStep.tasks && !this.newStep.tasks?.[this.newStep.tasks.length-1]?.text) {
+      if (this.newStep.tasks && !this.newStep.tasks?.[this.newStep.tasks.length - 1]?.text) {
         this.newStep.tasks.pop(); // remove empty task
       }
       this.stepsEmitter.emit(this.newStep);
