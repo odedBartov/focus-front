@@ -44,7 +44,9 @@
             *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
             (mouseleave)="hoverStepId = undefined" cdkDrag>
             <div *ngIf="editStepId !== step.id && animationHackFlag">
-                <div [class]="'step-header ' + (!step.isComplete?(activeStepId === step.id? 'active' :  'future') : '')">
+                <div
+                    [class]="'step-header '"
+                    [ngClass]="{ 'active': !step.isComplete && step.id === activeStepId, 'future': !step.isComplete && step.id !== activeStepId && hoverStepId === step.id }">
                     <span [class]="step.id === activeStepId? 'new-h2' : 'new-text-bold'"
                         #stepHeader>{{step.name}}</span>
                     <img [class]="isReadOnly()? 'finished-icon' : 'pointer icon-confirm'"
@@ -60,13 +62,15 @@
                     class="extra-not-finished" *ngIf="!step.isComplete">
                     <textarea [class]="activeStepId === step.id? 'new-text active' : 'new-small future'" disabled="true"
                         *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
-                        #descriptions autoResize rows="1">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
+                        #descriptions autoResize
+                        rows="1">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
                     <div class="tasks" *ngIf="step.tasks">
                         <div class="task-list">
                             <div class="task" *ngFor="let task of step.tasks; let i = index">
                                 <div *ngIf="i < step.tasks.length" style="display: flex;">
                                     <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')"
-                                        (click)="toggleTask(step, task)" [style.pointer-events]="isReadOnly() ? 'none' : 'auto'">
+                                        (click)="toggleTask(step, task)"
+                                        [style.pointer-events]="isReadOnly() ? 'none' : 'auto'">
                                         <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg" />
                                     </div>
                                     <textarea [class]="activeStepId === step.id? 'new-text active' : 'new-small future'"
@@ -83,9 +87,10 @@
                         </div>
                         <div class="animation-container">
                             <div class="finish-step-animation" *ngIf="step.id === animatingItemId">
-                                <ng-lottie [options]="lottieOptions" (animationCreated)="finishStepAnimationCreated($event)"/>
+                                <ng-lottie [options]="lottieOptions"
+                                    (animationCreated)="finishStepAnimationCreated($event)" />
                             </div>
-                            <img class="icon-confirm-circle" (click)="changeStepStatus(step)"/>
+                            <img class="icon-confirm-circle" (click)="changeStepStatus(step)" />
                         </div>
                     </div>
                 </div>
@@ -106,7 +111,6 @@
         <app-rich-text [project]="project()" [expanded]="true"></app-rich-text>
     </div>
     <div class="notes" #notesDiv>
-        <app-notes [project]="project" [notesPopup]="showNotes"
-            (showNotesEmitter)="showNotesPopup($event)"></app-notes>
+        <app-notes [project]="project" [notesPopup]="showNotes" (showNotesEmitter)="showNotesPopup($event)"></app-notes>
     </div>
 </div>
