@@ -17,7 +17,12 @@
                         תאריכים
                     </span>
                     <span class="small-text">
-                        {{`${project.startDate | date: 'dd.MM.yyyy'} - ${project.endDate | date: 'dd.MM.yyyy'}`}}
+                        <span *ngIf="project.startDate">
+                            {{project.startDate | date: 'dd.MM.yyyy'}} - 
+                        </span>
+                        <span *ngIf="project.startDate && project.endDate">
+                            {{project.endDate | date: 'dd.MM.yyyy'}}
+                        </span>
                     </span>
                 </div>
                 <div class="title-and-text new-small">
