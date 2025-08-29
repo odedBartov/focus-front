@@ -35,7 +35,7 @@ export class WeeklyDayTaskComponent {
   @Output() completeTask = new EventEmitter<StepOrTask>();
   @Output() createNewTaskEmitter = new EventEmitter<StepTask>();
   @Input() task!: StepOrTask;
-  @Input() isDragging!: {dragging: boolean};
+  @Input() isDragging!: { dragging: boolean };
   @Input() set shouldHidePlaceHolder(value: boolean) {
     const placeholder = document.querySelector('.cdk-drag-placeholder');
     if (placeholder) {
@@ -75,13 +75,15 @@ export class WeeklyDayTaskComponent {
 
   updateTask(task: StepTask) {
     this.isEditing = false;
-    this.task.task = task;
-    this.createNewTaskEmitter.emit(task);
+    if (task.text) {
+      this.task.task = task;
+      this.createNewTaskEmitter.emit(task);
+    }
   }
 
   isDateBeforeToday() {
     const taskDate = this.task.task ? this.task.task.dateOnWeekly : this.task.step?.dateOnWeekly;
-    return taskDate && isDateBeforeToday(new Date (taskDate));
+    return taskDate && isDateBeforeToday(new Date(taskDate));
   }
 
   changeTaskStatus(isComplete: boolean) {

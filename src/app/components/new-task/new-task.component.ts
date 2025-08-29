@@ -52,7 +52,7 @@ export class NewTaskComponent {
   }
 
   createTask() {
-    if (this.newTask.text) {
+    if (this.newTask.text || this.isEdit) {
       this.isShowNewStep = false;
       this.createNewTask.emit({ ...this.newTask });
       this.newTask = new StepTask();
