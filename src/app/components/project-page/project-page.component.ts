@@ -164,30 +164,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.finishStepAnimationItem = animation;
   }
 
-  setStepHeadersMargin() {
-    // this.stepHeaders.forEach((span, index) => {
-    //   const el = span.nativeElement;
-    //   const computedStyle = getComputedStyle(el);
-    //   let lineHeight = parseFloat(computedStyle.lineHeight);
-    //   if (isNaN(lineHeight)) {
-    //     const fontSize = parseFloat(computedStyle.fontSize);
-    //     lineHeight = fontSize * 1.2;
-    //   }
-
-    //   const lines = el.offsetHeight / lineHeight;
-    //   if (lines > 2) { // if text is overflowing
-    //     const finishedSteps = this.project().steps.filter(s => s.isComplete).length;
-    //     const description = this.descriptions.get(index-finishedSteps)?.nativeElement;
-    //     if (description) {
-    // setTimeout(() => {
-    //   console.log(description);
-    //   description.style.marginTop = 20 * (lines - 1) + 'px';
-    // }, 100);
-    //     }
-    //   }
-    // })
-  }
-
   setActiveStepHeight() {
     const element = this.descriptions.get(0)?.nativeElement as HTMLTextAreaElement;
     if (element) {
@@ -410,9 +386,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         unActiveProjects.set(unActiveProjects().concat(this.project()));
         activeProjects().splice(activeProjectIndex, 1);
       }
-      this.httpService.updateProjects([this.project()]).subscribe(res => {
-      });
-      this.navigateToHomeEmitter.emit();
+      this.httpService.updateProjects([this.project()]).subscribe(res => {});
+      setTimeout(() => {
+        this.navigateToHomeEmitter.emit();
+      }, 5000);
     }
   }
 
