@@ -27,6 +27,10 @@
         margin-bottom: 20px;
     }
 
+    .subscription-name {
+        font-family: 'bold';
+    }
+
     .subscribe {
         @include mixins.confirm-button;
     }
