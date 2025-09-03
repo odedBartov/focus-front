@@ -246,8 +246,10 @@ export class HomeComponent implements OnInit {
 
   projectUpdated(project: Project) {
     this.selectedProject.set(project);
-    this.activeTab.project = project;
-    this.activeTab.label = project.name;
+    if (this.activeTab.id !== 'home' && this.activeTab.id !== 'tasks' && this.activeTab.id !== 'archive') {
+      this.activeTab.project = project;
+      this.activeTab.label = project.name;
+    }
     for (let index = 0; index < this.activeProjects().length; index++) {
       if (this.activeProjects()[index].id === project.id) {
         this.activeProjects()[index] = project;
