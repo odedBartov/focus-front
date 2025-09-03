@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Router } from '@angular/router';
 import { ProjectStatus, StepType } from '../../models/enums';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { HttpService } from '../../services/http.service';
 import { AnimationsService } from '../../services/animations.service';
@@ -13,7 +13,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { NewProjectComponent } from '../../modals/new-project/new-project.component';
 import { TodayTasksComponent } from "../today-tasks/today-tasks.component";
-import { Task } from '../../models/task';
 import { ProjectsService } from '../../services/projects.service';
 
 @Component({
@@ -157,5 +156,13 @@ export class ProjectsListComponent {
         })
       }
     })
+  }
+
+  openMenu(event: MouseEvent, menuTrigger: MatMenuTrigger) {
+    event.preventDefault(); // stop browser context menu
+    event.stopPropagation(); // don’t trigger parent clicks
+    menuTrigger.openMenu();
+    menuTrigger.menu?.focusFirstItem('mouse');
+    // menuTrigger.openMenu({ x: event.clientX, y: event.clientY });
   }
 }

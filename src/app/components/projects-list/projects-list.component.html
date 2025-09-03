@@ -7,7 +7,7 @@
     </div>
     <div cdkDropList (cdkDropListDropped)="drop($event)" *ngIf="activeTab === 1">
         <div class="project-drag" *ngFor="let project of projects()" cdkDrag>
-            <div class="project" (click)="selectProject(project)">
+            <div class="project" (click)="selectProject(project)" (contextmenu)="openMenu($event, menuTrigger)">
                 <img class="priority" (click)="togglePriority($event, project)"
                     [src]="`assets/icons/${project.isPriority?'star_full' :'star_empty'}.svg`" />
                 <div class="project-description">
@@ -39,7 +39,7 @@
                     <span style="margin-top: 1rem;">{{getProjectProgress(project) | number:'1.0-0'}}%</span>
                 </div>
                 <div class="menu" (click)="$event.stopPropagation()">
-                    <img class="menu icon-kabab-menu" [matMenuTriggerFor]="menu" />
+                    <img class="menu icon-kabab-menu" [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger" style="padding: 10px;"/>
                     <mat-menu #menu="matMenu" class="pointer">
                         <button mat-menu-item class="menu-item"
                             (click)="changeProjectStatus(project, projectStatusEnum.frozen)">הקפאה</button>
