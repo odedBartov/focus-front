@@ -7,7 +7,8 @@
     </div>
     <div cdkDropList (cdkDropListDropped)="drop($event)" *ngIf="activeTab === 1">
         <div class="project-drag" *ngFor="let project of projects()" cdkDrag>
-            <div class="project" (click)="selectProject(project)" (contextmenu)="openMenu($event, menuTrigger)">
+            <div class="project" (click)="selectProject(project)"
+                (contextmenu)="openMenu($event, menuTrigger, menuAnchor)">
                 <img class="priority" (click)="togglePriority($event, project)"
                     [src]="`assets/icons/${project.isPriority?'star_full' :'star_empty'}.svg`" />
                 <div class="project-description">
@@ -19,8 +20,9 @@
                     <span class="disabled-text">
                         שלב נוכחי
                     </span>
-                    <span class="small-text" #stepRef matTooltip="{{getCurrentStep(project)?.name}}" matTooltipPosition="above"
-                        matTooltipClass="custom-tooltip" [matTooltipDisabled]="stepRef.offsetWidth >= stepRef.scrollWidth">
+                    <span class="small-text" #stepRef matTooltip="{{getCurrentStep(project)?.name}}"
+                        matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                        [matTooltipDisabled]="stepRef.offsetWidth >= stepRef.scrollWidth">
                         {{getCurrentStep(project)?.name}}
                     </span>
                 </div>
@@ -39,7 +41,8 @@
                     <span style="margin-top: 1rem;">{{getProjectProgress(project) | number:'1.0-0'}}%</span>
                 </div>
                 <div class="menu" (click)="$event.stopPropagation()">
-                    <img class="menu icon-kabab-menu" [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger" style="padding: 10px;"/>
+                    <img class="menu icon-kabab-menu" [matMenuTriggerFor]="menu"
+                        style="padding: 10px;" />
                     <mat-menu #menu="matMenu" class="pointer">
                         <button mat-menu-item class="menu-item"
                             (click)="changeProjectStatus(project, projectStatusEnum.frozen)">הקפאה</button>
@@ -48,6 +51,8 @@
                         <button mat-menu-item class="menu-item" (click)="deleteProject(project)">מחיקה</button>
                         <button mat-menu-item class="menu-item" (click)="cloneProject(project)">שכפול</button>
                     </mat-menu>
+                    <div #menuAnchor style="position: fixed; top: 0; left: 0; width: 0; height: 0;"
+                        [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger"></div>
                 </div>
             </div>
         </div>

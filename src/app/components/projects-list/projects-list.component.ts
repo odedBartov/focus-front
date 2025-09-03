@@ -158,11 +158,16 @@ export class ProjectsListComponent {
     })
   }
 
-  openMenu(event: MouseEvent, menuTrigger: MatMenuTrigger) {
-    event.preventDefault(); // stop browser context menu
-    event.stopPropagation(); // don’t trigger parent clicks
+  openMenu(event: MouseEvent, menuTrigger: MatMenuTrigger, anchor: HTMLElement) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Move anchor to cursor
+    anchor.style.top = `${event.clientY}px`;
+    anchor.style.left = `${event.clientX}px`;
+
+    // Open menu from anchor
     menuTrigger.openMenu();
     menuTrigger.menu?.focusFirstItem('mouse');
-    // menuTrigger.openMenu({ x: event.clientX, y: event.clientY });
   }
 }

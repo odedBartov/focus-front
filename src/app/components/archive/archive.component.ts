@@ -7,7 +7,7 @@ import { tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ProjectsService } from '../../services/projects.service';
 
@@ -88,5 +88,18 @@ export class ArchiveComponent {
     return this.httpService.updateProjects(projects).pipe(tap(res => {
       this.animationsService.changeIsloading(false);
     }));
+  }
+
+  openMenu(event: MouseEvent, menuTrigger: MatMenuTrigger, anchor: HTMLElement) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Move anchor to cursor
+    anchor.style.top = `${event.clientY}px`;
+    anchor.style.left = `${event.clientX}px`;
+
+    // Open menu from anchor
+    menuTrigger.openMenu();
+    menuTrigger.menu?.focusFirstItem('mouse');
   }
 }
