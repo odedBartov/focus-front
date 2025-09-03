@@ -33,9 +33,9 @@ export class AuthenticationComponent {
               this.animationsService.changeIsloading(true);
               this.httpService.updateUser(res).subscribe(newUser => {
                 this.animationsService.changeIsloading(false);
-                this.authenticationService.setNewUser(false);
                 this.authenticationService.setUserName(newUser.firstName, newUser.lastName);
                 if (this.authenticationService.getIsNewUser()) {
+                  this.authenticationService.setNewUser(false);
                   this.dialog.open(FreeTrialStartComponent).afterClosed().subscribe(() => {
                     this.router.navigate(['/home']);
                   });

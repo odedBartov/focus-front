@@ -2,15 +2,16 @@
 
 .main {
     width: 600px !important;
-    height: 515px !important;
+    height: 490px !important;
     width: 24rem;
     box-shadow: var(--common-shadow);
     background-color: var(--default-white);
-    padding: 2rem;
+    padding: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    box-sizing: border-box;
 
     img {
         height: 90px;
@@ -32,12 +33,21 @@
         @include mixins.confirm-button;
         display: flex;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 5px;
 
         img {
             margin: 0 0 0 10px !important;
             width: 18px;
             height: 16px;
+        }
+    }
+
+    .whatsapp {
+        margin-top: 20px;
+
+        .underline {
+            text-decoration: underline;
+            cursor: pointer;
         }
     }
 }

@@ -14,9 +14,15 @@ export class FreeTrialEndComponent {
   dialogRef = inject(MatDialogRef<FreeTrialEndComponent>);
   httpService = inject(HttpService);
   router = inject(Router);
+  arielsNumber = environment.arielsNumber;
+  msg = "היי, אני רוצה לקבל חודש נוסף של פוקוס על מלא";
 
   subscribe() {
     window.location.href = environment.subscriptionUrl;
+  }
+
+  sendWhatsapp() {
+    window.open(`https://wa.me/${this.arielsNumber}?text=${encodeURIComponent(this.msg)}`);
   }
 
   cancel() {

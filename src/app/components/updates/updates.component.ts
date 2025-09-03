@@ -6,6 +6,7 @@ import { Insight } from '../../models/insight';
 import { AnimationsService } from '../../services/animations.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { UpdatesService } from '../../services/updates.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-updates',
@@ -20,9 +21,9 @@ export class UpdatesComponent implements OnInit {
   updatesService = inject(UpdatesService)
   features: Feature[] = [];
   insight: Insight = new Insight();
-  ArielsNumber = "972584046213";
   fullName = "משתמש ללא שם";
-
+  arielsNumber = environment.arielsNumber;
+  
   ngOnInit(): void {
     this.animationsService.changeIsloading(true);
     this.updatesService.getInsightAndUpdates().subscribe(res => {
@@ -40,7 +41,7 @@ export class UpdatesComponent implements OnInit {
   openWhatsapp() {
     const message = `הי, זה ${this.fullName}. אני משתמש בפוקוס ויש לי משהו להגיד:
     `;
-    const url = `https://wa.me/${this.ArielsNumber}?text=${message}`;
+    const url = `https://wa.me/${this.arielsNumber}?text=${message}`;
     window.open(url, '_blank');
   }
 }
