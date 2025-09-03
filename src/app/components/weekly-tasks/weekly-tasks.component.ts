@@ -385,11 +385,13 @@ export class WeeklyTasksComponent implements AfterViewInit {
 
   completeTask(task: StepOrTask, container: StepOrTask[]) {
     let previousIndex: number | undefined = undefined;
+    
     if (task.task) {
       if (task.task.isComplete) {
         previousIndex = task.task.positionInWeeklyList;
       }
     } else if (task.step) {
+      task.step.dateCompleted = new Date();
       if (task.step.isComplete) {
         previousIndex = task.step?.positionInWeeklyList;
       }
