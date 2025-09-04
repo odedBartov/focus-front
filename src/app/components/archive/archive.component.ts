@@ -49,9 +49,12 @@ export class ArchiveComponent {
   }
 
   activateProject(project: Project) {
-    project.status = ProjectStatus.active;
-    project.positionInList += 99999;
-    this.updateProjects([project]).subscribe(res => {
+    const projectToUpdate = { ...project };
+    projectToUpdate.status = ProjectStatus.active;
+    projectToUpdate.positionInList += 99999;
+    this.updateProjects([projectToUpdate]).subscribe(res => {  
+      project.status = projectToUpdate.status;
+      project.positionInList = projectToUpdate.positionInList;
       const projectIndex = this.projects().indexOf(project);
       const projects = [...this.projects()];
       projects.splice(projectIndex, 1);
