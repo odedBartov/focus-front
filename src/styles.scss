@@ -217,6 +217,15 @@
     width: 10px;
 }
 
+::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+
+::-webkit-scrollbar:vertical {
+  width: 10px;
+}
+
+
 ::-webkit-scrollbar-thumb {
     background: var(--hover-color);
     border-radius: 10px;
