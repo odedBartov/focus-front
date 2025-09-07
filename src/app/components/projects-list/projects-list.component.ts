@@ -34,6 +34,7 @@ export class ProjectsListComponent {
 
   constructor() {
     this.projects = this.projectsService.getActiveProjects();
+    this.openProjectModal()
   }
 
   getCurrentStep(project: Project) {

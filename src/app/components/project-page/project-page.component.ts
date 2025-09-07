@@ -23,10 +23,11 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
 import { StepTask } from '../../models/stepTask';
 import { AnimationItem } from 'lottie-web';
+import { RetainerStepsComponent } from "../retainer-steps/retainer-steps.component";
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, RichTextComponent, LottieComponent, AutoResizeInputDirective],
+  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, RichTextComponent, LottieComponent, AutoResizeInputDirective, RetainerStepsComponent],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss',
   animations: [

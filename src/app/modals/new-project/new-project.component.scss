@@ -1,21 +1,24 @@
 @use '../../../mixins.scss' as mixins;
 
 .template {
-    @include mixins.big-popup;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 630px;
+    width: 600px;
+    padding: 70px;
+    box-sizing: border-box;
 
     .main {
-        width: 45rem;
+        // width: 45rem;
         display: flex;
         flex-direction: column;
         border-radius: var(--common-radius);
-        height: 90%;
+        height: 100%;
         justify-content: space-between;
 
         Form {
-            height: 30rem;
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
@@ -25,49 +28,16 @@
             display: flex;
             flex-direction: column;
             margin-top: 2rem;
-            width: 45rem;
+            // width: 45rem;
         }
 
         .line {
             display: flex;
-            align-items: flex-end;
-
-            .dates {
-                display: flex;
-                margin-left: 4rem;
-                flex: 4;
-                justify-content: space-between;
-
-                .text-and-input {
-                    flex: 0;
-                    margin-left: 0;
-
-                    div {
-                        input {
-                            width: 7rem;
-                        }
-                    }
-                }
-            }
-
-            .text-and-input {
-                display: flex;
-                flex-direction: column;
-                flex: 4;
-                margin-left: 4rem;
-
-                textarea,
-                input {
-                    margin-top: 0.2rem;
-                }
-
-                textarea {
-                    height: 120px;
-                }
-            }
-
-            .description {
-                flex: 3;
+            flex-direction: column;
+            input,
+            textarea {
+                margin-top: 6px;
+                resize: none;
             }
         }
 

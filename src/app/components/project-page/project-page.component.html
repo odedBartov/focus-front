@@ -38,7 +38,7 @@
             </div>
         </div>
     </div>
-    <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)" *ngIf="!showNotes" #stepsContainer>
+    <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)" *ngIf="!showNotes && project().isRetainer" #stepsContainer>
         <div [class]="step.isComplete? 'finished' : 'not-finished'" #stepDiv
             [ngClass]="{'step' : editStepId !== step.id, 'active-step': step.id === activeStepId && step.id !== editStepId}"
             *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
@@ -106,6 +106,9 @@
             <app-new-step class="new-step" (stepsEmitter)="createNewStep($event)" style="margin-bottom: 200px;"
                 (scrollToBottom)="scrollToBottom()"></app-new-step>
         </div>
+    </div>
+    <div class="retainer-steps" *ngIf="!showNotes && !project().isRetainer">
+        <app-retainer-steps [project]="project()"></app-retainer-steps>
     </div>
     <div class="rich-text" *ngIf="showNotes" #richTextDiv>
         <app-rich-text [project]="project()" [expanded]="true"></app-rich-text>

@@ -18,6 +18,7 @@ export class Project {
     links:{name: string, url: string}[];
     notes: string;
     ownerPicture?: string;
+    isRetainer?: boolean;
 
     constructor() {
         this.id = '';

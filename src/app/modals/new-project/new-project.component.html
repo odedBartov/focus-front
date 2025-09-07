@@ -1,60 +1,62 @@
 <div class="template">
     <div class="main">
+        <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="(currentProgress/4)*100"></div>
+        </div>
+        <div class="step1" *ngIf="currentProgress === 1">
             <div class="header">
                 <span class="new-h1">פרויקט חדש</span>
                 <span class="new-small">איזה כיף! אתגר חדש בדרך</span>
             </div>
-            <Form [formGroup]="projectForm">
+            <Form [formGroup]="firstForm">
                 <div class="line">
-                    <div class="text-and-input new-small">
-                        <span>שם הפרויקט</span>
-                        <input type="text" formControlName="projectName" class="new-text"/>
-                        <div class="error-container">
-                            <span *ngIf="submitted && projectForm.get('projectName')?.errors" class="error">אנא
-                                הזינו כותרת</span>
-                        </div>
-                    </div>
-                    <div class="description new-small">
-                        <span>רוב המשתמשים מעדיפים לקרוא לפרויקט בשם הלקוח</span>
+                    <span class="new-text-bold">שם הפרויקט</span>
+                    <span class="new-small">רוב המשתמשים מעדיפים לקרוא לפרויקט בשם הלקוח</span>
+                    <input type="text" formControlName="projectName" class="new-text" />
+                    <div class="error-container">
+                        <span *ngIf="submitted && firstForm.get('projectName')?.errors" class="error">אנא
+                            הזינו כותרת</span>
                     </div>
                 </div>
                 <div class="line">
-                    <div class="text-and-input new-small">
-                        <span>בריף קצר</span>
-                        <textarea formControlName="description" class="new-text"></textarea>
-                    </div>
-                    <div class="description new-small">
-                        <span>לא חובה, אבל כדאי. הבריף מוצג במיקום מרכזי במסך הפרויקט, ומטרתו לעזור לך להיכנס לעניינים
-                            ולזכור את
-                            הדברים החשובים.</span>
-                    </div>
+                    <span class="new-text-bold">בריף קצר</span>
+                    <span class="new-small">לא חובה, אבל כדאי. הבריף מוצג במיקום מרכזי במסך הפרויקט, ומטרתו לעזור לך
+                        להיכנס לעניינים ולזכור את הדברים החשובים.</span>
+                    <textarea formControlName="description" class="new-text"></textarea>
                 </div>
-                <div class="line">
-                    <div class="dates new-small">
-                        <div class="text-and-input">
-                            <span>תאריך התחלה</span>
-                            <div>
-                                <input class="new-text" type="text" formControlName="startDate" mask="00/00/00" placeholder="_ _/_ _/_ _"
-                                    [dropSpecialCharacters]="false" />
-                            </div>
-                        </div>
-                        <div class="text-and-input">
-                            <span>תאריך סיום</span>
-                            <div>
-                                <input class="new-text" type="text" formControlName="endDate" mask="00/00/00" placeholder="_ _/_ _/_ _"
-                                    [dropSpecialCharacters]="false" />
-                            </div>
+                <div class="description new-small">
+                </div>
+                <!-- <div class="line">
+                <div class="dates new-small">
+                    <div class="text-and-input">
+                        <span>תאריך התחלה</span>
+                        <div>
+                            <input class="new-text" type="text" formControlName="startDate" mask="00/00/00"
+                                placeholder="_ _/_ _/_ _" [dropSpecialCharacters]="false" />
                         </div>
                     </div>
-                    <div class="description new-small">
-                        <span>חשוב לתחום את הפרויקט בתאריכים, כדי לצפות את לוחות הזמנים וההכנסות.</span>
+                    <div class="text-and-input">
+                        <span>תאריך סיום</span>
+                        <div>
+                            <input class="new-text" type="text" formControlName="endDate" mask="00/00/00"
+                                placeholder="_ _/_ _/_ _" [dropSpecialCharacters]="false" />
+                        </div>
                     </div>
                 </div>
+                <div class="description new-small">
+                    <span>חשוב לתחום את הפרויקט בתאריכים, כדי לצפות את לוחות הזמנים וההכנסות.</span>
+                </div>
+            </div> -->
             </Form>
+        </div>
+
+        <div class="step2" *ngIf="currentProgress === 2">
+            <span class="new-h1">מבנה הפרויקט</span>
+        </div>
         <div class="confirm">
             <button class="confirm-button" (click)="submit()">
-                <img src="assets/icons/confirm_white.svg" />
-                אישור
+                <img src="assets/icons/confirm_white.svg" *ngIf="currentProgress === 4" />
+                <span>{{currentProgress === 4 ? 'אישור' : 'המשך'}}</span>
             </button>
         </div>
     </div>
