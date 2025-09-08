@@ -25,3 +25,8 @@ export enum projectTypeEnum {
     proccess = 'process',
     retainer = 'retainer'
 }
+
+export enum paymentModelEnum {
+    hourly = 'hourly',
+    monthly = 'monthly'
+}

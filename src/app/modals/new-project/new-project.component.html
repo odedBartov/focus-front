@@ -67,7 +67,19 @@
         </div>
 
         <div class="step3" *ngIf="currentProgress === 3">
-
+            <span class="new-h1">מודל התשלום</span>
+            <div class="project-types-container">
+                <div class="project-type" (click)="choosePaymentModel(paymentModelEnum.monthly)">
+                    <img src="assets/icons/calendar.svg" />
+                    <span class="new-text-bold">תשלום חודשי</span>
+                    <span class="new-small">בעל סכום ותאריך קבועים</span>
+                </div>
+                <div class="project-type" (click)="choosePaymentModel(paymentModelEnum.hourly)">
+                    <img src="assets/icons/clock.svg" />
+                    <span class="new-text-bold">תשלום שעתי</span>
+                    <span class="new-small">ספירת שעות בתעריף קבוע</span>
+                </div>
+            </div>
         </div>
 
         <div class="step4" *ngIf="currentProgress === 4">
@@ -91,10 +103,38 @@
                     </div>
                 </div>
             </div>
-            <div class="paymentSetting" *ngIf="project.projectType !== projectTypeEnum.retainer"></div>
+            <div class="payment-setting" *ngIf="project.projectType == projectTypeEnum.retainer">
+                <span class="new-h1">הגדרת התשלום</span>
+                <div class="hourly-text-and-input" *ngIf="project.paymentModel === paymentModelEnum.hourly">
+                    <span class="new-small">מחיר שעתי (לא כולל מע"ם)</span>
+                    <input type="number" class="new-small" [(ngModel)]="project.reccuringPayment" />
+                    <span *ngIf="submitted && !project.reccuringPayment" class="error">אנא
+                            הזינו סכום</span>
+                </div>
+
+                <div class="monthly" *ngIf="project.paymentModel === paymentModelEnum.monthly">
+                    <div class="text-and-input">
+                        <span class="new-small">הסכום לתשלום (לא כולל מע"ם)</span>
+                        <input type="number" class="new-small" [(ngModel)]="project.reccuringPayment" />
+                        <div class="error-container">
+                        <span *ngIf="submitted && !project.reccuringPayment" class="error">אנא
+                            הזינו סכום</span>
+                    </div>
+                    </div>
+
+                    <div class="text-and-input">
+                        <span class="new-small">תאריך לתשלום</span>
+                        <select [(ngModel)]="selectedDay">
+                            <option *ngFor="let day of daysInMonth" [value]="day">
+                                {{ day }} לחודש
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="confirm" *ngIf="currentProgress !== 2">
+        <div class="confirm" *ngIf="currentProgress !== 2 && currentProgress !== 3">
             <button class="confirm-button" (click)="submit()">
                 <img src="assets/icons/confirm_white.svg" *ngIf="currentProgress === 4" />
                 <span>{{currentProgress === 4 ? 'יצירת פרויקט' : 'המשך'}}</span>

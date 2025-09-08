@@ -6,7 +6,7 @@
     align-items: center;
     height: 630px;
     width: 600px;
-    padding: 60px;
+    padding: 70px;
     box-sizing: border-box;
 
     .main {
@@ -33,6 +33,7 @@
         .line {
             display: flex;
             flex-direction: column;
+
             input,
             textarea {
                 margin-top: 6px;
@@ -40,19 +41,9 @@
             }
         }
 
-        .confirm {
-            display: flex;
-            width: 100%;
-            align-items: center;
-            justify-content: center;
-
-            .confirm-button {
-                @include mixins.confirm-button;
-            }
-        }
-
-        .step2{
-            .project-types-container{
+        .step2,
+        .step3 {
+            .project-types-container {
                 margin-top: 50px;
                 display: flex;
                 justify-content: center;
@@ -87,27 +78,75 @@
             }
         }
 
-        .step3{
-
-        }
-
-        .step4{
-            .dates{
+        .step4 {
+            .dates {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: flex-start;
-                
-                .date-inputs{
+
+                .date-inputs {
                     margin-top: 20px;
                     display: flex;
                     justify-content: space-between;
                     gap: 50px;
 
                     input {
+                        margin-top: 4px;
                         width: 83%;
                     }
                 }
+            }
+
+            .payment-setting {
+                .hourly-text-and-input {
+                    margin-top: 40px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    width: 100%;
+
+                    input {
+                        margin-top: 4px;
+                        width: 100%;
+                        text-align: center;
+                    }
+                }
+
+                .monthly {
+                    display: flex;
+                    gap: 50px;
+
+                    .text-and-input {
+                        margin-top: 40px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        width: 100%;
+
+                        input {
+                            margin-top: 4px;
+                            width: 83%;
+                            text-align: center;
+                        }
+
+                        select {
+                            margin-top: 4px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .confirm {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+
+            .confirm-button {
+                @include mixins.confirm-button;
             }
         }
     }

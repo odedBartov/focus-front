@@ -6,7 +6,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { parseDate } from '../../helpers/functions';
 import { AuthenticationService } from '../../services/authentication.service';
-import { projectTypeEnum } from '../../models/enums';
+import { paymentModelEnum, projectTypeEnum } from '../../models/enums';
 
 @Component({
   selector: 'app-new-project',
@@ -20,12 +20,15 @@ export class NewProjectComponent {
   formBuilder = inject(FormBuilder);
   authenticationService = inject(AuthenticationService);
   projectTypeEnum = projectTypeEnum;
+  paymentModelEnum = paymentModelEnum;
+  daysInMonth = [1, 2, 3, 4, 5];
+  selectedDay = 1;
   firstForm: FormGroup;
   project: Project;
   startDate: string = '';
   endDate: string = '';
   submitted = false;
-  currentProgress = 2;
+  currentProgress = 1;
 
   constructor() {
     this.project = new Project();
@@ -50,6 +53,11 @@ export class NewProjectComponent {
     }
   }
 
+  choosePaymentModel(paymentModel: paymentModelEnum) {
+    this.project.paymentModel = paymentModel;
+    this.currentProgress += 1;
+  }
+
   submit() {
     this.submitted = true;
     switch (this.currentProgress) {
@@ -60,9 +68,8 @@ export class NewProjectComponent {
         }
         break;
       case 3:
-
+        this.dialogRef.close(this.project);
         break;
-
       case 4:
         if (this.project.projectType !== projectTypeEnum.retainer) {
           const startDate = parseDate(this.startDate);
@@ -73,9 +80,13 @@ export class NewProjectComponent {
           if (endDate) {
             this.project.endDate = endDate;
           }
-
+          if (this.project.reccuringPayment) {
+            this.dialogRef.close(this.project);
+          }
+        } else {
           this.dialogRef.close(this.project);
         }
+
         break;
       default:
         break;
