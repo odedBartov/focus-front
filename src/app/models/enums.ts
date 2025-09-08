@@ -20,3 +20,8 @@ export enum subscriptionEnum {
     full = 3,
     trial = 4
 }
+
+export enum projectTypeEnum {
+    proccess = 'process',
+    retainer = 'retainer'
+}

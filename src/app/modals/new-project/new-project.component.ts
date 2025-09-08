@@ -1,15 +1,16 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Project } from '../../models/project';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { parseDate } from '../../helpers/functions';
 import { AuthenticationService } from '../../services/authentication.service';
+import { projectTypeEnum } from '../../models/enums';
 
 @Component({
   selector: 'app-new-project',
-  imports: [CommonModule, ReactiveFormsModule, NgxMaskDirective],
+  imports: [CommonModule, ReactiveFormsModule, NgxMaskDirective, FormsModule],
   providers: [provideNgxMask(), DatePipe],
   templateUrl: './new-project.component.html',
   styleUrl: './new-project.component.scss'
@@ -18,10 +19,13 @@ export class NewProjectComponent {
   dialogRef = inject(MatDialogRef<NewProjectComponent>);
   formBuilder = inject(FormBuilder);
   authenticationService = inject(AuthenticationService);
+  projectTypeEnum = projectTypeEnum;
   firstForm: FormGroup;
   project: Project;
+  startDate: string = '';
+  endDate: string = '';
   submitted = false;
-  currentProgress = 1;
+  currentProgress = 2;
 
   constructor() {
     this.project = new Project();
@@ -37,13 +41,51 @@ export class NewProjectComponent {
     });
   }
 
+  chooseProjectType(type: projectTypeEnum) {
+    this.project.projectType = type;
+    if (type === projectTypeEnum.retainer) {
+      this.currentProgress += 1;
+    } else {
+      this.currentProgress += 2;
+    }
+  }
+
   submit() {
     this.submitted = true;
+    switch (this.currentProgress) {
+      case 1:
+        if (this.firstForm.valid) {
+          this.currentProgress += 1;
+          this.submitted = false;
+        }
+        break;
+      case 3:
+
+        break;
+
+      case 4:
+        if (this.project.projectType !== projectTypeEnum.retainer) {
+          const startDate = parseDate(this.startDate);
+          const endDate = parseDate(this.endDate);
+          if (startDate) {
+            this.project.startDate = startDate;
+          }
+          if (endDate) {
+            this.project.endDate = endDate;
+          }
+
+          this.dialogRef.close(this.project);
+        }
+        break;
+      default:
+        break;
+    }
+
+
     if (this.currentProgress === 1) {
-      if (this.firstForm.valid) {
-        this.currentProgress = 2;
-        this.submitted = false;
-      }
+
+    } else if (this.currentProgress === 2) {
+
     } else {
       this.submitted = true;
       if (this.firstForm.valid && this.project) {

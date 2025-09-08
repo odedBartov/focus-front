@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NewStepComponent } from '../new-step/new-step.component';
-import { ProjectStatus, StepType, subscriptionEnum } from '../../models/enums';
+import { ProjectStatus, projectTypeEnum, StepType } from '../../models/enums';
 import { ProjectModalComponent } from '../../modals/project-modal/project-modal.component';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NotesComponent } from '../notes/notes.component';
@@ -66,6 +66,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   @ViewChild('addStepDiv', { static: false }) addStepDiv!: ElementRef;
   @ViewChildren('descriptions') descriptions!: QueryList<ElementRef<HTMLTextAreaElement>>;
   @ViewChildren('stepHeader') stepHeaders!: QueryList<ElementRef<HTMLSpanElement>>;
+  projectTypeEnum = projectTypeEnum;
   editDiv?: HTMLDivElement;
   stepTypeEnum = StepType;
   project!: WritableSignal<Project>;

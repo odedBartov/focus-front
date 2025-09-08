@@ -1,4 +1,4 @@
-import { ProjectStatus } from "./enums";
+import { ProjectStatus, projectTypeEnum } from "./enums";
 import { Step } from "./step";
 
 export class Project {
@@ -18,7 +18,7 @@ export class Project {
     links:{name: string, url: string}[];
     notes: string;
     ownerPicture?: string;
-    isRetainer?: boolean;
+    projectType?: projectTypeEnum;
 
     constructor() {
         this.id = '';

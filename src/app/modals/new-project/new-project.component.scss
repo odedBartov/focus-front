@@ -6,11 +6,11 @@
     align-items: center;
     height: 630px;
     width: 600px;
-    padding: 70px;
+    padding: 60px;
     box-sizing: border-box;
 
     .main {
-        // width: 45rem;
+        width: 100%;
         display: flex;
         flex-direction: column;
         border-radius: var(--common-radius);
@@ -28,7 +28,6 @@
             display: flex;
             flex-direction: column;
             margin-top: 2rem;
-            // width: 45rem;
         }
 
         .line {
@@ -49,6 +48,66 @@
 
             .confirm-button {
                 @include mixins.confirm-button;
+            }
+        }
+
+        .step2{
+            .project-types-container{
+                margin-top: 50px;
+                display: flex;
+                justify-content: center;
+                gap: 40px;
+
+                .project-type {
+                    text-align: center;
+                    cursor: pointer;
+                    width: 210px;
+                    height: 153px;
+                    box-sizing: border-box;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-direction: column;
+                    padding: 20px;
+                    width: 210px;
+                    background-color: var(--hover-color);
+                    border-radius: 26px;
+                    transition: all 0.3s;
+
+                    &:hover {
+                        background-color: var(--main-color);
+                    }
+
+                    img {
+                        width: 60px;
+                        height: 48px;
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+        }
+
+        .step3{
+
+        }
+
+        .step4{
+            .dates{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
+                
+                .date-inputs{
+                    margin-top: 20px;
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 50px;
+
+                    input {
+                        width: 83%;
+                    }
+                }
             }
         }
     }
