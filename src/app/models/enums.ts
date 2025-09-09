@@ -22,11 +22,11 @@ export enum subscriptionEnum {
 }
 
 export enum projectTypeEnum {
-    proccess = 'process',
-    retainer = 'retainer'
+    proccess,
+    retainer
 }
 
 export enum paymentModelEnum {
-    hourly = 'hourly',
-    monthly = 'monthly'
+    hourly,
+    monthly
 }

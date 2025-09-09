@@ -26,27 +26,6 @@
                 </div>
                 <div class="description new-small">
                 </div>
-                <!-- <div class="line">
-                <div class="dates new-small">
-                    <div class="text-and-input">
-                        <span>תאריך התחלה</span>
-                        <div>
-                            <input class="new-text" type="text" formControlName="startDate" mask="00/00/00"
-                                placeholder="_ _/_ _/_ _" [dropSpecialCharacters]="false" />
-                        </div>
-                    </div>
-                    <div class="text-and-input">
-                        <span>תאריך סיום</span>
-                        <div>
-                            <input class="new-text" type="text" formControlName="endDate" mask="00/00/00"
-                                placeholder="_ _/_ _/_ _" [dropSpecialCharacters]="false" />
-                        </div>
-                    </div>
-                </div>
-                <div class="description new-small">
-                    <span>חשוב לתחום את הפרויקט בתאריכים, כדי לצפות את לוחות הזמנים וההכנסות.</span>
-                </div>
-            </div> -->
             </Form>
         </div>
 
@@ -124,7 +103,7 @@
 
                     <div class="text-and-input">
                         <span class="new-small">תאריך לתשלום</span>
-                        <select [(ngModel)]="selectedDay">
+                        <select [(ngModel)]="project.monthlyPaymentDay">
                             <option *ngFor="let day of daysInMonth" [value]="day">
                                 {{ day }} לחודש
                             </option>

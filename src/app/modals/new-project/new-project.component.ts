@@ -22,7 +22,6 @@ export class NewProjectComponent {
   projectTypeEnum = projectTypeEnum;
   paymentModelEnum = paymentModelEnum;
   daysInMonth = [1, 2, 3, 4, 5];
-  selectedDay = 1;
   firstForm: FormGroup;
   project: Project;
   startDate: string = '';

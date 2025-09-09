@@ -21,6 +21,7 @@ export class Project {
     projectType?: projectTypeEnum;
     paymentModel?: paymentModelEnum;
     reccuringPayment?: number;
+    monthlyPaymentDay?: number;
 
     constructor() {
         this.id = '';
