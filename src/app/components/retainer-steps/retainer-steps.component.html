@@ -1,5 +1,13 @@
 <div class="main">
-    <div class="step" *ngFor="let step of project.steps">
+    <div class="step" *ngFor="let step of project.steps" #stepsContainer>
         {{step.name}}
+    </div>
+
+    <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly()">
+        <img (click)="showNewStep()" class="icon-plus" #addStepDiv tabindex="0" />
+    </div>
+    <div *ngIf="isShowNewStep" #newStepDiv>
+        <!-- <app-new-step class="new-step" (stepsEmitter)="createNewStep($event)" style="margin-bottom: 200px;"
+            (scrollToBottom)="scrollToBottom()"></app-new-step> -->
     </div>
 </div>

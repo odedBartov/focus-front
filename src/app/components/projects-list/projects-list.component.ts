@@ -12,12 +12,11 @@ import { tap } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { NewProjectComponent } from '../../modals/new-project/new-project.component';
-import { TodayTasksComponent } from "../today-tasks/today-tasks.component";
 import { ProjectsService } from '../../services/projects.service';
 
 @Component({
   selector: 'app-projects-list',
-  imports: [CommonModule, MatProgressBarModule, MatMenuModule, DragDropModule, MatTooltipModule, TodayTasksComponent],
+  imports: [CommonModule, MatProgressBarModule, MatMenuModule, DragDropModule, MatTooltipModule],
   templateUrl: './projects-list.component.html',
   styleUrl: './projects-list.component.scss'
 })

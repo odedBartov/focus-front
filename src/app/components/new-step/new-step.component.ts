@@ -27,6 +27,7 @@ export class NewStepComponent implements AfterViewInit {
   @ViewChildren('taskText') tasksTexts!: QueryList<ElementRef<HTMLTextAreaElement>>;
   @Output() scrollToBottom = new EventEmitter<void>();
   @Input() defaultType?: StepType;
+  @Input() isRetainer = false;
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;

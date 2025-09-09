@@ -10,11 +10,15 @@
             </span>
             <div class="dates">
                 <div class="new-small">תאריך התחלה</div>
-                <div class="new-small" *ngIf="project().projectType !== projectTypeEnum.retainer">{{project().endDate? 'תאריך סיום' : ''}}</div>
-                <div class="new-small" *ngIf="project().projectType === projectTypeEnum.retainer">{{project().paymentModel === paymentModelEnum.hourly ? 'מחיר שעתי' : 'מחיר חודשי'}}</div>
+                <div class="new-small" *ngIf="project().projectType !== projectTypeEnum.retainer">{{project().endDate?
+                    'תאריך סיום' : ''}}</div>
+                <div class="new-small" *ngIf="project().projectType === projectTypeEnum.retainer">
+                    {{project().paymentModel === paymentModelEnum.hourly ? 'מחיר שעתי' : 'מחיר חודשי'}}</div>
                 <div class="cell new-text-bold">{{project().startDate | date: 'dd.MM.yyyy'}}</div>
-                <div class="cell new-text-bold" *ngIf="project().projectType !== projectTypeEnum.retainer">{{project().endDate | date: 'dd.MM.yyyy'}}</div>
-                <div class="cell new-text-bold" *ngIf="project().projectType === projectTypeEnum.retainer">{{project().reccuringPayment}}</div>
+                <div class="cell new-text-bold" *ngIf="project().projectType !== projectTypeEnum.retainer">
+                    {{project().endDate | date: 'dd.MM.yyyy'}}</div>
+                <div class="cell new-text-bold" *ngIf="project().projectType === projectTypeEnum.retainer">
+                    {{project().reccuringPayment}}</div>
             </div>
         </div>
         <div class="price">
@@ -40,14 +44,14 @@
             </div>
         </div>
     </div>
-    <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)" *ngIf="!showNotes && project().projectType !== projectTypeEnum.retainer" #stepsContainer>
+    <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)"
+        *ngIf="!showNotes && project().projectType !== projectTypeEnum.retainer" #stepsContainer>
         <div [class]="step.isComplete? 'finished' : 'not-finished'" #stepDiv
             [ngClass]="{'step' : editStepId !== step.id, 'active-step': step.id === activeStepId && step.id !== editStepId}"
             *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
             (mouseleave)="hoverStepId = undefined" cdkDrag>
             <div *ngIf="editStepId !== step.id && animationHackFlag">
-                <div
-                    [class]="'step-header '"
+                <div [class]="'step-header '"
                     [ngClass]="{ 'active': !step.isComplete && step.id === activeStepId, 'future': !step.isComplete && step.id !== activeStepId && hoverStepId === step.id }">
                     <span [class]="step.id === activeStepId? 'new-h2' : 'new-text-bold'"
                         #stepHeader>{{step.name}}</span>
@@ -109,8 +113,18 @@
                 (scrollToBottom)="scrollToBottom()"></app-new-step>
         </div>
     </div>
+
     <div class="retainer-steps" *ngIf="!showNotes && (project().projectType === projectTypeEnum.retainer)">
-        <app-retainer-steps [project]="project()"></app-retainer-steps>
+        <div class="retainer-step" *ngFor="let step of project().steps" #stepsContainer>
+            {{step.name}}
+        </div>
+        <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly()">
+            <img (click)="showNewStep()" class="icon-plus" #addStepDiv tabindex="0" />
+        </div>
+        <div *ngIf="isShowNewStep" #newStepDiv>
+            <app-new-step class="new-step" (stepsEmitter)="createNewStep($event)" style="margin-bottom: 200px;"
+                (scrollToBottom)="scrollToBottom()" [isRetainer]="true"></app-new-step>
+        </div>
     </div>
     <div class="rich-text" *ngIf="showNotes" #richTextDiv>
         <app-rich-text [project]="project()" [expanded]="true"></app-rich-text>

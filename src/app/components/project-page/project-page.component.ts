@@ -362,7 +362,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-
   toggleTask(step: Step, task: StepTask) {
     task.isComplete = !task.isComplete;
     this.httpService.updateSteps([step]).subscribe(res => { })
