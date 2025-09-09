@@ -12,18 +12,31 @@
 
     .projects-list {
         display: flex;
+        flex-direction: column;
         margin-bottom: 40px;
         margin-right: 30px;
+        color: var(--default-black);
 
-        .tab {
-            cursor: pointer;
-            margin-left: 40px;
-            color: var(--disabled-text);
+        .projects-filter {
+            margin-top: 2rem;
+
+            span {
+                text-align: center;
+                background-color: var(--hover-color);
+                color: var(--default-black);
+                border-radius: 26px;
+                padding: 1px 12px 5px;
+                transition: all 0.3s;
+                margin-left: 10px;
+                cursor: pointer;
+
+                &:hover, &.selected {
+                    color: var(--default-white);
+                    background-color: var(--main-color);
+                }
+            }
         }
 
-        .tab.active {
-            color: var(--default-black);
-        }
     }
 
     .line {
@@ -52,6 +65,7 @@
     .progress-bar {
         margin: 5px 0;
     }
+
     overflow: hidden;
     margin: 0 30px;
     box-shadow: var(--common-shadow);

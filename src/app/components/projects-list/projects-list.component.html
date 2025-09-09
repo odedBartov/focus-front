@@ -1,12 +1,14 @@
 <div class="projects-container">
     <div class="projects-list">
-        <div class="tab new-h2" [class.active]="activeTab === 1" (click)="activeTab = 1">פרויקטים פעילים</div>
-        <div class="tab new-h2" [class.active]="activeTab === 2" (click)="activeTab = 2">
-            משימות היום
+        <div class="title new-h2">פרויקטים פעילים</div>
+        <div class="projects-filter">
+            <span class="new-small" (click)="filterProjects()" [ngClass]="{'selected': projectsFilter === undefined}">כל הפרוייקטים</span>
+            <span class="new-small" (click)="filterProjects(projectTypeEnum.proccess)" [ngClass]="{'selected': projectsFilter === projectTypeEnum.proccess}">תהליכים</span>
+            <span class="new-small" (click)="filterProjects(projectTypeEnum.retainer)" [ngClass]="{'selected': projectsFilter === projectTypeEnum.retainer}">ריטיינרים</span>
         </div>
     </div>
-    <div cdkDropList (cdkDropListDropped)="drop($event)" *ngIf="activeTab === 1">
-        <div class="project-drag" *ngFor="let project of projects()" cdkDrag>
+    <div cdkDropList (cdkDropListDropped)="drop($event)">
+        <div class="project-drag" *ngFor="let project of filteredProjects" cdkDrag>
             <div class="project" (click)="selectProject(project)"
                 (contextmenu)="openMenu($event, menuTrigger, menuAnchor)">
                 <img class="priority" (click)="togglePriority($event, project)"
@@ -41,8 +43,7 @@
                     <span style="margin-top: 1rem;">{{getProjectProgress(project) | number:'1.0-0'}}%</span>
                 </div>
                 <div class="menu" (click)="$event.stopPropagation()">
-                    <img class="menu icon-kabab-menu" [matMenuTriggerFor]="menu"
-                        style="padding: 10px;" />
+                    <img class="menu icon-kabab-menu" [matMenuTriggerFor]="menu" style="padding: 10px;" />
                     <mat-menu #menu="matMenu" class="pointer">
                         <button mat-menu-item class="menu-item"
                             (click)="changeProjectStatus(project, projectStatusEnum.frozen)">הקפאה</button>
@@ -57,12 +58,9 @@
             </div>
         </div>
     </div>
-    <div class="line" *ngIf="activeTab === 1">
+    <div class="line">
         <div class="add-project new-text-bold" (click)="openProjectModal()">
             + פרויקט חדש
         </div>
-    </div>
-    <div class="today-tasks" *ngIf="activeTab === 2">
-        <app-today-tasks (selectProjectEmitter)="selectProject($event)"></app-today-tasks>
     </div>
 </div>

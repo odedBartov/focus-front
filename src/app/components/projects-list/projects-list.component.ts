@@ -1,9 +1,9 @@
-import { Component, EventEmitter, inject, Input, Output, WritableSignal } from '@angular/core';
+import { Component, effect, EventEmitter, inject, Input, Output, WritableSignal } from '@angular/core';
 import { Project } from '../../models/project';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Router } from '@angular/router';
-import { ProjectStatus, StepType } from '../../models/enums';
+import { ProjectStatus, projectTypeEnum, StepType } from '../../models/enums';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { HttpService } from '../../services/http.service';
@@ -28,12 +28,33 @@ export class ProjectsListComponent {
   dialog = inject(MatDialog);
   @Output() selectProjectEmitter = new EventEmitter<Project>();
   projects: WritableSignal<Project[]>;
+  filteredProjects: Project[] = [];
   router = inject(Router);
   projectStatusEnum = ProjectStatus;
-  activeTab = 1;
+  projectTypeEnum = projectTypeEnum;
+  projectsFilter?: projectTypeEnum;
 
   constructor() {
     this.projects = this.projectsService.getActiveProjects();
+    this.filterProjects();
+
+    effect(() => {
+      this.projects();
+      this.filteredProjects = [...this.projects()];
+    });
+  }
+
+  filterProjects(filterType?: projectTypeEnum) {
+    this.projectsFilter = filterType;
+    var filterLambda = (p: Project) => true;
+
+    if (filterType === projectTypeEnum.proccess) {
+      filterLambda = (p: Project) => p.projectType == undefined || p.projectType === projectTypeEnum.proccess;
+    } else if (filterType === projectTypeEnum.retainer) {
+      filterLambda = (p: Project) => p.projectType === projectTypeEnum.retainer;
+    } 
+
+    this.filteredProjects = this.projects().filter(filterLambda);
   }
 
   getCurrentStep(project: Project) {
