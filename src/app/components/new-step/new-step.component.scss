@@ -4,6 +4,12 @@
     @include mixins.regular-border;
 }
 
+.white-background {
+    background-color: var(--default-white);
+    box-shadow: var(--common-shadow);
+    border-radius: 18px;
+}
+
 .main {
     width: 100%;
 
@@ -34,7 +40,6 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
 
             img {
                 height: 24px;
@@ -43,7 +48,7 @@
         }
 
         .text-and-input {
-            margin-bottom: 20px;
+            margin: 20px 0;
             display: flex;
             flex-direction: column;
 

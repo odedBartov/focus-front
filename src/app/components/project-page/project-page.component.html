@@ -102,7 +102,8 @@
                 </div>
             </div>
             <div *ngIf="editStepId === step.id" (mousedown)="$event.stopPropagation(); mouseDownInside = true;">
-                <app-new-step class="new-step" [steptInput]="step" (stepsEmitter)="updateStep($event)"></app-new-step>
+                <app-new-step class="new-step" [steptInput]="step" [isActive]="editStepId === activeStepId"
+                    (stepsEmitter)="updateStep($event)"></app-new-step>
             </div>
         </div>
         <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly()">
@@ -114,16 +115,63 @@
         </div>
     </div>
 
-    <div class="retainer-steps" *ngIf="!showNotes && (project().projectType === projectTypeEnum.retainer)">
-        <div class="retainer-step" *ngFor="let step of project().steps" #stepsContainer>
-            {{step.name}}
+    <div class="retainer-steps" *ngIf="!showNotes && (project().projectType === projectTypeEnum.retainer)" cdkDropList
+        #stepsContainer>
+        <div [class]="'retainer-step' + (editStepId === step.id? '' : ' active-step')" *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
+            (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
+            <div *ngIf="editStepId !== step.id && animationHackFlag">
+                <div class="step-header active">
+                    <span class="new-h2">{{step.name}}</span>
+                    <img [src]="`assets/icons/${step.stepType === stepTypeEnum.task? 'puzzle_piece' : 'dollar'}.svg`" />
+                </div>
+                <textarea class="new-text" disabled="true"
+                    *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
+                    #descriptions autoResize
+                    rows="1">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
+                    <div class="tasks" *ngIf="step.tasks">
+                        <div class="task-list">
+                            <div class="task" *ngFor="let task of step.tasks; let i = index">
+                                <div *ngIf="i < step.tasks.length" style="display: flex;">
+                                    <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')"
+                                        (click)="toggleTask(step, task)"
+                                        [style.pointer-events]="isReadOnly() ? 'none' : 'auto'">
+                                        <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg" />
+                                    </div>
+                                    <textarea [class]="activeStepId === step.id? 'new-text active' : 'new-small future'"
+                                        [(ngModel)]="task.text" autoResize defaultHeight="20px" disabled
+                                        #taskText></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'expanded'" class="extra-not-finished">
+                    <div class="step-icons" *ngIf="!isReadOnly()">
+                        <div class="edit-delete">
+                            <img class="icon-garbage-can" (click)="deleteStep(step)" />
+                            <img class="icon-pencil" (click)="editStep(stepDiv, step.id)" />
+                        </div>
+                        <div class="animation-container">
+                            <div class="finish-step-animation" *ngIf="step.id === animatingItemId">
+                                <ng-lottie [options]="lottieOptions"
+                                    (animationCreated)="finishStepAnimationCreated($event)" />
+                            </div>
+                            <img class="icon-confirm-circle" (click)="changeStepStatus(step)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="editStepId === step.id" (mousedown)="$event.stopPropagation(); mouseDownInside = true;">
+                <app-new-step class="new-step" [steptInput]="step" [isActive]="true"
+                    (stepsEmitter)="updateStep($event)"></app-new-step>
+            </div>
         </div>
         <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly()">
             <img (click)="showNewStep()" class="icon-plus" #addStepDiv tabindex="0" />
         </div>
         <div *ngIf="isShowNewStep" #newStepDiv>
             <app-new-step class="new-step" (stepsEmitter)="createNewStep($event)" style="margin-bottom: 200px;"
-                (scrollToBottom)="scrollToBottom()" [isRetainer]="true"></app-new-step>
+                (scrollToBottom)="scrollToBottom()" [projectType]="projectTypeEnum.retainer"
+                [paymentModel]="project().paymentModel"></app-new-step>
         </div>
     </div>
     <div class="rich-text" *ngIf="showNotes" #richTextDiv>

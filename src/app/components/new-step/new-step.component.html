@@ -1,9 +1,9 @@
-<div class="main" [ngClass]="{'border': newStep != undefined}">
+<div class="main" [ngClass]="{'border': !isActive && newStep != undefined, 'white-background': isActive && newStep != undefined}">
     <div class="choose-type" *ngIf="!isEdit && (newStep == undefined || newStep.stepType === undefined)">
         <div class="steps">
             <div class="step-type" (click)="selectType(stepTypeEnum.task)" tabindex="0">
                 <div class="new-text-bold">
-                    + שלב
+                    + {{projectType === projectTypeEnum.retainer ? 'משימה' : 'שלב'}}
                 </div>
             </div>
             <div class="step-type" (click)="selectType(stepTypeEnum.payment)" tabindex="0">
@@ -13,12 +13,13 @@
             </div>
         </div>
     </div>
-    <div *ngIf="newStep?.stepType !== undefined" class="details" [ngClass]="{'details-padding': newStep && newStep.stepType !== undefined}">
+    <div *ngIf="newStep?.stepType !== undefined" class="details"
+        [ngClass]="{'details-padding': newStep && newStep.stepType !== undefined}">
         <div class="task" *ngIf="newStep?.stepType === stepTypeEnum.task">
             <div class="title">
-                <div class="new-text-bold">
-                     <span *ngIf="isEdit">עריכת שלב</span>
-                     <span *ngIf="!isEdit">שלב חדש</span>
+                <div class="new-h2">
+                    <span *ngIf="isEdit">עריכת שלב</span>
+                    <span *ngIf="!isEdit">שלב חדש</span>
                 </div>
                 <img src="assets/icons/puzzle_piece.svg" />
             </div>
@@ -49,7 +50,9 @@
                         <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')"
                             (click)="task.isComplete = !task.isComplete"><img *ngIf="task.isComplete"
                                 src="assets\icons\confirm_white.svg" /></div>
-                        <textarea [(ngModel)]="task.text" placeholder="משימה חדשה..." autoResize defaultHeight="20px" class="new-small" (input)="taskTextUpdates(task)" (keydown)="handleEnter($event, i)" #taskText></textarea>
+                        <textarea [(ngModel)]="task.text" placeholder="משימה חדשה..." autoResize defaultHeight="20px"
+                            class="new-small" (input)="taskTextUpdates(task)" (keydown)="handleEnter($event, i)"
+                            #taskText></textarea>
                     </div>
                 </div>
             </div>
@@ -57,11 +60,12 @@
 
         <div class="payment" *ngIf="newStep?.stepType === stepTypeEnum.payment">
             <div class="title">
-                <div class="new-text-bold">
+                <div class="new-h2">
                     <span *ngIf="isEdit">עריכת שלב </span>תשלום <span></span><span *ngIf="!isEdit">חדש</span>
                 </div>
                 <img src="assets/icons/dollar.svg" />
             </div>
+            <span class="sub-title new-small" *ngIf="!isEdit && projectType === projectTypeEnum.retainer">{{paymentModel === paymentModelEnum.hourly ? 'תשלום עבור שעות שנספרו במערכת. יצירת התשלום לא תגדיל את מחיר הפרויקט הכולל. ' : 'תשלום חד פעמי, נוסף על התשלום החודשי הקבוע בהגדרות הפרויקט.'}}</span>
             <div class="text-and-input">
                 <span class="text new-small">שם התשלום</span>
                 <input class="text new-text" type="text" [(ngModel)]="newStep.name" #stepNameInput>

@@ -1,5 +1,93 @@
 @use '../../../mixins.scss' as mixins;
 
+@mixin extra-not-finished-style {
+    .task-list {
+        display: flex;
+        flex-direction: column;
+
+        .active {
+            margin-bottom: 16px;
+        }
+
+        .task {
+            display: flex;
+            align-items: flex-start;
+
+            .radio-button {
+                border-radius: 50%;
+                margin-top: 3px;
+                height: 15px;
+                width: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--default-white);
+                cursor: pointer;
+
+                img {
+                    height: 70%;
+                    user-select: none;
+                }
+            }
+
+            .checked-circle {
+                border: solid 2px transparent;
+                background-color: var(--main-color);
+            }
+
+            .empty-circle {
+                background-color: transparent;
+                border: solid 2px var(--main-color);
+            }
+
+            textarea {
+                width: 100%;
+                border: none;
+                resize: none;
+                padding: 0;
+                overflow: hidden;
+                border-radius: 0px;
+                margin-right: 6px;
+                margin-top: 0;
+
+                &.active {
+                    margin-bottom: 20px;
+                }
+
+            }
+        }
+    }
+
+    textarea {
+        box-sizing: border-box;
+        border: none;
+        resize: none;
+        padding: 0;
+        overflow: hidden;
+        border-radius: 0px;
+        width: 100%;
+        margin-bottom: 16px;
+    }
+}
+
+@mixin retainer-step-style {
+    @include mixins.step;
+    width: 340px !important;
+    font-size: var(--font-size-3) !important;
+    background-color: var(--default-white);
+    box-shadow: var(--common-shadow);
+    // padding: 32px 40px 40px;
+
+    textarea {
+        border: none !important;
+        padding: 0;
+    }
+
+    .step-icons {
+        margin-top: 20px;
+    }
+}
+
 .main {
     height: 100%;
     display: flex;
@@ -125,95 +213,40 @@
                 margin-bottom: 16px;
             }
         }
+    }
 
-        .extra-not-finished {
-            .task-list {
-                display: flex;
-                flex-direction: column;
-
-                .active {
-                    margin-bottom: 16px;
-                }
-
-                .task {
-                    display: flex;
-                    align-items: flex-start;
-
-                    .radio-button {
-                        border-radius: 50%;
-                        margin-top: 3px;
-                        height: 15px;
-                        width: 16px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        color: var(--default-white);
-                        cursor: pointer;
-
-                        img {
-                            height: 70%;
-                            user-select: none;
-                        }
-                    }
-
-                    .checked-circle {
-                        border: solid 2px transparent;
-                        background-color: var(--main-color);
-                    }
-
-                    .empty-circle {
-                        background-color: transparent;
-                        border: solid 2px var(--main-color);
-                    }
-
-                    textarea {
-                        width: 100%;
-                        border: none;
-                        resize: none;
-                        padding: 0;
-                        overflow: hidden;
-                        border-radius: 0px;
-                        margin-right: 6px;
-                        margin-top: 0;
-
-                        &.active {
-                            margin-bottom: 20px;
-                        }
-
-                    }
-                }
-            }
-
-            textarea {
-                box-sizing: border-box;
-                border: none;
-                resize: none;
-                padding: 0;
-                overflow: hidden;
-                border-radius: 0px;
-                width: 100%;
-                margin-bottom: 16px;
-            }
+    .retainer-steps {
+        .active {
+            margin-bottom: 20px;
         }
 
-        .add-step {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            margin-bottom: 200px;
-
-            img {
-                height: 32px;
-                padding-bottom: 8px;
-            }
+        .retainer-step {
+            @include retainer-step-style;
         }
 
-        .new-step {
-            display: flex;
-            width: 24rem;
-            margin-bottom: 28px;
+    }
+
+    .new-step {
+        display: flex;
+        width: 400px;
+        margin-bottom: 28px;
+    }
+
+    .add-step {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        margin-bottom: 200px;
+
+        img {
+            height: 32px;
+            padding-bottom: 8px;
         }
+    }
+
+    .extra-not-finished {
+        @include extra-not-finished-style;
     }
 
     .rich-text {
@@ -235,25 +268,44 @@
 }
 
 .cdk-drag-preview {
-    @include mixins.step;
-    background-color: var(--home-color);
-    width: 15.25rem !important;
-    height: auto !important;
-    border-radius: 0;
+    textarea {
+        resize: none;
+        overflow: hidden;
+    }
 
-    .extra-not-finished {
-        textarea {
-            box-sizing: border-box;
-            border: none;
-            resize: none;
-            padding: 0;
-            overflow: hidden;
-            border-radius: 0px;
+    &.step {
+        @include mixins.step;
+        @include extra-not-finished-style;
+        background-color: var(--home-color);
+        width: 15.25rem !important;
+        height: auto !important;
+        border-radius: 0;
+    }
 
-            &.active {
-                font-size: var(--font-size-2);
-            }
-        }
+    &.retainer-step {
+        height: auto !important;
+        @include retainer-step-style;
+    }
+
+    &.step.not-finished {
+        padding: 20px 28px 24px;
+    }
+
+    &.active-step {
+        width: 20rem;
+        font-size: var(--font-size-3) !important;
+        background-color: var(--default-white);
+        border: none !important;
+        box-shadow: var(--common-shadow);
+        padding: 32px 40px 40px !important;
+    }
+
+    .active {
+        margin-bottom: 20px;
+    }
+
+    .future {
+        margin-bottom: 16px;
     }
 
     &.active-step {

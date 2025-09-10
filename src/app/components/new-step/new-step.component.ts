@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, viewChild, ViewChild, ViewChildren } from '@angular/core';
-import { StepType, stepTypeLabels } from '../../models/enums';
+import { paymentModelEnum, projectTypeEnum, StepType, stepTypeLabels } from '../../models/enums';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Step } from '../../models/step';
@@ -27,7 +27,9 @@ export class NewStepComponent implements AfterViewInit {
   @ViewChildren('taskText') tasksTexts!: QueryList<ElementRef<HTMLTextAreaElement>>;
   @Output() scrollToBottom = new EventEmitter<void>();
   @Input() defaultType?: StepType;
-  @Input() isRetainer = false;
+  @Input() projectType: projectTypeEnum = projectTypeEnum.proccess;
+  @Input() paymentModel?: paymentModelEnum;
+  @Input() isActive = false;
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
@@ -44,6 +46,8 @@ export class NewStepComponent implements AfterViewInit {
     }
   }
   @Output() stepsEmitter = new EventEmitter<Step>();
+  projectTypeEnum = projectTypeEnum;
+  paymentModelEnum = paymentModelEnum;
   stepTypeLabels = stepTypeLabels;
   stepTypeEnum = StepType;
   newStep!: Step;

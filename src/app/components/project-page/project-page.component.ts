@@ -432,6 +432,8 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   editStep(div: HTMLDivElement, stepId: string | undefined) {
     this.editDiv = div;
+    console.log(stepId);
+    
     this.editStepId = stepId;
   }
 
