@@ -117,7 +117,7 @@
 
     <div class="retainer-steps" *ngIf="!showNotes && (project().projectType === projectTypeEnum.retainer)" cdkDropList
         #stepsContainer>
-        <div [class]="'retainer-step' + (editStepId === step.id? '' : ' active-step')" *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
+        <div [ngClass]="{'retainer-step active-step': step.id !== editStepId, }" *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
             (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
             <div *ngIf="editStepId !== step.id && animationHackFlag">
                 <div class="step-header active">
@@ -161,7 +161,7 @@
                 </div>
             </div>
             <div *ngIf="editStepId === step.id" (mousedown)="$event.stopPropagation(); mouseDownInside = true;">
-                <app-new-step class="new-step" [steptInput]="step" [isActive]="true"
+                <app-new-step class="new-retainer-step" [steptInput]="step" [isActive]="true"
                     (stepsEmitter)="updateStep($event)"></app-new-step>
             </div>
         </div>
@@ -169,7 +169,7 @@
             <img (click)="showNewStep()" class="icon-plus" #addStepDiv tabindex="0" />
         </div>
         <div *ngIf="isShowNewStep" #newStepDiv>
-            <app-new-step class="new-step" (stepsEmitter)="createNewStep($event)" style="margin-bottom: 200px;"
+            <app-new-step class="new-retainer-step" (stepsEmitter)="createNewStep($event)" style="margin-bottom: 200px;"
                 (scrollToBottom)="scrollToBottom()" [projectType]="projectTypeEnum.retainer"
                 [paymentModel]="project().paymentModel"></app-new-step>
         </div>
