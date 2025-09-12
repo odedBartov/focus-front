@@ -84,6 +84,10 @@ export class NewStepComponent implements AfterViewInit {
     };
   }
 
+  get isRetainer (){
+    return this.projectType === projectTypeEnum.retainer;;
+  }
+
   initFutureMonths() {
     const today = new Date();
     for (let index = 0; index < 5; index++) {
@@ -118,6 +122,10 @@ export class NewStepComponent implements AfterViewInit {
     setTimeout(() => {
       this.tasksTexts.first.nativeElement.focus();
     }, 1);
+  }
+
+  showRecurringTask() {
+
   }
 
   taskTextUpdates(task: StepTask) {
