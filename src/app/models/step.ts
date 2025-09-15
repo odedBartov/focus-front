@@ -1,4 +1,4 @@
-import { StepType } from "./enums";
+import { recurringDateTypeEnum, StepType } from "./enums";
 import { StepTask } from "./stepTask";
 
 export class Step {
@@ -17,6 +17,8 @@ export class Step {
     positionInWeeklyList: number;
     hideTaskDate?: Date;
     tasks?: StepTask[];
+    reccuringEvery?: number;
+    recurringDateType?: recurringDateTypeEnum;
 
     constructor() {
         this.userId = "newStep";
