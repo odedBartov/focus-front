@@ -162,6 +162,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     }
   }
 
+  get isRetainer() {
+    return this.project().projectType === projectTypeEnum.retainer;
+  }
+
   finishStepAnimationCreated(animation: AnimationItem) {
     this.finishStepAnimationItem = animation;
   }

@@ -120,11 +120,12 @@
     input,
     textarea,
     select {
-        padding: 0.5rem 1rem;
+        padding: 7px 15px;
         color: var(--default-black);
         outline: none;
         background-color: transparent;
         @include mixins.regular-border;
+        min-width: 0;
     }
 }
 

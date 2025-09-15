@@ -23,25 +23,18 @@ export class ProjectModalComponent {
   formBuilder = inject(FormBuilder);
   datePipe = inject(DatePipe);
   paymentModelEnum = paymentModelEnum;
-  form!: FormGroup;
   submitted = false;
   daysInMonth = new Array(30).fill(0).map((_, i) => i + 1);
+  startDate = '';
+  endDate = '';
 
   project: Project;
   constructor(@Inject(MAT_DIALOG_DATA) public data: { project: Project }) {
-    this.project = {...data.project};
-    this.initForm();
+    this.project = { ...data.project };
+    this.startDate = this.datePipe.transform(this.project.startDate, 'dd/MM/yy') ?? '';
+    this.endDate = this.datePipe.transform(this.project.endDate, 'dd/MM/yy') ?? '';    
   }
 
-  initForm() {
-    this.form = this.formBuilder.group({
-      projectName: [this.project.name, Validators.required],
-      description: this.project.description,
-      startDate: this.datePipe.transform(this.project.startDate, 'dd/MM/yy'),
-      endDate: this.datePipe.transform(this.project.endDate, 'dd/MM/yy'),
-      reccuringPayment: this.project.reccuringPayment
-    });
-  }
 
   get isRetainer() {
     return this.project.projectType === projectTypeEnum.retainer;
@@ -49,30 +42,21 @@ export class ProjectModalComponent {
 
   submit() {
     this.submitted = true;
-    if (this.form.valid) {
-      this.animationsService.changeIsloading(true);
-      this.updateProjectFromForm();
-      this.httpService.updateProjects([this.project]).subscribe(res => {
-        this.project = res[0];
-        this.closeModal()
-      })
-    } else {
-      Object.values(this.form.controls).forEach(control => control.markAsTouched());
-    }
+    this.animationsService.changeIsloading(true);
+    this.transfromDates();
+    this.httpService.updateProjects([this.project]).subscribe(res => {
+      this.project = res[0];
+      this.closeModal()
+    })
   }
 
-  updateProjectFromForm() {
-    this.project.name = this.form.get('projectName')?.value;
-    this.project.description = this.form.get('description')?.value;
-
-    const rawStartDate = this.form.get('startDate')!.value;
-    const startDate = parseDate(rawStartDate);
-    if (startDate) { 
+  transfromDates() {
+    const startDate = parseDate(this.startDate);
+    if (startDate) {
       this.project.startDate = startDate;
     }
-    const rawEndDate = this.form.get('endDate')!.value;
-    const endDate = parseDate(rawEndDate);
-    if (endDate) { 
+    const endDate = parseDate(this.endDate);
+    if (endDate) {
       this.project.endDate = endDate;
     }
   }

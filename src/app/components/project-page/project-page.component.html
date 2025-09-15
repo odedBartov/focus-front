@@ -10,14 +10,14 @@
             </span>
             <div class="dates">
                 <div class="new-small">תאריך התחלה</div>
-                <div class="new-small" *ngIf="project().projectType !== projectTypeEnum.retainer">{{project().endDate?
+                <div class="new-small" *ngIf="!isRetainer">{{project().endDate?
                     'תאריך סיום' : ''}}</div>
-                <div class="new-small" *ngIf="project().projectType === projectTypeEnum.retainer">
+                <div class="new-small" *ngIf="isRetainer">
                     {{project().paymentModel === paymentModelEnum.hourly ? 'מחיר שעתי' : 'מחיר חודשי'}}</div>
                 <div class="cell new-text-bold">{{project().startDate | date: 'dd.MM.yyyy'}}</div>
                 <div class="cell new-text-bold" *ngIf="project().projectType !== projectTypeEnum.retainer">
                     {{project().endDate | date: 'dd.MM.yyyy'}}</div>
-                <div class="cell new-text-bold" *ngIf="project().projectType === projectTypeEnum.retainer">
+                <div class="cell new-text-bold" *ngIf="isRetainer">
                     {{project().reccuringPayment}}</div>
             </div>
         </div>
@@ -115,7 +115,7 @@
         </div>
     </div>
 
-    <div class="retainer-steps" *ngIf="!showNotes && (project().projectType === projectTypeEnum.retainer)" cdkDropList
+    <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList
         #stepsContainer>
         <div [ngClass]="{'retainer-step active-step': step.id !== editStepId, }" *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
             (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>

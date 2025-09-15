@@ -28,7 +28,7 @@
             justify-content: space-between;
 
             .text-and-input {
-                margin-top: 2rem;
+                margin-top: 30px;
                 display: flex;
                 flex-direction: column;
                 width: 100%;
@@ -59,7 +59,8 @@
                 gap: 3rem;
             }
 
-            .retainer-monthly {
+            .retainer-monthly, .retainer-hourly {
+                margin-top: 30px;
                 display: flex;
                 flex-direction: column;
                 width: 100%;
@@ -67,16 +68,19 @@
                 .titles {
                     display: flex;
                     width: 100%;
+                    margin-bottom: 10px;
                     span {
                         flex: 1;
                     }
                 }
 
                 .inputs {
+                    gap: 30px;
                     display: flex;
                     width: 100%;
-
+                    
                     select, input {
+                        text-align: center;
                         flex: 1;
                     }
                 }
