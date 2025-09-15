@@ -15,7 +15,7 @@
                     <span class="new-small">תיאור</span>
                     <textarea class="new-text" formControlName="description"></textarea>
                 </div>
-                <div class="dates">
+                <div class="dates" *ngIf="!isRetainer">
                     <div class="text-and-input">
                         <span class="new-small">תאריך התחלה</span>
                         <input class="date new-text" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _"
@@ -25,6 +25,29 @@
                         <span class="new-small">תאריך סיום משוער</span>
                         <input class="date new-text" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _"
                             formControlName="endDate" [dropSpecialCharacters]="false" />
+                    </div>
+                </div>
+
+                <div class="retainer-monthly" *ngIf="isRetainer && project.paymentModel === paymentModelEnum.monthly">
+                    <div class="titles">
+                        <span class="new-small">תשלום חודשי (לא כולל מע״מ)</span>
+                        <span class="new-small">תאריך התשלום</span>
+                        <span class="new-small">תאריך התחלה</span>
+                    </div>
+                    <div class="inputs">
+                        <input type="number" formControlName="reccuringPayment">
+                        <select [(ngModel)]="project.monthlyPaymentDay">
+                            <option *ngFor="let day of daysInMonth" [value]="day">
+                                {{ day }} לחודש
+                            </option>
+                        </select>
+                        <div class="text-and-input">
+                        <span class="new-small">תאריך התחלה</span>
+                        <div>
+                            <input class="new-small" type="text" mask="00/00/00" [(ngModel)]="project.startDate"
+                                placeholder="_ _/_ _/_ _" [dropSpecialCharacters]="false" />
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>

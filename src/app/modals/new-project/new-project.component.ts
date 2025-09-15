@@ -21,7 +21,7 @@ export class NewProjectComponent {
   authenticationService = inject(AuthenticationService);
   projectTypeEnum = projectTypeEnum;
   paymentModelEnum = paymentModelEnum;
-  daysInMonth = [1, 2, 3, 4, 5];
+  daysInMonth = new Array(30).fill(0).map((_, i) => i + 1);
   firstForm: FormGroup;
   project: Project;
   startDate: string = '';
