@@ -9,16 +9,42 @@
                 {{project().description}}
             </span>
             <div class="dates">
-                <div class="new-small">תאריך התחלה</div>
-                <div class="new-small" *ngIf="project().projectType !== projectTypeEnum.retainer">{{project().endDate?
-                    'תאריך סיום' : ''}}</div>
-                <div class="new-small" *ngIf="project().projectType === projectTypeEnum.retainer">
-                    {{project().paymentModel === paymentModelEnum.hourly ? 'מחיר שעתי' : 'מחיר חודשי'}}</div>
-                <div class="cell new-text-bold">{{project().startDate | date: 'dd.MM.yyyy'}}</div>
-                <div class="cell new-text-bold" *ngIf="project().projectType !== projectTypeEnum.retainer">
-                    {{project().endDate | date: 'dd.MM.yyyy'}}</div>
-                <div class="cell new-text-bold" *ngIf="project().projectType === projectTypeEnum.retainer">
-                    {{project().reccuringPayment}}</div>
+                <ng-container *ngIf="!isRetainer">
+                    <div class="cell">
+                        <span class="new-small cell-title">תאריך התחלה</span>
+                        <span class="new-text-bold">{{project().startDate | date: 'dd.MM.yyyy'}}</span>
+                    </div>
+                    <div class="cell">
+                        <span class="new-small cell-title">תאריך סיום</span>
+                        <span class="new-text-bold">{{project().endDate | date: 'dd.MM.yyyy'}}</span>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="isRetainer && project().paymentModel === paymentModelEnum.hourly">
+                    <div class="cell">
+                        <span class="new-small cell-title">תאריך התחלה</span>
+                        <span class="new-text-bold">{{project().startDate | date: 'dd.MM.yyyy'}}</span>
+                    </div>
+                    <div class="cell">
+                        <span class="new-small cell-title">מחיר שעתי</span>
+                        <span class="new-text-bold">{{project().reccuringPayment}} ₪</span>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="isRetainer && project().paymentModel === paymentModelEnum.monthly">
+                    <div class="cell">
+                        <span class="new-small cell-title">תשלום חודשי</span>
+                        <span class="new-text-bold">{{project().reccuringPayment}} ₪</span>
+                    </div>
+                    <div class="cell">
+                        <span class="new-small cell-title">תאריך תשלום</span>
+                        <span class="new-text-bold">{{project().monthlyPaymentDay | number:'2.0-0'}} לחודש</span>
+                    </div>
+                    <div class="cell">
+                        <span class="new-small cell-title">תאריך התחלה</span>
+                        <span class="new-text-bold">{{project().startDate | date: 'dd.MM.yyyy'}}</span>
+                    </div>
+                </ng-container>
             </div>
         </div>
         <div class="price">
@@ -117,7 +143,8 @@
 
     <div class="retainer-steps" *ngIf="!showNotes && (project().projectType === projectTypeEnum.retainer)" cdkDropList
         #stepsContainer>
-        <div [class]="'retainer-step' + (editStepId === step.id? '' : ' active-step')" *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
+        <div [class]="'retainer-step' + (editStepId === step.id? '' : ' active-step')"
+            *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
             (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
             <div *ngIf="editStepId !== step.id && animationHackFlag">
                 <div class="step-header active">
@@ -128,22 +155,22 @@
                     *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
                     #descriptions autoResize
                     rows="1">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
-                    <div class="tasks" *ngIf="step.tasks">
-                        <div class="task-list">
-                            <div class="task" *ngFor="let task of step.tasks; let i = index">
-                                <div *ngIf="i < step.tasks.length" style="display: flex;">
-                                    <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')"
-                                        (click)="toggleTask(step, task)"
-                                        [style.pointer-events]="isReadOnly() ? 'none' : 'auto'">
-                                        <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg" />
-                                    </div>
-                                    <textarea [class]="activeStepId === step.id? 'new-text active' : 'new-small future'"
-                                        [(ngModel)]="task.text" autoResize defaultHeight="20px" disabled
-                                        #taskText></textarea>
+                <div class="tasks" *ngIf="step.tasks">
+                    <div class="task-list">
+                        <div class="task" *ngFor="let task of step.tasks; let i = index">
+                            <div *ngIf="i < step.tasks.length" style="display: flex;">
+                                <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')"
+                                    (click)="toggleTask(step, task)"
+                                    [style.pointer-events]="isReadOnly() ? 'none' : 'auto'">
+                                    <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg" />
                                 </div>
+                                <textarea [class]="activeStepId === step.id? 'new-text active' : 'new-small future'"
+                                    [(ngModel)]="task.text" autoResize defaultHeight="20px" disabled
+                                    #taskText></textarea>
                             </div>
                         </div>
                     </div>
+                </div>
                 <div [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'expanded'" class="extra-not-finished">
                     <div class="step-icons" *ngIf="!isReadOnly()">
                         <div class="edit-delete">

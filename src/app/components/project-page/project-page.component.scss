@@ -144,11 +144,16 @@
             .dates {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr 1fr;
 
                 .cell {
                     display: flex;
-                    align-items: center;
-                    justify-content: flex-start;
+                    flex-direction: column;
+                    margin-bottom: 30px;
+
+                    .cell-title {
+                        color: var(--default-gray);
+                    }
                 }
             }
         }
