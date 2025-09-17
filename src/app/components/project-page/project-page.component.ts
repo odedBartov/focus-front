@@ -88,6 +88,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   hideProperties = this.projectHoverService.getSignal();
   animationHackFlag = true;
   mouseDownInside = false;
+  isShowSessionTimer = false;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.project = this.projectsService.getCurrentProject();

@@ -6,7 +6,7 @@ export enum StepType {
 export const stepTypeLabels = {
     [StepType.task]: 'משימה',
     [StepType.payment]: 'תשלום'
-  };
+};
 
 export enum ProjectStatus {
     active,
@@ -35,4 +35,9 @@ export enum recurringDateTypeEnum {
     day,
     week,
     month
+}
+
+export enum retainerPaymentTypeEnum {
+    mothly,
+    oneTime
 }

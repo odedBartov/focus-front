@@ -1,4 +1,6 @@
 import { paymentModelEnum, ProjectStatus, projectTypeEnum } from "./enums";
+import { HourlyWorkSession } from "./hourlyWorkSession";
+import { RetainerPayment } from "./RetainerPayment";
 import { Step } from "./step";
 
 export class Project {
@@ -22,6 +24,8 @@ export class Project {
     paymentModel?: paymentModelEnum;
     reccuringPayment?: number;
     monthlyPaymentDay?: number;
+    retainerPayment?: RetainerPayment;
+    hourlyWorkSession?: HourlyWorkSession;
 
     constructor() {
         this.id = '';

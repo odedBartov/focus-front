@@ -184,6 +184,15 @@
                 }
             }
         }
+
+        .sessions-counter {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            color: var(--default-white);
+            background-color: var(--main-color);
+            border-radius: 20px;
+        }
     }
 
     .summurize.show-before::before {

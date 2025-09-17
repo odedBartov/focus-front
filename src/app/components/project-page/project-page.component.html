@@ -69,6 +69,16 @@
                 </div>
             </div>
         </div>
+
+        <div class="sessions-counter" [ngClass]="{pointer: !isShowSessionTimer}" (click)="isShowSessionTimer = true">
+            <ng-container *ngIf="!isShowSessionTimer">
+                <span class="new-text-bold">ספירת שעות לתשלום</span>
+                <img src="assets/icons/play_button_white.svg" />
+            </ng-container>
+            <ng-container>
+                
+            </ng-container>
+        </div>
     </div>
     <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)"
         *ngIf="!showNotes && project().projectType !== projectTypeEnum.retainer" #stepsContainer>
