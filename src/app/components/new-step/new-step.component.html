@@ -1,9 +1,10 @@
-<div class="main" [ngClass]="{'border': !isActive && newStep != undefined, 'white-background': isActive && newStep != undefined}">
+<div class="main"
+    [ngClass]="{'border': !isActive && newStep != undefined, 'white-background': isActive && newStep != undefined}">
     <div class="choose-type" *ngIf="!isEdit && (newStep == undefined || newStep.stepType === undefined)">
         <div class="steps">
             <div class="step-type" (click)="selectType(stepTypeEnum.task)" tabindex="0">
                 <div class="new-text-bold">
-                    + {{projectType === projectTypeEnum.retainer ? 'משימה' : 'שלב'}}
+                    + {{isRetainer ? 'משימה' : 'שלב'}}
                 </div>
             </div>
             <div class="step-type" (click)="selectType(stepTypeEnum.payment)" tabindex="0">
@@ -18,25 +19,27 @@
         <div class="task" *ngIf="newStep?.stepType === stepTypeEnum.task">
             <div class="title">
                 <div class="new-h2">
-                    <span *ngIf="isEdit">עריכת שלב</span>
-                    <span *ngIf="!isEdit">שלב חדש</span>
+                    <span *ngIf="isEdit">{{isRetainer? 'עריכת משימה' : 'עריכת שלב'}}</span>
+                    <span *ngIf="!isEdit">{{isRetainer? 'משימה חדשה' : 'שלב חדש'}}</span>
                 </div>
                 <img src="assets/icons/puzzle_piece.svg" />
             </div>
             <div class="text-and-input">
-                <span class="text new-small">שם השלב</span>
+                <span class="text new-small">{{isRetainer? 'שם המשימה' : 'שם השלב'}}</span>
                 <input class="text new-text" type="text" [(ngModel)]="newStep.name" #stepNameInput tabindex="2">
                 <div class="error-container new-small">
                     <span *ngIf="submitted && !newStep.name" class="error">אנא הזינו שם</span>
                 </div>
             </div>
             <div class="add-description" *ngIf="!isShowDescription && !isShowTasks">
-                <button class="button" (click)="showDescription()" tabindex="3">
-                    + פירוט
-                </button>
-                <button class="button" (click)="showTasks()" tabindex="4">
-                    + רשימת משימות
-                </button>
+                <div class="buttons">
+                    <button class="button" (click)="showDescription()" tabindex="3">
+                        + פירוט
+                    </button>
+                    <button class="button" (click)="showTasks()" tabindex="4">
+                        + רשימת משימות
+                    </button>
+                </div>
             </div>
             <div class="text-and-input" *ngIf="isShowDescription">
                 <span class="text new-small">פירוט</span>
@@ -56,6 +59,31 @@
                     </div>
                 </div>
             </div>
+            <div class="cycle" *ngIf="isRetainer">
+                <button class="button" (click)="isShowReccuringData = true" *ngIf="!isShowReccuringData" tabindex="6">
+                    <img class="cycle" />
+                    משימה חוזרת
+                </button>
+                <div class="reccuring-data" *ngIf="isShowReccuringData">
+                    <div class="text new-small">
+                        <span>חזרה כל</span>
+                        <span style="cursor: pointer;" (click)="isShowReccuringData = false">X</span>
+                    </div>
+                    <div class="repeatance new-text">
+                        <input type="number" [(ngModel)]="newStep.reccuringEvery">
+                        <div class="date-types">
+                            <div [class]="'date-type' + (newStep.recurringDateType === recurringDateTypeEnum.day? ' selected' : '')"
+                                [style.border-radius]="'0 20px 20px 0'"
+                                (click)="selectRecurringDateType(recurringDateTypeEnum.day)">יום</div>
+                            <div [class]="'date-type' + (newStep.recurringDateType === recurringDateTypeEnum.week? ' selected' : '')"
+                                (click)="selectRecurringDateType(recurringDateTypeEnum.week)">שבוע</div>
+                            <div [class]="'date-type' + (newStep.recurringDateType === recurringDateTypeEnum.month? ' selected' : '')"
+                                [style.border-radius]="'20px 0 0 20px'"
+                                (click)="selectRecurringDateType(recurringDateTypeEnum.month)">חודש</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="payment" *ngIf="newStep?.stepType === stepTypeEnum.payment">
@@ -65,7 +93,9 @@
                 </div>
                 <img src="assets/icons/dollar.svg" />
             </div>
-            <span class="sub-title new-small" *ngIf="!isEdit && projectType === projectTypeEnum.retainer">{{paymentModel === paymentModelEnum.hourly ? 'תשלום עבור שעות שנספרו במערכת. יצירת התשלום לא תגדיל את מחיר הפרויקט הכולל. ' : 'תשלום חד פעמי, נוסף על התשלום החודשי הקבוע בהגדרות הפרויקט.'}}</span>
+            <span class="sub-title new-small" *ngIf="!isEdit && isRetainer">{{paymentModel === paymentModelEnum.hourly ?
+                'תשלום עבור שעות שנספרו במערכת. יצירת התשלום לא תגדיל את מחיר הפרויקט הכולל. ' : 'תשלום חד פעמי, נוסף על
+                התשלום החודשי הקבוע בהגדרות הפרויקט.'}}</span>
             <div class="text-and-input">
                 <span class="text new-small">שם התשלום</span>
                 <input class="text new-text" type="text" [(ngModel)]="newStep.name" #stepNameInput>

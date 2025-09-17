@@ -1,34 +1,63 @@
 <div class="main">
     <div class="content">
         <div class="header new-h2">פרטי הפרויקט</div>
-        <form class="form" [formGroup]="form">
+        <div class="form">
             <div class="project">
                 <div class="text-and-input">
                     <span class="new-small">כותרת ראשית</span>
-                    <input class="new-text" type="text" formControlName="projectName">
+                    <input class="new-text" type="text" [(ngModel)]="project.name">
                     <div class="error-container">
-                        <span *ngIf="submitted && form.get('projectName')?.errors" class="error">אנא הזינו שם
+                        <span *ngIf="submitted && !project.name" class="error">אנא הזינו שם
                             פרויקט</span>
                     </div>
                 </div>
                 <div class="text-and-input">
                     <span class="new-small">תיאור</span>
-                    <textarea class="new-text" formControlName="description"></textarea>
+                    <textarea class="new-text" [(ngModel)]="project.description"></textarea>
                 </div>
-                <div class="dates">
+                <div class="dates" *ngIf="!isRetainer">
                     <div class="text-and-input">
                         <span class="new-small">תאריך התחלה</span>
                         <input class="date new-text" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _"
-                            formControlName="startDate" [dropSpecialCharacters]="false" />
+                            [(ngModel)]="startDate" [dropSpecialCharacters]="false" />
                     </div>
                     <div class="text-and-input">
                         <span class="new-small">תאריך סיום משוער</span>
                         <input class="date new-text" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _"
-                            formControlName="endDate" [dropSpecialCharacters]="false" />
+                            [(ngModel)]="endDate" [dropSpecialCharacters]="false" />
+                    </div>
+                </div>
+
+                <div class="retainer-monthly" *ngIf="isRetainer && project.paymentModel === paymentModelEnum.monthly">
+                    <div class="titles">
+                        <span class="new-small">תשלום חודשי (לא כולל מע״מ)</span>
+                        <span class="new-small">תאריך התשלום</span>
+                        <span class="new-small">תאריך התחלה</span>
+                    </div>
+                    <div class="inputs">
+                        <input type="number" [(ngModel)]="project.reccuringPayment">
+                        <select [(ngModel)]="project.monthlyPaymentDay">
+                            <option *ngFor="let day of daysInMonth" [value]="day">
+                                {{ day }} לחודש
+                            </option>
+                        </select>
+                        <input class="new-small" type="text" mask="00/00/00" [(ngModel)]="startDate"
+                            placeholder="_ _/_ _/_ _" [dropSpecialCharacters]="false" />
+                    </div>
+                </div>
+                <div class="retainer-hourly" *ngIf="isRetainer && project.paymentModel === paymentModelEnum.hourly">
+                    <div class="titles">
+                        <span class="new-small">מחיר שעתי (לא כולל מע״מ)</span>
+                        <span class="new-small">תאריך התחלה</span>
+                    </div>
+                    <div class="inputs">
+                        <input type="number" [(ngModel)]="project.reccuringPayment">
+                        <input class="new-small" type="text" mask="00/00/00" [(ngModel)]="startDate"
+                            placeholder="_ _/_ _/_ _" [dropSpecialCharacters]="false" />
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
         <div class="confirm">
             <button class="confirm-button" (click)="submit()">
                 <img src="assets/icons/confirm_white.svg" />

@@ -30,3 +30,9 @@ export enum paymentModelEnum {
     hourly,
     monthly
 }
+
+export enum recurringDateTypeEnum {
+    day,
+    week,
+    month
+}

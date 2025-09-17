@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, viewChild, ViewChild, ViewChildren } from '@angular/core';
-import { paymentModelEnum, projectTypeEnum, StepType, stepTypeLabels } from '../../models/enums';
+import { paymentModelEnum, projectTypeEnum, recurringDateTypeEnum, StepType, stepTypeLabels } from '../../models/enums';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Step } from '../../models/step';
@@ -48,6 +48,7 @@ export class NewStepComponent implements AfterViewInit {
   @Output() stepsEmitter = new EventEmitter<Step>();
   projectTypeEnum = projectTypeEnum;
   paymentModelEnum = paymentModelEnum;
+  recurringDateTypeEnum = recurringDateTypeEnum;
   stepTypeLabels = stepTypeLabels;
   stepTypeEnum = StepType;
   newStep!: Step;
@@ -55,6 +56,7 @@ export class NewStepComponent implements AfterViewInit {
   isEdit = false;
   isShowDescription = false;
   isShowTasks = false;
+  isShowReccuringData = false;
   futureDates: (Date | undefined | null)[] = [];
 
   @HostListener('document:keydown.enter', ['$event'])
@@ -82,6 +84,10 @@ export class NewStepComponent implements AfterViewInit {
     if (this.defaultType !== undefined) {
       this.selectType(this.defaultType);
     };
+  }
+
+  get isRetainer (){
+    return this.projectType === projectTypeEnum.retainer;;
   }
 
   initFutureMonths() {
@@ -118,6 +124,10 @@ export class NewStepComponent implements AfterViewInit {
     setTimeout(() => {
       this.tasksTexts.first.nativeElement.focus();
     }, 1);
+  }
+
+  selectRecurringDateType(dateType: recurringDateTypeEnum) {
+    this.newStep.recurringDateType = dateType;
   }
 
   taskTextUpdates(task: StepTask) {
@@ -157,6 +167,10 @@ export class NewStepComponent implements AfterViewInit {
     if (this.validateStep()) {
       if (this.newStep.tasks && !this.newStep.tasks?.[this.newStep.tasks.length - 1]?.text) {
         this.newStep.tasks.pop(); // remove empty task
+      }
+
+      if (this.isRetainer && !this.newStep.reccuringEvery) {
+        this.newStep.reccuringEvery = 1;
       }
       this.stepsEmitter.emit(this.newStep);
     }

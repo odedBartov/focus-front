@@ -69,24 +69,83 @@
         }
 
         .add-description {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
 
-            .button {
-                border: none;
-                transition: all 0.2s;
-                width: fit-content;
-                padding: 0.3rem 1rem;
-                margin-left: 15px;
-                border-radius: var(--common-radius);
-                font-size: var(--font-size-1);
-                font-family: 'regular';
-                cursor: pointer;
-                background-color: var(--hover-color);
+            .buttons {
+                display: flex;
+            }  
+        }
 
-                &:hover,
-                &:focus {
-                    background-color: var(--main-color);
-                    color: var(--default-white);
+        .button {
+            display: flex;
+            align-items: center;
+            border: none;
+            transition: all 0.2s;
+            width: fit-content;
+            padding: 0.3rem 1rem;
+            margin-left: 15px;
+            margin-bottom: 15px;
+            border-radius: var(--common-radius);
+            font-size: var(--font-size-1);
+            font-family: 'regular';
+            cursor: pointer;
+            background-color: var(--hover-color);
+
+            &:hover,
+            &:focus {
+                background-color: var(--main-color);
+                color: var(--default-white);
+
+                img {
+                    content: url('/assets/icons/cycle_white.svg');
+                }
+            }
+
+            img {
+                margin-left: 5px;
+                margin-top: 2px;
+                content: url('/assets/icons/cycle.svg');
+            }
+        }
+
+        .cycle {
+            .reccuring-data {
+                .text {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 5px;
+                }
+
+                .repeatance {
+                    margin-bottom: 15px;
+                    display: flex;
+                    gap: 20px;
+                    justify-content: space-between;
+
+                    input {
+                        width: 15px;
+                    }
+
+                    .date-types {
+                        width: 100%;
+                        display: flex;
+                        justify-content: flex-end;
+                        gap: 2px;
+
+                        .date-type {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            flex: 1;
+                            cursor: pointer;
+                            background-color: var(--hover-color);
+
+                            &.selected {
+                                background-color: var(--main-color);
+                                color: var(--default-white);
+                            }
+                        }
+                    }
                 }
             }
         }

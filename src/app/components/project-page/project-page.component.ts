@@ -23,11 +23,10 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
 import { StepTask } from '../../models/stepTask';
 import { AnimationItem } from 'lottie-web';
-import { RetainerStepsComponent } from "../retainer-steps/retainer-steps.component";
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, RichTextComponent, LottieComponent, AutoResizeInputDirective, RetainerStepsComponent],
+  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, RichTextComponent, LottieComponent, AutoResizeInputDirective],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss',
   animations: [
@@ -435,9 +434,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   editStep(div: HTMLDivElement, stepId: string | undefined) {
-    this.editDiv = div;
-    console.log(stepId);
-    
+    this.editDiv = div;    
     this.editStepId = stepId;
   }
 
