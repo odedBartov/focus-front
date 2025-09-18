@@ -73,7 +73,7 @@
 
             .buttons {
                 display: flex;
-            }  
+            }
         }
 
         .button {
@@ -146,6 +146,51 @@
                             }
                         }
                     }
+                }
+
+                .title {
+                    margin-bottom: 5px;
+                }
+
+                .days-in-week {
+                    margin-bottom: 15px;
+                    width: 100%;
+
+                    .days {
+                        display: flex;
+                        display: flex;
+                        justify-content: space-between;
+
+                        .day {
+                            cursor: pointer;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            background-color: var(--hover-color);
+                            width: 35px;
+                            height: 25px;
+                            border-radius: 20px;
+                            padding-bottom: 3px;
+
+                            &:hover,
+                            :focus {
+                                background-color: var(--select-color);
+                            }
+
+                            &.selected {
+                                background-color: var(--main-color);
+                                color: var(--default-white);
+                            }
+
+                        }
+                    }
+                }
+
+                .day-in-month {
+                    display: flex;
+                    flex-direction: column;
+                    margin-bottom: 15px;
+                    width: 100%;
                 }
             }
         }

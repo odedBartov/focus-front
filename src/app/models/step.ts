@@ -17,8 +17,11 @@ export class Step {
     positionInWeeklyList: number;
     hideTaskDate?: Date;
     tasks?: StepTask[];
+    isRecurring = false;
     reccuringEvery?: number;
     recurringDateType?: recurringDateTypeEnum;
+    recurringDaysInWeek?: string[]; // 1 - Sunday, 7 - Saturday
+    recurringDayInMonth?: number; // day in the month. 1-30
 
     constructor() {
         this.userId = "newStep";

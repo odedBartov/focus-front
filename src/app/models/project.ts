@@ -21,11 +21,11 @@ export class Project {
     notes: string;
     ownerPicture?: string;
     projectType?: projectTypeEnum;
-    paymentModel?: paymentModelEnum;
-    reccuringPayment?: number;
-    monthlyPaymentDay?: number;
-    retainerPayment: RetainerPayment[];
-    hourlyWorkSession: HourlyWorkSession[];
+    paymentModel?: paymentModelEnum; 
+    reccuringPayment?: number; // how much mony to charge every period
+    monthlyPaymentDay?: number; // day in the month. 1-30
+    retainerPayment: RetainerPayment[]; // list of all retainer payments logged for this project - only for monthly retainer
+    hourlyWorkSession: HourlyWorkSession[]; // list of all hourly work sessions logged for this project - only for hourly retainer
 
     constructor() {
         this.id = '';

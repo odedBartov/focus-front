@@ -60,17 +60,18 @@
                 </div>
             </div>
             <div class="cycle" *ngIf="isRetainer">
-                <button class="button" (click)="isShowReccuringData = true" *ngIf="!isShowReccuringData" tabindex="6">
+                <button class="button" (click)="newStep.isRecurring= true" *ngIf="!newStep.isRecurring" tabindex="6">
                     <img class="cycle" />
                     משימה חוזרת
                 </button>
-                <div class="reccuring-data" *ngIf="isShowReccuringData">
+                <div class="reccuring-data" *ngIf="newStep.isRecurring">
                     <div class="text new-small">
                         <span>חזרה כל</span>
-                        <span style="cursor: pointer;" (click)="isShowReccuringData = false">X</span>
+                        <span style="cursor: pointer;" (click)="closeRecurringEvery()">X</span>
                     </div>
                     <div class="repeatance new-text">
-                        <input type="number" [(ngModel)]="newStep.reccuringEvery" (input)="onInputRecurringEvery($event)" tabindex="7">
+                        <input type="number" [(ngModel)]="newStep.reccuringEvery"
+                            (input)="onInputRecurringEvery($event)" tabindex="7">
                         <div class="date-types">
                             <div [class]="'date-type' + (newStep.recurringDateType === recurringDateTypeEnum.day? ' selected' : '')"
                                 [style.border-radius]="'0 20px 20px 0'"
@@ -81,6 +82,24 @@
                                 [style.border-radius]="'20px 0 0 20px'"
                                 (click)="selectRecurringDateType(recurringDateTypeEnum.month)">חודש</div>
                         </div>
+                    </div>
+                    <div class="days-in-week" *ngIf="newStep.recurringDateType === recurringDateTypeEnum.week">
+                        <span class="new-small title">בימים</span>
+                        <div class="days">
+                            <div class="day new-small" *ngFor="let day of daysInWeek; let i = index"
+                                [ngClass]="{'selected': newStep.recurringDaysInWeek?.includes(day)}"
+                                (click)="selectDayInWeek(day)" tabindex="8">
+                                {{day}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="day-in-month" *ngIf="newStep.recurringDateType === recurringDateTypeEnum.month">
+                        <span class="new-small title">בתאריך</span>
+                        <select [(ngModel)]="newStep.recurringDayInMonth" tabindex="9">
+                            <option *ngFor="let day of daysInMonth" [value]="day">
+                                {{ day }} לחודש
+                            </option>
+                        </select>
                     </div>
                 </div>
             </div>

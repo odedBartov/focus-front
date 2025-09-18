@@ -33,7 +33,7 @@ export class NewStepComponent implements AfterViewInit {
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
-      this.isShowReccuringData = value.reccuringEvery !== undefined && value.reccuringEvery > 0;
+      // this.isShowReccuringData = value.reccuringEvery !== undefined && value.reccuringEvery > 0;
       value.dateDue = value.dateDue ? new Date(value.dateDue) : value.dateDue;
       if (value.description) {
         this.isShowDescription = true;
@@ -57,8 +57,9 @@ export class NewStepComponent implements AfterViewInit {
   isEdit = false;
   isShowDescription = false;
   isShowTasks = false;
-  isShowReccuringData = false;
   futureDates: (Date | undefined | null)[] = [];
+  daysInWeek = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
+  daysInMonth = new Array(30).fill(0).map((_, i) => i + 1);
 
   @HostListener('document:keydown.enter', ['$event'])
   handleEnterKey(event: KeyboardEvent) {
@@ -87,8 +88,8 @@ export class NewStepComponent implements AfterViewInit {
     };
   }
 
-  get isRetainer() {
-    return this.projectType === projectTypeEnum.retainer;;
+  get isRetainer() {    
+    return this.projectType === projectTypeEnum.retainer;
   }
 
   initFutureMonths() {
@@ -157,8 +158,24 @@ export class NewStepComponent implements AfterViewInit {
   }
 
   closeRecurringEvery() {
-    this.isShowReccuringData = false;
-    this.newStep.reccuringEvery = -1;
+    this.newStep.reccuringEvery = 1;
+    this.newStep.isRecurring = false;
+    this.newStep.recurringDateType = undefined;
+    this.newStep.recurringDaysInWeek = [];
+    this.newStep.recurringDayInMonth = 0;
+  }
+
+  selectDayInWeek(day: string) {
+    if(this.newStep.recurringDaysInWeek === undefined) {
+      this.newStep.recurringDaysInWeek = [];
+    }
+
+    const index = this.newStep.recurringDaysInWeek.indexOf(day);
+    if(index > -1) {
+      this.newStep.recurringDaysInWeek.splice(index, 1);
+    } else {
+      this.newStep.recurringDaysInWeek.push(day);
+    }
   }
 
   handleEnter(event: KeyboardEvent, index: number) {
@@ -183,9 +200,10 @@ export class NewStepComponent implements AfterViewInit {
         this.newStep.tasks.pop(); // remove empty task
       }
 
-      if (this.isRetainer && !this.newStep.reccuringEvery) {
+      if (this.newStep.isRecurring && !this.newStep.reccuringEvery) {
         this.newStep.reccuringEvery = 1;
       }
+      
       this.stepsEmitter.emit(this.newStep);
     }
   }

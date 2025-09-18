@@ -226,7 +226,7 @@
                 </div>
             </div>
             <div *ngIf="editStepId === step.id" (mousedown)="$event.stopPropagation(); mouseDownInside = true;">
-                <app-new-step class="new-retainer-step" [steptInput]="step" [isActive]="true"
+                <app-new-step class="new-retainer-step" [steptInput]="step" [isActive]="true" [projectType]="projectTypeEnum.retainer"
                     (stepsEmitter)="updateStep($event)"></app-new-step>
             </div>
         </div>
