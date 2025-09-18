@@ -244,6 +244,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.finishStepAnimationItem = animation;
   }
 
+  openPaymentHistoryModal(){
+    
+  }
+
   setActiveStepHeight() {
     const element = this.descriptions.get(0)?.nativeElement as HTMLTextAreaElement;
     if (element) {

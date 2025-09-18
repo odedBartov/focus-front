@@ -70,7 +70,7 @@
                         <span style="cursor: pointer;" (click)="isShowReccuringData = false">X</span>
                     </div>
                     <div class="repeatance new-text">
-                        <input type="number" [(ngModel)]="newStep.reccuringEvery">
+                        <input type="number" [(ngModel)]="newStep.reccuringEvery" (input)="onInputRecurringEvery($event)" tabindex="7">
                         <div class="date-types">
                             <div [class]="'date-type' + (newStep.recurringDateType === recurringDateTypeEnum.day? ' selected' : '')"
                                 [style.border-radius]="'0 20px 20px 0'"

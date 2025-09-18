@@ -19,7 +19,6 @@
                         <span class="new-text-bold">{{project().endDate | date: 'dd.MM.yyyy'}}</span>
                     </div>
                 </ng-container>
-
                 <ng-container *ngIf="isRetainer && project().paymentModel === paymentModelEnum.hourly">
                     <div class="cell">
                         <span class="new-small cell-title">תאריך התחלה</span>
@@ -30,7 +29,6 @@
                         <span class="new-text-bold">{{project().reccuringPayment}} ₪</span>
                     </div>
                 </ng-container>
-
                 <ng-container *ngIf="isRetainer && project().paymentModel === paymentModelEnum.monthly">
                     <div class="cell">
                         <span class="new-small cell-title">תשלום חודשי</span>
@@ -52,8 +50,9 @@
             <div class="price">
                 <div class="text-and-icon">
                     <span class="title new-small">מחיר (לא כולל מע"מ)</span>
-                    <img class="icon icon-info" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                    <img class="icon icon-info" matTooltipPosition="above" matTooltipClass="custom-tooltip" *ngIf="!isRetainer"
                         matTooltip="אם מחיר הפרויקט משתנה, כל מה שצריך לעשות הוא לשנות את הסכומים בשלבי התשלום (או להוסיף תשלום חדש). המחיר הכולל יתעדכן בהתאם." />
+                        <img *ngIf="isRetainer" class="pointer icon-expand" (click)="openPaymentHistoryModal()"/>
                 </div>
                 <span class="base-price new-h2">{{baseProjectPrice | number}} ₪</span>
                 <div class="progress-bar">

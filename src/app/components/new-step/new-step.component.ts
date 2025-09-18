@@ -33,6 +33,7 @@ export class NewStepComponent implements AfterViewInit {
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
+      this.isShowReccuringData = value.reccuringEvery !== undefined && value.reccuringEvery > 0;
       value.dateDue = value.dateDue ? new Date(value.dateDue) : value.dateDue;
       if (value.description) {
         this.isShowDescription = true;
@@ -86,7 +87,7 @@ export class NewStepComponent implements AfterViewInit {
     };
   }
 
-  get isRetainer (){
+  get isRetainer() {
     return this.projectType === projectTypeEnum.retainer;;
   }
 
@@ -145,6 +146,19 @@ export class NewStepComponent implements AfterViewInit {
         this.newStep.tasks?.splice(taskIndex, 1);
       }
     }
+  }
+
+  onInputRecurringEvery(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.value.length > 3) {
+      input.value = input.value.slice(0, 3);
+      this.newStep.reccuringEvery = Number(input.value);
+    }
+  }
+
+  closeRecurringEvery() {
+    this.isShowReccuringData = false;
+    this.newStep.reccuringEvery = -1;
   }
 
   handleEnter(event: KeyboardEvent, index: number) {
