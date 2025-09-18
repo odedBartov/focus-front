@@ -47,37 +47,67 @@
                 </ng-container>
             </div>
         </div>
-        <div class="price">
-            <div class="text-and-icon">
-                <span class="title new-small">מחיר (לא כולל מע"מ)</span>
-                <img class="icon icon-info" matTooltipPosition="above" matTooltipClass="custom-tooltip"
-                    matTooltip="אם מחיר הפרויקט משתנה, כל מה שצריך לעשות הוא לשנות את הסכומים בשלבי התשלום (או להוסיף תשלום חדש). המחיר הכולל יתעדכן בהתאם." />
-            </div>
-            <span class="base-price new-h2">{{baseProjectPrice | number}} ₪</span>
-            <div class="progress-bar">
-                <div class="progress-fill" [style.width.%]="baseProjectPrice?(paidMoney/baseProjectPrice)*100 : 100">
-                </div>
-            </div>
-            <div class="paid-remain">
-                <div class="paid">
-                    <span class="title new-small">שולם</span>
-                    <span class="new-small-bold">{{paidMoney | number}} ₪</span>
-                </div>
-                <div class="remain">
-                    <span class="title new-small">נשאר לתשלום</span>
-                    <span class="new-small-bold">{{baseProjectPrice-paidMoney | number}} ₪</span>
-                </div>
-            </div>
-        </div>
 
-        <div class="sessions-counter" [ngClass]="{pointer: !isShowSessionTimer}" (click)="isShowSessionTimer = true">
-            <ng-container *ngIf="!isShowSessionTimer">
-                <span class="new-text-bold">ספירת שעות לתשלום</span>
-                <img src="assets/icons/play_button_white.svg" />
-            </ng-container>
-            <ng-container>
-                
-            </ng-container>
+        <div>
+            <div class="price">
+                <div class="text-and-icon">
+                    <span class="title new-small">מחיר (לא כולל מע"מ)</span>
+                    <img class="icon icon-info" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                        matTooltip="אם מחיר הפרויקט משתנה, כל מה שצריך לעשות הוא לשנות את הסכומים בשלבי התשלום (או להוסיף תשלום חדש). המחיר הכולל יתעדכן בהתאם." />
+                </div>
+                <span class="base-price new-h2">{{baseProjectPrice | number}} ₪</span>
+                <div class="progress-bar">
+                    <div class="progress-fill"
+                        [style.width.%]="baseProjectPrice?(paidMoney/baseProjectPrice)*100 : 100">
+                    </div>
+                </div>
+                <div class="paid-remain">
+                    <div class="paid">
+                        <span class="title new-small">שולם</span>
+                        <span class="new-small-bold">{{paidMoney | number}} ₪</span>
+                    </div>
+                    <div class="remain">
+                        <span class="title new-small">נשאר לתשלום</span>
+                        <span class="new-small-bold">{{baseProjectPrice-paidMoney | number}} ₪</span>
+                    </div>
+                </div>
+            </div>
+            <div class="sessions-counter" [ngClass]="{pointer: sessionTimerStep === 1}"
+                [ngStyle]="{'height': sessionTimerStep === 1 ? '60px' : sessionTimerStep === 2? '126px' : '115px'}"
+                *ngIf="isRetainer && project().paymentModel === paymentModelEnum.hourly"
+                (click)="sessionTimerStep = sessionTimerStep === 1 ? 2 : sessionTimerStep">
+                <ng-container *ngIf="sessionTimerStep === 1">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span class="new-text-bold">ספירת שעות לתשלום</span>
+                        <img src="assets/icons/play_button_white.svg" />
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="sessionTimerStep === 2">
+                    <div>
+                        <span class="new-text-bold">ספירת שעות לתשלום</span>
+                    </div>
+                    <div class="timer">
+                        <img class="icon-stop pointer" (click)="sessionTimerStep = 3; $event.stopPropagation()" />
+                        <div class="clock">
+                            <div class="group">{{ seconds }}</div>
+                            <div class="colon">:</div>
+                            <div class="group">{{ minutes }}</div>
+                            <div class="colon">:</div>
+                            <div class="group">{{ hours }}</div>
+                        </div>
+                        <img [class]="'pointer ' + (sessionTimer? 'icon-pause' : 'icon-play')"
+                            (click)="sessionTimer? pauseSessionTimer() : startSessionTimer()" />
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="sessionTimerStep === 3">
+                    <span class="new-text-bold">שמירת סשן</span>
+                    <div class="save-session">
+                        <img class="icon-garage-can-gray-white pointer" (click)="deleteWorkingSession($event)"/>
+                        <input placeholder="שלב נוכחי" [(ngModel)]="retainerPaymentName"/>
+                        <img class="icon-confirm-transparent pointer" (click)="finishWorkingSession()"/>
+                    </div>
+                </ng-container>
+            </div>
         </div>
     </div>
     <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)"
@@ -151,9 +181,9 @@
         </div>
     </div>
 
-    <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList
-        #stepsContainer>
-        <div [ngClass]="{'retainer-step active-step': step.id !== editStepId, }" *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
+    <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList #stepsContainer>
+        <div [ngClass]="{'retainer-step active-step': step.id !== editStepId, }"
+            *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
             (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
             <div *ngIf="editStepId !== step.id && animationHackFlag">
                 <div class="step-header active">

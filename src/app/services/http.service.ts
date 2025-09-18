@@ -8,6 +8,7 @@ import { environment } from "../../environments/environment";
 import { InsightAndUpdates } from '../models/insightAndUpdates';
 import { User } from '../models/user';
 import { Title } from '@angular/platform-browser';
+import { HourlyWorkSession } from '../models/hourlyWorkSession';
 
 @Injectable({
   providedIn: 'root'
@@ -58,7 +59,8 @@ export class HttpService {
   }
 
   createProject(project: Project) {
-    return this.httpClient.post<Project>(this.apiUrl + "Projects/createProject", project);
+    const headers = this.generateHeaders();
+    return this.httpClient.post<Project>(this.apiUrl + "Projects/createProject", project, headers);
   }
 
   getProject(projectId: string): Observable<Project> {
@@ -90,7 +92,8 @@ export class HttpService {
   }
 
   createStep(step: Step): Observable<Step> {
-    return this.httpClient.post<Step>(this.apiUrl + "Steps/createStep", step);
+    const headers = this.generateHeaders();
+    return this.httpClient.post<Step>(this.apiUrl + "Steps/createStep", step, headers);
   }
 
   getSteps(projectId: string): Observable<Step[]> {
@@ -106,6 +109,11 @@ export class HttpService {
   deleteStep(stepId: string) {
     const headers = this.generateHeaders();
     return this.httpClient.delete(`${this.apiUrl}Steps/deleteStep?stepId=${stepId}`, headers)
+  }
+
+  createHourlyWorkSession(session: HourlyWorkSession): Observable<any> {
+    const headers = this.generateHeaders();
+    return this.httpClient.post(this.apiUrl + "*****", session, headers);
   }
 
   getInsightAndUpdates(): Observable<InsightAndUpdates> {

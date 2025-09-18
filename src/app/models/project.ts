@@ -24,8 +24,8 @@ export class Project {
     paymentModel?: paymentModelEnum;
     reccuringPayment?: number;
     monthlyPaymentDay?: number;
-    retainerPayment?: RetainerPayment;
-    hourlyWorkSession?: HourlyWorkSession;
+    retainerPayment: RetainerPayment[];
+    hourlyWorkSession: HourlyWorkSession[];
 
     constructor() {
         this.id = '';
@@ -42,5 +42,7 @@ export class Project {
         this.clientMail = '';
         this.links = [];
         this.notes = '';
+        this.retainerPayment = [];
+        this.hourlyWorkSession = [];
     }
 }

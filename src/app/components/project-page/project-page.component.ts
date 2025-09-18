@@ -23,6 +23,8 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
 import { StepTask } from '../../models/stepTask';
 import { AnimationItem } from 'lottie-web';
+import { RetainerPayment } from '../../models/RetainerPayment';
+import { HourlyWorkSession } from '../../models/hourlyWorkSession';
 
 @Component({
   selector: 'app-project-page',
@@ -46,6 +48,15 @@ import { AnimationItem } from 'lottie-web';
       transition('collapsed <=> expanded', [
         animate('200ms ease')
       ]),
+    ]),
+    trigger('timerHeightTransition', [
+      state('small', style({
+        height: '100px'
+      })),
+      state('large', style({
+        height: '*'
+      })),
+      transition('small <=> large', animate('300ms ease-in-out'))
     ])
   ]
 })
@@ -88,7 +99,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   hideProperties = this.projectHoverService.getSignal();
   animationHackFlag = true;
   mouseDownInside = false;
-  isShowSessionTimer = false;
+  sessionTimerStep = 1;
+  sessionTime = 0;
+  sessionTimer?: any;
+  retainerPaymentName = '';
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.project = this.projectsService.getCurrentProject();
@@ -165,6 +179,65 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   get isRetainer() {
     return this.project()?.projectType === projectTypeEnum.retainer;
+  }
+
+  get hours() {
+    return this.pad(Math.floor(this.sessionTime / 3600000));
+  }
+
+  get minutes() {
+    return this.pad(Math.floor((this.sessionTime % 3600000) / 60000));
+  }
+
+  get seconds() {
+    return this.pad(Math.floor((this.sessionTime % 60000) / 1000));
+  }
+
+  pad(num: number) {
+    return num.toString().padStart(2, '0');
+  }
+
+  startSessionTimer() {
+    this.sessionTimer = setInterval(() => {
+      this.sessionTime += 1000;
+    }, 100);
+  }
+
+  stopSessionTimer(event: MouseEvent) {
+    this.pauseSessionTimer();
+    this.sessionTimerStep = 3;
+    event.stopPropagation();
+  }
+
+  pauseSessionTimer() {
+    if (this.sessionTimer) {
+      clearInterval(this.sessionTimer);
+      this.sessionTimer = undefined;
+    }
+  }
+
+  deleteWorkingSession(event: MouseEvent) {
+    this.sessionTime = 0;
+    this.sessionTimerStep = 1;
+    this.pauseSessionTimer();
+    event.stopPropagation();
+  }
+
+  finishWorkingSession() {
+    if (this.retainerPaymentName) { 
+      const payment = new HourlyWorkSession();
+      payment.name = this.retainerPaymentName;
+      payment.price = (this.sessionTime / 3600000) * (this.project()?.reccuringPayment ?? 0);
+      payment.date = new Date();
+      payment.workTime = this.sessionTime;
+      
+      this.project()?.hourlyWorkSession.push(payment);
+      this.sessionTime = 0;
+      this.sessionTimerStep = 1;
+      this.pauseSessionTimer();
+      this.calculatePayments();
+      this.httpService.createHourlyWorkSession(payment).subscribe(res => {});
+    }
   }
 
   finishStepAnimationCreated(animation: AnimationItem) {
@@ -392,7 +465,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         unActiveProjects.set(unActiveProjects().concat(this.project()));
         activeProjects().splice(activeProjectIndex, 1);
       }
-      this.httpService.updateProjects([this.project()]).subscribe(res => {});
+      this.httpService.updateProjects([this.project()]).subscribe(res => { });
       setTimeout(() => {
         this.navigateToHomeEmitter.emit();
       }, 5000);
@@ -435,7 +508,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   editStep(div: HTMLDivElement, stepId: string | undefined) {
-    this.editDiv = div;    
+    this.editDiv = div;
     this.editStepId = stepId;
   }
 

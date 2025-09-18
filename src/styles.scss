@@ -220,11 +220,11 @@
 }
 
 ::-webkit-scrollbar:horizontal {
-  height: 10px;
+    height: 10px;
 }
 
 ::-webkit-scrollbar:vertical {
-  width: 10px;
+    width: 10px;
 }
 
 
@@ -450,5 +450,45 @@ input::-webkit-inner-spin-button {
 
     &:hover {
         content: url('/assets/icons/paragraph_yes.svg');
+    }
+}
+
+.icon-play {
+    content: url('/assets/icons/play_button_gray.svg');
+
+    &:hover {
+        content: url('/assets/icons/play_button_white.svg');
+    }
+}
+
+.icon-stop {
+    content: url('/assets/icons/stop_button_gray.svg');
+
+    &:hover {
+        content: url('/assets/icons/stop_button_white.svg');
+    }
+}
+
+.icon-pause {
+    content: url('/assets/icons/pause_button_gray.svg');
+
+    &:hover {
+        content: url('/assets/icons/pause_button_white.svg');
+    }
+}
+
+.icon-garage-can-gray-white {
+    content: url('/assets/icons/garbage_can_gray.svg');
+
+    &:hover {
+        content: url('/assets/icons/garbage_can_white.svg');
+    }
+}
+
+.icon-confirm-transparent {
+    content: url('/assets/icons/confirm_transparent_gray.svg');
+
+    &:hover {
+        content: url('/assets/icons/confirm_transparent_white.svg');
     }
 }

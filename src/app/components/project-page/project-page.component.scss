@@ -186,12 +186,59 @@
         }
 
         .sessions-counter {
+            box-sizing: border-box;
+            transition: 0.3s ease;
+            margin-top: 20px;
             display: flex;
+            flex-direction: column;
             justify-content: space-between;
             padding: 20px;
             color: var(--default-white);
             background-color: var(--main-color);
             border-radius: 20px;
+
+
+
+            .timer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                img {
+                    height: 21px;
+                    width: 18px;
+                }
+
+                .clock {
+                    display: flex;
+                    align-items: center;
+
+                    .group {
+                        display: inline-block;
+                        min-width: 2ch;
+                        text-align: right;
+                        font-size: var(--font-size-4);
+                        font-family: 'regular';
+                    }
+
+                    .colon {
+                        width: 0.6ch;
+                        font-size: var(--font-size-4);
+                        font-family: 'regular';
+                    }
+                }
+            }
+
+            .save-session {
+                margin-top: 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                input {
+                    background-color: var(--default-white);
+                }
+            }
         }
     }
 
