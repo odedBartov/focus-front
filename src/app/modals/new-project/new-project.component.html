@@ -32,15 +32,15 @@
         <div class="step2" *ngIf="currentProgress === 2">
             <span class="new-h1">מבנה הפרויקט</span>
             <div class="project-types-container">
-                <div class="project-type" (click)="chooseProjectType(projectTypeEnum.proccess)">
-                    <img src="assets/icons/one_time_proccess.svg" />
-                    <span class="new-text-bold">ליווי חד פעמי</span>
-                    <span class="new-small">תהליך מסודר ובעל נקודת סיום</span>
-                </div>
                 <div class="project-type" (click)="chooseProjectType(projectTypeEnum.retainer)">
                     <img src="assets/icons/infinity.svg" />
                     <span class="new-text-bold">תהליך מתמשך</span>
                     <span class="new-small">ריטיינר, עבודה שוטפת או חזרתית</span>
+                </div>
+                <div class="project-type" (click)="chooseProjectType(projectTypeEnum.proccess)">
+                    <img src="assets/icons/one_time_proccess.svg" />
+                    <span class="new-text-bold">ליווי חד פעמי</span>
+                    <span class="new-small">תהליך מסודר ובעל נקודת סיום</span>
                 </div>
             </div>
         </div>
