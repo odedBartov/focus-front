@@ -62,6 +62,8 @@ export class NewProjectComponent {
     switch (this.currentProgress) {
       case 1:
         if (this.firstForm.valid) {
+          this.project.name = this.firstForm.get("projectName")?.value;
+          this.project.description = this.firstForm.get("description")?.value;
           this.currentProgress += 1;
           this.submitted = false;
         }
@@ -79,11 +81,11 @@ export class NewProjectComponent {
           if (endDate) {
             this.project.endDate = endDate;
           }
+          this.dialogRef.close(this.project);
+        } else {
           if (this.project.reccuringPayment) {
             this.dialogRef.close(this.project);
           }
-        } else {
-          this.dialogRef.close(this.project);
         }
 
         break;
@@ -92,28 +94,28 @@ export class NewProjectComponent {
     }
 
 
-    if (this.currentProgress === 1) {
+    // if (this.currentProgress === 1) {
 
-    } else if (this.currentProgress === 2) {
+    // } else if (this.currentProgress === 2) {
 
-    } else {
-      this.submitted = true;
-      if (this.firstForm.valid && this.project) {
-        this.project.name = this.firstForm.get("projectName")?.value;
-        this.project.description = this.firstForm.get("description")?.value;
-        const rawStartDate = this.firstForm.get('startDate')!.value;
-        const startDate = parseDate(rawStartDate);
-        if (startDate) {
-          this.project.startDate = startDate;
-        }
-        const rawEndDate = this.firstForm.get('endDate')!.value;
-        const endDate = parseDate(rawEndDate);
-        if (endDate) {
-          this.project.endDate = endDate;
-        }
+    // } else {
+    //   this.submitted = true;
+    //   if (this.firstForm.valid && this.project) {
+    //     this.project.name = this.firstForm.get("projectName")?.value;
+    //     this.project.description = this.firstForm.get("description")?.value;
+    //     const rawStartDate = this.firstForm.get('startDate')!.value;
+    //     const startDate = parseDate(rawStartDate);
+    //     if (startDate) {
+    //       this.project.startDate = startDate;
+    //     }
+    //     const rawEndDate = this.firstForm.get('endDate')!.value;
+    //     const endDate = parseDate(rawEndDate);
+    //     if (endDate) {
+    //       this.project.endDate = endDate;
+    //     }
 
-        this.dialogRef.close(this.project);
-      }
-    }
+    //     this.dialogRef.close(this.project);
+    //   }
+    // }
   }
 }
