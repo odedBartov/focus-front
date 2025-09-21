@@ -42,8 +42,20 @@ import { HourlyWorkSession } from '../../models/hourlyWorkSession';
       state('expanded', style({
         height: '*',
         opacity: 1,
-        // marginTop: '16px',
         pointerEvents: 'auto'
+      })),
+      transition('collapsed <=> expanded', [
+        animate('200ms ease')
+      ]),
+    ]),
+    trigger('accordion', [
+      state('collapsed', style({
+        height: '0px',
+        display: 'none'
+      })),
+      state('expanded', style({
+        height: '*',
+        display: 'flex'
       })),
       transition('collapsed <=> expanded', [
         animate('200ms ease')
@@ -104,6 +116,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   sessionTime = 0;
   sessionTimer?: any;
   retainerPaymentName = '';
+  openedAccordion = 1;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.project = this.projectsService.getCurrentProject();
@@ -225,19 +238,19 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   finishWorkingSession() {
-    if (this.retainerPaymentName) { 
+    if (this.retainerPaymentName) {
       const payment = new HourlyWorkSession();
       payment.name = this.retainerPaymentName;
       payment.price = (this.sessionTime / 3600000) * (this.project()?.reccuringPayment ?? 0);
       payment.date = new Date();
       payment.workTime = this.sessionTime;
-      
+
       this.project()?.hourlyWorkSessions.push(payment);
       this.sessionTime = 0;
       this.sessionTimerStep = 1;
       this.pauseSessionTimer();
       this.calculatePayments();
-      this.httpService.createHourlyWorkSession(payment).subscribe(res => {});
+      this.httpService.createHourlyWorkSession(payment).subscribe(res => { });
     }
   }
 
@@ -245,8 +258,8 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.finishStepAnimationItem = animation;
   }
 
-  openPaymentHistoryModal(){
-    
+  openPaymentHistoryModal() {
+
   }
 
   setActiveStepHeight() {
@@ -277,6 +290,13 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         element.nativeElement.style.height = scrollHeight + "px";
       }
     }
+  }
+
+  clickOnAccordion(accordionNumber: number) {
+    this.openedAccordion = this.openedAccordion === accordionNumber ? 0 : accordionNumber;
+    setTimeout(() => {
+      this.setActiveStepHeight()
+    }, 40);
   }
 
   updateStepsPosition() {

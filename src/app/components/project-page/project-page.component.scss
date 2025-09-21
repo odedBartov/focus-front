@@ -74,6 +74,7 @@
     @include mixins.step;
     width: 340px !important;
     font-size: var(--font-size-3) !important;
+    margin-bottom: 0;
     background-color: var(--default-white);
     box-shadow: var(--common-shadow);
     padding: 28px 36px 36px;
@@ -86,6 +87,7 @@
     textarea {
         border: none !important;
         padding: 0;
+        border-radius: 0px;
     }
 
     .recurring-data-span {
@@ -288,19 +290,62 @@
         }
     }
 
+    .accordions-conteiner {
+        display: flex;
+        flex-direction: column;
+        width: 750px;
+
+        .accordion {
+            width: 100%;
+    
+            .title {
+                cursor: pointer;
+                font-size: var(--font-size-3);
+                font-family: 'regular';
+                padding: 0 25px;
+            }
+    
+            .line {
+                width: 100%;
+                height: 0px;
+                border: 1px solid var(--border-color);
+                margin: 10px 25px;
+            }
+
+            .content {
+                padding: 0 25px;
+                margin-bottom: 20px;
+                overflow-x: hidden;
+                display: flex;
+                flex-direction: column;
+                max-height: calc(var(--big-window-height) - 150px);
+            }
+    
+            .opened {
+                &.title {
+                    font-family: 'bold';
+                }
+            }
+        }
+    }
+
     .retainer-steps {
-        width: 800px;
+        width: 710px;
         gap: 15px;
-        padding: 15px;
+        padding: 15px 0;
         display: flex;
         flex-flow: row wrap;
         align-content: flex-start;
-        overflow-x: auto;
+        align-items: flex-start;
+        justify-content: center;
 
         .retainer-step {
             @include retainer-step-style;
         }
 
+        .add-step {
+            margin-bottom: 0;
+        }
     }
 
     .new-step {
