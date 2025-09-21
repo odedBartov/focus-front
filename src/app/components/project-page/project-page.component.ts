@@ -231,7 +231,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       payment.date = new Date();
       payment.workTime = this.sessionTime;
       
-      this.project()?.hourlyWorkSession.push(payment);
+      this.project()?.hourlyWorkSessions.push(payment);
       this.sessionTime = 0;
       this.sessionTimerStep = 1;
       this.pauseSessionTimer();
