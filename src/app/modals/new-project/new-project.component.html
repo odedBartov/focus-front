@@ -34,13 +34,13 @@
             <div class="project-types-container">
                 <div class="project-type" (click)="chooseProjectType(projectTypeEnum.retainer)">
                     <img src="assets/icons/infinity.svg" />
-                    <span class="new-text-bold">תהליך מתמשך</span>
-                    <span class="new-small">ריטיינר, עבודה שוטפת או חזרתית</span>
+                    <span class="new-text-bold">תהליך חד פעמי</span>
+                    <span class="new-small">תהליך מסודר ובעל נקודת סיום</span>
                 </div>
                 <div class="project-type" (click)="chooseProjectType(projectTypeEnum.proccess)">
                     <img src="assets/icons/one_time_proccess.svg" />
-                    <span class="new-text-bold">ליווי חד פעמי</span>
-                    <span class="new-small">תהליך מסודר ובעל נקודת סיום</span>
+                    <span class="new-text-bold">ליווי מתמשך</span>
+                    <span class="new-small">ריטיינר, עבודה שוטפת או חזרתית</span>
                 </div>
             </div>
         </div>
@@ -85,7 +85,7 @@
             <div class="payment-setting" *ngIf="project.projectType == projectTypeEnum.retainer">
                 <span class="new-h1">הגדרת התשלום</span>
                 <div class="hourly-text-and-input" *ngIf="project.paymentModel === paymentModelEnum.hourly">
-                    <span class="new-small">מחיר שעתי (לא כולל מע"ם)</span>
+                    <span class="new-small">מחיר שעתי (לא כולל מע"מ)</span>
                     <input type="number" class="new-small" [(ngModel)]="project.reccuringPayment" />
                     <span *ngIf="submitted && !project.reccuringPayment" class="error">אנא
                             הזינו סכום</span>
@@ -93,7 +93,7 @@
 
                 <div class="monthly" *ngIf="project.paymentModel === paymentModelEnum.monthly">
                     <div class="text-and-input">
-                        <span class="new-small">הסכום לתשלום (לא כולל מע"ם)</span>
+                        <span class="new-small">הסכום לתשלום (לא כולל מע"מ)</span>
                         <input type="number" class="new-small" [(ngModel)]="project.reccuringPayment" />
                         <div class="error-container">
                         <span *ngIf="submitted && !project.reccuringPayment" class="error">אנא
