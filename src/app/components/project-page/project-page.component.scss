@@ -76,7 +76,12 @@
     font-size: var(--font-size-3) !important;
     background-color: var(--default-white);
     box-shadow: var(--common-shadow);
-    // padding: 32px 40px 40px;
+    padding: 28px 36px 36px;
+    box-sizing: border-box;
+
+    .step-header {
+        margin-bottom: 20px;
+    }
 
     textarea {
         border: none !important;
@@ -284,9 +289,13 @@
     }
 
     .retainer-steps {
-        .active {
-            margin-bottom: 20px;
-        }
+        width: 800px;
+        gap: 15px;
+        padding: 15px;
+        display: flex;
+        flex-flow: row wrap;
+        align-content: flex-start;
+        overflow-x: auto;
 
         .retainer-step {
             @include retainer-step-style;
@@ -302,7 +311,7 @@
 
     .new-retainer-step {
         display: flex;
-        width: 420px;
+        width: 340px;
         margin-bottom: 28px;
     }
 
@@ -311,6 +320,7 @@
         justify-content: center;
         align-items: center;
         margin-bottom: 200px;
+        width: 100%;
 
         img {
             cursor: pointer;
