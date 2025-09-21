@@ -77,24 +77,24 @@
     margin-bottom: 0;
     background-color: var(--default-white);
     box-shadow: var(--common-shadow);
-    padding: 28px 36px 36px;
+    padding: 20px 28px 24px;
     box-sizing: border-box;
 
     .step-header {
-        margin-bottom: 20px;
+        margin-bottom: 16px;
     }
 
     textarea {
         border: none !important;
         padding: 0;
         border-radius: 0px;
+        margin-bottom: 16px
     }
 
     .recurring-data-span {
         @include mixins.step-option-button;
         cursor: default;
         margin-bottom: 0px;
-        margin-top: 10px;
     }
 
     .step-icons {
@@ -337,14 +337,18 @@
         flex-flow: row wrap;
         align-content: flex-start;
         align-items: flex-start;
-        justify-content: center;
 
         .retainer-step {
             @include retainer-step-style;
         }
 
         .add-step {
+            margin-top: 20px;
             margin-bottom: 0;
+
+            img {
+                margin-bottom: 0;
+            }
         }
     }
 
