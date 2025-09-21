@@ -77,19 +77,7 @@
         }
 
         .button {
-            display: flex;
-            align-items: center;
-            border: none;
-            transition: all 0.2s;
-            width: fit-content;
-            padding: 0.3rem 1rem;
-            margin-left: 15px;
-            margin-bottom: 15px;
-            border-radius: var(--common-radius);
-            font-size: var(--font-size-1);
-            font-family: 'regular';
-            cursor: pointer;
-            background-color: var(--hover-color);
+            @include mixins.step-option-button;
 
             &:hover,
             &:focus {
@@ -290,8 +278,3 @@
         }
     }
 }
-
-// .text {
-//     font-family: 'regular';
-//     font-size: var(--font-size-1);
-// }

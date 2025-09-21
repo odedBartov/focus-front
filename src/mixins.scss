@@ -10,7 +10,7 @@
   justify-content: space-between;
   margin-bottom: 28px;
   border-radius: 15px;
-  
+
   &.step.not-finished {
     @include regular-border;
     padding: 20px 28px 24px;
@@ -22,7 +22,7 @@
     background-color: var(--default-white);
     border: none !important;
     box-shadow: var(--common-shadow);
-    padding: 32px 40px 40px !important;
+    padding: 28px 36px 36px !important;
   }
 
   .step-header {
@@ -102,7 +102,24 @@
     align-self: center;
   }
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background-color: var(--main-color);
   }
+}
+
+@mixin step-option-button {
+  display: flex;
+  align-items: center;
+  border: none;
+  transition: all 0.1s;
+  width: fit-content;
+  padding: 0.3rem 1rem;
+  margin-left: 15px;
+  margin-bottom: 15px;
+  border-radius: var(--common-radius);
+  font-size: var(--font-size-1);
+  font-family: 'regular';
+  cursor: pointer;
+  background-color: var(--hover-color);
 }
