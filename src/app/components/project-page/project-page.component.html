@@ -219,19 +219,19 @@
                             </div>
                             <div class="recurring-data-span">
                                 <img class="cycle" />
-                                <span>חוזר כל {{step.reccuringEvery && step.reccuringEvery > 1? step.reccuringEvery :
+                                <span>חוזר כל {{step.recurringEvery && step.recurringEvery > 1? step.recurringEvery :
                                     ''}}&nbsp;</span>
                                 <span
-                                    *ngIf="step.recurringDateType === recurringDateTypeEnum.day">{{(step.reccuringEvery
-                                    && step.reccuringEvery > 1)? 'ימים' : 'יום'}}</span>
+                                    *ngIf="step.recurringDateType === recurringDateTypeEnum.day">{{(step.recurringEvery
+                                    && step.recurringEvery > 1)? 'ימים' : 'יום'}}</span>
                                 <span
-                                    *ngIf="step.recurringDateType === recurringDateTypeEnum.week">{{(step.reccuringEvery
-                                    && step.reccuringEvery > 1)? 'שבועות' : 'שבוע'}} {{(step.recurringDaysInWeek &&
+                                    *ngIf="step.recurringDateType === recurringDateTypeEnum.week">{{(step.recurringEvery
+                                    && step.recurringEvery > 1)? 'שבועות' : 'שבוע'}} {{(step.recurringDaysInWeek &&
                                     step.recurringDaysInWeek.length > 1)? 'בימים' : 'ביום'}}
-                                    {{step.recurringDaysInWeek?.join(', ')}}</span>
+                                    {{getWeekDays(step.recurringDaysInWeek)}}</span>
                                 <span
-                                    *ngIf="step.recurringDateType === recurringDateTypeEnum.month">{{(step.reccuringEvery
-                                    && step.reccuringEvery > 1)? 'חודשים' : 'חודש'}} ב-{{step.recurringDayInMonth}}
+                                    *ngIf="step.recurringDateType === recurringDateTypeEnum.month">{{(step.recurringEvery
+                                    && step.recurringEvery > 1)? 'חודשים' : 'חודש'}} ב-{{step.recurringDayInMonth}}
                                     לחודש</span>
                             </div>
                             <div [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"

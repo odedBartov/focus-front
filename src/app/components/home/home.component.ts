@@ -24,6 +24,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileComponent } from '../../modals/profile/profile.component';
 import { WeeklyTasksComponent } from '../weekly-tasks/weekly-tasks.component';
+import { Step } from '../../models/step';
 
 @Component({
   selector: 'app-home',

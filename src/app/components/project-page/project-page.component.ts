@@ -117,6 +117,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   sessionTimer?: any;
   retainerPaymentName = '';
   openedAccordion = 1;
+  retainerActiveSteps: Step[] = [];
+  retainerFutureSteps: Step[] = [];
+  retainerFinishedSteps: Step[] = [];
+  daysInWeek = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.project = this.projectsService.getCurrentProject();
@@ -145,6 +149,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.setActiveStepHeight();
+    if (this.isRetainer) {
+      this.initRetainerSteps();
+    }
   }
 
   @HostListener('document:click', ['$event'])
@@ -209,6 +216,36 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   pad(num: number) {
     return num.toString().padStart(2, '0');
+  }
+
+  getWeekDays(days?:number[]) {
+    return days? days.map(d => this.daysInWeek[d]).join(', ') : [];
+  }
+
+  initRetainerSteps() {
+    if (this.project()?.steps) {
+      this.project().steps.forEach(step => {
+        if (!step.isComplete) {
+          this.retainerActiveSteps.push(step);
+        } else {
+          if (step.isRecurring) {
+            let nextOccurrenceDate = new Date();
+            const dateCompleted = step.dateCompleted ? new Date(step.dateCompleted) : new Date();
+            if (step.recurringDateType === recurringDateTypeEnum.day) {
+              nextOccurrenceDate.setDate(dateCompleted.getDate() + (step.recurringEvery ?? 1));
+            } else if (step.recurringDateType === recurringDateTypeEnum.week && step.recurringDaysInWeek) {
+              const nextDayInWeek = step.recurringDaysInWeek[0];
+            } else {
+              // month
+            }
+
+            // calculate next occurrence
+          } else {
+            this.retainerFinishedSteps.push(step);
+          }
+        }
+      });
+    }
   }
 
   startSessionTimer() {

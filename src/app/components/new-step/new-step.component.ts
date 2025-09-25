@@ -88,7 +88,7 @@ export class NewStepComponent implements AfterViewInit {
     };
   }
 
-  get isRetainer() {    
+  get isRetainer() {
     return this.projectType === projectTypeEnum.retainer;
   }
 
@@ -128,6 +128,11 @@ export class NewStepComponent implements AfterViewInit {
     }, 1);
   }
 
+  isdayInWeekDay(day: string) {    
+    const index = this.daysInWeek.indexOf(day);
+    return this.newStep.recurringDaysInWeek?.includes(index);
+  }
+
   selectRecurringDateType(dateType: recurringDateTypeEnum) {
     this.newStep.recurringDateType = dateType;
   }
@@ -153,12 +158,12 @@ export class NewStepComponent implements AfterViewInit {
     const input = event.target as HTMLInputElement;
     if (input.value.length > 3) {
       input.value = input.value.slice(0, 3);
-      this.newStep.reccuringEvery = Number(input.value);
+      this.newStep.recurringEvery = Number(input.value);
     }
   }
 
   closeRecurringEvery() {
-    this.newStep.reccuringEvery = 1;
+    this.newStep.recurringEvery = 1;
     this.newStep.isRecurring = false;
     this.newStep.recurringDateType = undefined;
     this.newStep.recurringDaysInWeek = [];
@@ -166,15 +171,16 @@ export class NewStepComponent implements AfterViewInit {
   }
 
   selectDayInWeek(day: string) {
-    if(this.newStep.recurringDaysInWeek === undefined) {
+    if (this.newStep.recurringDaysInWeek === undefined) {
       this.newStep.recurringDaysInWeek = [];
     }
 
-    const index = this.newStep.recurringDaysInWeek.indexOf(day);
-    if(index > -1) {
+    const weekDayIndex = this.daysInWeek.indexOf(day);
+    const index = this.newStep.recurringDaysInWeek.indexOf(weekDayIndex);
+    if (index > -1) {
       this.newStep.recurringDaysInWeek.splice(index, 1);
     } else {
-      this.newStep.recurringDaysInWeek.push(day);
+      this.newStep.recurringDaysInWeek.push(weekDayIndex);
     }
   }
 
@@ -200,10 +206,10 @@ export class NewStepComponent implements AfterViewInit {
         this.newStep.tasks.pop(); // remove empty task
       }
 
-      if (this.newStep.isRecurring && !this.newStep.reccuringEvery) {
-        this.newStep.reccuringEvery = 1;
+      if (this.newStep.isRecurring && !this.newStep.recurringEvery) {
+        this.newStep.recurringEvery = 1;
       }
-      
+
       this.stepsEmitter.emit(this.newStep);
     }
   }
