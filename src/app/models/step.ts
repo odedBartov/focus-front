@@ -4,6 +4,7 @@ import { StepTask } from "./stepTask";
 export class Step {
     id?: string;
     projectId?: string | null;
+    dateCreated?: Date;
     userId: string;
     name?: string;
     description?: string;
@@ -31,5 +32,6 @@ export class Step {
         this.dateDue = undefined;
         this.positionInList = 0;
         this.positionInWeeklyList = 0;
+        this.dateCreated = new Date();
     }
 }

@@ -33,3 +33,19 @@ export function getTextForTask(task: StepOrTask): string | undefined {
   } else
     return task.step?.name;
 }
+
+export function areTwoDaysInTheSameWeek(date1: Date, date2: Date): boolean {
+  // Clone the dates so we don't mutate the originals
+  const d1 = new Date(date1);
+  const d2 = new Date(date2);
+
+  // Get start of week (Sunday) for each date
+  d1.setHours(0, 0, 0, 0);
+  d1.setDate(d1.getDate() - d1.getDay());
+
+  d2.setHours(0, 0, 0, 0);
+  d2.setDate(d2.getDate() - d2.getDay());
+
+  // Compare timestamps
+  return d1.getTime() === d2.getTime();
+}

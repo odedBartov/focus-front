@@ -25,6 +25,7 @@ import { StepTask } from '../../models/stepTask';
 import { AnimationItem } from 'lottie-web';
 import { RetainerPayment } from '../../models/RetainerPayment';
 import { HourlyWorkSession } from '../../models/hourlyWorkSession';
+import { areTwoDaysInTheSameWeek } from '../../helpers/functions';
 
 @Component({
   selector: 'app-project-page',
@@ -218,8 +219,8 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     return num.toString().padStart(2, '0');
   }
 
-  getWeekDays(days?:number[]) {
-    return days? days.map(d => this.daysInWeek[d]).join(', ') : [];
+  getWeekDays(days?: number[]) {
+    return days ? days.map(d => this.daysInWeek[d]).join(', ') : [];
   }
 
   initRetainerSteps() {
@@ -229,22 +230,67 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
           this.retainerActiveSteps.push(step);
         } else {
           if (step.isRecurring) {
-            let nextOccurrenceDate = new Date();
-            const dateCompleted = step.dateCompleted ? new Date(step.dateCompleted) : new Date();
+            const dateCreated = step.dateCreated ? new Date(step.dateCreated) : new Date(0);
+            const dateCompleted = step.dateCompleted ? new Date(step.dateCompleted) : new Date(0);
+            const today = new Date();
+            let nextOccurrenceDate = new Date(dateCreated);
+            let occurIntervalCounter = new Date(nextOccurrenceDate);
             if (step.recurringDateType === recurringDateTypeEnum.day) {
-              nextOccurrenceDate.setDate(dateCompleted.getDate() + (step.recurringEvery ?? 1));
-            } else if (step.recurringDateType === recurringDateTypeEnum.week && step.recurringDaysInWeek) {
-              const nextDayInWeek = step.recurringDaysInWeek[0];
-            } else {
-              // month
+              occurIntervalCounter.setDate(occurIntervalCounter.getDate() + (step.recurringEvery ?? 1));
+              while (occurIntervalCounter <= today) {
+                nextOccurrenceDate.setDate(occurIntervalCounter.getDate());
+                occurIntervalCounter.setDate(occurIntervalCounter.getDate() + (step.recurringEvery ?? 1));
+              }
+            } else if (step.recurringDateType === recurringDateTypeEnum.week && step.recurringDaysInWeek?.length) {
+              if (areTwoDaysInTheSameWeek(dateCreated, dateCompleted)) { // maybe there is another weekly step in the same week
+                // look for next day in week
+                const dayInWeekCompleted = dateCompleted.getDay();
+                let nextDayInWeek = -1;
+                for (let index = 0; index < step.recurringDaysInWeek.length; index++) {
+                  if (step.recurringDaysInWeek[index] > dayInWeekCompleted) {
+                    nextDayInWeek = step.recurringDaysInWeek[index];
+                    break;
+                  }
+                }
+                if (nextDayInWeek > -1) { // we are still in target week
+                  nextOccurrenceDate.setDate(dateCreated.getDate() + (nextDayInWeek - dateCreated.getDay()));
+                } else { // should look at next week
+                  nextOccurrenceDate.setDate(dateCreated.getDate() + (step.recurringEvery ?? 1) * 7);
+                }
+              } else { // should look at next week
+                nextOccurrenceDate.setDate(dateCreated.getDate() + (step.recurringEvery ?? 1) * 7);
+              }
+            } else { // month
+              occurIntervalCounter.setMonth(occurIntervalCounter.getMonth() + (step.recurringEvery ?? 1));
+              occurIntervalCounter.setDate(step.recurringDayInMonth ?? dateCreated.getDate());
+              while (occurIntervalCounter <= today) {
+                nextOccurrenceDate.setDate(occurIntervalCounter.getDate());
+                occurIntervalCounter.setMonth(occurIntervalCounter.getMonth() + (step.recurringEvery ?? 1));
+              }
             }
-
-            // calculate next occurrence
+            step.dateCreated = nextOccurrenceDate;
+            if (dateCompleted > nextOccurrenceDate) {
+              this.retainerFutureSteps.push(step);
+            } else {
+              this.retainerActiveSteps.push(step);
+            }
           } else {
             this.retainerFinishedSteps.push(step);
           }
         }
       });
+    }
+  }
+
+  updateRetainerStepDate(step: Step, nextOccurrenceDate: Date) {
+    const today = new Date();
+    let newCreatedDate = new Date(step.dateCreated ?? new Date(0));
+    while (newCreatedDate <= today) {
+      const deltaDays = step.recurringDateType === recurringDateTypeEnum.day ? (step.recurringEvery ?? 1) :
+        step.recurringDateType === recurringDateTypeEnum.week ? (step.recurringEvery ?? 1) * 7 :
+          (step.recurringEvery ?? 1) * 30;
+      step.dateCreated?.setDate(newCreatedDate.getDate() + deltaDays);
+      newCreatedDate.setDate(newCreatedDate.getDate() + deltaDays);
     }
   }
 
