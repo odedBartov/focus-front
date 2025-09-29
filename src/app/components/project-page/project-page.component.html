@@ -188,7 +188,7 @@
                 <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList cdkDropListOrientation="mixed"
                     #stepsContainer>
                     <div [ngClass]="{'retainer-step': step.id !== editStepId }"
-                        *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
+                        *ngFor="let step of retainerActiveSteps; let i = index" (mouseenter)="hoverStep(step.id, i)"
                         (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
                         <div *ngIf="editStepId !== step.id && animationHackFlag">
                             <div class="step-header active">
@@ -217,7 +217,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="recurring-data-span">
+                            <div class="recurring-data-span" *ngIf="step.isRecurring">
                                 <img class="cycle" />
                                 <span>חוזר כל {{step.recurringEvery && step.recurringEvery > 1? step.recurringEvery :
                                     ''}}&nbsp;</span>
@@ -274,7 +274,7 @@
         <div class="accordion">
             <span class="title" [ngClass]="{'opened': openedAccordion == 2}" (click)="clickOnAccordion(2)">משימות עתידיות</span>
             <div class="content" [@accordion]="(openedAccordion === 2) ? 'expanded' : 'collapsed'">
-                <span>111</span>
+                <span>{{retainerFutureSteps.length}}</span>
                 <span>222</span>
                 <span>333</span>
                 <span>444</span>
@@ -287,7 +287,7 @@
         <div class="accordion">
             <span class="title" [ngClass]="{'opened': openedAccordion == 3}" (click)="clickOnAccordion(3)">משימות שהסתיימו</span>
             <div class="content" [@accordion]="(openedAccordion === 3) ? 'expanded' : 'collapsed'">
-                <span>111</span>
+                <span>{{retainerFinishedSteps.length}}</span>
                 <span>222</span>
                 <span>333</span>
                 <span>444</span>

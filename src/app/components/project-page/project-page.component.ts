@@ -224,6 +224,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   initRetainerSteps() {
+    this.retainerActiveSteps = [];
+    this.retainerFutureSteps = [];
+    this.retainerFinishedSteps = [];
     if (this.project()?.steps) {
       this.project().steps.forEach(step => {
         if (!step.isComplete) {
@@ -237,16 +240,18 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
             let occurIntervalCounter = new Date(nextOccurrenceDate);
             if (step.recurringDateType === recurringDateTypeEnum.day) {
               occurIntervalCounter.setDate(occurIntervalCounter.getDate() + (step.recurringEvery ?? 1));
+              // nextOccurrenceDate.setDate(occurIntervalCounter.getDate());
               while (occurIntervalCounter <= today) {
-                nextOccurrenceDate.setDate(occurIntervalCounter.getDate());
+                nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + (step.recurringEvery ?? 1));
                 occurIntervalCounter.setDate(occurIntervalCounter.getDate() + (step.recurringEvery ?? 1));
               }
+              step.dateCreated = new Date(nextOccurrenceDate);
             } else if (step.recurringDateType === recurringDateTypeEnum.week && step.recurringDaysInWeek?.length) {
               if (areTwoDaysInTheSameWeek(dateCreated, dateCompleted)) { // maybe there is another weekly step in the same week
                 // look for next day in week
                 const dayInWeekCompleted = dateCompleted.getDay();
                 let nextDayInWeek = -1;
-                for (let index = 0; index < step.recurringDaysInWeek.length; index++) {
+                for (let index = 0; index < step.recurringDaysInWeek.length; index++) { // check if there is another task in the same week
                   if (step.recurringDaysInWeek[index] > dayInWeekCompleted) {
                     nextDayInWeek = step.recurringDaysInWeek[index];
                     break;
@@ -256,19 +261,21 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
                   nextOccurrenceDate.setDate(dateCreated.getDate() + (nextDayInWeek - dateCreated.getDay()));
                 } else { // should look at next week
                   nextOccurrenceDate.setDate(dateCreated.getDate() + (step.recurringEvery ?? 1) * 7);
+                  step.dateCreated?.setDate(nextOccurrenceDate.getDate());
                 }
               } else { // should look at next week
                 nextOccurrenceDate.setDate(dateCreated.getDate() + (step.recurringEvery ?? 1) * 7);
               }
             } else { // month
-              occurIntervalCounter.setMonth(occurIntervalCounter.getMonth() + (step.recurringEvery ?? 1));
+              occurIntervalCounter.setMonth(occurIntervalCounter.getMonth());
               occurIntervalCounter.setDate(step.recurringDayInMonth ?? dateCreated.getDate());
               while (occurIntervalCounter <= today) {
                 nextOccurrenceDate.setDate(occurIntervalCounter.getDate());
                 occurIntervalCounter.setMonth(occurIntervalCounter.getMonth() + (step.recurringEvery ?? 1));
               }
+              step.dateCreated?.setDate(nextOccurrenceDate.getDate());
             }
-            step.dateCreated = nextOccurrenceDate;
+
             if (dateCompleted > nextOccurrenceDate) {
               this.retainerFutureSteps.push(step);
             } else {
@@ -446,12 +453,13 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   changeStepStatus(step: Step) {
-    this.animatingItemId = !step.isComplete ? step.id : undefined;
+    debugger
+    this.animatingItemId = step.isRecurring || (!step.isRecurring && !step.isComplete) ? step.id : undefined;
     this.changeDetectorRef.detectChanges(); // Ensure the view is updated before the animation starts
     setTimeout(() => {
       this.playLottieAnimation().then(() => {
         this.animatingItemId = '';
-        step.isComplete = !step.isComplete;
+        step.isComplete = step.isRecurring? true : !step.isComplete;
         if (step.isComplete) {
           step.dateCompleted = new Date();
           if (this.project()) {
@@ -499,6 +507,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
           }
         }
 
+        if (this.isRetainer) {
+          this.initRetainerSteps();
+        }
         this.activeStepId = this.project()?.steps?.find(s => !s.isComplete)?.id;
         this.updateStep(step);
       })
@@ -609,6 +620,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     step.positionInList = (this.project()?.steps?.length ?? 0) + 1;
     this.httpService.createStep(step).subscribe(res => {
       this.project()?.steps?.push(res);
+      this.retainerActiveSteps.push(res);
       this.isShowNewStep = false;
       this.calculatePayments();
       this.animationsService.changeIsloading(false);
