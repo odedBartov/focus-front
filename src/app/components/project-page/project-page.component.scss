@@ -342,6 +342,10 @@
             @include retainer-step-style;
         }
 
+        .retainer-step-finished {
+    
+        }
+        
         .add-step {
             margin-top: 20px;
             margin-bottom: 0;
@@ -351,6 +355,7 @@
             }
         }
     }
+
 
     .new-step {
         display: flex;

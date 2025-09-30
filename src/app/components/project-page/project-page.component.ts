@@ -304,7 +304,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   startSessionTimer() {
     this.sessionTimer = setInterval(() => {
       this.sessionTime += 1000;
-    }, 100);
+    }, 1000);
   }
 
   stopSessionTimer(event: MouseEvent) {
