@@ -183,7 +183,8 @@
 
     <div class="accordions-conteiner" *ngIf="isRetainer">
         <div class="accordion">
-            <span class="title" [ngClass]="{'opened': openedAccordion == 1}" (click)="clickOnAccordion(1)">משימות פתוחות</span>
+            <span class="title" [ngClass]="{'opened': openedAccordion == 1}" (click)="clickOnAccordion(1)">משימות
+                פתוחות</span>
             <div class="content" [@accordion]="(openedAccordion === 1) ? 'expanded' : 'collapsed'">
                 <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList cdkDropListOrientation="mixed"
                     #stepsContainer>
@@ -263,8 +264,7 @@
                     </div>
                     <div *ngIf="isShowNewStep" #newStepDiv>
                         <app-new-step class="new-retainer-step" (stepsEmitter)="createNewStep($event)"
-                            (scrollToBottom)="scrollToBottom()"
-                            [projectType]="projectTypeEnum.retainer"
+                            (scrollToBottom)="scrollToBottom()" [projectType]="projectTypeEnum.retainer"
                             [paymentModel]="project().paymentModel"></app-new-step>
                     </div>
                 </div>
@@ -272,7 +272,8 @@
             <div class="line"></div>
         </div>
         <div class="accordion">
-            <span class="title" [ngClass]="{'opened': openedAccordion == 2}" (click)="clickOnAccordion(2)">משימות עתידיות</span>
+            <span class="title" [ngClass]="{'opened': openedAccordion == 2}" (click)="clickOnAccordion(2)">משימות
+                עתידיות</span>
             <div class="content" [@accordion]="(openedAccordion === 2) ? 'expanded' : 'collapsed'">
                 <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList cdkDropListOrientation="mixed"
                     #stepsContainer>
@@ -352,8 +353,7 @@
                     </div>
                     <div *ngIf="isShowNewStep" #newStepDiv>
                         <app-new-step class="new-retainer-step" (stepsEmitter)="createNewStep($event)"
-                            (scrollToBottom)="scrollToBottom()"
-                            [projectType]="projectTypeEnum.retainer"
+                            (scrollToBottom)="scrollToBottom()" [projectType]="projectTypeEnum.retainer"
                             [paymentModel]="project().paymentModel"></app-new-step>
                     </div>
                 </div>
@@ -361,21 +361,25 @@
             <div class="line"></div>
         </div>
         <div class="accordion">
-            <span class="title" [ngClass]="{'opened': openedAccordion == 3}" (click)="clickOnAccordion(3)">משימות שהסתיימו</span>
+            <span class="title" [ngClass]="{'opened': openedAccordion == 3}" (click)="clickOnAccordion(3)">משימות
+                שהסתיימו</span>
             <div class="content" [@accordion]="(openedAccordion === 3) ? 'expanded' : 'collapsed'">
-                <div class="retainer-steps" *ngIf="!showNotes && isRetainer"
-                    #stepsContainer>
+                <div class="retainer-steps-finished" *ngIf="!showNotes && isRetainer" #stepsContainer>
                     <div [ngClass]="{'retainer-step-finished': step.id !== editStepId }"
                         *ngFor="let step of retainerFinishedSteps; let i = index" (mouseenter)="hoverStep(step.id, i)"
                         (mouseleave)="hoverStepId = undefined" #stepDiv>
                         <div *ngIf="editStepId !== step.id && animationHackFlag">
-                            <div class="step-header active">
-                                <span class="new-text-bold">{{step.name}}</span>
-                                <img src="assets/icons/confirm_yes.svg" />
+                            <div class="step-name-finished">
+                                <span class="new-text">{{step.name}}</span>
+                                <div class="radio-button checked-circle" (click)="changeStepStatus(step)"
+                                    [style.pointer-events]="isReadOnly() ? 'none' : 'auto'">
+                                    <img src="assets\icons\confirm_white.svg" />
+                                </div>
                             </div>
                             <div [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"
                                 class="extra-not-finished">
-                                <span *ngIf="step.dateCompleted">הסתיים בתאריך: {{step.dateCompleted | date: 'shortDate'}}</span>
+                                <span *ngIf="step.dateCompleted" class="new-small">הסתיים בתאריך: {{step.dateCompleted |
+                                    date: 'dd/MM/yy'}}</span>
                             </div>
                         </div>
                     </div>

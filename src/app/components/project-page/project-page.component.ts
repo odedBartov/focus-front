@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { Step } from '../../models/step';
 import { AnimationsService } from '../../services/animations.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ConfirmationModalComponent } from '../../modals/confirmation-modal/confirmation-modal.component';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { trigger, state, style, animate, transition } from '@angular/animations';
@@ -52,11 +51,13 @@ import { areTwoDaysInTheSameWeek } from '../../helpers/functions';
     trigger('accordion', [
       state('collapsed', style({
         height: '0px',
-        display: 'none'
+        display: 'none',
+        opacity: 0,
       })),
       state('expanded', style({
         height: '*',
-        display: 'flex'
+        display: 'flex',
+        opacity: 1,
       })),
       transition('collapsed <=> expanded', [
         animate('200ms ease')
@@ -89,6 +90,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   @ViewChild('addStepDiv', { static: false }) addStepDiv!: ElementRef;
   @ViewChildren('descriptions') descriptions!: QueryList<ElementRef<HTMLTextAreaElement>>;
   @ViewChildren('stepHeader') stepHeaders!: QueryList<ElementRef<HTMLSpanElement>>;
+  
   projectTypeEnum = projectTypeEnum;
   paymentModelEnum = paymentModelEnum;
   recurringDateTypeEnum = recurringDateTypeEnum;
@@ -125,16 +127,13 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.project = this.projectsService.getCurrentProject();
-
     effect(() => {
       const value = this.project();
-      this.project.set(value); // ?
-
       if (value?.steps) {
         value.steps.sort((a, b) => a.positionInList - b.positionInList);
+        this.initRetainerSteps();
       }
       this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
-
       this.calculatePayments();
 
       setTimeout(() => {
@@ -287,6 +286,8 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         }
       });
     }
+
+    // order by positions
   }
 
   updateRetainerStepDate(step: Step, nextOccurrenceDate: Date) {
@@ -523,6 +524,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         this.project().steps = this.project()?.steps?.map(step =>
           step.id === res[0].id ? res[0] : step
         )
+        this.initRetainerSteps();
       }
       this.editStepId = '';
       this.calculatePayments();
@@ -605,15 +607,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.scrollToBottom();
   }
 
-  showDeleteStepModal(step: Step) {
-    const dialogRef = this.dialog.open(ConfirmationModalComponent, { data: step.name });
-    dialogRef.afterClosed().subscribe(res => {
-      if (res) {
-        this.deleteStep(step);
-      }
-    })
-  }
-
   createNewStep(step: Step) {
     this.animationsService.changeIsloading(true);
     step.projectId = this.project()?.id;
@@ -638,6 +631,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       const stepIndex = this.project()?.steps?.indexOf(step);
       if (stepIndex !== undefined) {
         this.project()?.steps?.splice(stepIndex, 1);
+        this.initRetainerSteps();
         this.calculatePayments();
       }
       this.httpService.deleteStep(step.id).subscribe(res => {

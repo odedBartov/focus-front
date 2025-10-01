@@ -13,33 +13,6 @@
             display: flex;
             align-items: flex-start;
 
-            .radio-button {
-                border-radius: 50%;
-                margin-top: 3px;
-                height: 15px;
-                width: 16px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: var(--default-white);
-                cursor: pointer;
-
-                img {
-                    height: 70%;
-                    user-select: none;
-                }
-            }
-
-            .checked-circle {
-                border: solid 2px transparent;
-                background-color: var(--main-color);
-            }
-
-            .empty-circle {
-                background-color: transparent;
-                border: solid 2px var(--main-color);
-            }
-
             textarea {
                 width: 100%;
                 border: none;
@@ -72,9 +45,10 @@
 
 @mixin retainer-step-style {
     @include mixins.step;
-    width: 340px !important;
+    width: 100%;
+    display: inline-flex;
     font-size: var(--font-size-3) !important;
-    margin-bottom: 0;
+    margin-bottom: 20px;
     background-color: var(--default-white);
     box-shadow: var(--common-shadow);
     padding: 20px 28px 24px;
@@ -297,16 +271,16 @@
 
         .accordion {
             width: 100%;
-    
+
             .title {
                 cursor: pointer;
                 font-size: var(--font-size-3);
                 font-family: 'regular';
                 padding: 0 25px;
             }
-    
+
             .line {
-                width: 100%;
+                width: 710px;
                 height: 0px;
                 border: 1px solid var(--border-color);
                 margin: 10px 25px;
@@ -314,13 +288,12 @@
 
             .content {
                 padding: 0 25px;
-                margin-bottom: 20px;
-                overflow-x: hidden;
+                // overflow-x: hidden;
                 display: flex;
                 flex-direction: column;
                 max-height: calc(var(--big-window-height) - 150px);
             }
-    
+
             .opened {
                 &.title {
                     font-family: 'bold';
@@ -330,22 +303,18 @@
     }
 
     .retainer-steps {
+        column-count: 2;
         width: 710px;
-        gap: 15px;
         padding: 15px 0;
-        display: flex;
-        flex-flow: row wrap;
-        align-content: flex-start;
-        align-items: flex-start;
 
         .retainer-step {
             @include retainer-step-style;
         }
 
-        .retainer-step-finished {
-    
+        .retainer-step:nth-last-child(-n+2) {
+            margin-bottom: 0;
         }
-        
+
         .add-step {
             margin-top: 20px;
             margin-bottom: 0;
@@ -356,6 +325,24 @@
         }
     }
 
+    .retainer-steps-finished {
+        width: 710px;
+        padding: 15px 0;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px 50px;
+
+        .retainer-step-finished {
+            .step-name-finished {
+                display: flex;
+                justify-content: space-between;
+
+                span {
+                    width: 80%;
+                }
+            }
+        }
+    }
 
     .new-step {
         display: flex;
@@ -449,6 +436,33 @@
     &.active-step {
         width: 20rem !important;
     }
+}
+
+.radio-button {
+    border-radius: 50%;
+    margin-top: 3px;
+    height: 15px;
+    width: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--default-white);
+    cursor: pointer;
+
+    img {
+        height: 70%;
+        user-select: none;
+    }
+}
+
+.checked-circle {
+    border: solid 2px transparent;
+    background-color: var(--main-color);
+}
+
+.empty-circle {
+    background-color: transparent;
+    border: solid 2px var(--main-color);
 }
 
 .finished-icon {
