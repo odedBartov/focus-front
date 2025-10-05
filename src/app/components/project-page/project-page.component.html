@@ -187,10 +187,9 @@
             <div class="content" [@accordion]="(openedAccordion === 1) ? 'expanded' : 'collapsed'">
                 <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList cdkDropListOrientation="mixed"
                     #stepsContainer>
-                    <div [ngClass]="{'retainer-step': step.id !== editStepId }" style="break-inside: avoid;"
-                        *ngFor="let step of retainerActiveSteps; let i = index" (mouseenter)="hoverStep(step.id, i)"
-                        (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
-                        <div *ngIf="editStepId !== step.id && animationHackFlag">
+                    <div class="retainer-step" *ngFor="let step of retainerActiveSteps; let i = index"
+                        (mouseenter)="hoverStep(step.id, i)" (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
+                        <div *ngIf="animationHackFlag">
                             <div class="step-header active">
                                 <span class="new-text-bold">{{step.name}}</span>
                                 <img *ngIf="step.stepType === stepTypeEnum.payment" src="assets/icons/dollar.svg" />
@@ -208,10 +207,8 @@
                                                 [style.pointer-events]="isReadOnly() ? 'none' : 'auto'">
                                                 <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg" />
                                             </div>
-                                            <textarea
-                                                [class]="activeStepId === step.id? 'new-text active' : 'new-small future'"
-                                                [(ngModel)]="task.text" autoResize defaultHeight="20px" disabled
-                                                #taskText></textarea>
+                                            <textarea class="new-small future" [(ngModel)]="task.text" autoResize
+                                                defaultHeight="20px" disabled #taskText></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -233,12 +230,11 @@
                                     && step.recurringEvery > 1)? 'חודשים' : 'חודש'}} ב-{{step.recurringDayInMonth}}
                                     לחודש</span>
                             </div>
-                            <div [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"
-                                class="extra-not-finished">
+                            <div class="extra-not-finished hide-and-show">
                                 <div class="step-icons" *ngIf="!isReadOnly()">
                                     <div class="edit-delete">
                                         <img class="icon-garbage-can" (click)="deleteStep(step)" />
-                                        <img class="icon-pencil" (click)="editStep(stepDiv, step.id)" />
+                                        <img class="icon-pencil" (click)="openNewStepModal(step)" />
                                     </div>
                                     <div class="animation-container">
                                         <div class="finish-step-animation" *ngIf="step.id === animatingItemId">
@@ -250,21 +246,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div *ngIf="editStepId === step.id"
-                            (mousedown)="$event.stopPropagation(); mouseDownInside = true;">
-                            <app-new-step class="new-retainer-step" [steptInput]="step" [isActive]="true"
-                                [projectType]="projectTypeEnum.retainer"
-                                (stepsEmitter)="updateStep($event)"></app-new-step>
-                        </div>
                     </div>
-                    <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly()">
-                        <img (click)="showNewStep()" class="icon-plus" #addStepDiv tabindex="0" />
-                    </div>
-                    <div *ngIf="isShowNewStep" #newStepDiv>
-                        <app-new-step class="new-retainer-step" (stepsEmitter)="createNewStep($event)"
-                            (scrollToBottom)="scrollToBottom()" [projectType]="projectTypeEnum.retainer"
-                            [paymentModel]="project().paymentModel"></app-new-step>
-                    </div>
+                </div>
+                <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly()">
+                    <img (click)="showNewStep()" class="icon-plus" #addStepDiv tabindex="0" />
                 </div>
             </div>
             <div class="line"></div>
@@ -275,10 +260,10 @@
             <div class="content" [@accordion]="(openedAccordion === 2) ? 'expanded' : 'collapsed'">
                 <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList cdkDropListOrientation="mixed"
                     #stepsContainer>
-                    <div [ngClass]="{'retainer-step-future not-finished': step.id !== editStepId }"
-                        style="break-inside: avoid;" *ngFor="let step of retainerFutureSteps; let i = index"
-                        (mouseenter)="hoverStep(step.id, i)" (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
-                        <div *ngIf="editStepId !== step.id && animationHackFlag">
+                    <div class="retainer-step-future not-finished" style="break-inside: avoid;"
+                        *ngFor="let step of retainerFutureSteps; let i = index" (mouseenter)="hoverStep(step.id, i)"
+                        (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
+                        <div *ngIf="animationHackFlag">
                             <div class="step-header active">
                                 <span class="new-text-bold">{{step.name}}</span>
                                 <img src="assets/icons/cycle_white.svg" />
@@ -307,7 +292,7 @@
                             <div class="buttons-and-recurring">
                                 <div class="edit-delete">
                                     <img class="icon-garbage-can" (click)="deleteStep(step)" />
-                                    <img class="icon-pencil" (click)="editStep(stepDiv, step.id)" />
+                                    <img class="icon-pencil" (click)="openNewStepModal(step)" />
                                 </div>
                                 <div class="recurring-data-span new-small" *ngIf="step.isRecurring">
                                     <img class="cycle" />
@@ -329,21 +314,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div *ngIf="editStepId === step.id"
-                            (mousedown)="$event.stopPropagation(); mouseDownInside = true;">
-                            <app-new-step class="new-retainer-step" [steptInput]="step" [isActive]="true"
-                                [projectType]="projectTypeEnum.retainer"
-                                (stepsEmitter)="updateStep($event)"></app-new-step>
-                        </div>
                     </div>
-                    <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly()">
-                        <img (click)="showNewStep()" class="icon-plus" #addStepDiv tabindex="0" />
-                    </div>
-                    <div *ngIf="isShowNewStep" #newStepDiv>
-                        <app-new-step class="new-retainer-step" (stepsEmitter)="createNewStep($event)"
-                            (scrollToBottom)="scrollToBottom()" [projectType]="projectTypeEnum.retainer"
-                            [paymentModel]="project().paymentModel"></app-new-step>
-                    </div>
+                </div>
+                <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly()">
+                    <img (click)="showNewStep()" class="icon-plus" #addStepDiv tabindex="0" />
                 </div>
             </div>
             <div class="line"></div>

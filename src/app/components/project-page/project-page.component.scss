@@ -53,6 +53,7 @@
     box-shadow: var(--common-shadow);
     padding: 20px 28px 24px;
     box-sizing: border-box;
+    break-inside: avoid;
 
     .step-header {
         margin-bottom: 16px;
@@ -62,7 +63,6 @@
         border: none !important;
         padding: 0;
         border-radius: 0px;
-        margin-bottom: 16px
     }
 
     .recurring-data-span {
@@ -72,7 +72,7 @@
     }
 
     .step-icons {
-        margin-top: 20px;
+        margin-top: 6px;
     }
 }
 
@@ -317,6 +317,7 @@
 
             .step-header {
                 margin-bottom: 16px;
+
                 img {
                     height: 12px;
                     background-color: var(--main-color);
@@ -340,21 +341,25 @@
                     display: flex;
                     justify-content: start;
                     gap: 10px;
+
+                    img {
+                        cursor: pointer;
+                    }
                 }
             }
         }
 
-        .retainer-step:nth-last-child(-n+2) {
-            margin-bottom: 0;
-        }
+        // .retainer-step:nth-last-child(-n+2) {
+        //     margin-bottom: 0;
+        // }
 
-        .add-step {
-            margin-top: 20px;
-            margin-bottom: 0;
+    }
+    .add-step {
+        margin-top: 10px;
+        margin-bottom: 0 !important;
 
-            img {
-                margin-bottom: 0;
-            }
+        img {
+            margin-bottom: 0;
         }
     }
 
@@ -366,11 +371,10 @@
         gap: 15px 50px;
 
         .retainer-step-finished {
-            cursor: pointer;
-
             .step-name-finished {
-                &:hover {
-                    .checked-circle {
+                .checked-circle {
+                    &:hover {
+                        cursor: pointer;
                         background-color: var(--main-color) !important;
                     }
                 }

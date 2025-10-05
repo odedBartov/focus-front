@@ -25,6 +25,7 @@ import { AnimationItem } from 'lottie-web';
 import { RetainerPayment } from '../../models/RetainerPayment';
 import { HourlyWorkSession } from '../../models/hourlyWorkSession';
 import { areTwoDaysInTheSameWeek } from '../../helpers/functions';
+import { NewStepModalComponent } from '../../modals/new-step-modal/new-step-modal.component';
 
 @Component({
   selector: 'app-project-page',
@@ -119,7 +120,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   sessionTime = 0;
   sessionTimer?: any;
   retainerPaymentName = '';
-  openedAccordion = 2;
+  openedAccordion = 1;
   retainerActiveSteps: Step[] = [];
   retainerFutureSteps: Step[] = [];
   retainerFinishedSteps: Step[] = [];
@@ -606,8 +607,11 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   showNewStep() {
-    this.isShowNewStep = true;
-    this.scrollToBottom();
+    const dialogRef = this.dialog.open(NewStepModalComponent, { data: { } });
+    const childInstance = dialogRef.componentInstance;
+    childInstance.stepUpdated.subscribe(newStep => {
+      this.createNewStep(newStep);
+    });
   }
 
   createNewStep(step: Step) {
@@ -626,6 +630,14 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   editStep(div: HTMLDivElement, stepId: string | undefined) {
     this.editDiv = div;
     this.editStepId = stepId;
+  }
+
+  openNewStepModal(step?: Step) {
+    const dialogRef = this.dialog.open(NewStepModalComponent, { data: { step: step, isActive: true } });
+    const childInstance = dialogRef.componentInstance;
+    childInstance.stepUpdated.subscribe(newStep => {
+      this.updateStep(newStep);
+    });
   }
 
   deleteStep(step: Step) {
