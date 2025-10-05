@@ -123,8 +123,7 @@
                         #stepHeader>{{step.name}}</span>
                     <img [class]="isReadOnly()? 'finished-icon' : 'pointer icon-confirm'"
                         (click)="isReadOnly()? '' : changeStepStatus(step)" *ngIf="step.isComplete" />
-                    <img [src]="`assets/icons/${step.stepType === stepTypeEnum.task? 'puzzle_piece' : 'dollar'}.svg`"
-                        *ngIf="!step.isComplete" />
+                    <img src="assets/icons/dollar.svg" *ngIf="!step.isComplete && step.stepType === stepTypeEnum.payment" />
                 </div>
                 <div class="extra" [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"
                     *ngIf="step.isComplete">
@@ -194,8 +193,7 @@
                         <div *ngIf="editStepId !== step.id && animationHackFlag">
                             <div class="step-header active">
                                 <span class="new-text-bold">{{step.name}}</span>
-                                <img
-                                    [src]="`assets/icons/${step.stepType === stepTypeEnum.task? 'puzzle_piece' : 'dollar'}.svg`" />
+                                <img *ngIf="step.stepType === stepTypeEnum.payment" src="assets/icons/dollar.svg" />
                             </div>
                             <textarea class="new-small" disabled="true"
                                 *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"

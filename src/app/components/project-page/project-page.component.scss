@@ -366,9 +366,22 @@
         gap: 15px 50px;
 
         .retainer-step-finished {
+            cursor: pointer;
+
             .step-name-finished {
+                &:hover {
+                    .checked-circle {
+                        background-color: var(--main-color) !important;
+                    }
+                }
+
                 display: flex;
                 justify-content: space-between;
+
+                .checked-circle {
+                    background-color: var(--border-color);
+                }
+
 
                 span {
                     width: 80%;
