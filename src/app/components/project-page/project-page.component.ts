@@ -51,7 +51,7 @@ import { areTwoDaysInTheSameWeek } from '../../helpers/functions';
     trigger('accordion', [
       state('collapsed', style({
         height: '0px',
-        display: 'none',
+        display: 'flex',
         opacity: 0,
       })),
       state('expanded', style({
@@ -90,7 +90,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   @ViewChild('addStepDiv', { static: false }) addStepDiv!: ElementRef;
   @ViewChildren('descriptions') descriptions!: QueryList<ElementRef<HTMLTextAreaElement>>;
   @ViewChildren('stepHeader') stepHeaders!: QueryList<ElementRef<HTMLSpanElement>>;
-  
+
   projectTypeEnum = projectTypeEnum;
   paymentModelEnum = paymentModelEnum;
   recurringDateTypeEnum = recurringDateTypeEnum;
@@ -119,7 +119,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   sessionTime = 0;
   sessionTimer?: any;
   retainerPaymentName = '';
-  openedAccordion = 1;
+  openedAccordion = 2;
   retainerActiveSteps: Step[] = [];
   retainerFutureSteps: Step[] = [];
   retainerFinishedSteps: Step[] = [];
@@ -278,6 +278,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
             if (dateCompleted > nextOccurrenceDate) {
               this.retainerFutureSteps.push(step);
             } else {
+              if (step.tasks?.length) {
+                step.tasks.forEach(t => t.isComplete = false);
+              }
+
               this.retainerActiveSteps.push(step);
             }
           } else {
@@ -454,13 +458,12 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   changeStepStatus(step: Step) {
-    debugger
     this.animatingItemId = step.isRecurring || (!step.isRecurring && !step.isComplete) ? step.id : undefined;
     this.changeDetectorRef.detectChanges(); // Ensure the view is updated before the animation starts
     setTimeout(() => {
       this.playLottieAnimation().then(() => {
         this.animatingItemId = '';
-        step.isComplete = step.isRecurring? true : !step.isComplete;
+        step.isComplete = step.isRecurring ? true : !step.isComplete;
         if (step.isComplete) {
           step.dateCompleted = new Date();
           if (this.project()) {

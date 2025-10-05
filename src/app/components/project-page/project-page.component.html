@@ -188,7 +188,7 @@
             <div class="content" [@accordion]="(openedAccordion === 1) ? 'expanded' : 'collapsed'">
                 <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList cdkDropListOrientation="mixed"
                     #stepsContainer>
-                    <div [ngClass]="{'retainer-step': step.id !== editStepId }"
+                    <div [ngClass]="{'retainer-step': step.id !== editStepId }" style="break-inside: avoid;"
                         *ngFor="let step of retainerActiveSteps; let i = index" (mouseenter)="hoverStep(step.id, i)"
                         (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
                         <div *ngIf="editStepId !== step.id && animationHackFlag">
@@ -277,14 +277,13 @@
             <div class="content" [@accordion]="(openedAccordion === 2) ? 'expanded' : 'collapsed'">
                 <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList cdkDropListOrientation="mixed"
                     #stepsContainer>
-                    <div [ngClass]="{'retainer-step': step.id !== editStepId }"
+                    <div [ngClass]="{'retainer-step-not-finished not-finished': step.id !== editStepId }" style="break-inside: avoid;"
                         *ngFor="let step of retainerFutureSteps; let i = index" (mouseenter)="hoverStep(step.id, i)"
                         (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
                         <div *ngIf="editStepId !== step.id && animationHackFlag">
                             <div class="step-header active">
                                 <span class="new-text-bold">{{step.name}}</span>
-                                <img
-                                    [src]="`assets/icons/${step.stepType === stepTypeEnum.task? 'puzzle_piece' : 'dollar'}.svg`" />
+                                <img src="assets/icons/cycle_white.svg" />
                             </div>
                             <textarea class="new-small" disabled="true"
                                 *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
