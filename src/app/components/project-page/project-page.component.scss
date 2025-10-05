@@ -264,7 +264,7 @@
         }
     }
 
-    .accordions-conteiner {
+    .accordions-container {
         display: flex;
         flex-direction: column;
         width: 750px;
@@ -373,19 +373,15 @@
         .retainer-step-finished {
             .step-name-finished {
                 .checked-circle {
-                    &:hover {
-                        cursor: pointer;
-                        background-color: var(--main-color) !important;
-                    }
+                    cursor: pointer;
                 }
 
                 display: flex;
                 justify-content: space-between;
 
                 .checked-circle {
-                    background-color: var(--border-color);
+                    background-color: transparent !important;
                 }
-
 
                 span {
                     width: 80%;

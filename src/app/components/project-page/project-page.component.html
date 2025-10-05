@@ -121,7 +121,7 @@
                     [ngClass]="{ 'active': !step.isComplete && step.id === activeStepId, 'future': !step.isComplete && step.id !== activeStepId && hoverStepId === step.id }">
                     <span [class]="step.id === activeStepId? 'new-h2' : 'new-text-bold'"
                         #stepHeader>{{step.name}}</span>
-                    <img [class]="isReadOnly()? 'finished-icon' : 'pointer icon-confirm'"
+                    <img [class]="isReadOnly()? 'finished-icon' : 'pointer ' + (step.stepType === stepTypeEnum.payment? 'dollar-confirm' : 'icon-confirm')"
                         (click)="isReadOnly()? '' : changeStepStatus(step)" *ngIf="step.isComplete" />
                     <img src="assets/icons/dollar.svg" *ngIf="!step.isComplete && step.stepType === stepTypeEnum.payment" />
                 </div>
@@ -180,7 +180,7 @@
         </div>
     </div>
 
-    <div class="accordions-conteiner" *ngIf="isRetainer">
+    <div class="accordions-container" *ngIf="isRetainer">
         <div class="accordion">
             <span class="title" [ngClass]="{'opened': openedAccordion == 1}" (click)="clickOnAccordion(1)">משימות
                 פתוחות</span>
@@ -335,7 +335,7 @@
                                 <span class="new-text">{{step.name}}</span>
                                 <div class="radio-button checked-circle" (click)="changeStepStatus(step)"
                                     [style.pointer-events]="isReadOnly() ? 'none' : 'auto'">
-                                    <img src="assets\icons\confirm_white.svg" />
+                                    <img class="icon-confirm" />
                                 </div>
                             </div>
                             <div [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"

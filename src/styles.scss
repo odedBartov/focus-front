@@ -358,6 +358,14 @@ input::-webkit-inner-spin-button {
     }
 }
 
+.dollar-confirm {
+    content: url('/assets/icons/dollar_blue.svg');
+
+    &:hover {
+        content: url('/assets/icons/dollar_gray.svg');
+    }
+}
+
 .icon-plus {
     content: url('/assets/icons/plus_not.svg');
 
