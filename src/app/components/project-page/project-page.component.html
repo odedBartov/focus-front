@@ -277,9 +277,9 @@
             <div class="content" [@accordion]="(openedAccordion === 2) ? 'expanded' : 'collapsed'">
                 <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList cdkDropListOrientation="mixed"
                     #stepsContainer>
-                    <div [ngClass]="{'retainer-step-not-finished not-finished': step.id !== editStepId }" style="break-inside: avoid;"
-                        *ngFor="let step of retainerFutureSteps; let i = index" (mouseenter)="hoverStep(step.id, i)"
-                        (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
+                    <div [ngClass]="{'retainer-step-future not-finished': step.id !== editStepId }"
+                        style="break-inside: avoid;" *ngFor="let step of retainerFutureSteps; let i = index"
+                        (mouseenter)="hoverStep(step.id, i)" (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
                         <div *ngIf="editStepId !== step.id && animationHackFlag">
                             <div class="step-header active">
                                 <span class="new-text-bold">{{step.name}}</span>
@@ -306,37 +306,28 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="recurring-data-span" *ngIf="step.isRecurring">
-                                <img class="cycle" />
-                                <span>חוזר כל {{step.recurringEvery && step.recurringEvery > 1? step.recurringEvery :
-                                    ''}}&nbsp;</span>
-                                <span
-                                    *ngIf="step.recurringDateType === recurringDateTypeEnum.day">{{(step.recurringEvery
-                                    && step.recurringEvery > 1)? 'ימים' : 'יום'}}</span>
-                                <span
-                                    *ngIf="step.recurringDateType === recurringDateTypeEnum.week">{{(step.recurringEvery
-                                    && step.recurringEvery > 1)? 'שבועות' : 'שבוע'}} {{(step.recurringDaysInWeek &&
-                                    step.recurringDaysInWeek.length > 1)? 'בימים' : 'ביום'}}
-                                    {{getWeekDays(step.recurringDaysInWeek)}}</span>
-                                <span
-                                    *ngIf="step.recurringDateType === recurringDateTypeEnum.month">{{(step.recurringEvery
-                                    && step.recurringEvery > 1)? 'חודשים' : 'חודש'}} ב-{{step.recurringDayInMonth}}
-                                    לחודש</span>
-                            </div>
-                            <div [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"
-                                class="extra-not-finished">
-                                <div class="step-icons" *ngIf="!isReadOnly()">
-                                    <div class="edit-delete">
-                                        <img class="icon-garbage-can" (click)="deleteStep(step)" />
-                                        <img class="icon-pencil" (click)="editStep(stepDiv, step.id)" />
-                                    </div>
-                                    <div class="animation-container">
-                                        <div class="finish-step-animation" *ngIf="step.id === animatingItemId">
-                                            <ng-lottie [options]="lottieOptions"
-                                                (animationCreated)="finishStepAnimationCreated($event)" />
-                                        </div>
-                                        <img class="icon-confirm-circle" (click)="changeStepStatus(step)" />
-                                    </div>
+                            <div class="buttons-and-recurring">
+                                <div class="edit-delete">
+                                    <img class="icon-garbage-can" (click)="deleteStep(step)" />
+                                    <img class="icon-pencil" (click)="editStep(stepDiv, step.id)" />
+                                </div>
+                                <div class="recurring-data-span new-small" *ngIf="step.isRecurring">
+                                    <img class="cycle" />
+                                    <span>חוזר כל {{step.recurringEvery && step.recurringEvery > 1? step.recurringEvery
+                                        :
+                                        ''}}&nbsp;</span>
+                                    <span
+                                        *ngIf="step.recurringDateType === recurringDateTypeEnum.day">{{(step.recurringEvery
+                                        && step.recurringEvery > 1)? 'ימים' : 'יום'}}</span>
+                                    <span
+                                        *ngIf="step.recurringDateType === recurringDateTypeEnum.week">{{(step.recurringEvery
+                                        && step.recurringEvery > 1)? 'שבועות' : 'שבוע'}} {{(step.recurringDaysInWeek &&
+                                        step.recurringDaysInWeek.length > 1)? 'בימים' : 'ביום'}}
+                                        {{getWeekDays(step.recurringDaysInWeek)}}</span>
+                                    <span
+                                        *ngIf="step.recurringDateType === recurringDateTypeEnum.month">{{(step.recurringEvery
+                                        && step.recurringEvery > 1)? 'חודשים' : 'חודש'}} ב-{{step.recurringDayInMonth}}
+                                        לחודש</span>
                                 </div>
                             </div>
                         </div>

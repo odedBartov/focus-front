@@ -312,8 +312,36 @@
             @include retainer-step-style;
         }
 
-        .retainer-step-not-finished {
+        .retainer-step-future {
             @include mixins.step;
+
+            .step-header {
+                margin-bottom: 16px;
+                img {
+                    height: 12px;
+                    background-color: var(--main-color);
+                    border-radius: 50%;
+                    padding: 4px;
+                }
+            }
+
+            textarea {
+                border: none;
+                padding: 0;
+                border-radius: 0;
+                margin-bottom: 16px;
+            }
+
+            .buttons-and-recurring {
+                display: flex;
+                justify-content: space-between;
+
+                .edit-delete {
+                    display: flex;
+                    justify-content: start;
+                    gap: 10px;
+                }
+            }
         }
 
         .retainer-step:nth-last-child(-n+2) {
