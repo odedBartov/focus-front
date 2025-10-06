@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NewStepComponent } from '../new-step/new-step.component';
-import { paymentModelEnum, ProjectStatus, projectTypeEnum, recurringDateTypeEnum, StepType } from '../../models/enums';
+import { paymentModelEnum, ProjectStatus, projectTypeEnum, recurringDateTypeEnum, retainerPaymentTypeEnum, StepType } from '../../models/enums';
 import { ProjectModalComponent } from '../../modals/project-modal/project-modal.component';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NotesComponent } from '../notes/notes.component';
@@ -26,6 +26,7 @@ import { RetainerPayment } from '../../models/RetainerPayment';
 import { HourlyWorkSession } from '../../models/hourlyWorkSession';
 import { areTwoDaysInTheSameWeek } from '../../helpers/functions';
 import { NewStepModalComponent } from '../../modals/new-step-modal/new-step-modal.component';
+import { PaymentHistoryModalComponent } from '../../modals/payment-history-modal/payment-history-modal.component';
 
 @Component({
   selector: 'app-project-page',
@@ -215,6 +216,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     return this.pad(Math.floor((this.sessionTime % 60000) / 1000));
   }
 
+  get isPaymentModelHourly() {
+    return this.project().paymentModel === paymentModelEnum.hourly;
+  }
+
   pad(num: number) {
     return num.toString().padStart(2, '0');
   }
@@ -355,7 +360,11 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   openPaymentHistoryModal() {
-
+    var p1: RetainerPayment = {date: new Date(), name: "תשלום חודשי", type: retainerPaymentTypeEnum.mothly, id: '1', projectId: '1', price: 1500};
+    var p2: RetainerPayment = {date: new Date(), name: "תשלום שעתי", type: retainerPaymentTypeEnum.oneTime, id: '2', projectId: '1', price: 100};
+    var p3: RetainerPayment = {date: new Date(), name: "תשלום נוסף", type: retainerPaymentTypeEnum.oneTime, id: '3', projectId: '1', price: 200};
+    this.project().retainerPayments = [p1, p2, p3,p1, p2, p3,p1, p2, p3,]
+    this.dialog.open(PaymentHistoryModalComponent, { data: { payments: this.isPaymentModelHourly ? this.project().hourlyWorkSessions : this.project().retainerPayments, isPaymentModelHourly: this.isPaymentModelHourly } });
   }
 
   setActiveStepHeight() {
@@ -607,7 +616,12 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   showNewStep() {
-    const dialogRef = this.dialog.open(NewStepModalComponent, { data: { } });
+    this.isShowNewStep = true;
+    this.scrollToBottom();
+  }
+
+  showNewStepModal() {
+    const dialogRef = this.dialog.open(NewStepModalComponent, { data: {} });
     const childInstance = dialogRef.componentInstance;
     childInstance.stepUpdated.subscribe(newStep => {
       this.createNewStep(newStep);

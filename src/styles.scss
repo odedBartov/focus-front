@@ -495,11 +495,19 @@ input::-webkit-inner-spin-button {
     }
 }
 
-.icon-garage-can-gray-white {
+.icon-garbage-can-gray-white {
     content: url('/assets/icons/garbage_can_gray.svg');
 
     &:hover {
         content: url('/assets/icons/garbage_can_white.svg');
+    }
+}
+
+.icon-garbage-can-gray-blue {
+    content: url('/assets/icons/garbage_can_gray.svg');
+
+    &:hover {
+        content: url('/assets/icons/garbage_can_blue.svg');
     }
 }
 

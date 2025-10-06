@@ -19,7 +19,7 @@
                         <span class="new-text-bold">{{project().endDate | date: 'dd.MM.yyyy'}}</span>
                     </div>
                 </ng-container>
-                <ng-container *ngIf="isRetainer && project().paymentModel === paymentModelEnum.hourly">
+                <ng-container *ngIf="isRetainer && isPaymentModelHourly">
                     <div class="cell">
                         <span class="new-small cell-title">תאריך התחלה</span>
                         <span class="new-text-bold">{{project().startDate | date: 'dd.MM.yyyy'}}</span>
@@ -74,7 +74,7 @@
             </div>
             <div class="sessions-counter" [ngClass]="{pointer: sessionTimerStep === 1}"
                 [ngStyle]="{'height': sessionTimerStep === 1 ? '60px' : sessionTimerStep === 2? '126px' : '115px'}"
-                *ngIf="isRetainer && project().paymentModel === paymentModelEnum.hourly"
+                *ngIf="isRetainer && isPaymentModelHourly"
                 (click)="sessionTimerStep = sessionTimerStep === 1 ? 2 : sessionTimerStep">
                 <ng-container *ngIf="sessionTimerStep === 1">
                     <div style="display: flex; justify-content: space-between;">
@@ -102,7 +102,7 @@
                 <ng-container *ngIf="sessionTimerStep === 3">
                     <span class="new-text-bold">שמירת סשן</span>
                     <div class="save-session">
-                        <img class="icon-garage-can-gray-white pointer" (click)="deleteWorkingSession($event)" />
+                        <img class="icon-garbage-can-gray-white pointer" (click)="deleteWorkingSession($event)" />
                         <input placeholder="שלב נוכחי" [(ngModel)]="retainerPaymentName" />
                         <img class="icon-confirm-transparent pointer" (click)="finishWorkingSession()" />
                     </div>
@@ -248,7 +248,7 @@
                     </div>
                 </div>
                 <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly()">
-                    <img (click)="showNewStep()" class="icon-plus" #addStepDiv tabindex="0" />
+                    <img (click)="showNewStepModal()" class="icon-plus" #addStepDiv tabindex="0" />
                 </div>
             </div>
             <div class="line"></div>
@@ -316,7 +316,7 @@
                     </div>
                 </div>
                 <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly()">
-                    <img (click)="showNewStep()" class="icon-plus" #addStepDiv tabindex="0" />
+                    <img (click)="showNewStepModal()" class="icon-plus" #addStepDiv tabindex="0" />
                 </div>
             </div>
             <div class="line"></div>

@@ -30,6 +30,7 @@ export class NewStepComponent implements AfterViewInit {
   @Input() projectType: projectTypeEnum = projectTypeEnum.proccess;
   @Input() paymentModel?: paymentModelEnum;
   @Input() isActive = false;
+  @Input() isInModal = false;
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
