@@ -123,7 +123,8 @@
                         #stepHeader>{{step.name}}</span>
                     <img [class]="isReadOnly()? 'finished-icon' : 'pointer ' + (step.stepType === stepTypeEnum.payment? 'dollar-confirm' : 'icon-confirm')"
                         (click)="isReadOnly()? '' : changeStepStatus(step)" *ngIf="step.isComplete" />
-                    <img src="assets/icons/dollar.svg" *ngIf="!step.isComplete && step.stepType === stepTypeEnum.payment" />
+                    <img src="assets/icons/dollar.svg"
+                        *ngIf="!step.isComplete && step.stepType === stepTypeEnum.payment" />
                 </div>
                 <div class="extra" [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"
                     *ngIf="step.isComplete">
@@ -139,11 +140,9 @@
                         <div class="task-list">
                             <div class="task" *ngFor="let task of step.tasks; let i = index">
                                 <div *ngIf="i < step.tasks.length" style="display: flex;">
-                                    <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')"
+                                    <img [src]="'assets/icons/'+(task.isComplete? 'confirm_yes' : 'empty_circle')+'.svg'"
                                         (click)="toggleTask(step, task)"
-                                        [style.pointer-events]="isReadOnly() ? 'none' : 'auto'">
-                                        <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg" />
-                                    </div>
+                                        [style.pointer-events]="isReadOnly() ? 'none' : 'auto'" class="task-icon" />
                                     <textarea [class]="activeStepId === step.id? 'new-text active' : 'new-small future'"
                                         [(ngModel)]="task.text" autoResize defaultHeight="20px" disabled
                                         #taskText></textarea>
@@ -333,9 +332,9 @@
                         <div *ngIf="editStepId !== step.id && animationHackFlag">
                             <div class="step-name-finished">
                                 <span class="new-text">{{step.name}}</span>
-                                <div class="radio-button checked-circle" (click)="changeStepStatus(step)"
+                                <div (click)="changeStepStatus(step)"
                                     [style.pointer-events]="isReadOnly() ? 'none' : 'auto'">
-                                    <img class="icon-confirm" />
+                                    <img class="icon-confirm pointer" />
                                 </div>
                             </div>
                             <div [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"

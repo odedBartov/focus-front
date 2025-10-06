@@ -11,7 +11,13 @@
 
         .task {
             display: flex;
-            align-items: flex-start;
+            // align-items: flex-end;
+
+            .task-icon {
+                cursor: pointer;
+                height: 22px;
+                margin-top: 2px;
+            }
 
             textarea {
                 width: 100%;
@@ -287,9 +293,9 @@
             }
 
             .content {
-                overflow: hidden;
+                overflow-y: auto;
                 padding: 0 25px;
-                // overflow-x: hidden;
+                overflow-x: hidden;
                 display: flex;
                 flex-direction: column;
                 max-height: calc(var(--big-window-height) - 150px);
@@ -355,7 +361,6 @@
 
     }
     .add-step {
-        margin-top: 10px;
         margin-bottom: 0 !important;
 
         img {
@@ -369,19 +374,12 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 15px 50px;
+        margin-bottom: 4px;
 
         .retainer-step-finished {
             .step-name-finished {
-                .checked-circle {
-                    cursor: pointer;
-                }
-
                 display: flex;
                 justify-content: space-between;
-
-                .checked-circle {
-                    background-color: transparent !important;
-                }
 
                 span {
                     width: 80%;
