@@ -52,7 +52,7 @@
 @mixin retainer-step-style {
     @include mixins.step;
     width: 100%;
-    display: inline-flex;
+    // display: inline-flex;
     font-size: var(--font-size-3) !important;
     margin-bottom: 20px;
     background-color: var(--default-white);
@@ -360,6 +360,7 @@
         // }
 
     }
+
     .add-step {
         margin-bottom: 0 !important;
 

@@ -368,12 +368,12 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   setActiveStepHeight() {
-    const element = this.descriptions.get(0)?.nativeElement as HTMLTextAreaElement;
-    if (element) {
-      element.style.height = 'auto';
-      element.style.height = element.scrollHeight + 'px';
-      ;
-    }
+    // const element = this.descriptions.get(0)?.nativeElement as HTMLTextAreaElement;
+    // if (element) {
+    //   element.style.height = 'auto';
+    //   element.style.height = element.scrollHeight + 'px';
+    //   ;
+    // }
   }
 
   hoverStep(stepId: string | undefined, index: number) {
@@ -399,9 +399,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   clickOnAccordion(accordionNumber: number) {
     this.openedAccordion = this.openedAccordion === accordionNumber ? 0 : accordionNumber;
-    setTimeout(() => {
-      this.setActiveStepHeight()
-    }, 40);
+    // setTimeout(() => {
+    //   this.setActiveStepHeight()
+    // }, 40);
   }
 
   updateStepsPosition() {
