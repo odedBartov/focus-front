@@ -24,7 +24,7 @@ import { StepTask } from '../../models/stepTask';
 import { AnimationItem } from 'lottie-web';
 import { RetainerPayment } from '../../models/RetainerPayment';
 import { HourlyWorkSession } from '../../models/hourlyWorkSession';
-import { areTwoDaysInTheSameWeek } from '../../helpers/functions';
+import { areTwoDaysInTheSameWeek, isDateGreaterOrEqual, parseLocalDate } from '../../helpers/functions';
 import { NewStepModalComponent } from '../../modals/new-step-modal/new-step-modal.component';
 import { PaymentHistoryModalComponent } from '../../modals/payment-history-modal/payment-history-modal.component';
 
@@ -238,8 +238,8 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
           this.retainerActiveSteps.push(step);
         } else {
           if (step.isRecurring) {
-            const dateCreated = step.dateCreated ? new Date(step.dateCreated) : new Date(0);
-            const dateCompleted = step.dateCompleted ? new Date(step.dateCompleted) : new Date(0);
+            const dateCreated = parseLocalDate(step.dateCreated);
+            const dateCompleted = parseLocalDate(step.dateCompleted);
             const today = new Date();
             let nextOccurrenceDate = new Date(dateCreated);
             let occurIntervalCounter = new Date(nextOccurrenceDate);
@@ -272,16 +272,17 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
                 nextOccurrenceDate.setDate(dateCreated.getDate() + (step.recurringEvery ?? 1) * 7);
               }
             } else { // month
-              occurIntervalCounter.setMonth(occurIntervalCounter.getMonth());
+              occurIntervalCounter.setMonth(occurIntervalCounter.getMonth() + (step.recurringEvery ?? 1));
               occurIntervalCounter.setDate(step.recurringDayInMonth ?? dateCreated.getDate());
+              nextOccurrenceDate.setDate(step.recurringDayInMonth ?? dateCreated.getDate());
               while (occurIntervalCounter <= today) {
-                nextOccurrenceDate.setDate(occurIntervalCounter.getDate());
+                nextOccurrenceDate = new Date(occurIntervalCounter);
                 occurIntervalCounter.setMonth(occurIntervalCounter.getMonth() + (step.recurringEvery ?? 1));
               }
-              step.dateCreated?.setDate(nextOccurrenceDate.getDate());
+              step.dateCreated = new Date(nextOccurrenceDate);
             }
 
-            if (dateCompleted > nextOccurrenceDate) {
+            if (isDateGreaterOrEqual(dateCompleted, nextOccurrenceDate)) {
               this.retainerFutureSteps.push(step);
             } else {
               if (step.tasks?.length) {

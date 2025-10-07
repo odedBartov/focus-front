@@ -26,7 +26,6 @@ export function isDateBeforeToday(date: Date): boolean {
   return given < today;
 }
 
-
 export function getTextForTask(task: StepOrTask): string | undefined {
   if (task.task) {
     return task.task.text;
@@ -48,4 +47,21 @@ export function areTwoDaysInTheSameWeek(date1: Date, date2: Date): boolean {
 
   // Compare timestamps
   return d1.getTime() === d2.getTime();
+}
+
+export function parseLocalDate(dateValue: string | Date | undefined): Date {
+  if (!dateValue) return new Date(0);
+  if (dateValue instanceof Date) return dateValue;
+
+  // Remove timezone info (Z or ±hh:mm) so JS treats it as local time
+  const localDateString = dateValue.replace(/Z|([+-]\d{2}:?\d{2})$/, '');
+  return new Date(localDateString);
+}
+
+export function isDateGreaterOrEqual(d1: Date, d2: Date): boolean {
+  return (
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+  );
 }
