@@ -246,7 +246,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
             if (step.recurringDateType === recurringDateTypeEnum.day) {
               occurIntervalCounter.setDate(occurIntervalCounter.getDate() + (step.recurringEvery ?? 1));
               // nextOccurrenceDate.setDate(occurIntervalCounter.getDate());
-              while (occurIntervalCounter <= today) {
+              while (isDateGreaterOrEqual(today, occurIntervalCounter)) {
                 nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + (step.recurringEvery ?? 1));
                 occurIntervalCounter.setDate(occurIntervalCounter.getDate() + (step.recurringEvery ?? 1));
               }
@@ -275,7 +275,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
               occurIntervalCounter.setMonth(occurIntervalCounter.getMonth() + (step.recurringEvery ?? 1));
               occurIntervalCounter.setDate(step.recurringDayInMonth ?? dateCreated.getDate());
               nextOccurrenceDate.setDate(step.recurringDayInMonth ?? dateCreated.getDate());
-              while (occurIntervalCounter <= today) {
+              while (isDateGreaterOrEqual(today, occurIntervalCounter)) {
                 nextOccurrenceDate = new Date(occurIntervalCounter);
                 occurIntervalCounter.setMonth(occurIntervalCounter.getMonth() + (step.recurringEvery ?? 1));
               }
@@ -440,7 +440,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   dropStep(event: CdkDragDrop<string[]>, retainerSteps?: Step[]) {
-    debugger
     if (this.project()?.steps) {
       if (this.isRetainer && retainerSteps) {
         moveItemInArray(retainerSteps, event.previousIndex, event.currentIndex);
