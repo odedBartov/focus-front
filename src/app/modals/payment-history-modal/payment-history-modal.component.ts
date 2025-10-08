@@ -29,7 +29,7 @@ export class PaymentHistoryModalComponent {
     return payment as RetainerPayment;
   }
 
-  getretainerPaymentText(paymentType: retainerPaymentTypeEnum) {
+  getRetainerPaymentText(paymentType: retainerPaymentTypeEnum) {
     return paymentType === retainerPaymentTypeEnum.mothly ? 'חודשי' : 'חד פעמי';
   }
 

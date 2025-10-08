@@ -18,9 +18,9 @@
         <div *ngFor="let payment of payments" class="grid-container">
             <div class="data-row">
                 <div class="new-small">{{ payment.name }}</div>
-                <div class="new-small">{{ isPaymentModelHourly? (getHourlyWorkSession(payment).workTime | date:
-                    'HH:mm:ss') : getretainerPaymentText(getRetainerPayment(payment).type) }}</div>
-                <div class="new-small">{{ payment.price }} ₪</div>
+                <div class="new-small">{{ isPaymentModelHourly? (getHourlyWorkSession(payment).workTime | date:'HH:mm:ss':'UTC')
+                 : getRetainerPaymentText(getRetainerPayment(payment).type)}}</div>
+                <div class="new-small">{{ payment.price | number:'1.1-2'}} ₪</div>
                 <div class="new-small">{{ payment.date | date: 'dd.MM.yyyy' }}</div>
                 <div class="garbage-can">
                     <img class="icon-garbage-can-gray-blue pointer" (click)="deletePayment(payment)" />
@@ -32,7 +32,7 @@
             <div class="data-row">
                 <div class="new-small-bold">סה"כ</div>
                 <div></div>
-                <div class="new-small-bold">{{getTotalPayments()}} ₪</div>
+                <div class="new-small-bold">{{getTotalPayments() | number:'1.1-2'}} ₪</div>
                 <div></div>
                 <div></div>
             </div>

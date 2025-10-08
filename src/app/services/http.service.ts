@@ -9,6 +9,7 @@ import { InsightAndUpdates } from '../models/insightAndUpdates';
 import { User } from '../models/user';
 import { Title } from '@angular/platform-browser';
 import { HourlyWorkSession } from '../models/hourlyWorkSession';
+import { RetainerPayment } from '../models/RetainerPayment';
 
 @Injectable({
   providedIn: 'root'
@@ -106,14 +107,29 @@ export class HttpService {
     return this.httpClient.put<Step[]>(this.apiUrl + "Steps/updateSteps", steps, headers);
   }
 
+  createRetainerPayment(payment: RetainerPayment) {
+    const headers = this.generateHeaders();
+    return this.httpClient.post<RetainerPayment>(this.apiUrl + "Retainer/createRetainerPayment", payment, headers);
+  }
+
+  deleteRetainerPayment(paymentId: string) {
+    const headers = this.generateHeaders();
+    return this.httpClient.delete(`${this.apiUrl}Retainer/deleteRetainerPayment?paymentId=${paymentId}`, headers)
+  }
+
   deleteStep(stepId: string) {
     const headers = this.generateHeaders();
     return this.httpClient.delete(`${this.apiUrl}Steps/deleteStep?stepId=${stepId}`, headers)
   }
 
-  createHourlyWorkSession(session: HourlyWorkSession): Observable<any> {
+  createHourlyWorkSession(session: HourlyWorkSession): Observable<HourlyWorkSession> {
     const headers = this.generateHeaders();
-    return this.httpClient.post(this.apiUrl + "*****", session, headers);
+    return this.httpClient.post<HourlyWorkSession>(this.apiUrl + "Retainer/createHourlySession", session, headers);
+  }
+
+  deleteHourlyWorkSession(sessionId: string) {
+    const headers = this.generateHeaders();
+    return this.httpClient.delete(`${this.apiUrl}Retainer/deleteHourlySession?paymentId=${sessionId}`, headers)
   }
 
   getInsightAndUpdates(): Observable<InsightAndUpdates> {

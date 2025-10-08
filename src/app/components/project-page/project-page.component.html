@@ -87,7 +87,7 @@
                         <span class="new-text-bold">ספירת שעות לתשלום</span>
                     </div>
                     <div class="timer">
-                        <img class="icon-stop pointer" (click)="sessionTimerStep = 3; $event.stopPropagation()" />
+                        <img class="icon-stop pointer" (click)="stopSessionTimer($event)" />
                         <div class="clock">
                             <div class="group">{{ seconds }}</div>
                             <div class="colon">:</div>

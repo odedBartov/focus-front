@@ -346,13 +346,14 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       payment.price = (this.sessionTime / 3600000) * (this.project()?.reccuringPayment ?? 0);
       payment.date = new Date();
       payment.workTime = this.sessionTime;
+      payment.projectId = this.project().id ?? '';
 
       this.project()?.hourlyWorkSessions.push(payment);
       this.sessionTime = 0;
       this.sessionTimerStep = 1;
       this.pauseSessionTimer();
       this.calculatePayments();
-      this.httpService.createHourlyWorkSession(payment).subscribe(res => { });
+      this.httpService.createHourlyWorkSession(payment).subscribe(res => {});
     }
   }
 
@@ -361,10 +362,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   openPaymentHistoryModal() {
-    var p1: RetainerPayment = { date: new Date(), name: "תשלום חודשי", type: retainerPaymentTypeEnum.mothly, id: '1', projectId: '1', price: 1500 };
-    var p2: RetainerPayment = { date: new Date(), name: "תשלום שעתי", type: retainerPaymentTypeEnum.oneTime, id: '2', projectId: '1', price: 100 };
-    var p3: RetainerPayment = { date: new Date(), name: "תשלום נוסף", type: retainerPaymentTypeEnum.oneTime, id: '3', projectId: '1', price: 200 };
-    this.project().retainerPayments = [p1, p2, p3, p1, p2, p3, p1, p2, p3,]
     this.dialog.open(PaymentHistoryModalComponent, { data: { payments: this.isPaymentModelHourly ? this.project().hourlyWorkSessions : this.project().retainerPayments, isPaymentModelHourly: this.isPaymentModelHourly } });
   }
 
@@ -563,6 +560,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   updateStep(step: Step) {
     this.animationsService.changeIsLoadingWithDelay();
+    this.handleRetainerPayments(step);
     this.httpService.updateSteps([step]).subscribe(res => {
       if (this.project().steps) {
         this.project().steps = this.project()?.steps?.map(step =>
@@ -581,6 +579,21 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.animationsService.changeIsloading(false);
       this.isFinishProject();
     })
+  }
+
+  handleRetainerPayments(step: Step) {
+    if (step.isComplete) {
+      const payment = new RetainerPayment();
+      payment.name = step.name ?? 'תשלום ללא שם';
+      payment.price = step.price;
+      payment.projectId = step.projectId ?? 'noId';
+      payment.type = step.isRecurring ? retainerPaymentTypeEnum.mothly : retainerPaymentTypeEnum.oneTime;
+      this.httpService.createRetainerPayment(payment).subscribe((res: RetainerPayment) => {
+        this.project().retainerPayments.push(res);
+      });
+    } else if (!step.isRecurring) {
+      // delete retainer payment?
+    }
   }
 
   playLottieAnimation(): Promise<void> {

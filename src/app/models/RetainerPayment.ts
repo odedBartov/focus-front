@@ -7,4 +7,9 @@ export class RetainerPayment {
     type!: retainerPaymentTypeEnum;
     price!: number;
     date!: Date;
+
+    constructor() {
+        this.id = '';
+        this.date = new Date();
+    }
 }
