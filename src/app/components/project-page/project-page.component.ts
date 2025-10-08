@@ -238,7 +238,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
           this.retainerActiveSteps.push(step);
         } else {
           if (step.isRecurring) {
-            const dateCreated = parseLocalDate(step.dateCreated);
+            const dateCreated = parseLocalDate(step.dateCreated ?? step.dateCompleted);
             const dateCompleted = parseLocalDate(step.dateCompleted);
             const today = new Date();
             let nextOccurrenceDate = new Date(dateCreated);
@@ -282,7 +282,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
               step.dateCreated = new Date(nextOccurrenceDate);
             }
 
-            if (isDateGreaterOrEqual(dateCompleted, nextOccurrenceDate)) {
+            if (isDateGreaterOrEqual(dateCompleted, nextOccurrenceDate) || nextOccurrenceDate > today) {
               this.retainerFutureSteps.push(step);
             } else {
               if (step.tasks?.length) {
@@ -298,7 +298,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       });
     }
 
-    // order by positions
+    this.updateRetainerStepsPositions();
   }
 
   updateRetainerStepDate(step: Step, nextOccurrenceDate: Date) {
@@ -361,10 +361,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   openPaymentHistoryModal() {
-    var p1: RetainerPayment = {date: new Date(), name: "תשלום חודשי", type: retainerPaymentTypeEnum.mothly, id: '1', projectId: '1', price: 1500};
-    var p2: RetainerPayment = {date: new Date(), name: "תשלום שעתי", type: retainerPaymentTypeEnum.oneTime, id: '2', projectId: '1', price: 100};
-    var p3: RetainerPayment = {date: new Date(), name: "תשלום נוסף", type: retainerPaymentTypeEnum.oneTime, id: '3', projectId: '1', price: 200};
-    this.project().retainerPayments = [p1, p2, p3,p1, p2, p3,p1, p2, p3,]
+    var p1: RetainerPayment = { date: new Date(), name: "תשלום חודשי", type: retainerPaymentTypeEnum.mothly, id: '1', projectId: '1', price: 1500 };
+    var p2: RetainerPayment = { date: new Date(), name: "תשלום שעתי", type: retainerPaymentTypeEnum.oneTime, id: '2', projectId: '1', price: 100 };
+    var p3: RetainerPayment = { date: new Date(), name: "תשלום נוסף", type: retainerPaymentTypeEnum.oneTime, id: '3', projectId: '1', price: 200 };
+    this.project().retainerPayments = [p1, p2, p3, p1, p2, p3, p1, p2, p3,]
     this.dialog.open(PaymentHistoryModalComponent, { data: { payments: this.isPaymentModelHourly ? this.project().hourlyWorkSessions : this.project().retainerPayments, isPaymentModelHourly: this.isPaymentModelHourly } });
   }
 
@@ -411,11 +411,42 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         this.project().steps[index].positionInList = index;
       }
     }
+
+    if (this.isRetainer) {
+      this.updateRetainerStepsPositions();
+    }
   }
 
-  dropStep(event: CdkDragDrop<string[]>) {
+  updateRetainerStepsPositions() {
+    for (let index = 0; index < this.retainerActiveSteps.length; index++) {
+      this.retainerActiveSteps[index].positionInList = index;
+    }
+    this.retainerActiveSteps.sort(s => s.positionInList);
+
+    for (let index = 0; index < this.retainerFutureSteps.length; index++) {
+      this.retainerFutureSteps[index].positionInList = index;
+    }
+    this.retainerFutureSteps.sort(s => s.positionInList);
+
+    for (let index = 0; index < this.retainerFinishedSteps.length; index++) {
+      this.retainerFinishedSteps[index].positionInList = index;
+    }
+    this.retainerFinishedSteps.sort(s => s.positionInList);
+  }
+
+  adjustCdkPreviewHeight(div: any) { // this is stupid. angular is stupid
+    const cdkPreview = document.getElementsByClassName("cdk-drag retainer-step-future not-finished cdk-drag-preview")[0] as any;
+    cdkPreview.style.height = (div.scrollHeight + 18) + 'px';
+  }
+
+  dropStep(event: CdkDragDrop<string[]>, retainerSteps?: Step[]) {
+    debugger
     if (this.project()?.steps) {
-      moveItemInArray(this.project().steps, event.previousIndex, event.currentIndex);
+      if (this.isRetainer && retainerSteps) {
+        moveItemInArray(retainerSteps, event.previousIndex, event.currentIndex);
+      } else {
+        moveItemInArray(this.project().steps, event.previousIndex, event.currentIndex);
+      }
       this.updateStepsPosition();
       this.animationHackFlag = false;
       setTimeout(() => { // stupid angular animation

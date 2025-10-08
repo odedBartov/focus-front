@@ -185,7 +185,7 @@
                 פתוחות</span>
             <div class="content" [@accordion]="(openedAccordion === 1) ? 'expanded' : 'collapsed'">
                 <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList cdkDropListOrientation="mixed"
-                    #stepsContainer>
+                    #stepsContainer (cdkDropListDropped)="dropStep($event, retainerActiveSteps)">
                     <div class="retainer-step" *ngFor="let step of retainerActiveSteps; let i = index"
                         (mouseenter)="hoverStep(step.id, i)" (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
                         <div *ngIf="animationHackFlag">
@@ -214,8 +214,7 @@
                             </div>
                             <div class="recurring-data-span" *ngIf="step.isRecurring">
                                 <img class="cycle" />
-                                <span>חוזר כל {{step.recurringEvery && step.recurringEvery > 1? step.recurringEvery :
-                                    ''}}&nbsp;</span>
+                                <span>חוזר כל {{step.recurringEvery && step.recurringEvery > 1? step.recurringEvery :''}}&nbsp;</span>
                                 <span
                                     *ngIf="step.recurringDateType === recurringDateTypeEnum.day">{{(step.recurringEvery
                                     && step.recurringEvery > 1)? 'ימים' : 'יום'}}</span>
@@ -258,9 +257,9 @@
                 עתידיות</span>
             <div class="content" [@accordion]="(openedAccordion === 2) ? 'expanded' : 'collapsed'">
                 <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList cdkDropListOrientation="mixed"
-                    #stepsContainer>
+                    #stepsContainer (cdkDropListDropped)="dropStep($event, retainerFutureSteps)">
                     <div class="retainer-step-future not-finished" style="break-inside: avoid;"
-                        *ngFor="let step of retainerFutureSteps; let i = index" (mouseenter)="hoverStep(step.id, i)"
+                        *ngFor="let step of retainerFutureSteps; let i = index" (mouseenter)="hoverStep(step.id, i)" (cdkDragStarted)="adjustCdkPreviewHeight(stepDiv)"
                         (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
                         <div *ngIf="animationHackFlag">
                             <div class="step-header active">
@@ -295,7 +294,7 @@
                                 </div>
                                 <div class="recurring-data-span new-small" *ngIf="step.isRecurring">
                                     <img class="cycle" />
-                                    <span>חוזר כל {{step.recurringEvery && step.recurringEvery > 1? step.recurringEvery
+                                    <span>חוזר כל{{step.recurringEvery && step.recurringEvery > 1? step.recurringEvery
                                         :
                                         ''}}&nbsp;</span>
                                     <span

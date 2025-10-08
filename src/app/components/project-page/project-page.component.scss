@@ -457,6 +457,49 @@
         @include retainer-step-style;
     }
 
+    &.retainer-step-future {
+        @include mixins.step;
+        width: 15.25rem !important;
+
+        &.step.not-finished,
+        &.not-finished {
+            padding-bottom: 0 !important;
+        }
+
+        .step-header {
+            margin-bottom: 16px;
+
+            img {
+                height: 12px;
+                background-color: var(--main-color);
+                border-radius: 50%;
+                padding: 4px;
+            }
+        }
+
+        textarea {
+            border: none;
+            padding: 0;
+            border-radius: 0;
+            margin-bottom: 16px;
+        }
+
+        .buttons-and-recurring {
+            display: flex;
+            justify-content: space-between;
+
+            .edit-delete {
+                display: flex;
+                justify-content: start;
+                gap: 10px;
+
+                img {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
     &.step.not-finished {
         padding: 20px 28px 24px;
     }
