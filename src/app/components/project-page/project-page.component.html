@@ -186,8 +186,7 @@
             <div class="content" [@accordion]="(openedAccordion === 1) ? 'expanded' : 'collapsed'">
                 <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList cdkDropListOrientation="mixed"
                     #stepsContainer (cdkDropListDropped)="dropStep($event, retainerActiveSteps)">
-                    <div class="retainer-step" *ngFor="let step of retainerActiveSteps; let i = index"
-                        (mouseenter)="hoverStep(step.id, i)" (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
+                    <div class="retainer-step" *ngFor="let step of retainerActiveSteps; let i = index" #stepDiv cdkDrag>
                         <div *ngIf="animationHackFlag">
                             <div class="step-header active">
                                 <span class="new-text-bold">{{step.name}}</span>
@@ -259,8 +258,7 @@
                 <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList cdkDropListOrientation="mixed"
                     #stepsContainer (cdkDropListDropped)="dropStep($event, retainerFutureSteps)">
                     <div class="retainer-step-future not-finished" style="break-inside: avoid;"
-                        *ngFor="let step of retainerFutureSteps; let i = index" (mouseenter)="hoverStep(step.id, i)" (cdkDragStarted)="adjustCdkPreviewHeight(stepDiv)"
-                        (mouseleave)="hoverStepId = undefined" #stepDiv cdkDrag>
+                        *ngFor="let step of retainerFutureSteps; let i = index" (cdkDragStarted)="adjustCdkPreviewHeight(stepDiv)" #stepDiv cdkDrag>
                         <div *ngIf="animationHackFlag">
                             <div class="step-header active">
                                 <span class="new-text-bold">{{step.name}}</span>

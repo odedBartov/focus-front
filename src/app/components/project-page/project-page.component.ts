@@ -353,7 +353,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.sessionTimerStep = 1;
       this.pauseSessionTimer();
       this.calculatePayments();
-      this.httpService.createHourlyWorkSession(payment).subscribe(res => {});
+      this.httpService.createHourlyWorkSession(payment).subscribe(res => { });
     }
   }
 
@@ -577,7 +577,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         }
       }, 1);
       this.animationsService.changeIsloading(false);
-      this.isFinishProject();
+      if (!this.isRetainer) {
+        this.isFinishProject();
+      }
     })
   }
 
