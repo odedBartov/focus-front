@@ -129,7 +129,7 @@ export class HttpService {
 
   deleteHourlyWorkSession(sessionId: string) {
     const headers = this.generateHeaders();
-    return this.httpClient.delete(`${this.apiUrl}Retainer/deleteHourlySession?paymentId=${sessionId}`, headers)
+    return this.httpClient.delete(`${this.apiUrl}Retainer/deleteHourlySession?sessionId=${sessionId}`, headers)
   }
 
   getInsightAndUpdates(): Observable<InsightAndUpdates> {

@@ -4,6 +4,7 @@ import { HourlyWorkSession } from '../../models/hourlyWorkSession';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { retainerPaymentTypeEnum } from '../../models/enums';
+import { HttpService } from '../../services/http.service';
 
 @Component({
   selector: 'app-payment-history-modal',
@@ -13,6 +14,7 @@ import { retainerPaymentTypeEnum } from '../../models/enums';
 })
 export class PaymentHistoryModalComponent {
   dialogRef = inject(MatDialogRef<PaymentHistoryModalComponent>);
+  httpService = inject(HttpService);
   retainerPaymentTypeEnum = retainerPaymentTypeEnum;
   payments: (RetainerPayment | HourlyWorkSession)[] = [];
   isPaymentModelHourly = false;
@@ -43,6 +45,10 @@ export class PaymentHistoryModalComponent {
       this.payments.splice(index, 1);
     }
 
-    //call http
+    if(this.isPaymentModelHourly) {
+      this.httpService.deleteHourlyWorkSession(payment.id).subscribe();
+    } else {
+      this.httpService.deleteRetainerPayment(payment.id).subscribe();
+    }
   }
 }
