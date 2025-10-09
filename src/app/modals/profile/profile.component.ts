@@ -81,10 +81,10 @@ export class ProfileComponent implements AfterViewInit {
   }
 
   unSubscribe() {
-    this.fullName = this.user.firstName + ' ' + this.user.lastName;
-    const message = `הי, זה ${this.fullName}.%0A כתובת המייל שלי היא ${this.user.email}.%0A אני משתמש בפוקוס ורוצה לבטל את המנוי שלי`;
-    const url = `https://wa.me/${this.arielsNumber}?text=${message}`;
-    window.open(url, '_blank');
+    // this.fullName = this.user.firstName + ' ' + this.user.lastName;
+    // const message = `הי, זה ${this.fullName}.%0A כתובת המייל שלי היא ${this.user.email}.%0A אני משתמש בפוקוס ורוצה לבטל את המנוי שלי`;
+    // const url = `https://wa.me/${this.arielsNumber}?text=${message}`;
+    window.open(environment.subscriptionUrl, '_blank');
   }
 
   logOut() {
