@@ -348,12 +348,13 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       payment.workTime = this.sessionTime;
       payment.projectId = this.project().id ?? '';
 
-      this.project()?.hourlyWorkSessions.push(payment);
       this.sessionTime = 0;
       this.sessionTimerStep = 1;
       this.pauseSessionTimer();
       this.calculatePayments();
-      this.httpService.createHourlyWorkSession(payment).subscribe(res => { });
+      this.httpService.createHourlyWorkSession(payment).subscribe(res => { 
+        this.project()?.hourlyWorkSessions.push(res);
+      });
     }
   }
 

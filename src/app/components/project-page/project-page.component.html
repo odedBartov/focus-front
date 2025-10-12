@@ -103,8 +103,8 @@
                     <span class="new-text-bold">שמירת סשן</span>
                     <div class="save-session">
                         <img class="icon-garbage-can-gray-white pointer" (click)="deleteWorkingSession($event)" />
-                        <input placeholder="שלב נוכחי" [(ngModel)]="retainerPaymentName" />
-                        <img class="icon-confirm-transparent pointer" (click)="finishWorkingSession()" />
+                        <input placeholder="שלב נוכחי" [(ngModel)]="retainerPaymentName" tabindex="0"/>
+                        <img class="icon-confirm-transparent pointer" (click)="finishWorkingSession()" tabindex="0" (keydown.enter)="finishWorkingSession()"/>
                     </div>
                 </ng-container>
             </div>
