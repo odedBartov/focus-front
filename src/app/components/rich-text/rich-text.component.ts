@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { AuthenticationService } from '../../services/authentication.service';
+import { DOMParser as ProseMirrorDOMParser } from 'prosemirror-model';
 
 @Component({
   selector: 'app-rich-text',
@@ -36,23 +37,42 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     this.initEditor();
   }
 
-ngAfterViewInit(): void {
-  const plainTextPastePlugin = new Plugin({
-    props: {
-      handlePaste(view: EditorView, event: ClipboardEvent) {
-        const text = event.clipboardData?.getData('text/plain');
-        if (text) {
-          const { from, to } = view.state.selection;          
-          const tr = view.state.tr.insertText(text, from, to);
+  ngAfterViewInit(): void {
+    const preserveHtmlPastePlugin = new Plugin({
+      props: {
+        handlePaste(view, event) {
+          const html = event.clipboardData?.getData('text/html');
+          const text = event.clipboardData?.getData('text/plain');
+
+          // Nothing to paste
+          if (!html && !text) return false;
+
+          event.preventDefault();
+
+          // Prefer HTML if available (keeps formatting)
+          let htmlToUse = html || text;
+
+          // If source HTML does not include line breaks as <br> or <p>,
+          // convert raw \n characters to <br>
+          if (text && !html) {
+            htmlToUse = text.replace(/\r?\n/g, '<br>');
+          }
+
+          const parser = new DOMParser();
+          const dom = parser.parseFromString(htmlToUse ?? '', 'text/html');
+
+          const pmParser = ProseMirrorDOMParser.fromSchema(view.state.schema);
+          const slice = pmParser.parseSlice(dom.body);
+
+          const tr = view.state.tr.replaceSelection(slice);
           view.dispatch(tr);
-          return true; // ✅ Tell ProseMirror not to process the paste any further
-        }
-        return false;
-      }
-    }
-  });
-  this.editor.registerPlugin(plainTextPastePlugin);
-}
+
+          return true; // stop default paste
+        },
+      },
+    });
+    this.editor.registerPlugin(preserveHtmlPastePlugin);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['project'] && this.project) {
