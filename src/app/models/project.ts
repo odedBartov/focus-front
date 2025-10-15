@@ -44,5 +44,6 @@ export class Project {
         this.notes = '';
         this.retainerPayments = [];
         this.hourlyWorkSessions = [];
+        this.startDate = new Date();
     }
 }

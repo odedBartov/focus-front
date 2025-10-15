@@ -19,6 +19,7 @@ export class NewProjectComponent {
   dialogRef = inject(MatDialogRef<NewProjectComponent>);
   formBuilder = inject(FormBuilder);
   authenticationService = inject(AuthenticationService);
+  datePipe = inject(DatePipe);
   projectTypeEnum = projectTypeEnum;
   paymentModelEnum = paymentModelEnum;
   daysInMonth = new Array(30).fill(0).map((_, i) => i + 1);
@@ -32,6 +33,7 @@ export class NewProjectComponent {
   constructor() {
     this.project = new Project();
     this.project.ownerPicture = this.authenticationService.getUserPicture() ?? undefined;
+    this.startDate = this.datePipe.transform(this.project.startDate, 'dd/MM/yy') ?? '';
     // const today = new Date();
     // const dd = String(today.getDate()).padStart(2, '0');
     // const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
