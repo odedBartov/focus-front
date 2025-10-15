@@ -289,6 +289,16 @@
         .accordion {
             width: 100%;
 
+            .collapsed {
+                height: 0;
+                opacity: 0;
+            }
+
+            .expanded {
+                height: calc(var(--big-window-height) - 150px);
+                opacity: 1;
+            }
+
             .title {
                 cursor: pointer;
                 font-size: var(--font-size-3);
@@ -304,12 +314,13 @@
             }
 
             .content {
+                transition: 0.3s;
                 overflow-y: auto;
                 padding: 0 25px;
                 overflow-x: hidden;
                 display: flex;
                 flex-direction: column;
-                max-height: calc(var(--big-window-height) - 150px);
+                //max-height: calc(var(--big-window-height) - 150px);
             }
 
             .opened {

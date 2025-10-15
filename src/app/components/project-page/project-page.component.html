@@ -183,7 +183,7 @@
         <div class="accordion">
             <span class="title" [ngClass]="{'opened': openedAccordion == 1}" (click)="clickOnAccordion(1)">משימות
                 פתוחות</span>
-            <div class="content" [@accordion]="(openedAccordion === 1) ? 'expanded' : 'collapsed'">
+            <div class="content" [class]="(openedAccordion === 1) ? 'expanded' : 'collapsed'">
                 <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList cdkDropListOrientation="mixed"
                     #stepsContainer (cdkDropListDropped)="dropStep($event, retainerActiveSteps)">
                     <div class="retainer-step" *ngFor="let step of retainerActiveSteps; let i = index" #stepDiv cdkDrag>
@@ -254,7 +254,7 @@
         <div class="accordion">
             <span class="title" [ngClass]="{'opened': openedAccordion == 2}" (click)="clickOnAccordion(2)">משימות
                 עתידיות</span>
-            <div class="content" [@accordion]="(openedAccordion === 2) ? 'expanded' : 'collapsed'">
+            <div class="content" [class]="(openedAccordion === 2) ? 'expanded' : 'collapsed'">
                 <div class="retainer-steps" *ngIf="!showNotes && isRetainer" cdkDropList cdkDropListOrientation="mixed"
                     #stepsContainer (cdkDropListDropped)="dropStep($event, retainerFutureSteps)">
                     <div class="retainer-step-future not-finished" style="break-inside: avoid;"
@@ -318,7 +318,7 @@
         <div class="accordion">
             <span class="title" [ngClass]="{'opened': openedAccordion == 3}" (click)="clickOnAccordion(3)">משימות
                 שהסתיימו</span>
-            <div class="content" [@accordion]="(openedAccordion === 3) ? 'expanded' : 'collapsed'">
+            <div class="content" [class]="(openedAccordion === 3) ? 'expanded' : 'collapsed'">
                 <div class="retainer-steps-finished" *ngIf="!showNotes && isRetainer" #stepsContainer>
                     <div [ngClass]="{'retainer-step-finished': step.id !== editStepId }"
                         *ngFor="let step of retainerFinishedSteps; let i = index" (mouseenter)="hoverStep(step.id, i)"

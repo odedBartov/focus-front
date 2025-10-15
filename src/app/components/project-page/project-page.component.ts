@@ -50,21 +50,6 @@ import { PaymentHistoryModalComponent } from '../../modals/payment-history-modal
         animate('200ms ease')
       ]),
     ]),
-    trigger('accordion', [
-      state('collapsed', style({
-        height: '0px',
-        display: 'flex',
-        opacity: 0,
-      })),
-      state('expanded', style({
-        height: '*',
-        display: 'flex',
-        opacity: 1,
-      })),
-      transition('collapsed <=> expanded', [
-        animate('200ms ease')
-      ]),
-    ]),
     trigger('timerHeightTransition', [
       state('small', style({
         height: '100px'
