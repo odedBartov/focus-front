@@ -243,16 +243,6 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
-.hide-and-show {
-    opacity: 0;
-
-    &:hover {
-        opacity: 1;
-    }
-
-    transition: 0.3s;
-}
-
 .toggle-switch {
     width: 28px;
     height: 16px;

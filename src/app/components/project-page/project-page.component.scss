@@ -80,6 +80,17 @@
     .step-icons {
         margin-top: 6px;
     }
+
+    .extra-not-finished {
+        opacity: 0;
+        transition: 0.3s;
+    }
+
+    :hover {
+        .extra-not-finished {
+            opacity: 1;
+        }
+    }
 }
 
 .main {
