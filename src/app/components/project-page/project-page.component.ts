@@ -348,9 +348,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   openPaymentHistoryModal() {
-    this.dialog.open(PaymentHistoryModalComponent, { data: { payments: this.isPaymentModelHourly ? this.project().hourlyWorkSessions : this.project().retainerPayments, isPaymentModelHourly: this.isPaymentModelHourly } });
+    const payments = this.isPaymentModelHourly ? this.project().hourlyWorkSessions : this.project().retainerPayments;    
+    this.dialog.open(PaymentHistoryModalComponent, { data: { payments: payments, isPaymentModelHourly: this.isPaymentModelHourly } });
   }
-
+  
   setActiveStepHeight() {
     // const element = this.descriptions.get(0)?.nativeElement as HTMLTextAreaElement;
     // if (element) {
@@ -475,12 +476,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  updateCient() {
-    if (this.project) {
-      this.project().updateClient = !this.project().updateClient;
-    }
-  }
-
   changeStepStatus(step: Step) {
     this.animatingItemId = step.isRecurring || (!step.isRecurring && !step.isComplete) ? step.id : undefined;
     this.changeDetectorRef.detectChanges(); // Ensure the view is updated before the animation starts
@@ -570,7 +565,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   handleRetainerPayments(step: Step) {
-    if (step.isComplete) {
+    if (step.isComplete && step.stepType === StepType.payment) {
       const payment = new RetainerPayment();
       payment.name = step.name ?? 'תשלום ללא שם';
       payment.price = step.price;
