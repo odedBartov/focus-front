@@ -277,3 +277,13 @@
         }
     }
 }
+
+::ng-deep .hide-modal-background {
+    .mat-mdc-dialog-surface {
+        background: transparent;
+    }
+
+    .cdk-overlay-pane.mat-mdc-dialog-panel {
+        box-shadow: none !important;
+    }
+}

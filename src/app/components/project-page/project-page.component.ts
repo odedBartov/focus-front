@@ -668,7 +668,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   showNewStepModal() {
-    const dialogRef = this.dialog.open(NewStepModalComponent, { data: {} });
+    const dialogRef = this.dialog.open(NewStepModalComponent, { autoFocus: false, data: {} });
     const childInstance = dialogRef.componentInstance;
     childInstance.stepUpdated.subscribe(newStep => {
       this.createNewStep(newStep);

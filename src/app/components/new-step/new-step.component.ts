@@ -104,6 +104,7 @@ export class NewStepComponent implements AfterViewInit {
   }
 
   selectType(type: StepType) {
+    document.body.classList.remove('hide-modal-background');
     this.newStep = new Step();
     this.newStep.stepType = type;
     this.scrollToBottom.emit();
