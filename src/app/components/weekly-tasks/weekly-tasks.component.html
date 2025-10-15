@@ -24,9 +24,9 @@
                                 (completeTask)="completeTask($event, day.tasks)"
                                 [shouldHidePlaceHolder]="isDraggingTaskToProjects"></app-weekly-day-task>
                         </div>
-                        <div class="new-task" *ngIf="!isDateBeforeToday(day.date)">
-                            <app-new-task (createNewTask)="createNewTask($event, day)"></app-new-task>
-                        </div>
+                    </div>
+                    <div class="new-task" *ngIf="!isDateBeforeToday(day.date)">
+                        <app-new-task (createNewTask)="createNewTask($event, day)"></app-new-task>
                     </div>
                 </div>
             </div>
