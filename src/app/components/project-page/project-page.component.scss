@@ -412,6 +412,13 @@
         }
     }
 
+    .retainer-steps,
+    .retainer-steps-finished {
+        .task {
+            margin-bottom: 8px;
+        }
+    }
+
     .new-step {
         display: flex;
         width: 400px;
@@ -552,6 +559,7 @@
 .radio-button {
     border-radius: 50%;
     margin-top: 3px;
+    margin-left: 12px;
     height: 15px;
     width: 16px;
     display: flex;
