@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div class="cycle" *ngIf="isRetainer">
-                <button class="button" (click)="newStep.isRecurring= true" *ngIf="!newStep.isRecurring" tabindex="6">
+                <button class="button" (click)="initStepIsRecurring()" *ngIf="!newStep.isRecurring" tabindex="6">
                     <img class="cycle" />
                     משימה חוזרת
                 </button>

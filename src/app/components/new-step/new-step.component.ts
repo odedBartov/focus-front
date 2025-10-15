@@ -130,7 +130,12 @@ export class NewStepComponent implements AfterViewInit {
     }, 1);
   }
 
-  isdayInWeekDay(day: string) {    
+  initStepIsRecurring() {
+    this.newStep.isRecurring = true;
+    this.newStep.recurringEvery = 1;
+  }
+
+  isdayInWeekDay(day: string) {
     const index = this.daysInWeek.indexOf(day);
     return this.newStep.recurringDaysInWeek?.includes(index);
   }

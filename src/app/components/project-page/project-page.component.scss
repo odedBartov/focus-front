@@ -333,8 +333,9 @@
 
     .retainer-steps {
         column-count: 2;
+        gap: 20px;
         width: 710px;
-        padding: 15px 0;
+        padding: 20px 0;
 
         .retainer-step {
             @include retainer-step-style;
