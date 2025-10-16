@@ -47,6 +47,7 @@ export class NewStepComponent implements AfterViewInit {
       }
     }
   }
+  @Input() showBorder = true;
   @Output() stepsEmitter = new EventEmitter<Step>();
   projectTypeEnum = projectTypeEnum;
   paymentModelEnum = paymentModelEnum;

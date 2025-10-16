@@ -1,5 +1,5 @@
 <div class="main"
-    [ngClass]="{'border': !isActive && newStep != undefined, 'white-background': isActive && newStep != undefined}">
+    [ngClass]="{'border': !isActive && newStep != undefined && showBorder, 'white-background': isActive && newStep != undefined}">
     <div class="choose-type" *ngIf="!isEdit && (newStep == undefined || newStep.stepType === undefined)">
         <div class="steps">
             <div class="step-type" (click)="selectType(stepTypeEnum.task)" tabindex="0">
