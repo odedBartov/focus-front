@@ -54,6 +54,11 @@ export class HttpService {
     return this.httpClient.put(this.apiUrl + 'Auth/endFreeTrial', headers);
   }
 
+  checkIfFreeTrialEnded() {
+    const headers = this.generateHeaders();
+    return this.httpClient.get(this.apiUrl + "Auth/checkFreeTrialExpire", headers);
+  }
+
   updateUser(user: User) {
     const headers = this.generateHeaders();
     return this.httpClient.put<User>(this.apiUrl + 'Auth/updateUser', user, headers);

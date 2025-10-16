@@ -3,6 +3,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { environment } from '../../../environments/environment';
 import { HttpService } from '../../services/http.service';
 import { Router } from '@angular/router';
+import { AnimationsService } from '../../services/animations.service';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-free-trial-end',
@@ -13,6 +15,8 @@ import { Router } from '@angular/router';
 export class FreeTrialEndComponent {
   dialogRef = inject(MatDialogRef<FreeTrialEndComponent>);
   httpService = inject(HttpService);
+  animationsService = inject(AnimationsService);
+  authSercvice = inject(AuthenticationService);
   router = inject(Router);
   arielsNumber = environment.arielsNumber;
   msg = "היי, אני רוצה לקבל חודש נוסף של פוקוס על מלא";
@@ -26,8 +30,11 @@ export class FreeTrialEndComponent {
   }
 
   cancel() {
+    this.animationsService.changeIsloading(true);
     this.httpService.endFreeTrial().subscribe({
       next: () => {
+        this.animationsService.changeIsloading(false);
+        this.authSercvice.setSubscription(1);
         this.dialogRef.close();
         this.router.navigate(['/home']);
       }

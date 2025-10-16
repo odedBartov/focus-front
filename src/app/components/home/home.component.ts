@@ -24,7 +24,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ProfileComponent } from '../../modals/profile/profile.component';
 import { WeeklyTasksComponent } from '../weekly-tasks/weekly-tasks.component';
-import { Step } from '../../models/step';
+import { FreeTrialEndComponent } from '../../modals/free-trial-end/free-trial-end.component';
 
 @Component({
   selector: 'app-home',
@@ -110,6 +110,16 @@ export class HomeComponent implements OnInit {
         this.refreshProjects(paramProjectId);
       }
     }, 1);
+
+    this.checkIfFreeTrialEnded();
+  }
+
+  checkIfFreeTrialEnded() {
+    this.httpService.checkIfFreeTrialEnded().subscribe(res => {
+      if (res === true) {
+        this.dialog.open(FreeTrialEndComponent, { disableClose: true })
+      }
+    });
   }
 
   listenToUrl() {

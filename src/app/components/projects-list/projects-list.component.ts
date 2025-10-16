@@ -1,9 +1,9 @@
-import { Component, effect, EventEmitter, inject, Input, Output, WritableSignal } from '@angular/core';
+import { Component, effect, EventEmitter, inject, Input, OnInit, Output, WritableSignal } from '@angular/core';
 import { Project } from '../../models/project';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Router } from '@angular/router';
-import { ProjectStatus, projectTypeEnum, StepType } from '../../models/enums';
+import { ProjectStatus, projectTypeEnum, StepType, subscriptionEnum } from '../../models/enums';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { HttpService } from '../../services/http.service';
@@ -13,6 +13,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { NewProjectComponent } from '../../modals/new-project/new-project.component';
 import { ProjectsService } from '../../services/projects.service';
+import { AuthenticationService } from '../../services/authentication.service';
+import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-feature-modal.component';
 
 @Component({
   selector: 'app-projects-list',
@@ -20,10 +22,11 @@ import { ProjectsService } from '../../services/projects.service';
   templateUrl: './projects-list.component.html',
   styleUrl: './projects-list.component.scss'
 })
-export class ProjectsListComponent {
+export class ProjectsListComponent implements OnInit {
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
   projectsService = inject(ProjectsService);
+  authenticationService = inject(AuthenticationService);
   dialog = inject(MatDialog);
   @Output() selectProjectEmitter = new EventEmitter<Project>();
   projects: WritableSignal<Project[]>;
@@ -32,6 +35,7 @@ export class ProjectsListComponent {
   projectStatusEnum = ProjectStatus;
   projectTypeEnum = projectTypeEnum;
   projectsFilter?: projectTypeEnum;
+  userSubscription = subscriptionEnum.free;
 
   constructor() {
     this.projects = this.projectsService.getActiveProjects();
@@ -43,6 +47,10 @@ export class ProjectsListComponent {
     });
   }
 
+  ngOnInit() {
+    this.userSubscription = this.authenticationService.getSubscription();
+  }
+
   filterProjects(filterType?: projectTypeEnum) {
     this.projectsFilter = filterType;
     var filterLambda = (p: Project) => true;
@@ -51,7 +59,7 @@ export class ProjectsListComponent {
       filterLambda = (p: Project) => p.projectType == undefined || p.projectType === projectTypeEnum.proccess;
     } else if (filterType === projectTypeEnum.retainer) {
       filterLambda = (p: Project) => p.projectType === projectTypeEnum.retainer;
-    } 
+    }
 
     this.filteredProjects = this.projects().filter(filterLambda);
   }
@@ -163,19 +171,24 @@ export class ProjectsListComponent {
   }
 
   openProjectModal() {
-    const dialogRef = this.dialog.open(NewProjectComponent);
-    dialogRef.afterClosed().subscribe(res => {
-      if (res) {
-        this.animationsService.changeIsLoadingWithDelay();
-        this.httpService.createProject(res).subscribe(newProject => {
-          this.projects.set(this.projects().concat(newProject));
-          this.animationsService.changeIsloading(false);
-          setTimeout(() => {
-            this.selectProject(newProject);
-          }, 1);
-        })
-      }
-    })
+    const maxProjects = this.userSubscription == subscriptionEnum.free ? 1 : (this.userSubscription == subscriptionEnum.partial ? 3 : -1);
+    if (maxProjects <= this.projects().length) {
+      this.dialog.open(PaidFeatureModalComponent);
+    } else {
+      const dialogRef = this.dialog.open(NewProjectComponent);
+      dialogRef.afterClosed().subscribe(res => {
+        if (res) {
+          this.animationsService.changeIsLoadingWithDelay();
+          this.httpService.createProject(res).subscribe(newProject => {
+            this.projects.set(this.projects().concat(newProject));
+            this.animationsService.changeIsloading(false);
+            setTimeout(() => {
+              this.selectProject(newProject);
+            }, 1);
+          })
+        }
+      })
+    }
   }
 
   openMenu(event: MouseEvent, menuTrigger: MatMenuTrigger, anchor: HTMLElement) {
