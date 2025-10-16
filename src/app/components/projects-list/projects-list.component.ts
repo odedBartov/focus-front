@@ -3,7 +3,7 @@ import { Project } from '../../models/project';
 import { CommonModule } from '@angular/common';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Router } from '@angular/router';
-import { ProjectStatus, projectTypeEnum, StepType, subscriptionEnum } from '../../models/enums';
+import { paymentModelEnum, ProjectStatus, projectTypeEnum, recurringDateTypeEnum, StepType, subscriptionEnum } from '../../models/enums';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { HttpService } from '../../services/http.service';
@@ -15,6 +15,7 @@ import { NewProjectComponent } from '../../modals/new-project/new-project.compon
 import { ProjectsService } from '../../services/projects.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-feature-modal.component';
+import { Step } from '../../models/step';
 
 @Component({
   selector: 'app-projects-list',
@@ -178,13 +179,33 @@ export class ProjectsListComponent implements OnInit {
       const dialogRef = this.dialog.open(NewProjectComponent);
       dialogRef.afterClosed().subscribe(res => {
         if (res) {
-          this.animationsService.changeIsLoadingWithDelay();
+          this.animationsService.changeIsloading(true);
           this.httpService.createProject(res).subscribe(newProject => {
             this.projects.set(this.projects().concat(newProject));
-            this.animationsService.changeIsloading(false);
-            setTimeout(() => {
-              this.selectProject(newProject);
-            }, 1);
+            if (newProject.projectType === projectTypeEnum.retainer && newProject.paymentModel === paymentModelEnum.monthly) {
+              const newStep = new Step();
+              newStep.isRecurring = true;
+              newStep.name = "תשלום חודשי";
+              newStep.price = newProject.reccuringPayment ?? 0;
+              newStep.projectId = newProject.id;
+              newStep.recurringDateType = recurringDateTypeEnum.month;
+              newStep.recurringDayInMonth = newProject.monthlyPaymentDay;
+              newStep.recurringEvery = 1;
+              newStep.stepType = StepType.payment;
+              newStep.dateDue = new Date();
+              this.httpService.createStep(newStep).subscribe(res => {
+                newProject.steps.push(res);
+                setTimeout(() => {
+                  this.animationsService.changeIsloading(false);
+                  this.selectProject(newProject);
+                }, 1);
+              });
+            } else {
+              setTimeout(() => {
+                this.animationsService.changeIsloading(false);
+                this.selectProject(newProject);
+              }, 1);
+            }
           })
         }
       })

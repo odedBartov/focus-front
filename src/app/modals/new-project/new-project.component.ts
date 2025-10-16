@@ -89,35 +89,6 @@ export class NewProjectComponent {
             this.dialogRef.close(this.project);
           }
         }
-
-        break;
-      default:
-        break;
     }
-
-
-    // if (this.currentProgress === 1) {
-
-    // } else if (this.currentProgress === 2) {
-
-    // } else {
-    //   this.submitted = true;
-    //   if (this.firstForm.valid && this.project) {
-    //     this.project.name = this.firstForm.get("projectName")?.value;
-    //     this.project.description = this.firstForm.get("description")?.value;
-    //     const rawStartDate = this.firstForm.get('startDate')!.value;
-    //     const startDate = parseDate(rawStartDate);
-    //     if (startDate) {
-    //       this.project.startDate = startDate;
-    //     }
-    //     const rawEndDate = this.firstForm.get('endDate')!.value;
-    //     const endDate = parseDate(rawEndDate);
-    //     if (endDate) {
-    //       this.project.endDate = endDate;
-    //     }
-
-    //     this.dialogRef.close(this.project);
-    //   }
-    // }
   }
 }

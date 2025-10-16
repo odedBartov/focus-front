@@ -213,8 +213,12 @@ export class NewStepComponent implements AfterViewInit {
         this.newStep.tasks.pop(); // remove empty task
       }
 
-      if (this.newStep.isRecurring && !this.newStep.recurringEvery) {
-        this.newStep.recurringEvery = 1;
+      if (this.newStep.isRecurring) {
+        this.newStep.dateDue = new Date();
+
+        if (!this.newStep.recurringEvery) {
+          this.newStep.recurringEvery = 1;
+        }
       }
 
       this.stepsEmitter.emit(this.newStep);

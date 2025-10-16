@@ -223,10 +223,11 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
           this.retainerActiveSteps.push(step);
         } else {
           if (step.isRecurring) {
-            const dateCreated = parseLocalDate(step.dateCreated ?? step.dateCompleted);
+            // const dateCreated = parseLocalDate(step.dateCreated ?? step.dateCompleted);
+            const dateDue = parseLocalDate(step.dateDue ?? step.dateCompleted);
             const dateCompleted = parseLocalDate(step.dateCompleted);
             const today = new Date();
-            let nextOccurrenceDate = new Date(dateCreated);
+            let nextOccurrenceDate = new Date(dateDue);
             let occurIntervalCounter = new Date(nextOccurrenceDate);
             if (step.recurringDateType === recurringDateTypeEnum.day) {
               occurIntervalCounter.setDate(occurIntervalCounter.getDate() + (step.recurringEvery ?? 1));
@@ -235,9 +236,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
                 nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + (step.recurringEvery ?? 1));
                 occurIntervalCounter.setDate(occurIntervalCounter.getDate() + (step.recurringEvery ?? 1));
               }
-              step.dateCreated = new Date(nextOccurrenceDate);
+              step.dateDue = new Date(nextOccurrenceDate);
             } else if (step.recurringDateType === recurringDateTypeEnum.week && step.recurringDaysInWeek?.length) {
-              if (areTwoDaysInTheSameWeek(dateCreated, dateCompleted)) { // maybe there is another weekly step in the same week
+              if (areTwoDaysInTheSameWeek(dateDue, dateCompleted)) { // maybe there is another weekly step in the same week
                 // look for next day in week
                 const dayInWeekCompleted = dateCompleted.getDay();
                 let nextDayInWeek = -1;
@@ -248,23 +249,23 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
                   }
                 }
                 if (nextDayInWeek > -1) { // we are still in target week
-                  nextOccurrenceDate.setDate(dateCreated.getDate() + (nextDayInWeek - dateCreated.getDay()));
+                  nextOccurrenceDate.setDate(dateDue.getDate() + (nextDayInWeek - dateDue.getDay()));
                 } else { // should look at next week
-                  nextOccurrenceDate.setDate(dateCreated.getDate() + (step.recurringEvery ?? 1) * 7);
-                  step.dateCreated?.setDate(nextOccurrenceDate.getDate());
+                  nextOccurrenceDate.setDate(dateDue.getDate() + (step.recurringEvery ?? 1) * 7);
+                  step.dateDue?.setDate(nextOccurrenceDate.getDate());
                 }
               } else { // should look at next week
-                nextOccurrenceDate.setDate(dateCreated.getDate() + (step.recurringEvery ?? 1) * 7);
+                nextOccurrenceDate.setDate(dateDue.getDate() + (step.recurringEvery ?? 1) * 7);
               }
             } else { // month
               occurIntervalCounter.setMonth(occurIntervalCounter.getMonth() + (step.recurringEvery ?? 1));
-              occurIntervalCounter.setDate(step.recurringDayInMonth ?? dateCreated.getDate());
-              nextOccurrenceDate.setDate(step.recurringDayInMonth ?? dateCreated.getDate());
+              occurIntervalCounter.setDate(step.recurringDayInMonth ?? dateDue.getDate());
+              nextOccurrenceDate.setDate(step.recurringDayInMonth ?? dateDue.getDate());
               while (isDateGreaterOrEqual(today, occurIntervalCounter)) {
                 nextOccurrenceDate = new Date(occurIntervalCounter);
                 occurIntervalCounter.setMonth(occurIntervalCounter.getMonth() + (step.recurringEvery ?? 1));
               }
-              step.dateCreated = new Date(nextOccurrenceDate);
+              step.dateDue = new Date(nextOccurrenceDate);
             }
 
             if (isDateGreaterOrEqual(dateCompleted, nextOccurrenceDate) || nextOccurrenceDate > today) {

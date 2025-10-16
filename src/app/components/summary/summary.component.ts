@@ -3,7 +3,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { CommonModule } from '@angular/common';
 import { Project } from '../../models/project';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ProjectStatus, StepType } from '../../models/enums';
+import { paymentModelEnum, ProjectStatus, projectTypeEnum, StepType } from '../../models/enums';
 import { Step } from '../../models/step';
 
 @Component({
@@ -14,9 +14,10 @@ import { Step } from '../../models/step';
 })
 export class SummaryComponent implements OnInit {
   authService = inject(AuthenticationService);
-  @Input() steps: Step[] = [];
+  steps: Step[] = [];
   @Input() set projects(projects: Project[]) {
     this.steps = [];
+    this.updatedProjects = projects;
     projects.forEach(project => {
       if (project.status === ProjectStatus.active) {
         this.steps = this.steps.concat(project.steps);
@@ -27,6 +28,7 @@ export class SummaryComponent implements OnInit {
     });
     this.initChart();
   }
+  updatedProjects: Project[] = [];
   greetings: { hour: number, greeting: string }[] = [{ hour: 5, greeting: 'לילה טוב' },
   { hour: 12, greeting: 'בוקר טוב' },
   { hour: 16, greeting: 'צהריים טובים' },
@@ -90,6 +92,7 @@ export class SummaryComponent implements OnInit {
     this.futurePayments[2] = filteredMonths[2].reduce((sum, step) => sum + (!step.isComplete ? step.price : 0), 0);
     this.futurePayments[3] = 0;
     this.futurePayments[4] = 0;
+    this.calculateMonthlyRetainerPayments();
 
     this.calculateGraphScale();
   }
@@ -127,6 +130,18 @@ export class SummaryComponent implements OnInit {
   getFutureGraphValue(index: number) {
     let value = this.pastPayments[index] + this.futurePayments[index];
     return (value / this.maxGraphValue) * 100;
+  }
+
+  calculateMonthlyRetainerPayments() {
+    if (this.updatedProjects) {
+      this.updatedProjects.forEach(project => {
+        if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.monthly) {
+          this.futurePayments[0] += project.reccuringPayment ?? 0;
+          this.futurePayments[1] += project.reccuringPayment ?? 0;
+          this.futurePayments[2] += project.reccuringPayment ?? 0;
+        }
+      });
+    }
   }
 
   calculateGraphScale() {
