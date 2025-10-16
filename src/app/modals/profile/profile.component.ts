@@ -40,7 +40,7 @@ export class ProfileComponent implements AfterViewInit {
     this.getUserSubscription();
     this.animationsService.changeIsloading(true);
     this.httpService.getUser().subscribe(user => {
-      this.user = user;      
+      this.user = user;
       this.animationsService.changeIsloading(false);
     });
   }
@@ -56,13 +56,17 @@ export class ProfileComponent implements AfterViewInit {
 
   getUserSubscription() {
     const subscription = this.authenticationService.getSubscription();
-    this.currentUserSubscription = this.userSubscriptions.find(sub => sub.subscription === subscription) || this.userSubscriptions[0];
+    if (subscription === subscriptionEnum.trial) {
+      this.currentUserSubscription = this.userSubscriptions[2];
+    } else {
+      this.currentUserSubscription = this.userSubscriptions.find(sub => sub.subscription === subscription) || this.userSubscriptions[0];
+    }
     this.cd.detectChanges();
   }
 
   selectStatus(status: any) {
-    const parsedStatus = Number(status.value) as UserStatus;    
-    this.user.status = parsedStatus;    
+    const parsedStatus = Number(status.value) as UserStatus;
+    this.user.status = parsedStatus;
     this.updateUser();
   }
 
