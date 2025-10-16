@@ -50,7 +50,7 @@ export class SummaryComponent implements OnInit {
   graphMonths: number[] = [];
   isPayedHovered = false;
   hoverTimeout: any;
-  graphScales: number[] = [10, 20, 40 , 60, 80, 100, 150, 200, 300, 400, 500, 600, 700, 800, 900, 1000,
+  graphScales: number[] = [10, 20, 40, 60, 80, 100, 150, 200, 300, 400, 500, 600, 700, 800, 900, 1000,
     1200, 1400, 1600, 1800, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 6000, 7000, 8000, 9000, 10000,
     12000, 14000, 16000, 18000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 60000, 70000, 80000, 90000, 100000, 120000, 140000,
     160000, 180000, 200000, 250000, 300000, 350000, 400000, 450000, 500000, 600000, 700000, 800000, 900000, 1000000];
@@ -64,12 +64,12 @@ export class SummaryComponent implements OnInit {
 
   initChart() {
     const today = new Date();
-    const twoMonthsAgo = new Date(today.getFullYear(), today.getMonth() - 2, 1);
-    const oneMonthAgo = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-    const oneMonthFuture = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    const twoMonthsFuture = new Date(today.getFullYear(), today.getMonth() + 2, 1);
-    this.graphMonths = [(today.getMonth() + 3) % 12, (today.getMonth() + 2) % 12, (today.getMonth() + 1) % 12, today.getMonth() % 12, (today.getMonth() - 1) % 12];
-
+    const todayMonth = today.getMonth();
+    const twoMonthsAgo = new Date(today.getFullYear(), todayMonth - 2, 1);
+    const oneMonthAgo = new Date(today.getFullYear(), todayMonth - 1, 1);
+    const oneMonthFuture = new Date(today.getFullYear(), todayMonth + 1, 1);
+    const twoMonthsFuture = new Date(today.getFullYear(), todayMonth + 2, 1);
+    this.graphMonths = [this.getMonthForChart(todayMonth + 3), this.getMonthForChart(todayMonth + 2), this.getMonthForChart(todayMonth + 1), this.getMonthForChart(todayMonth), this.getMonthForChart(todayMonth - 1)];
     const chartModel = this.steps;
     const paymentSteps = chartModel.filter(s => s && s.stepType === StepType.payment) as Step[];
     const filteredMonths = [];
@@ -92,6 +92,11 @@ export class SummaryComponent implements OnInit {
     this.futurePayments[4] = 0;
 
     this.calculateGraphScale();
+  }
+
+  getMonthForChart(delta: number) {
+    if (delta < 1) delta += 12;
+    return Math.floor(delta % 13 + delta / 13);
   }
 
   initCoffeePicture() {
