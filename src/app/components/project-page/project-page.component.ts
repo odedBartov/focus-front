@@ -308,6 +308,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.pauseSessionTimer();
     this.sessionTimerStep = 3;
     event.stopPropagation();
+    this.retainerPaymentName = this.retainerActiveSteps[0].name ?? 'שלב נוכחי';
   }
 
   pauseSessionTimer() {

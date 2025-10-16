@@ -79,7 +79,7 @@
                 <ng-container *ngIf="sessionTimerStep === 1">
                     <div style="display: flex; justify-content: space-between;">
                         <span class="new-text-bold">ספירת שעות לתשלום</span>
-                        <img src="assets/icons/play_button_white.svg" />
+                        <img src="assets/icons/play_button_white.svg" (click)="startSessionTimer()"/>
                     </div>
                 </ng-container>
                 <ng-container *ngIf="sessionTimerStep === 2">
@@ -103,7 +103,7 @@
                     <span class="new-text-bold">שמירת סשן</span>
                     <div class="save-session">
                         <img class="icon-garbage-can-gray-white pointer" (click)="deleteWorkingSession($event)" />
-                        <input placeholder="שלב נוכחי" [(ngModel)]="retainerPaymentName" tabindex="0"/>
+                        <input class="new-small" [(ngModel)]="retainerPaymentName" tabindex="0" (keydown.enter)="finishWorkingSession()"/>
                         <img class="icon-confirm-transparent pointer" (click)="finishWorkingSession()" tabindex="0" (keydown.enter)="finishWorkingSession()"/>
                     </div>
                 </ng-container>
