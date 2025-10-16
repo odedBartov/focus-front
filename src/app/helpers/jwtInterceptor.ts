@@ -41,11 +41,12 @@ export class TokenInterceptor implements HttpInterceptor {
                     this.router.navigate(['/login']);
                 } else if (err.status === 402) {
                     if (this.authenticationService.getSubscription() === subscriptionEnum.trial) {
-                        return this.dialog.open(FreeTrialEndComponent, { disableClose: true }).afterClosed().pipe(switchMap(() => {
-                            this.animationsService.changeIsloading(true);
-                            const newReq = req.clone();
-                            return next.handle(newReq);
-                        }));
+                        this.dialog.open(FreeTrialEndComponent, { disableClose: true })
+                        // return this.dialog.open(FreeTrialEndComponent, { disableClose: true }).afterClosed().pipe(switchMap(() => {
+                        //     this.animationsService.changeIsloading(true);
+                        //     const newReq = req.clone();
+                        //     return next.handle(newReq);
+                        // }));
                     } else {
                         this.dialog.open(PaidFeatureModalComponent, { data: { subscription: err.error.requiredSubscription } });
                     }
