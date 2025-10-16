@@ -172,7 +172,7 @@ export class ProjectsListComponent implements OnInit {
 
   openProjectModal() {
     const maxProjects = this.userSubscription == subscriptionEnum.free ? 1 : (this.userSubscription == subscriptionEnum.partial ? 3 : -1);
-    if (maxProjects <= this.projects().length) {
+    if (maxProjects > -1 && maxProjects <= this.projects().length) {
       this.dialog.open(PaidFeatureModalComponent);
     } else {
       const dialogRef = this.dialog.open(NewProjectComponent);
