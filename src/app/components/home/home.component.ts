@@ -25,6 +25,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProfileComponent } from '../../modals/profile/profile.component';
 import { WeeklyTasksComponent } from '../weekly-tasks/weekly-tasks.component';
 import { FreeTrialEndComponent } from '../../modals/free-trial-end/free-trial-end.component';
+import { WorkSessionService } from '../../services/work-session.service';
 
 @Component({
   selector: 'app-home',
@@ -45,6 +46,7 @@ export class HomeComponent implements OnInit {
   standAloneStepsService = inject(StandAloneStepsService);
   projectsService = inject(ProjectsService);
   titleService = inject(Title);
+  workSessionService = inject(WorkSessionService);
   router = inject(Router);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
@@ -83,13 +85,16 @@ export class HomeComponent implements OnInit {
   }
 
   setActiveTab(tab: ProjectTab) {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { tab: tab.id },
-      queryParamsHandling: 'merge'
-    });
-    this.activeTab = tab;
-    this.selectedProject.set(tab.project);
+    const canChangeTab = this.workSessionService.tryToChangePage();
+    if (canChangeTab) {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { tab: tab.id },
+        queryParamsHandling: 'merge'
+      });
+      this.activeTab = tab;
+      this.selectedProject.set(tab.project);
+    }
   }
 
   ngOnInit(): void {

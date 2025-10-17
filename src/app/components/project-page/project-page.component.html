@@ -72,7 +72,7 @@
                     </div>
                 </div>
             </div>
-            <div class="sessions-counter" [ngClass]="{pointer: sessionTimerStep === 1}"
+            <div class="sessions-counter" [ngClass]="{pointer: sessionTimerStep === 1, buzz: buzzWorkSession}"
                 [ngStyle]="{'height': sessionTimerStep === 1 ? '60px' : sessionTimerStep === 2? '126px' : '115px'}"
                 *ngIf="isRetainer && isPaymentModelHourly"
                 (click)="startSessionTimer()">

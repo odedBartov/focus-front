@@ -27,6 +27,7 @@ import { HourlyWorkSession } from '../../models/hourlyWorkSession';
 import { areTwoDaysInTheSameWeek, isDateGreaterOrEqual, parseLocalDate } from '../../helpers/functions';
 import { NewStepModalComponent } from '../../modals/new-step-modal/new-step-modal.component';
 import { PaymentHistoryModalComponent } from '../../modals/payment-history-modal/payment-history-modal.component';
+import { WorkSessionService } from '../../services/work-session.service';
 
 @Component({
   selector: 'app-project-page',
@@ -69,6 +70,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   projectHoverService = inject(ProjectHoverService);
   projectsService = inject(ProjectsService);
   authenticationService = inject(AuthenticationService);
+  WorkSessionService = inject(WorkSessionService);
   @Output() navigateToHomeEmitter = new EventEmitter<void>();
   @ViewChild('stepsContainer', { static: false }) stepsContainer?: ElementRef;
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
@@ -102,7 +104,14 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   hideProperties = this.projectHoverService.getSignal();
   animationHackFlag = true;
   mouseDownInside = false;
-  sessionTimerStep = 1;
+  private _sessionTimerStep = 1;
+  get sessionTimerStep() {
+    return this._sessionTimerStep;
+  }
+  set sessionTimerStep(value: number) {
+    this._sessionTimerStep = value;
+    this.WorkSessionService.changeIsSessionActive(value !== 1);
+  }
   sessionTime = 0;
   sessionTimer?: any;
   retainerPaymentName = '';
@@ -111,6 +120,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   retainerFutureSteps: Step[] = [];
   retainerFinishedSteps: Step[] = [];
   daysInWeek = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
+  buzzWorkSession = false;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.project = this.projectsService.getCurrentProject();
@@ -132,6 +142,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.loadProject();
     this.isReadOnly = this.authenticationService.getIsReadOnly();
+    this.listenToBuzz();
   }
 
   ngAfterViewInit(): void {
@@ -207,6 +218,15 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   pad(num: number) {
     return num.toString().padStart(2, '0');
+  }
+
+  listenToBuzz() {
+    this.WorkSessionService.getObservable().subscribe(() => {
+      this.buzzWorkSession = true;
+      setTimeout(() => {
+        this.buzzWorkSession = false;
+      }, 600);
+    });
   }
 
   getWeekDays(days?: number[]) {
