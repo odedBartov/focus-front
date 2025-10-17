@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 })
 export class WorkSessionService {
   isSessionActive = false;
+  sessions: { [key: string]: number } = {};
   private buzzSubject = new Subject<void>();
   buzzEvent$ = this.buzzSubject.asObservable();
 
@@ -13,6 +14,21 @@ export class WorkSessionService {
 
   changeIsSessionActive(status: boolean) {
     this.isSessionActive = status;
+  }
+
+  storeSession(projectId: string | undefined, session: number) {
+    if (projectId) {
+      this.sessions[projectId] = session;
+    }
+  }
+
+  deleteSession(projectId: string | undefined) {
+    if (projectId) delete this.sessions[projectId];
+  }
+
+  getSession(projectId: string | undefined): number | undefined {
+    if (!projectId) return undefined;
+    return this.sessions[projectId];
   }
 
   getObservable() {

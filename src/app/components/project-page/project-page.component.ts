@@ -131,6 +131,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         this.initRetainerSteps();
       }
       this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
+      this.loadSessionTimer();
       this.calculatePayments();
 
       setTimeout(() => {
@@ -319,14 +320,25 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     }
   }
 
+  loadSessionTimer() {
+    if (this.isRetainer && this.project().paymentModel === paymentModelEnum.hourly) {
+      const storedSession = this.WorkSessionService.getSession(this.project().id);
+      if (storedSession) {
+        this.sessionTime = storedSession;
+        this.sessionTimerStep = 2;
+      }
+    }
+  }
+
   startSessionTimer() {
     if (this.sessionTimerStep === 1) {
-      this.sessionTimerStep = 2;
       this.resumeSessionTimer();
+      this.sessionTimerStep = 2;
     }
   }
 
   resumeSessionTimer() {
+    this.WorkSessionService.changeIsSessionActive(true);
     if (!this.sessionTimer) {
       this.sessionTimer = setInterval(() => {
         this.sessionTime += 1000;
@@ -341,6 +353,8 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   pauseSessionTimer() {
+    this.WorkSessionService.storeSession(this.project().id, this.sessionTime);
+    this.WorkSessionService.changeIsSessionActive(false);
     if (this.sessionTimer) {
       clearInterval(this.sessionTimer);
       this.sessionTimer = undefined;
@@ -348,6 +362,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   deleteWorkingSession(event: Event) {
+    this.WorkSessionService.deleteSession(this.project().id);
     event?.stopPropagation();
     event?.preventDefault();
     this.sessionTime = 0;
@@ -356,6 +371,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   finishWorkingSession(event: Event) {
+    this.WorkSessionService.deleteSession(this.project().id);
     if (this.retainerPaymentName) {
       event?.stopPropagation();
       event?.preventDefault();
