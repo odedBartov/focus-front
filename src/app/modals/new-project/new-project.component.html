@@ -32,12 +32,12 @@
         <div class="step2" *ngIf="currentProgress === 2">
             <span class="new-h1">מבנה הפרויקט</span>
             <div class="project-types-container">
-                <div class="project-type" (click)="chooseProjectType(projectTypeEnum.proccess)">
+                <div class="project-type" (click)="chooseProjectType(projectTypeEnum.proccess)" (keydown.enter)="chooseProjectType(projectTypeEnum.proccess)" tabindex="0">
                     <img src="assets/icons/one_time_proccess.svg" />
                     <span class="new-text-bold">תהליך חד פעמי</span>
                     <span class="new-small">תהליך מסודר ובעל נקודת סיום</span>
                 </div>
-                <div class="project-type" (click)="chooseProjectType(projectTypeEnum.retainer)">
+                <div class="project-type" (click)="chooseProjectType(projectTypeEnum.retainer)" (keydown.enter)="chooseProjectType(projectTypeEnum.retainer)" tabindex="0">
                     <img src="assets/icons/infinity.svg" />
                     <span class="new-text-bold">ליווי מתמשך</span>
                     <span class="new-small">ריטיינר, עבודה שוטפת או חזרתית</span>
@@ -48,12 +48,12 @@
         <div class="step3" *ngIf="currentProgress === 3">
             <span class="new-h1">מודל התשלום</span>
             <div class="project-types-container">
-                <div class="project-type" (click)="choosePaymentModel(paymentModelEnum.monthly)">
+                <div class="project-type" (click)="choosePaymentModel(paymentModelEnum.monthly)" (keydown.enter)="choosePaymentModel(paymentModelEnum.monthly)" tabindex="0">
                     <img src="assets/icons/calendar.svg" />
                     <span class="new-text-bold">תשלום חודשי</span>
                     <span class="new-small">בעל סכום ותאריך קבועים</span>
                 </div>
-                <div class="project-type" (click)="choosePaymentModel(paymentModelEnum.hourly)">
+                <div class="project-type" (click)="choosePaymentModel(paymentModelEnum.hourly)" (keydown.enter)="choosePaymentModel(paymentModelEnum.hourly)" tabindex="0">
                     <img src="assets/icons/clock.svg" />
                     <span class="new-text-bold">תשלום שעתי</span>
                     <span class="new-small">ספירת שעות בתעריף קבוע</span>
@@ -94,7 +94,7 @@
                 <div class="monthly" *ngIf="project.paymentModel === paymentModelEnum.monthly">
                     <div class="text-and-input">
                         <span class="new-small">הסכום לתשלום (לא כולל מע"מ)</span>
-                        <input type="number" class="new-small" [(ngModel)]="project.reccuringPayment" />
+                        <input type="number" class="new-small" [(ngModel)]="project.reccuringPayment" tabindex="0"/>
                         <div class="error-container">
                         <span *ngIf="submitted && !project.reccuringPayment" class="error">אנא
                             הזינו סכום</span>
@@ -103,7 +103,7 @@
 
                     <div class="text-and-input">
                         <span class="new-small">תאריך לתשלום</span>
-                        <select [(ngModel)]="project.monthlyPaymentDay">
+                        <select [(ngModel)]="project.monthlyPaymentDay" tabindex="0">
                             <option *ngFor="let day of daysInMonth" [value]="day">
                                 {{ day }} לחודש
                             </option>
