@@ -75,11 +75,11 @@
             <div class="sessions-counter" [ngClass]="{pointer: sessionTimerStep === 1}"
                 [ngStyle]="{'height': sessionTimerStep === 1 ? '60px' : sessionTimerStep === 2? '126px' : '115px'}"
                 *ngIf="isRetainer && isPaymentModelHourly"
-                (click)="sessionTimerStep = sessionTimerStep === 1 ? 2 : sessionTimerStep">
+                (click)="startSessionTimer()">
                 <ng-container *ngIf="sessionTimerStep === 1">
                     <div style="display: flex; justify-content: space-between;">
                         <span class="new-text-bold">ספירת שעות לתשלום</span>
-                        <img src="assets/icons/play_button_white.svg" (click)="startSessionTimer()"/>
+                        <img src="assets/icons/play_button_white.svg"/>
                     </div>
                 </ng-container>
                 <ng-container *ngIf="sessionTimerStep === 2">
@@ -87,7 +87,7 @@
                         <span class="new-text-bold">ספירת שעות לתשלום</span>
                     </div>
                     <div class="timer">
-                        <img class="icon-stop pointer" (click)="stopSessionTimer($event)" />
+                        <img class="icon-stop pointer" (click)="stopSessionTimer()" />
                         <div class="clock">
                             <div class="group">{{ seconds }}</div>
                             <div class="colon">:</div>
@@ -96,15 +96,15 @@
                             <div class="group">{{ hours }}</div>
                         </div>
                         <img [class]="'pointer ' + (sessionTimer? 'icon-pause' : 'icon-play')"
-                            (click)="sessionTimer? pauseSessionTimer() : startSessionTimer()" />
+                            (click)="sessionTimer? pauseSessionTimer() : resumeSessionTimer()" />
                     </div>
                 </ng-container>
                 <ng-container *ngIf="sessionTimerStep === 3">
                     <span class="new-text-bold">שמירת סשן</span>
                     <div class="save-session">
                         <img class="icon-garbage-can-gray-white pointer" (click)="deleteWorkingSession($event)" />
-                        <input class="new-small" [(ngModel)]="retainerPaymentName" tabindex="0" (keydown.enter)="finishWorkingSession()"/>
-                        <img class="icon-confirm-transparent pointer" (click)="finishWorkingSession()" tabindex="0" (keydown.enter)="finishWorkingSession()"/>
+                        <input class="new-small" [(ngModel)]="retainerPaymentName" tabindex="0" (keydown.enter)="finishWorkingSession($event)"/>
+                        <img class="icon-confirm-transparent pointer" (click)="finishWorkingSession($event)" tabindex="0" (keydown.enter)="finishWorkingSession($event)"/>
                     </div>
                 </ng-container>
             </div>

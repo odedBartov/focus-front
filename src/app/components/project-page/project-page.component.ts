@@ -300,15 +300,23 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   startSessionTimer() {
-    this.sessionTimer = setInterval(() => {
-      this.sessionTime += 1000;
-    }, 1000);
+    if (this.sessionTimerStep === 1) {
+      this.sessionTimerStep = 2;
+      this.resumeSessionTimer();
+    }
   }
 
-  stopSessionTimer(event: MouseEvent) {
+  resumeSessionTimer() {
+    if (!this.sessionTimer) {
+      this.sessionTimer = setInterval(() => {
+        this.sessionTime += 1000;
+      }, 1000);
+    }
+  }
+
+  stopSessionTimer() {
     this.pauseSessionTimer();
     this.sessionTimerStep = 3;
-    event.stopPropagation();
     this.retainerPaymentName = this.retainerActiveSteps[0].name ?? 'שלב נוכחי';
   }
 
@@ -319,15 +327,18 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  deleteWorkingSession(event: MouseEvent) {
+  deleteWorkingSession(event: Event) {
+    event?.stopPropagation();
+    event?.preventDefault();
     this.sessionTime = 0;
     this.sessionTimerStep = 1;
     this.pauseSessionTimer();
-    event.stopPropagation();
   }
 
-  finishWorkingSession() {
+  finishWorkingSession(event: Event) {
     if (this.retainerPaymentName) {
+      event?.stopPropagation();
+      event?.preventDefault();
       const payment = new HourlyWorkSession();
       payment.name = this.retainerPaymentName;
       payment.price = (this.sessionTime / 3600000) * (this.project()?.reccuringPayment ?? 0);
@@ -339,7 +350,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.sessionTimerStep = 1;
       this.pauseSessionTimer();
       this.calculatePayments();
-      this.httpService.createHourlyWorkSession(payment).subscribe(res => { 
+      this.httpService.createHourlyWorkSession(payment).subscribe(res => {
         this.project()?.hourlyWorkSessions.push(res);
       });
     }
@@ -350,10 +361,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   openPaymentHistoryModal() {
-    const payments = this.isPaymentModelHourly ? this.project().hourlyWorkSessions : this.project().retainerPayments;    
+    const payments = this.isPaymentModelHourly ? this.project().hourlyWorkSessions : this.project().retainerPayments;
     this.dialog.open(PaymentHistoryModalComponent, { data: { payments: payments, isPaymentModelHourly: this.isPaymentModelHourly } });
   }
-  
+
   setActiveStepHeight() {
     // const element = this.descriptions.get(0)?.nativeElement as HTMLTextAreaElement;
     // if (element) {
