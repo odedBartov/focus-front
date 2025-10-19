@@ -20,6 +20,7 @@ export class NewStepModalComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { step: Step, isActive: boolean, paymentModel: paymentModelEnum }) {
     this.step = data.step;
+    this.paymentModel = data.paymentModel;
     this.isActive = data.isActive;
     if (!this.step?.stepType) {
       document.body.classList.add('hide-modal-background');

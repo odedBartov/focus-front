@@ -322,6 +322,13 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     }
   }
 
+  getProjectPrice() : number {
+    if (this.isRetainer && this.project().paymentModel === paymentModelEnum.hourly) {
+      const totalHours = this.project().hourlyWorkSessions.reduce((acc, session) => acc + (session.workTime / 3600000), 0);
+      return totalHours * (this.project().reccuringPayment ?? 0);
+    } else return this.baseProjectPrice;
+  }
+
   loadSessionTimer() {
     if (this.isRetainer && this.project().paymentModel === paymentModelEnum.hourly) {
       const storedSession = this.WorkSessionService.getSession(this.project().id);
@@ -699,7 +706,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   showNewStepModal() {
-    const dialogRef = this.dialog.open(NewStepModalComponent, { autoFocus: false, data: {} });
+    const dialogRef = this.dialog.open(NewStepModalComponent, { autoFocus: false, data: {paymentModel: this.project().paymentModel} });
     const childInstance = dialogRef.componentInstance;
     childInstance.stepUpdated.subscribe(newStep => {
       this.createNewStep(newStep);
@@ -725,7 +732,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   openNewStepModal(step?: Step) {
-    const dialogRef = this.dialog.open(NewStepModalComponent, { data: { step: step, isActive: true } });
+    const dialogRef = this.dialog.open(NewStepModalComponent, { data: { step: step, isActive: true, paymentModel: this.project().paymentModel } });
     const childInstance = dialogRef.componentInstance;
     childInstance.stepUpdated.subscribe(newStep => {
       this.updateStep(newStep);

@@ -111,9 +111,7 @@
                 </div>
                 <img src="assets/icons/dollar.svg" />
             </div>
-            <span class="sub-title new-small" *ngIf="!isEdit && isRetainer">{{paymentModel === paymentModelEnum.hourly ?
-                'תשלום עבור שעות שנספרו במערכת. יצירת התשלום לא תגדיל את מחיר הפרויקט הכולל. ' : 'תשלום חד פעמי, נוסף על
-                התשלום החודשי הקבוע בהגדרות הפרויקט.'}}</span>
+            <span class="sub-title new-small" *ngIf="!isEdit && isRetainer">{{paymentModel === paymentModelEnum.hourly ? 'תשלום עבור שעות שנספרו במערכת. יצירת התשלום לא תגדיל את מחיר הפרויקט הכולל. ' : 'תשלום חד פעמי, נוסף על התשלום החודשי הקבוע בהגדרות הפרויקט.'}}</span>
             <div class="text-and-input">
                 <span class="text new-small">שם התשלום</span>
                 <input class="text new-text" type="text" [(ngModel)]="newStep.name" #stepNameInput>
