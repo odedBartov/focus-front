@@ -179,7 +179,7 @@
         </div>
     </div>
 
-    <div class="accordions-container" *ngIf="isRetainer">
+    <div class="accordions-container" *ngIf="isRetainer && !showNotes">
         <div class="accordion">
             <span class="title" [ngClass]="{'opened': openedAccordion == 1}" (click)="clickOnAccordion(1)">משימות
                 פתוחות</span>
