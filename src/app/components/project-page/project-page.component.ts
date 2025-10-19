@@ -245,30 +245,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.updateRetainerStepsPositions();
   }
 
-  // handleNotCompletedRetainerStep(step: Step) {
-  //   if (!step.isRecurring) {
-  //     this.retainerActiveSteps.push(step);
-  //   } else {
-  //     const today = new Date();
-  //     if (step.recurringDateType === recurringDateTypeEnum.day) { // day
-  //       this.retainerActiveSteps.push(step);
-  //     } else if (step.recurringDateType === recurringDateTypeEnum.week && step.recurringDaysInWeek?.length) { // week
-  //       const todayDayInWeek = today.getDay();
-  //       if (step.recurringDaysInWeek.includes(todayDayInWeek)) {
-  //         this.retainerActiveSteps.push(step);
-  //       } else {
-  //         this.retainerFutureSteps.push(step);
-  //       }
-  //     } else { // month
-  //       if (today.getDate() === step.recurringDayInMonth) {
-  //         this.retainerActiveSteps.push(step);
-  //       } else {
-  //         this.retainerFutureSteps.push(step);
-  //       }
-  //     }
-  //   }
-  // }
-
   updateRetainerStepDate(step: Step) {
     const today = new Date();
     let newCreatedDate = new Date(step.dateCreated ?? new Date(0));
@@ -483,14 +459,20 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   calculatePayments() {
     this.baseProjectPrice = 0;
     this.paidMoney = 0;
-    this.project()?.steps?.forEach(step => {
-      if (step.stepType === StepType.payment) {
-        this.baseProjectPrice += step.price;
-        if (step.isComplete) {
-          this.paidMoney += step.price;
+
+    if (this.project().projectType === projectTypeEnum.retainer && this.project().paymentModel === paymentModelEnum.hourly) {
+      this.baseProjectPrice = this.getProjectPrice();
+      this.paidMoney = this.retainerFinishedSteps.reduce((acc, step) => {return acc + step.price}, 0);
+    } else {
+      this.project()?.steps?.forEach(step => {
+        if (step.stepType === StepType.payment) {
+          this.baseProjectPrice += step.price;
+          if (step.isComplete) {
+            this.paidMoney += step.price;
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   changeStepStatus(step: Step) {

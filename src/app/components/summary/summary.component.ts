@@ -5,6 +5,7 @@ import { Project } from '../../models/project';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { paymentModelEnum, ProjectStatus, projectTypeEnum, StepType } from '../../models/enums';
 import { Step } from '../../models/step';
+import { HourlyWorkSession } from '../../models/hourlyWorkSession';
 
 @Component({
   selector: 'app-summary',
@@ -144,6 +145,16 @@ export class SummaryComponent implements OnInit {
     }
   }
 
+  calculateHourlyRetainerPayments() {
+    const today = new Date();
+    const sessions = this.projects
+      .filter(p => p.projectType === projectTypeEnum.retainer && p.paymentModel === paymentModelEnum.hourly)
+      .flatMap(p => p.hourlyWorkSessions);
+    sessions.forEach(session => {
+      //;
+    });
+  }
+
   calculateGraphScale() {
     const maxPast = Math.max(...this.pastPayments);
     const maxFuture = Math.max(...this.futurePayments);
@@ -182,6 +193,12 @@ export class SummaryComponent implements OnInit {
     const currentHour = new Date().getHours();
     const greeting = this.greetings.find(g => g.hour > currentHour)?.greeting;
     return greeting;
+  }
+
+  monthDiffCalendar(from: Date, to: Date = new Date()): number {
+    const a = to.getFullYear() * 12 + to.getMonth();
+    const b = from.getFullYear() * 12 + from.getMonth();
+    return a - b;
   }
 
   onInnerEnter() {
