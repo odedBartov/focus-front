@@ -243,7 +243,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     if (this.project()?.steps) {
       this.project().steps.forEach(step => {
         if (!step.isComplete) {
-          this.retainerActiveSteps.push(step);
+          this.handleNotCompletedRetainerStep(step);
         } else {
           if (step.isRecurring) {
             // const dateCreated = parseLocalDate(step.dateCreated ?? step.dateCompleted);
@@ -310,6 +310,30 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.updateRetainerStepsPositions();
   }
 
+  handleNotCompletedRetainerStep(step: Step) {
+    if (!step.isRecurring) {
+      this.retainerActiveSteps.push(step);
+    } else {
+      const today = new Date();
+      if (step.recurringDateType === recurringDateTypeEnum.day) { // day
+        this.retainerActiveSteps.push(step);
+      } else if (step.recurringDateType === recurringDateTypeEnum.week && step.recurringDaysInWeek?.length) { // week
+        const todayDayInWeek = today.getDay();
+        if (step.recurringDaysInWeek.includes(todayDayInWeek)) {
+          this.retainerActiveSteps.push(step);
+        } else {
+          this.retainerFutureSteps.push(step);
+        }
+      } else { // month
+        if (today.getDate() === step.recurringDayInMonth) {
+          this.retainerActiveSteps.push(step);
+        } else {
+          this.retainerFutureSteps.push(step);
+        }
+      }
+    }
+  }
+
   updateRetainerStepDate(step: Step, nextOccurrenceDate: Date) {
     const today = new Date();
     let newCreatedDate = new Date(step.dateCreated ?? new Date(0));
@@ -322,9 +346,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getProjectPrice() : number {
+  getProjectPrice(): number {
     if (this.isRetainer && this.project().paymentModel === paymentModelEnum.hourly) {
-      const totalHours = this.project().hourlyWorkSessions.reduce((acc, session) => acc + (session.workTime / 3600000), 0);      
+      const totalHours = this.project().hourlyWorkSessions.reduce((acc, session) => acc + (session.workTime / 3600000), 0);
       return Math.round(totalHours * (this.project().reccuringPayment ?? 0));
     } else return this.baseProjectPrice;
   }
@@ -706,7 +730,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   showNewStepModal() {
-    const dialogRef = this.dialog.open(NewStepModalComponent, { autoFocus: false, data: {paymentModel: this.project().paymentModel} });
+    const dialogRef = this.dialog.open(NewStepModalComponent, { autoFocus: false, data: { paymentModel: this.project().paymentModel } });
     const childInstance = dialogRef.componentInstance;
     childInstance.stepUpdated.subscribe(newStep => {
       this.createNewStep(newStep);
@@ -719,11 +743,11 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     step.positionInList = (this.project()?.steps?.length ?? 0) + 1;
     this.httpService.createStep(step).subscribe(res => {
       this.project()?.steps?.push(res);
-      this.retainerActiveSteps.push(res);
+      this.initRetainerSteps();
       this.isShowNewStep = false;
       this.calculatePayments();
       this.animationsService.changeIsloading(false);
-    })
+    });
   }
 
   editStep(div: HTMLDivElement, stepId: string | undefined) {

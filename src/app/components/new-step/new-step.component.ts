@@ -216,7 +216,6 @@ export class NewStepComponent implements AfterViewInit {
 
       if (this.newStep.isRecurring) {
         this.newStep.dateDue = new Date();
-        this.newStep.isComplete = true;
 
         if (!this.newStep.recurringEvery) {
           this.newStep.recurringEvery = 1;
