@@ -324,8 +324,8 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   getProjectPrice() : number {
     if (this.isRetainer && this.project().paymentModel === paymentModelEnum.hourly) {
-      const totalHours = this.project().hourlyWorkSessions.reduce((acc, session) => acc + (session.workTime / 3600000), 0);
-      return totalHours * (this.project().reccuringPayment ?? 0);
+      const totalHours = this.project().hourlyWorkSessions.reduce((acc, session) => acc + (session.workTime / 3600000), 0);      
+      return Math.round(totalHours * (this.project().reccuringPayment ?? 0));
     } else return this.baseProjectPrice;
   }
 

@@ -55,10 +55,10 @@
                         matTooltip="אם מחיר הפרויקט משתנה, כל מה שצריך לעשות הוא לשנות את הסכומים בשלבי התשלום (או להוסיף תשלום חדש). המחיר הכולל יתעדכן בהתאם." />
                     <img *ngIf="isRetainer" class="pointer icon-expand" (click)="openPaymentHistoryModal()" />
                 </div>
-                <span class="base-price new-h2">{{getProjectPrice() | number:'1.1-2'}} ₪</span>
+                <span class="base-price new-h2">{{getProjectPrice()}} ₪</span>
                 <div class="progress-bar">
                     <div class="progress-fill"
-                        [style.width.%]="baseProjectPrice?(paidMoney/baseProjectPrice)*100 : 100">
+                        [style.width.%]="(paidMoney/getProjectPrice())*100">
                     </div>
                 </div>
                 <div class="paid-remain">
