@@ -16,6 +16,7 @@ import { ProjectsService } from '../../services/projects.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-feature-modal.component';
 import { Step } from '../../models/step';
+import { initRetainerSteps } from '../../helpers/retainerFunctions';
 
 @Component({
   selector: 'app-projects-list',
@@ -72,7 +73,18 @@ export class ProjectsListComponent implements OnInit {
   getProjectProgress(project: Project) {
     const completedSteps = project.steps?.filter(s => s.isComplete).length;
     return ((completedSteps ?? 0) / (project.steps?.length > 0 ? project.steps.length : 1)) * 100;
+  }
 
+  areThereOpenSteps(project: Project) {
+    if (project.projectType === projectTypeEnum.proccess) {
+      return project.steps?.some(s => !s.isComplete);
+    }
+
+    const retainerActiveSteps: Step[] = [];
+    const retainerFutureSteps: Step[] = [];
+    const retainerFinishedSteps: Step[] = [];
+    initRetainerSteps(project.steps, retainerActiveSteps, retainerFutureSteps, retainerFinishedSteps);
+    return retainerActiveSteps.length > 0;
   }
 
   getRemainingPayment(project: Project) {

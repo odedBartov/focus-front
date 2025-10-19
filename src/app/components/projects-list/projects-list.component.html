@@ -20,9 +20,9 @@
                 </div>
                 <div class="current-step new-small">
                     <span class="disabled-text">
-                        שלב נוכחי
+                        {{areThereOpenSteps(project)? 'שלב נוכחי' : 'אין משימות פתוחות'}}
                     </span>
-                    <span class="small-text" #stepRef matTooltip="{{getCurrentStep(project)?.name}}"
+                    <span class="small-text" #stepRef matTooltip="{{getCurrentStep(project)?.name}}" *ngIf="areThereOpenSteps(project)"
                         matTooltipPosition="above" matTooltipClass="custom-tooltip"
                         [matTooltipDisabled]="stepRef.offsetWidth >= stepRef.scrollWidth">
                         {{getCurrentStep(project)?.name}}
