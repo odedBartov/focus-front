@@ -2,12 +2,12 @@
     [ngClass]="{'border': !isActive && newStep != undefined && showBorder, 'white-background': isActive && newStep != undefined}">
     <div class="choose-type" *ngIf="!isEdit && (newStep == undefined || newStep.stepType === undefined)">
         <div class="steps">
-            <div class="step-type" (click)="selectType(stepTypeEnum.task)" tabindex="0">
+            <div class="step-type" (click)="selectType(stepTypeEnum.task)" tabindex="1">
                 <div class="new-text-bold">
                     + {{isRetainer ? 'משימה' : 'שלב'}}
                 </div>
             </div>
-            <div class="step-type" (click)="selectType(stepTypeEnum.payment)" tabindex="0">
+            <div class="step-type" (click)="selectType(stepTypeEnum.payment)" tabindex="1">
                 <div class="new-text-bold">
                     + תשלום
                 </div>
@@ -25,24 +25,24 @@
             </div>
             <div class="text-and-input">
                 <span class="text new-small">{{isRetainer? 'שם המשימה' : 'שם השלב'}}</span>
-                <input class="text new-text" type="text" [(ngModel)]="newStep.name" #stepNameInput tabindex="2">
+                <input class="text new-text" type="text" [(ngModel)]="newStep.name" #stepNameInput tabindex="1">
                 <div class="error-container new-small">
                     <span *ngIf="submitted && !newStep.name" class="error">אנא הזינו שם</span>
                 </div>
             </div>
             <div class="add-description" *ngIf="!isShowDescription && !isShowTasks">
                 <div class="buttons">
-                    <button class="button" (click)="showDescription()" tabindex="3">
+                    <button class="button" (click)="showDescription()" tabindex="1">
                         + פירוט
                     </button>
-                    <button class="button" (click)="showTasks()" tabindex="4">
+                    <button class="button" (click)="showTasks()" tabindex="1">
                         + רשימת משימות
                     </button>
                 </div>
             </div>
             <div class="text-and-input" *ngIf="isShowDescription">
                 <span class="text new-small">פירוט</span>
-                <textarea class="text new-text" maxlength="100" [(ngModel)]="newStep.description" tabindex="5"
+                <textarea class="text new-text" maxlength="100" [(ngModel)]="newStep.description" tabindex="1"
                     #descriptionInput></textarea>
             </div>
             <div class="text-and-input" *ngIf="isShowTasks">
@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div class="cycle" *ngIf="isRetainer">
-                <button class="button" (click)="initStepIsRecurring()" *ngIf="!newStep.isRecurring" tabindex="6">
+                <button class="button" (click)="initStepIsRecurring()" *ngIf="!newStep.isRecurring" tabindex="1">
                     <img class="cycle" />
                     משימה חוזרת
                 </button>
@@ -70,7 +70,7 @@
                     </div>
                     <div class="repeatance new-text">
                         <input type="number" [(ngModel)]="newStep.recurringEvery"
-                            (input)="onInputRecurringEvery($event)" tabindex="7">
+                            (input)="onInputRecurringEvery($event)" tabindex="1">
                         <div class="date-types">
                             <div [class]="'date-type' + (newStep.recurringDateType === recurringDateTypeEnum.day? ' selected' : '')"
                                 [style.border-radius]="'0 20px 20px 0'"
@@ -87,14 +87,14 @@
                         <div class="days">
                             <div class="day new-small" *ngFor="let day of daysInWeek; let i = index"
                                 [ngClass]="{'selected': isdayInWeekDay(day)}"
-                                (click)="selectDayInWeek(day)" tabindex="8">
+                                (click)="selectDayInWeek(day)" tabindex="1">
                                 {{day}}
                             </div>
                         </div>
                     </div>
                     <div class="day-in-month" *ngIf="newStep.recurringDateType === recurringDateTypeEnum.month">
                         <span class="new-small title">בתאריך</span>
-                        <select [(ngModel)]="newStep.recurringDayInMonth" tabindex="9">
+                        <select [(ngModel)]="newStep.recurringDayInMonth" tabindex="1">
                             <option *ngFor="let day of daysInMonth" [value]="day">
                                 {{ day }} לחודש
                             </option>
@@ -132,7 +132,7 @@
             <div class="future-dates">
                 <span>באיזה חודש התשלום צפוי להכנס?</span>
                 <div class="dates">
-                    <span *ngFor="let date of futureDates; let i = index" (click)="selectDate(date)" tabindex="0"
+                    <span *ngFor="let date of futureDates; let i = index" (click)="selectDate(date)" tabindex="1"
                         [ngClass]="{'selected': newStep.dateDue === date || (newStep.dateDue !== undefined && newStep.dateDue?.getFullYear() == date?.getFullYear() && newStep.dateDue?.getMonth() === date?.getMonth())}">
                         {{date? (date | date: 'MM') : 'לא ידוע'}}
                     </span>
@@ -144,7 +144,7 @@
         </div>
 
         <div class="create-step" *ngIf="newStep && newStep?.stepType !== undefined">
-            <img class="icon-confirm-circle" (click)="createStep()" tabindex="0" />
+            <img class="icon-confirm-circle" (click)="createStep()" tabindex="1"/>
         </div>
     </div>
 </div>
