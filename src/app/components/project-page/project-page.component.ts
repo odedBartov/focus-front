@@ -128,7 +128,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       const value = this.project();
       if (value?.steps) {
         value.steps.sort((a, b) => a.positionInList - b.positionInList);
-        this.initRetainerSteps();
+        if (value.projectType === projectTypeEnum.retainer) {
+          this.initRetainerSteps();
+        }
       }
       this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
       this.loadSessionTimer();
