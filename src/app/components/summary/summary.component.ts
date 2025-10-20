@@ -20,9 +20,9 @@ export class SummaryComponent implements OnInit {
     this.steps = [];
     this.updatedProjects = projects;
     projects.forEach(project => {
-      if (project.status === ProjectStatus.active) {
+      if (project.status === ProjectStatus.active && !(project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.hourly)) {
         this.steps = this.steps.concat(project.steps);
-      } else {
+      } else if (project.status !== ProjectStatus.frozen) {
         const finishedSteps = project.steps.filter(s => s.isComplete);
         this.steps = this.steps.concat(finishedSteps);
       }
@@ -66,6 +66,8 @@ export class SummaryComponent implements OnInit {
   }
 
   initChart() {
+    console.log(this.steps);
+
     const today = new Date();
     const todayMonth = today.getMonth();
     const twoMonthsAgo = new Date(today.getFullYear(), todayMonth - 2, 1);
@@ -73,8 +75,7 @@ export class SummaryComponent implements OnInit {
     const oneMonthFuture = new Date(today.getFullYear(), todayMonth + 1, 1);
     const twoMonthsFuture = new Date(today.getFullYear(), todayMonth + 2, 1);
     this.graphMonths = [this.getMonthForChart(todayMonth + 3), this.getMonthForChart(todayMonth + 2), this.getMonthForChart(todayMonth + 1), this.getMonthForChart(todayMonth), this.getMonthForChart(todayMonth - 1)];
-    const chartModel = this.steps;
-    const paymentSteps = chartModel.filter(s => s && s.stepType === StepType.payment) as Step[];
+    const paymentSteps = this.steps.filter(s => s && s.stepType === StepType.payment) as Step[];
     const filteredMonths = [];
     filteredMonths[0] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateDue, twoMonthsFuture) && !s.isComplete);
     filteredMonths[1] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateDue, oneMonthFuture) && !s.isComplete);
@@ -85,8 +86,8 @@ export class SummaryComponent implements OnInit {
     this.pastPayments[0] = 0;
     this.pastPayments[1] = 0;
     this.pastPayments[2] = filteredMonths[2].reduce((sum, step) => sum + (step.isComplete ? step.price : 0), 0);
-    this.pastPayments[3] = filteredMonths[3].reduce((sum, step) => sum + step.price, 0);
-    this.pastPayments[4] = filteredMonths[4].reduce((sum, step) => sum + step.price, 0);
+    this.pastPayments[3] = filteredMonths[3].reduce((sum, step) => sum + (step.isComplete ? step.price : 0), 0);
+    this.pastPayments[4] = filteredMonths[4].reduce((sum, step) => sum + (step.isComplete ? step.price : 0), 0);
 
     this.futurePayments[0] = filteredMonths[0].reduce((sum, step) => sum + step.price, 0);
     this.futurePayments[1] = filteredMonths[1].reduce((sum, step) => sum + step.price, 0);
@@ -94,6 +95,7 @@ export class SummaryComponent implements OnInit {
     this.futurePayments[3] = 0;
     this.futurePayments[4] = 0;
     this.calculateMonthlyRetainerPayments();
+    this.calculateHourlyRetainerPayments();
 
     this.calculateGraphScale();
   }
@@ -139,7 +141,6 @@ export class SummaryComponent implements OnInit {
         if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.monthly) {
           this.futurePayments[0] += project.reccuringPayment ?? 0;
           this.futurePayments[1] += project.reccuringPayment ?? 0;
-          this.futurePayments[2] += project.reccuringPayment ?? 0;
         }
       });
     }
@@ -147,11 +148,13 @@ export class SummaryComponent implements OnInit {
 
   calculateHourlyRetainerPayments() {
     const today = new Date();
-    const sessions = this.projects
-      .filter(p => p.projectType === projectTypeEnum.retainer && p.paymentModel === paymentModelEnum.hourly)
-      .flatMap(p => p.hourlyWorkSessions);
-    sessions.forEach(session => {
-      //;
+    this.updatedProjects.forEach(project => {
+      if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.hourly) {
+        project.hourlyWorkSessions.forEach(session => {
+          const sessionPayment = Math.round((session.workTime / 3600000) * (project.reccuringPayment ?? 0));
+          this.futurePayments[2] += sessionPayment;
+        });
+      }
     });
   }
 
