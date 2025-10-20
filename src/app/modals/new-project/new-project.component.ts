@@ -85,7 +85,7 @@ export class NewProjectComponent {
           }
           this.dialogRef.close(this.project);
         } else {
-          if (this.project.reccuringPayment) {
+          if (this.project.reccuringPayment !== undefined && this.project.monthlyPaymentDay !== undefined) {
             this.dialogRef.close(this.project);
           }
         }

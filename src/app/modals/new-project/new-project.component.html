@@ -96,7 +96,7 @@
                         <span class="new-small">הסכום לתשלום (לא כולל מע"מ)</span>
                         <input type="number" class="new-small" [(ngModel)]="project.reccuringPayment" tabindex="0"/>
                         <div class="error-container">
-                        <span *ngIf="submitted && !project.reccuringPayment" class="error">אנא
+                        <span *ngIf="submitted && project.reccuringPayment === undefined" class="error">אנא
                             הזינו סכום</span>
                     </div>
                     </div>
