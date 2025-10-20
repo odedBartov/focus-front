@@ -34,7 +34,6 @@ export class NewStepComponent implements AfterViewInit {
   @Input() set steptInput(value: Step | undefined) {
     
     if (value) {
-      console.log(value);
       this.isEdit = true;
       // this.isShowReccuringData = value.reccuringEvery !== undefined && value.reccuringEvery > 0;
       value.dateDue = value.dateDue ? new Date(value.dateDue) : value.dateDue;

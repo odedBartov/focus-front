@@ -66,8 +66,6 @@ export class SummaryComponent implements OnInit {
   }
 
   initChart() {
-    console.log(this.steps);
-
     const today = new Date();
     const todayMonth = today.getMonth();
     const twoMonthsAgo = new Date(today.getFullYear(), todayMonth - 2, 1);

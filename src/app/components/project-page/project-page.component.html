@@ -230,7 +230,7 @@
                             <div class="extra-not-finished">
                                 <div class="step-icons" *ngIf="!isReadOnly()">
                                     <div class="edit-delete">
-                                        <img class="icon-garbage-can" (click)="deleteStep(step)" />
+                                        <img class="icon-garbage-can" (click)="deleteStep(step)" *ngIf="!(project().paymentModel === paymentModelEnum.monthly)"/>
                                         <img class="icon-pencil" (click)="openNewStepModal(step)" />
                                     </div>
                                     <div class="animation-container">
@@ -287,7 +287,7 @@
                             </div>
                             <div class="buttons-and-recurring">
                                 <div class="edit-delete">
-                                    <img class="icon-garbage-can" (click)="deleteStep(step)" />
+                                    <img class="icon-garbage-can" (click)="deleteStep(step)" *ngIf="!(project().paymentModel === paymentModelEnum.monthly)"/>
                                     <img class="icon-pencil" (click)="openNewStepModal(step)" />
                                 </div>
                                 <div class="recurring-data-span new-small" *ngIf="step.isRecurring">

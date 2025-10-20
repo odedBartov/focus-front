@@ -462,7 +462,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
     if (this.project().projectType === projectTypeEnum.retainer && this.project().paymentModel === paymentModelEnum.hourly) {
       this.baseProjectPrice = this.getProjectPrice();
-      this.paidMoney = this.retainerFinishedSteps.reduce((acc, step) => {return acc + step.price}, 0);
+      this.paidMoney = this.retainerFinishedSteps.reduce((acc, step) => { return acc + step.price }, 0);
     } else {
       this.project()?.steps?.forEach(step => {
         if (step.stepType === StepType.payment) {
@@ -634,11 +634,19 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   openProjectModal() {
     const dialogRef = this.dialog.open(ProjectModalComponent, { data: { project: this.project() } });
-    dialogRef.afterClosed().subscribe(res => {
+    dialogRef.afterClosed().subscribe((res: Project) => {
       if (res) {
         this.project.set(res);
+        if (res.paymentModel === paymentModelEnum.monthly) {
+          const retainerStep = this.project().steps.find(s => s.stepType === StepType.payment && s.isRecurring);
+          if (retainerStep) {
+            retainerStep.price = res.reccuringPayment ?? 0;
+            retainerStep.recurringDayInMonth = res.monthlyPaymentDay;
+            this.updateStep(retainerStep);
+          }
+        }
       }
-    })
+    });
   }
 
   showNewStep() {
@@ -673,11 +681,15 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   openNewStepModal(step?: Step) {
-    const dialogRef = this.dialog.open(NewStepModalComponent, { data: { step: step, isActive: true, paymentModel: this.project().paymentModel } });
-    const childInstance = dialogRef.componentInstance;
-    childInstance.stepUpdated.subscribe(newStep => {
-      this.updateStep(newStep);
-    });
+    if (this.project().paymentModel === paymentModelEnum.monthly && step?.isRecurring) {
+      this.openProjectModal();
+    } else {
+      const dialogRef = this.dialog.open(NewStepModalComponent, { data: { step: step, isActive: true, paymentModel: this.project().paymentModel } });
+      const childInstance = dialogRef.componentInstance;
+      childInstance.stepUpdated.subscribe(newStep => {
+        this.updateStep(newStep);
+      });
+    }
   }
 
   deleteStep(step: Step) {

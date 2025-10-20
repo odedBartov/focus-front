@@ -1,7 +1,7 @@
 import { Component, inject, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Project } from '../../models/project';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpService } from '../../services/http.service';
 import { AnimationsService } from '../../services/animations.service';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -32,7 +32,7 @@ export class ProjectModalComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: { project: Project }) {
     this.project = { ...data.project };
     this.startDate = this.datePipe.transform(this.project.startDate, 'dd/MM/yy') ?? '';
-    this.endDate = this.datePipe.transform(this.project.endDate, 'dd/MM/yy') ?? '';    
+    this.endDate = this.datePipe.transform(this.project.endDate, 'dd/MM/yy') ?? '';
   }
 
 
