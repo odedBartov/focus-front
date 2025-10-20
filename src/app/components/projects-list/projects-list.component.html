@@ -37,10 +37,11 @@
                     </span>
                 </div>
                 <div class="small-text new-small">
+                    <span style="color: var(--default-gray);">התקדמות</span>
                     <div class="progress-bar">
                         <div class="progress-fill" [style.width.%]="getProjectProgress(project)"></div>
                     </div>
-                    <span style="margin-top: 1rem;">{{getProjectProgress(project) | number:'1.0-0'}}%</span>
+                    <!-- <span style="margin-top: 15px;">{{getProjectProgress(project) | number:'1.0-0'}}%</span> -->
                 </div>
                 <div class="menu" (click)="$event.stopPropagation()">
                     <img class="menu icon-kabab-menu" [matMenuTriggerFor]="menu" style="padding: 10px;" />
