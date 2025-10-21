@@ -1,21 +1,21 @@
 import { inject, Injectable } from '@angular/core';
-import { InsightAndUpdates } from '../models/insightAndUpdates';
 import { map, Observable, of } from 'rxjs';
 import { HttpService } from './http.service';
+import { Feature } from '../models/feature';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UpdatesService {
   httpService = inject(HttpService);
-  insightsAndUpdates?: InsightAndUpdates;
+  futureFeatures?: Feature[];
 
-  getInsightAndUpdates(): Observable<InsightAndUpdates> {
-    if (this.insightsAndUpdates) {
-      return of(this.insightsAndUpdates);
+  getFutureFeatures(): Observable<Feature[]> {
+    if (this.futureFeatures) {
+      return of(this.futureFeatures);
     } else {
-      return this.httpService.getInsightAndUpdates().pipe(map(res => {
-        this.insightsAndUpdates = res;
+      return this.httpService.getFutureFeatures().pipe(map(res => {
+        this.futureFeatures = res;
         return res;
       }));
     }

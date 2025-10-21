@@ -1,10 +1,6 @@
 .main {
     width: 100%;
 
-    .pointer {
-        cursor: pointer;
-    }
-
     .tasks {
         display: grid;
         grid-template-columns: repeat(2, 1fr);

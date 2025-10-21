@@ -314,6 +314,9 @@ input::-webkit-inner-spin-button {
     color: red;
 }
 
+.pointer {
+    cursor: pointer;
+}
 //icons
 .icon-garbage-can {
     content: url('/assets/icons/garbage_can_not.svg');

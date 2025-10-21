@@ -5,11 +5,11 @@ import { Step } from '../models/step';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthenticationService } from './authentication.service';
 import { environment } from "../../environments/environment";
-import { InsightAndUpdates } from '../models/insightAndUpdates';
 import { User } from '../models/user';
 import { Title } from '@angular/platform-browser';
 import { HourlyWorkSession } from '../models/hourlyWorkSession';
 import { RetainerPayment } from '../models/RetainerPayment';
+import { Feature } from '../models/feature';
 
 @Injectable({
   providedIn: 'root'
@@ -137,12 +137,8 @@ export class HttpService {
     return this.httpClient.delete(`${this.apiUrl}Retainer/deleteHourlySession?sessionId=${sessionId}`, headers)
   }
 
-  getInsightAndUpdates(): Observable<InsightAndUpdates> {
-    return this.httpClient.get<InsightAndUpdates>(this.apiUrl + "Info/GetInsightAndUpdates");
-  }
-
-  createInsight(text: string) {
-    return this.httpClient.post(this.apiUrl + "Info/createInsight", { Text: text })
+  getFutureFeatures(): Observable<Feature[]> {
+    return this.httpClient.get<Feature[]>(this.apiUrl + "Info/getFutureFeatures");
   }
 
   getUser(): Observable<User> {
