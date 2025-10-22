@@ -99,74 +99,79 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   initTasks() {
-    const projects = this.projects();
-    if (!projects) return;
-    this.tasksWithDate = [];
-    this.tasksWithoutDate = [];
-    this.currentAndFutureTasks = [];
+    const lists = this.projectsService.populateCalendarTasks();
+    this.tasksWithDate = lists.tasksWithDate;
+    this.tasksWithoutDate = lists.tasksWithoutDate;
+    this.currentAndFutureTasks = lists.currentAndFutureTasks;
+    // const projects = this.projects();
+    // if (!projects) return;
+    // this.tasksWithDate = [];
+    // this.tasksWithoutDate = [];
+    // this.currentAndFutureTasks = [];
 
-    const weeklyTasksStep = this.noProject().steps.find(s => s.name === 'weeklyTasks');
-    if (weeklyTasksStep) {
-      weeklyTasksStep.tasks?.forEach(task => {
-        if (task.dateOnWeekly) {
-          this.insertTaskToList(this.tasksWithDate, weeklyTasksStep, this.noProject(), task, undefined);
-        } else {
-          this.insertTaskToFutueTasks(this.noProject(), weeklyTasksStep, task, undefined);
-          this.insertTaskToList(this.tasksWithoutDate, weeklyTasksStep, this.noProject(), task, undefined);
-        }
-      });
-    }
+    // const weeklyTasksStep = this.noProject().steps.find(s => s.name === 'weeklyTasks');
+    // if (weeklyTasksStep) {
+    //   weeklyTasksStep.tasks?.forEach(task => {
+    //     if (task.dateOnWeekly) {
+    //       this.insertTaskToList(this.tasksWithDate, weeklyTasksStep, this.noProject(), task, undefined);
+    //     } else {
+    //       this.insertTaskToFutueTasks(this.noProject(), weeklyTasksStep, task, undefined);
+    //       this.insertTaskToList(this.tasksWithoutDate, weeklyTasksStep, this.noProject(), task, undefined);
+    //     }
+    //   });
+    // }
 
-    projects.forEach(project => {
-      project.steps.sort((a, b) => a.positionInList - b.positionInList);
-      let foundActiveStep = false;
-      project.steps.forEach(step => {
-        if (step.tasks?.length) {
-          step.tasks.forEach(task => {
-            if (task.dateOnWeekly) {
-              this.insertTaskToList(this.tasksWithDate, step, project, task, undefined);
-            } else if (!task.isComplete) {
-              this.insertTaskToFutueTasks(project, step, task, undefined);
-              if (!foundActiveStep) { // this is the first not complete step, so its the active one
-                this.insertTaskToList(this.tasksWithoutDate, step, project, task, undefined);
-              }
-            }
-          });
-        } else {
-          if (step.dateOnWeekly) {
-            this.insertTaskToList(this.tasksWithDate, step, project, undefined, step);
-          } else if (!step.isComplete) {
-            this.insertTaskToFutueTasks(project, step, undefined, step);
-            if (!foundActiveStep) { // this is the first not complete step, so its the active one
-              this.insertTaskToList(this.tasksWithoutDate, step, project, undefined, step);
-            }
-          }
-        }
-        if (!step.isComplete) foundActiveStep = true;
-      })
-    })
+    // projects.forEach(project => {
+    //   project.steps.sort((a, b) => a.positionInList - b.positionInList);
+    //   let foundActiveStep = false;
+    //   project.steps.forEach(step => {
+    //     if (step.tasks?.length) {
+    //       step.tasks.forEach(task => {
+    //         if (task.dateOnWeekly) {
+    //           this.insertTaskToList(this.tasksWithDate, step, project, task, undefined);
+    //         } else if (!task.isComplete) {
+    //           this.insertTaskToFutueTasks(project, step, task, undefined);
+    //           if (!foundActiveStep) { // this is the first not complete step, so its the active one
+    //             this.insertTaskToList(this.tasksWithoutDate, step, project, task, undefined);
+    //           }
+    //         }
+    //       });
+    //     } else {
+    //       if (step.dateOnWeekly) {
+    //         this.insertTaskToList(this.tasksWithDate, step, project, undefined, step);
+    //       } else if (!step.isComplete) {
+    //         this.insertTaskToFutueTasks(project, step, undefined, step);
+    //         if (!foundActiveStep) { // this is the first not complete step, so its the active one
+    //           this.insertTaskToList(this.tasksWithoutDate, step, project, undefined, step);
+    //         }
+    //       }
+    //     }
+    //     if (!step.isComplete) foundActiveStep = true;
+    //   })
+    // })
 
-    this.tasksWithDate = this.tasksWithDate.sort((a, b) => this.sortTasksAndSteps(a, b));
-    this.tasksWithoutDate = this.tasksWithoutDate.sort((a, b) => this.sortTasksAndSteps(a, b));
+    // this.tasksWithDate = this.tasksWithDate.sort((a, b) => this.sortTasksAndSteps(a, b));
+    // this.tasksWithoutDate = this.tasksWithoutDate.sort((a, b) => this.sortTasksAndSteps(a, b));
   }
 
-  insertTaskToList(list: StepOrTask[], parentStep: Step, project?: Project, task?: StepTask, step?: Step) {
-    const taskOrStep = new StepOrTask();
-    taskOrStep.task = task;
-    taskOrStep.step = step;
-    taskOrStep.parentStep = parentStep;
-    taskOrStep.project = project;
-    list.push(taskOrStep);
-  }
+  //insertTaskToList(list: StepOrTask[], parentStep: Step, project?: Project, task?: StepTask, step?: Step) {
+    //this.projectsService.insertTaskToList(list, parentStep, project, task, step);
+    // const taskOrStep = new StepOrTask();
+    // taskOrStep.task = task;
+    // taskOrStep.step = step;
+    // taskOrStep.parentStep = parentStep;
+    // taskOrStep.project = project;
+    // list.push(taskOrStep);
+  //}
 
-  insertTaskToFutueTasks(project: Project, parentStep: Step, task?: StepTask, step?: Step) {
-    let currentProject = this.currentAndFutureTasks.find(p => p.project.id === project.id);
-    if (!currentProject) {
-      currentProject = { project, tasks: [] };
-      this.currentAndFutureTasks.push(currentProject);
-    }
-    this.insertTaskToList(currentProject.tasks, parentStep, currentProject.project, task, step);
-  }
+  // insertTaskToFutueTasks(project: Project, parentStep: Step, task?: StepTask, step?: Step) {
+  //   let currentProject = this.currentAndFutureTasks.find(p => p.project.id === project.id);
+  //   if (!currentProject) {
+  //     currentProject = { project, tasks: [] };
+  //     this.currentAndFutureTasks.push(currentProject);
+  //   }
+  //   this.insertTaskToList(currentProject.tasks, parentStep, currentProject.project, task, step);
+  // }
 
   initPresentedDays() {
     setTimeout(() => {

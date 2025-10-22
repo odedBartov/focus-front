@@ -4,15 +4,13 @@
             <span>
                 משימות נוספות היום
             </span>
-            <img class="icon-expand pointer" (click)="navigateToCalendar()"/>
+            <img class="icon-expand pointer" (click)="navigateToCalendar()" />
         </div>
         <div class="tasks">
-            <div class="task card" *ngFor="let step of steps">
-                <span class="new-small">{{step.name}}</span>
-                <div class="icons">
-                    <img class="icon-pencil" (click)="editStep(step)"/>
-                    <img class="icon-garbage-can" (click)="deleteStep(step)"/>
-                </div>
+            <div class="task" *ngFor="let task of stepsAndTasks">
+                <app-weekly-day-task [task]="task" [isDragging]="isDragging" (openProject)="openProject(task.project)"
+                    (createNewTaskEmitter)="updateTaskText($event, task.parentStep)"
+                    (completeTask)="completeTask($event)" [shouldHidePlaceHolder]="false"></app-weekly-day-task>
             </div>
         </div>
     </div>

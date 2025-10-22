@@ -10,10 +10,13 @@ import { Step } from '../../models/step';
 import { Project } from '../../models/project';
 import { ProjectsService } from '../../services/projects.service';
 import { StepOrTask } from '../../models/stepOrTask';
+import { areDatesEqual } from '../../helpers/functions';
+import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
+import { StepTask } from '../../models/stepTask';
 
 @Component({
   selector: 'app-updates',
-  imports: [CommonModule],
+  imports: [CommonModule, WeeklyDayTaskComponent],
   templateUrl: './updates.component.html',
   styleUrl: './updates.component.scss'
 })
@@ -24,11 +27,12 @@ export class UpdatesComponent implements OnInit {
   updatesService = inject(UpdatesService);
   projectsService = inject(ProjectsService);
   @Output() navigateToCalendarEmitter = new EventEmitter<void>();
+  @Output() selectProject = new EventEmitter<Project>();
   projects: WritableSignal<Project[]>;
   noProject: WritableSignal<Project>;
   features: Feature[] = [];
-  steps: Step[] = [];
   stepsAndTasks: StepOrTask[] = [];
+  isDragging = { dragging: false };
   fullName = "משתמש ללא שם";
   arielsNumber = environment.arielsNumber;
 
@@ -38,20 +42,9 @@ export class UpdatesComponent implements OnInit {
     effect(() => {
       this.initTasks();
     })
-    effect(() => {
-      this.steps = this.noProject().steps;
-    })
   }
-  
-  ngOnInit(): void {
-    const s1 = new Step();
-    s1.name = "שלב 1";
-    const s2 = new Step();
-    s2.name = "שלב 2";
-    const s3 = new Step();
-    s3.name = "שלב 3";
-    this.steps.push(s1, s2, s3, s1, s2, s3);
 
+  ngOnInit(): void {
     this.animationsService.changeIsloading(true);
     this.updatesService.getFutureFeatures().subscribe(res => {
       this.animationsService.changeIsloading(false);
@@ -59,15 +52,20 @@ export class UpdatesComponent implements OnInit {
     })
 
     const userName = this.authenticationService.getUserName();
-    if (userName) { 
+    if (userName) {
       this.fullName = userName;
     }
   }
 
   initTasks() {
-    // for no project - take every step of today, if not completed, if regular add add it, if with tasks add the first not completed task
-    this.noProject().steps.forEach(step => {
-      
+    this.stepsAndTasks = [];
+    const lists = this.projectsService.populateCalendarTasks();
+    const allTasks = lists.tasksWithDate;
+    allTasks.forEach(t => {
+      const taskDate = t.task?.dateOnWeekly || t.step?.dateOnWeekly;
+      if (taskDate && areDatesEqual(new Date(taskDate), new Date())) {
+        this.stepsAndTasks.push(t);
+      }
     });
   }
 
@@ -75,10 +73,29 @@ export class UpdatesComponent implements OnInit {
     this.navigateToCalendarEmitter.emit();
   }
 
-  editStep(step: Step) {
+  openProject(project?: Project) {
+    if (project) {
+      this.selectProject.emit(project);
+    }
   }
 
-  deleteStep(step: Step) {
+  updateTaskText(task: StepTask, step: Step) {
+    if (step.tasks) {
+      const index = step.tasks.findIndex(t => t.id === task.id);
+      if (index > -1) {
+        step.tasks[index] = task;
+        this.httpService.updateSteps([step]).subscribe();
+      }
+    }
+  }
+
+  completeTask(task: StepOrTask) {
+    // update position
+    if (task.step) {
+      this.httpService.updateSteps([task.step]).subscribe();
+    } else if (task.task && task.parentStep) {
+      this.httpService.updateSteps([task.parentStep]).subscribe();
+    }
   }
 
   openWhatsapp() {
