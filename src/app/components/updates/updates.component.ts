@@ -13,6 +13,7 @@ import { StepOrTask } from '../../models/stepOrTask';
 import { areDatesEqual } from '../../helpers/functions';
 import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
 import { StepTask } from '../../models/stepTask';
+import { initRetainerSteps } from '../../helpers/retainerFunctions';
 
 @Component({
   selector: 'app-updates',
@@ -67,6 +68,16 @@ export class UpdatesComponent implements OnInit {
         this.stepsAndTasks.push(t);
       }
     });
+
+    const activeSteps = this.projects().flatMap(p => p.steps.filter(s => s.isRecurring));
+    const retainerSteps: Step[] = [];
+    initRetainerSteps(activeSteps, retainerSteps, [], []);    
+    const retainerStepsOrTasks = retainerSteps.map(step => {
+      const stepOrTask = new StepOrTask();
+      stepOrTask.step = step;
+      return stepOrTask;
+    });
+    this.stepsAndTasks = this.stepsAndTasks.concat(retainerStepsOrTasks);
   }
 
   navigateToCalendar() {

@@ -67,7 +67,11 @@ export class WeeklyDayTaskComponent {
     if (task.task) {
       return task.task.isComplete;
     } else if (task.step) {
-      return task.step.isComplete;
+      if (task.step.isRecurring) {
+        return task.step.dateCompleted == new Date();
+      } else {
+        return task.step.isComplete;
+      }
     }
 
     return false;
