@@ -4,9 +4,19 @@
             <span>
                 משימות נוספות היום
             </span>
-            <img class="icon-expand pointer" />
+            <img class="icon-expand pointer" (click)="navigateToCalendar()"/>
+        </div>
+        <div class="tasks">
+            <div class="task card" *ngFor="let step of steps">
+                <span class="new-small">{{step.name}}</span>
+                <div class="icons">
+                    <img class="icon-pencil" (click)="editStep(step)"/>
+                    <img class="icon-garbage-can" (click)="deleteStep(step)"/>
+                </div>
+            </div>
         </div>
     </div>
+
     <div>
         <div class="header new-h2">
             <span>
@@ -14,7 +24,7 @@
             </span>
             <img src="assets/icons/stars.svg" />
         </div>
-        <div class="new-small">
+        <div class="new-small" style="margin-right: 25px;">
             <ul>
                 <li *ngFor="let feature of features">{{feature.text}}</li>
             </ul>

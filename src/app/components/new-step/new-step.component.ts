@@ -32,7 +32,6 @@ export class NewStepComponent implements AfterViewInit {
   @Input() isActive = false;
   @Input() isInModal = false;
   @Input() set steptInput(value: Step | undefined) {
-    
     if (value) {
       this.isEdit = true;
       // this.isShowReccuringData = value.reccuringEvery !== undefined && value.reccuringEvery > 0;

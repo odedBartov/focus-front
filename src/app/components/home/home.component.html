@@ -22,7 +22,7 @@
             (activeProjectsEmitter)="refreshProjects()"></app-projects-list>
         </div>
         <div class="updates">
-          <app-updates></app-updates>
+          <app-updates (navigateToCalendarEmitter)="setActiveTab(tasksTab)"></app-updates>
         </div>
       </div>
     </div>

@@ -12,8 +12,8 @@ export class Step {
     stepType: StepType;
     price: number;
     dateCompleted?: Date;
-    dateDue?: Date | null;
-    dateOnWeekly?: Date;
+    dateDue?: Date | null; // month for payment
+    dateOnWeekly?: Date; // actual expected date
     positionInList: number;
     positionInWeeklyList: number;
     hideTaskDate?: Date;
