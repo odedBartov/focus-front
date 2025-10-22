@@ -39,7 +39,9 @@ export function initRetainerSteps(steps: Step[], retainerActiveSteps: Step[], re
                                 nextOccurrenceDate.setDate(dateDue.getDate() + (nextDayInWeek - dateDue.getDay()));
                             } else { // should look at next week
                                 nextOccurrenceDate.setDate(dateDue.getDate() + (step.recurringEvery ?? 1) * 7);
-                                step.dateDue = new Date(nextOccurrenceDate.getDate());
+                                const newDateDue = new Date(step.dateDue ?? new Date());
+                                newDateDue.setDate(nextOccurrenceDate.getDate());
+                                step.dateDue = newDateDue;
                             }
                         } else { // should look at next week
                             nextOccurrenceDate.setDate(dateDue.getDate() + (step.recurringEvery ?? 1) * 7);
