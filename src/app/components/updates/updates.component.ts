@@ -110,6 +110,13 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     })
   }
 
+  sortSteps() {
+    this.stepsAndTasks.sort((a, b) => {
+      const posA = a.task ? a.task.positionInWeeklyList : a.step!.positionInWeeklyList;
+      const posB = b.task ? b.task.positionInWeeklyList : b.step!.positionInWeeklyList;
+      return posA - posB;
+    });
+  }
 
   updateStepsPosition() {
     for (let index = 0; index < this.stepsAndTasks.length; index++) {
@@ -143,7 +150,18 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
   }
 
   completeTask(task: StepOrTask) {
-    // update position
+    const index = this.stepsAndTasks.findIndex(t => {
+      if (task.task) {
+        return t.task?.id === task.task.id;
+      } else if (task.step) {
+        return t.step?.id === task.step.id;
+      }
+      return false;
+    });
+    if (index > -1) {
+      moveItemInArray(this.stepsAndTasks, index, 0);
+    }
+    this.updateStepsPosition();
     if (task.step) {
       this.httpService.updateSteps([task.step]).subscribe();
     } else if (task.task && task.parentStep) {

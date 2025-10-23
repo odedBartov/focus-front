@@ -94,8 +94,14 @@ export class WeeklyDayTaskComponent {
     if (!this.isDateBeforeToday()) {
       if (this.task.task) {
         this.task.task.isComplete = isComplete;
+        if (isComplete) {
+          // this.task.task.positionInWeeklyList = 0;
+        }
       } else if (this.task.step) {
         this.task.step.isComplete = isComplete;
+        if (isComplete) {
+          // this.task.step.positionInWeeklyList = 0;
+        }
       }
 
       this.completeTask.emit(this.task);
