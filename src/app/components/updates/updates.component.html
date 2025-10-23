@@ -1,16 +1,16 @@
 <div class="main">
-    <div class="today-tasks">
+    <div class="today-tasks" #todayTasks>
         <div class="header new-h2">
             <span>
                 משימות היום
             </span>
             <img class="icon-expand pointer" (click)="navigateToCalendar()" />
         </div>
-        <div class="tasks">
+        <div class="tasks" cdkDropList id="todayTasks" [cdkDropListData]="stepsAndTasks" (cdkDropListDropped)="dropStep($event)">
             <div class="task" *ngFor="let task of stepsAndTasks">
                 <app-weekly-day-task [task]="task" [isDragging]="isDragging" (openProject)="openProject(task.project)"
                     (createNewTaskEmitter)="updateTaskText($event, task.parentStep)"
-                    (completeTask)="completeTask($event)" [shouldHidePlaceHolder]="false"></app-weekly-day-task>
+                    (completeTask)="completeTask($event)" [shouldHidePlaceHolder]="true"></app-weekly-day-task>
             </div>
         </div>
     </div>
