@@ -6,11 +6,15 @@
             </span>
             <img class="icon-expand pointer" (click)="navigateToCalendar()" />
         </div>
-        <div class="tasks" cdkDropList id="todayTasks" [cdkDropListData]="stepsAndTasks" (cdkDropListDropped)="dropStep($event)">
-            <div class="task" *ngFor="let task of stepsAndTasks">
-                <app-weekly-day-task [task]="task" [isDragging]="isDragging" (openProject)="openProject(task.project)"
-                    (createNewTaskEmitter)="updateTaskText($event, task.parentStep)"
-                    (completeTask)="completeTask($event)" [shouldHidePlaceHolder]="true"></app-weekly-day-task>
+        <div class="tasks-container">
+            <div class="tasks" cdkDropList id="todayTasks" [cdkDropListData]="stepsAndTasks"
+                (cdkDropListDropped)="dropStep($event)">
+                <div class="task" *ngFor="let task of stepsAndTasks">
+                    <app-weekly-day-task [task]="task" [isDragging]="isDragging"
+                        (openProject)="openProject(task.project)"
+                        (createNewTaskEmitter)="updateTaskText($event, task.parentStep)"
+                        (completeTask)="completeTask($event)" [shouldHidePlaceHolder]="true"></app-weekly-day-task>
+                </div>
             </div>
         </div>
     </div>
@@ -29,7 +33,7 @@
         </div>
     </div>
     <div class="contact" (click)="openWhatsapp()">
-        <span class="header new-text-bold">לתמיכה, שאלות והצעות</span>
+        <span class="text new-text-bold">לתמיכה, שאלות והצעות</span>
         <img src="assets/icons/whatsapp.svg" />
     </div>
 </div>

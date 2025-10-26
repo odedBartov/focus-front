@@ -9,6 +9,7 @@
         flex-direction: row;
         justify-content: space-between;
         margin-right: 25px;
+        margin-bottom: 12px;
 
         img {
             height: 1.2rem;
@@ -16,8 +17,16 @@
     }
 
     .today-tasks {
-        height: 500px;
-        overflow: auto;
+        .tasks-container {
+            height: 320px;
+            overflow: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer and Edge */
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
 
         .tasks {
             margin: 0 25px;
