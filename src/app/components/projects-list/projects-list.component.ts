@@ -38,14 +38,15 @@ export class ProjectsListComponent implements OnInit {
   projectTypeEnum = projectTypeEnum;
   projectsFilter?: projectTypeEnum;
   userSubscription = subscriptionEnum.free;
+  filterType?: projectTypeEnum
 
   constructor() {
     this.projects = this.projectsService.getActiveProjects();
     this.filterProjects();
 
     effect(() => {
-      this.projects();
       this.filteredProjects = [...this.projects()];
+      this.filterProjects(this.filterType);
     });
   }
 
@@ -54,6 +55,7 @@ export class ProjectsListComponent implements OnInit {
   }
 
   filterProjects(filterType?: projectTypeEnum) {
+    this.filterType = filterType;
     this.projectsFilter = filterType;
     var filterLambda = (p: Project) => true;
 
@@ -64,6 +66,11 @@ export class ProjectsListComponent implements OnInit {
     }
 
     this.filteredProjects = this.projects().filter(filterLambda);
+    this.sortFilteredProjects();
+  }
+
+  sortFilteredProjects() {
+    this.filteredProjects.sort((a, b) => (a.positionInList ?? 0) - (b.positionInList ?? 0));
   }
 
   getCurrentStep(project: Project) {
@@ -158,16 +165,16 @@ export class ProjectsListComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.projects(), event.previousIndex, event.currentIndex);
+    moveItemInArray(this.filteredProjects, event.previousIndex, event.currentIndex);
     this.updateProjectsPosition();
     this.updateProjects(this.projects()).subscribe(res => {
-      this.projects.set([...this.projects()])
+      this.filterProjects(this.projectsFilter);
     });
   }
 
   updateProjectsPosition() {
-    for (let index = 0; index < this.projects().length; index++) {
-      this.projects()[index].positionInList = index;
+    for (let index = 0; index < this.filteredProjects.length; index++) {
+      this.filteredProjects[index].positionInList = index;
     }
   }
 
