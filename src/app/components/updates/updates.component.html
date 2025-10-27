@@ -6,7 +6,7 @@
             </span>
             <img class="icon-expand pointer" (click)="navigateToCalendar()" />
         </div>
-        <div class="tasks-container">
+        <div class="tasks-container" #tasksContainer>
             <div class="tasks" cdkDropList id="todayTasks" [cdkDropListData]="stepsAndTasks"
                 (cdkDropListDropped)="dropStep($event)">
                 <div class="task" *ngFor="let task of stepsAndTasks">
@@ -15,6 +15,9 @@
                         (createNewTaskEmitter)="updateTaskText($event, task.parentStep)"
                         (completeTask)="completeTask($event)" [shouldHidePlaceHolder]="true"></app-weekly-day-task>
                 </div>
+            </div>
+            <div class="new-task" (click)="scrollToBottom()">
+                <app-new-task (createNewTask)="createNewTask($event)"></app-new-task>
             </div>
         </div>
     </div>

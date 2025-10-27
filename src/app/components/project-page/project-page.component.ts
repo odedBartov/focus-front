@@ -238,11 +238,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   initRetainerSteps() {
-    this.retainerActiveSteps = [];
-    this.retainerFutureSteps = [];
-    this.retainerFinishedSteps = [];
-    initRetainerSteps(this.project().steps, this.retainerActiveSteps, this.retainerFutureSteps, this.retainerFinishedSteps);
-    this.updateRetainerStepsPositions();
+    const retainerSteps = initRetainerSteps(this.project().steps ?? []);
+    this.retainerActiveSteps = retainerSteps.retainerActiveSteps;
+    this.retainerFutureSteps = retainerSteps.retainerFutureSteps;
+    this.retainerFinishedSteps = retainerSteps.retainerFinishedSteps;
   }
 
   updateRetainerStepDate(step: Step) {
