@@ -16,6 +16,8 @@ declare global {
 export class GoogleSigninComponent implements OnInit {
   @Output() googleLoginEmitter = new EventEmitter<string>();
   private codeClient: any;
+  termsAndConditionsUrl: string = 'https://arieladler.co.il/focus/focus-terms/';
+  privacyPolicyUrl: string = 'https://arieladler.co.il/focus/focus-privacy/';
   ngOnInit(): void {
     //this.initGoogleClient();
   }
@@ -33,9 +35,16 @@ export class GoogleSigninComponent implements OnInit {
     });
   }
 
-
   onGoogleSignInClick(): void {
     this.initGoogleClient();
     this.codeClient.requestCode();
+  }
+
+  goToTermsAndConditions() {
+    window.open(this.termsAndConditionsUrl, '_blank');
+  }
+
+  goToPrivacyPolicy() {
+    window.open(this.privacyPolicyUrl, '_blank');
   }
 }

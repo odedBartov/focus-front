@@ -6,13 +6,13 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    
+
     .icon {
         width: 360px;
         height: 120px;
         margin-bottom: 2rem;
     }
-    
+
     .google {
         padding: 0 24px;
         height: 60px;
@@ -22,10 +22,23 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        margin-bottom: 20px;
 
         span {
             margin-left: 12px;
             margin-bottom: 4px;
+        }
+
+    }
+
+    .terms-and-conditions {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .link {
+            text-decoration: underline;
+            cursor: pointer;
         }
     }
 }
