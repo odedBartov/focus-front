@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { ProjectsListComponent } from '../projects-list/projects-list.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { AnimationsService } from '../../services/animations.service';
-import { ProjectStatus } from '../../models/enums';
+import { ProjectStatus, subscriptionEnum } from '../../models/enums';
 import { SummaryComponent } from "../summary/summary.component";
 import { UpdatesComponent } from "../updates/updates.component";
 import { ProjectPageComponent } from '../project-page/project-page.component';
@@ -26,6 +26,7 @@ import { ProfileComponent } from '../../modals/profile/profile.component';
 import { WeeklyTasksComponent } from '../weekly-tasks/weekly-tasks.component';
 import { FreeTrialEndComponent } from '../../modals/free-trial-end/free-trial-end.component';
 import { WorkSessionService } from '../../services/work-session.service';
+import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-feature-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -92,7 +93,9 @@ export class HomeComponent implements OnInit {
         queryParams: { tab: tab.id },
         queryParamsHandling: 'merge'
       });
-      this.activeTab = tab;
+      if (!(tab === this.tasksTab && this.authenticationService.getSubscription() === subscriptionEnum.free)) {
+        this.activeTab = tab;
+      }
       this.selectedProject.set(tab.project);
     }
   }
@@ -130,11 +133,14 @@ export class HomeComponent implements OnInit {
   listenToUrl() {
     this.route.queryParams.subscribe(params => {
       const tabId = params['tab'];
-
       if (!tabId || tabId === 'main') {
         this.activeTab = this.homeTab;
       } else if (tabId === 'tasks') {
-        this.activeTab = this.tasksTab;
+        if (this.authenticationService.getSubscription() === subscriptionEnum.free) { // subscriptio 
+          this.dialog.open(PaidFeatureModalComponent);
+        } else {
+          this.activeTab = this.tasksTab;
+        }
       } else if (tabId === 'archive') {
         this.activeTab = this.archiveTab;
       } else {
