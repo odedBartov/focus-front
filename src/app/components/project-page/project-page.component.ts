@@ -24,11 +24,10 @@ import { StepTask } from '../../models/stepTask';
 import { AnimationItem } from 'lottie-web';
 import { RetainerPayment } from '../../models/RetainerPayment';
 import { HourlyWorkSession } from '../../models/hourlyWorkSession';
-import { areTwoDaysInTheSameWeek, isDateGreaterOrEqual, parseLocalDate } from '../../helpers/functions';
 import { NewStepModalComponent } from '../../modals/new-step-modal/new-step-modal.component';
 import { PaymentHistoryModalComponent } from '../../modals/payment-history-modal/payment-history-modal.component';
 import { WorkSessionService } from '../../services/work-session.service';
-import { handleNotCompletedRetainerStep, initRetainerSteps } from '../../helpers/retainerFunctions';
+import { initRetainerSteps } from '../../helpers/retainerFunctions';
 
 @Component({
   selector: 'app-project-page',

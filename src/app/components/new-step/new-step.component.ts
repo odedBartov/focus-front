@@ -10,6 +10,8 @@ import { HttpService } from '../../services/http.service';
 import { AnimationsService } from '../../services/animations.service';
 import { StepTask } from '../../models/stepTask';
 import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
+import { getNextRetainerOccurrenceDate } from '../../helpers/retainerFunctions';
+import { areDatesEqual } from '../../helpers/functions';
 
 @Component({
   selector: 'app-new-step',
@@ -190,6 +192,8 @@ export class NewStepComponent implements AfterViewInit {
     } else {
       this.newStep.recurringDaysInWeek.push(weekDayIndex);
     }
+
+    this.newStep.recurringDaysInWeek.sort((a, b) => a - b);
   }
 
   handleEnter(event: KeyboardEvent, index: number) {
@@ -220,6 +224,11 @@ export class NewStepComponent implements AfterViewInit {
         if (!this.newStep.recurringEvery) {
           this.newStep.recurringEvery = 1;
         }
+      }
+
+      if (this.newStep.isRecurring) {
+        this.newStep.nextOccurrence = getNextRetainerOccurrenceDate(this.newStep);
+        this.newStep.isComplete = !areDatesEqual(new Date(), this.newStep.nextOccurrence)
       }
 
       this.stepsEmitter.emit(this.newStep);

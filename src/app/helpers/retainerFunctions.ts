@@ -110,26 +110,71 @@ export function initRetainerSteps(steps: Step[]) {
     };
 }
 
-export function handleNotCompletedRetainerStep(step: Step, retainerActiveSteps: Step[], retainerFutureSteps: Step[]) {
-    if (!step.isRecurring) {
-        retainerActiveSteps.push(step);
-    } else {
-        const today = new Date();
-        if (step.recurringDateType === recurringDateTypeEnum.day) { // day
-            retainerActiveSteps.push(step);
-        } else if (step.recurringDateType === recurringDateTypeEnum.week && step.recurringDaysInWeek?.length) { // week
-            const todayDayInWeek = today.getDay();
-            if (step.recurringDaysInWeek.includes(todayDayInWeek)) {
-                retainerActiveSteps.push(step);
-            } else {
-                retainerFutureSteps.push(step);
+export function getNextRetainerOccurrenceDate(step: Step): Date {
+    const today = new Date();
+    if (step.isRecurring) {
+        const dateCreated = parseLocalDate(step.dateCreated ?? new Date());
+        let nextOccurrenceDate = new Date(dateCreated);
+        if (step.recurringDateType === recurringDateTypeEnum.day) {
+            nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + (step.recurringEvery ?? 1)-1);
+            while (!isDateGreaterOrEqual(nextOccurrenceDate, today)) {
+                nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + (step.recurringEvery ?? 1));
             }
+            return nextOccurrenceDate;
+        } else if (step.recurringDateType === recurringDateTypeEnum.week && step.recurringDaysInWeek?.length) {
+            // reset created date to the first day of the week
+            const currentDayInWeek = nextOccurrenceDate.getDay();
+            const firstDayOfWeek = step.recurringDaysInWeek[0];
+            nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() - (currentDayInWeek - firstDayOfWeek));
+            while (!isDateGreaterOrEqual(nextOccurrenceDate, today)) {
+                let didFound = false;
+                step.recurringDaysInWeek.forEach(day => {
+                    const potentialDate = new Date(nextOccurrenceDate);
+                    potentialDate.setDate(potentialDate.getDate() + (day - firstDayOfWeek));
+                    if (isDateGreaterOrEqual(potentialDate, today)) {
+                        nextOccurrenceDate = potentialDate;
+                        didFound = true;
+                        return;
+                    }
+                    if (didFound) return;
+                });
+                if (didFound) return nextOccurrenceDate; 
+                nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + (step.recurringEvery ?? 1) * 7);
+            }
+            return nextOccurrenceDate;
         } else { // month
-            if (today.getDate() === step.recurringDayInMonth) {
-                retainerActiveSteps.push(step);
-            } else {
-                retainerFutureSteps.push(step);
+            const delta = step.recurringDayInMonth == today.getDate() ? 1 : 0;
+            nextOccurrenceDate.setMonth(nextOccurrenceDate.getMonth() + (step.recurringEvery ?? 1) - delta);
+            nextOccurrenceDate.setDate(step.recurringDayInMonth ?? nextOccurrenceDate.getDate());
+            while (!isDateGreaterOrEqual(nextOccurrenceDate, today)) {
+                nextOccurrenceDate.setMonth(nextOccurrenceDate.getMonth() + (step.recurringEvery ?? 1));
             }
+            return nextOccurrenceDate;
         }
     }
+    return today;
 }
+
+// export function handleNotCompletedRetainerStep(step: Step, retainerActiveSteps: Step[], retainerFutureSteps: Step[]) {
+//     if (!step.isRecurring) {
+//         retainerActiveSteps.push(step);
+//     } else {
+//         const today = new Date();
+//         if (step.recurringDateType === recurringDateTypeEnum.day) { // day
+//             retainerActiveSteps.push(step);
+//         } else if (step.recurringDateType === recurringDateTypeEnum.week && step.recurringDaysInWeek?.length) { // week
+//             const todayDayInWeek = today.getDay();
+//             if (step.recurringDaysInWeek.includes(todayDayInWeek)) {
+//                 retainerActiveSteps.push(step);
+//             } else {
+//                 retainerFutureSteps.push(step);
+//             }
+//         } else { // month
+//             if (today.getDate() === step.recurringDayInMonth) {
+//                 retainerActiveSteps.push(step);
+//             } else {
+//                 retainerFutureSteps.push(step);
+//             }
+//         }
+//     }
+// }
