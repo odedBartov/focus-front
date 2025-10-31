@@ -17,7 +17,6 @@ import { ProjectHoverService } from '../../services/project-hover.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { Title } from '@angular/platform-browser';
 import { ArchiveComponent } from "../archive/archive.component";
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { StandAloneStepsService } from '../../services/stand-alone-steps.service';
 import { ProjectsService } from '../../services/projects.service';
 import { ActivatedRoute } from '@angular/router';
@@ -33,7 +32,7 @@ import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-
   imports: [RouterModule, MatExpansionModule, CommonModule,
     ProjectsListComponent, ProjectsListComponent,
     MatMenuModule, SummaryComponent, UpdatesComponent,
-    ProjectPageComponent, ArchiveComponent, DragDropModule, WeeklyTasksComponent],
+    ProjectPageComponent, ArchiveComponent, WeeklyTasksComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
   standalone: true
@@ -167,6 +166,8 @@ export class HomeComponent implements OnInit {
     } else {
       this.tabs = [this.homeTab, this.tasksTab];
     }
+
+    this.activeProjects().sort((a,b) => a.positionInList - b.positionInList)
     const activeProjectTabs = this.activeProjects().map(p => { return { id: p.id ?? '', label: p.name, project: p } });
     this.tabs.push(...activeProjectTabs);
     if (this.unActiveProjects().length) {
@@ -177,17 +178,6 @@ export class HomeComponent implements OnInit {
         this.activeTab = this.homeTab;
       }
     }
-  }
-
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.tabs, event.previousIndex, event.currentIndex);
-    moveItemInArray(this.activeProjects(), event.previousIndex - 1, event.currentIndex - 1)
-    this.updateProjectsPosition();
-    this.animationsService.changeIsLoadingWithDelay();
-    this.httpService.updateProjects(this.activeProjects()).subscribe(res => {
-      this.activeProjects.set(this.activeProjects().sort((a, b) => a.positionInList - b.positionInList));
-      this.animationsService.changeIsloading(false);
-    });
   }
 
   updateProjectsPosition() {

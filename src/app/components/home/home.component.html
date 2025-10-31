@@ -1,9 +1,8 @@
 <div class="main-window">
   <div class="tabs-container">
-    <div class="tab-list" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)">
+    <div class="tab-list">
       <img src="assets/focus_logo.svg" class="logo" />
-      <div *ngFor="let tab of tabs" [class.active]="tab.id === activeTab.id" class="tab new-small" (click)="setActiveTab(tab)"
-        cdkDrag [cdkDragDisabled]="tab.id === homeTab.id || tab.id === archiveTab.id || tab.id === tasksTab.id || isReadOnly()">
+      <div *ngFor="let tab of tabs" [class.active]="tab.id === activeTab.id" class="tab new-small" (click)="setActiveTab(tab)">
         <span>{{ tab.label }}</span>
         <img [src]="tab.id === activeTab.id ?tab.icon : tab.disabledIcon" />
       </div>

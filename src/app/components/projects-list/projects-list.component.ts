@@ -158,14 +158,17 @@ export class ProjectsListComponent implements OnInit {
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.filteredProjects, event.previousIndex, event.currentIndex);
     this.updateProjectsPosition();
-    this.updateProjects(this.projects()).subscribe(res => {
-      this.filterProjects(this.projectsFilter);
-    });
+    this.projects.set([...this.projects()]);
+    this.updateProjects(this.projects()).subscribe();
   }
 
   updateProjectsPosition() {
     for (let index = 0; index < this.filteredProjects.length; index++) {
       this.filteredProjects[index].positionInList = index;
+      const project = this.projects().find(p => p.id === this.filteredProjects[index].id);
+      if (project) {
+        project.positionInList = index;
+      }
     }
   }
 
