@@ -9,13 +9,14 @@ import { environment } from '../../../environments/environment';
 import { Step } from '../../models/step';
 import { Project } from '../../models/project';
 import { ProjectsService } from '../../services/projects.service';
-import { StepOrTask } from '../../models/stepOrTask';
+import { isStepOrTaskComplete, StepOrTask } from '../../models/stepOrTask';
 import { areDatesEqual } from '../../helpers/functions';
 import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
 import { StepTask } from '../../models/stepTask';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { StepType } from '../../models/enums';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-updates',
@@ -62,6 +63,10 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     }
   }
 
+  isComplete(task: StepOrTask) {
+    return isStepOrTaskComplete(task);
+  }
+
   initTasks() {
     this.stepsAndTasks = [];
     const lists = this.projectsService.populateCalendarTasks();
@@ -87,12 +92,14 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.ngZone.onStable.asObservable().pipe().subscribe(() => {
+    this.ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
       setTimeout(() => {
         const width = this.todayTasksElement.nativeElement.offsetWidth;
-        document.documentElement.style.setProperty('--task-width', `${width - 50}px`); // 50 is the margin
+        document.documentElement.style.setProperty('--task-width', `${width - 50}px`);
+        this.scrollToFirstIncomplete();
       }, 1);
     });
+
   }
 
   scrollToBottom() {
@@ -101,6 +108,25 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
       container.scrollTop = container.scrollHeight;
     }, 1);
   }
+
+  scrollToFirstIncomplete() {
+    const container = this.tasksContainer.nativeElement as HTMLElement;
+    const target = container.querySelector('.task.incomplete') as HTMLElement | null;
+
+    if (target) {
+      // Compute offset relative to the container, not the page
+      const targetOffset =
+        target.getBoundingClientRect().top -
+        container.getBoundingClientRect().top +
+        container.scrollTop;
+
+      container.scrollTo({
+        top: targetOffset,
+        behavior: 'smooth'
+      });
+    }
+  }
+
 
   dropStep(event: CdkDragDrop<StepOrTask[]>) {
     moveItemInArray(this.stepsAndTasks, event.previousIndex, event.currentIndex);

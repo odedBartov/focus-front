@@ -9,7 +9,7 @@
         <div class="tasks-container" #tasksContainer>
             <div class="tasks" cdkDropList id="todayTasks" [cdkDropListData]="stepsAndTasks"
                 (cdkDropListDropped)="dropStep($event)">
-                <div class="task" *ngFor="let task of stepsAndTasks">
+                <div class="task" [class.incomplete]="!isComplete(task)" *ngFor="let task of stepsAndTasks">
                     <app-weekly-day-task [task]="task" [isDragging]="isDragging"
                         (openProject)="openProject(task.project)"
                         (createNewTaskEmitter)="updateTaskText($event, task.parentStep)"

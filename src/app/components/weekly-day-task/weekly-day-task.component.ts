@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output, Renderer2, ViewChild } from '@angular/core';
-import { StepOrTask } from '../../models/stepOrTask';
+import { isStepOrTaskComplete, StepOrTask } from '../../models/stepOrTask';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { Project } from '../../models/project';
@@ -64,13 +64,7 @@ export class WeeklyDayTaskComponent {
   }
 
   isStepOrTaskComplete(task: StepOrTask) {
-    if (task.task) {
-      return task.task.isComplete;
-    } else if (task.step) {
-      return task.step.isComplete;
-    }
-
-    return false;
+    return isStepOrTaskComplete(task);
   }
 
   updateTask(task: StepTask) {
