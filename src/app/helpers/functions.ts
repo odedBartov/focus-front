@@ -1,3 +1,4 @@
+import { Step } from "../models/step";
 import { StepOrTask } from "../models/stepOrTask";
 
 export function parseDate(input?: string): Date | null {
@@ -64,7 +65,6 @@ export function isDateGreaterOrEqual(d1: Date, d2: Date): boolean {
   return date1.getTime() >= date2.getTime();
 }
 
-
 export function areDatesEqual(d1: Date | undefined, d2: Date | undefined): boolean {
   if (!d1 || !d2) return false;
   return (
@@ -72,4 +72,15 @@ export function areDatesEqual(d1: Date | undefined, d2: Date | undefined): boole
     d1.getMonth() === d2.getMonth() &&
     d1.getDate() === d2.getDate()
   );
+}
+
+export function updateDatesWithLocalTime(step: Step) {
+  const nextOccurrence = step.nextOccurrence;
+
+  if (nextOccurrence) {
+    const newNextOccurrence = new Date(
+      nextOccurrence.getTime() - nextOccurrence.getTimezoneOffset() * 60000
+    );
+    step.nextOccurrence = newNextOccurrence;
+  }
 }

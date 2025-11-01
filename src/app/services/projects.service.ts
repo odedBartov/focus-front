@@ -34,7 +34,6 @@ export class ProjectsService {
     return this.currentProject;
   }
   
-
   populateCalendarTasks() {
     const projects = this.activeProjects();
     this.tasksWithDate = [];

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, QueryList, viewChild, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, inject, Input, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { paymentModelEnum, projectTypeEnum, recurringDateTypeEnum, StepType, stepTypeLabels } from '../../models/enums';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -11,7 +11,7 @@ import { AnimationsService } from '../../services/animations.service';
 import { StepTask } from '../../models/stepTask';
 import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
 import { getNextRetainerOccurrenceDate } from '../../helpers/retainerFunctions';
-import { areDatesEqual } from '../../helpers/functions';
+import { areDatesEqual, updateDatesWithLocalTime } from '../../helpers/functions';
 
 @Component({
   selector: 'app-new-step',
@@ -228,7 +228,9 @@ export class NewStepComponent implements AfterViewInit {
 
       if (this.newStep.isRecurring) {
         this.newStep.nextOccurrence = getNextRetainerOccurrenceDate(this.newStep);
+        updateDatesWithLocalTime(this.newStep);
         this.newStep.isComplete = !areDatesEqual(new Date(), this.newStep.nextOccurrence)
+        this.newStep.dateOnWeekly = this.newStep.nextOccurrence;
       }
 
       this.stepsEmitter.emit(this.newStep);

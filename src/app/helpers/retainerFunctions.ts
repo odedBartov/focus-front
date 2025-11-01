@@ -115,8 +115,13 @@ export function getNextRetainerOccurrenceDate(step: Step): Date {
     if (step.isRecurring) {
         const dateCreated = parseLocalDate(step.dateCreated ?? new Date());
         let nextOccurrenceDate = new Date(dateCreated);
+        nextOccurrenceDate = new Date(
+            nextOccurrenceDate.getFullYear(),
+            nextOccurrenceDate.getMonth(),
+            nextOccurrenceDate.getDate()
+        );
         if (step.recurringDateType === recurringDateTypeEnum.day) {
-            nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + (step.recurringEvery ?? 1)-1);
+            nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + (step.recurringEvery ?? 1) - 1);
             while (!isDateGreaterOrEqual(nextOccurrenceDate, today)) {
                 nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + (step.recurringEvery ?? 1));
             }
@@ -138,7 +143,7 @@ export function getNextRetainerOccurrenceDate(step: Step): Date {
                     }
                     if (didFound) return;
                 });
-                if (didFound) return nextOccurrenceDate; 
+                if (didFound) return nextOccurrenceDate;
                 nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + (step.recurringEvery ?? 1) * 7);
             }
             return nextOccurrenceDate;
@@ -149,6 +154,7 @@ export function getNextRetainerOccurrenceDate(step: Step): Date {
             while (!isDateGreaterOrEqual(nextOccurrenceDate, today)) {
                 nextOccurrenceDate.setMonth(nextOccurrenceDate.getMonth() + (step.recurringEvery ?? 1));
             }
+            
             return nextOccurrenceDate;
         }
     }

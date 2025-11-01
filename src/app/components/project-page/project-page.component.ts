@@ -28,6 +28,7 @@ import { NewStepModalComponent } from '../../modals/new-step-modal/new-step-moda
 import { PaymentHistoryModalComponent } from '../../modals/payment-history-modal/payment-history-modal.component';
 import { WorkSessionService } from '../../services/work-session.service';
 import { initRetainerSteps } from '../../helpers/retainerFunctions';
+import { updateDatesWithLocalTime } from '../../helpers/functions';
 
 @Component({
   selector: 'app-project-page',
