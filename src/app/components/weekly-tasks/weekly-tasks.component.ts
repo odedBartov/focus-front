@@ -23,7 +23,7 @@ import { getTextForTask, isDateBeforeToday } from '../../helpers/functions';
   animations: [
     trigger('expandUnassignTasks', [
       state('collapsed', style({
-        flex: '1'
+        flex: '1.5'
       })),
       state('expanded', style({
         flex: '4'
