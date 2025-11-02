@@ -6,7 +6,7 @@ import { NewTaskComponent } from '../new-task/new-task.component';
 import { Project } from '../../models/project';
 import { StepTask } from '../../models/stepTask';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { areDatesEqual, getTextForTask, isDateBeforeToday } from '../../helpers/functions';
+import { areDatesEqual, getTextForTask, getTodayAtMidnightLocal, isDateBeforeToday } from '../../helpers/functions';
 
 @Component({
   selector: 'app-weekly-day-task',
@@ -64,7 +64,16 @@ export class WeeklyDayTaskComponent {
   }
 
   isStepOrTaskComplete(task: StepOrTask) {
-    return isStepOrTaskComplete(task);
+    return isStepOrTaskComplete(task) && this.isRecurringTaskInThePast(task);
+  }
+
+  isRecurringTaskInThePast(task: StepOrTask) {
+    if (task.step?.isRecurring && task.step.dateOnWeekly) {
+      const today = getTodayAtMidnightLocal();
+      return today > task.step.dateOnWeekly;
+    }
+
+    return true;
   }
 
   updateTask(task: StepTask) {

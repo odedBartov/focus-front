@@ -84,3 +84,17 @@ export function updateDatesWithLocalTime(step: Step) {
     step.nextOccurrence = newNextOccurrence;
   }
 }
+
+export function getTodayAtMidnightLocal() {
+  const now = new Date();
+  const localMidnight = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(), // creates a local date at 00:00:00
+    0, 0, 0, 0
+  );
+
+  // If you need to normalize like your example (compensate for timezone offset):
+  const adjusted = new Date(localMidnight.getTime() - localMidnight.getTimezoneOffset() * 60000);
+  return adjusted;
+}
