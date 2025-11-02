@@ -231,6 +231,7 @@ export class NewStepComponent implements AfterViewInit {
         updateDatesWithLocalTime(this.newStep);
         this.newStep.isComplete = !areDatesEqual(new Date(), this.newStep.nextOccurrence)
         this.newStep.dateOnWeekly = this.newStep.nextOccurrence;
+        this.newStep.positionInWeeklyList = 9999;
       }
 
       this.stepsEmitter.emit(this.newStep);

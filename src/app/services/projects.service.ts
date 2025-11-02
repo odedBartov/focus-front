@@ -53,7 +53,7 @@ export class ProjectsService {
     }
 
     projects.forEach(project => {
-      project.steps.sort((a, b) => a.positionInList - b.positionInList);
+      project.steps.sort((a, b) => a.positionInWeeklyList - b.positionInWeeklyList);
       let foundActiveStep = false;
       project.steps.forEach(step => {
         if (step.tasks?.length) {
