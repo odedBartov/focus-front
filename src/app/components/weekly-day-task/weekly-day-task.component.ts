@@ -64,16 +64,7 @@ export class WeeklyDayTaskComponent {
   }
 
   isStepOrTaskComplete(task: StepOrTask) {
-    return isStepOrTaskComplete(task) && this.isRecurringTaskInThePast(task);
-  }
-
-  isRecurringTaskInThePast(task: StepOrTask) {
-    if (task.step?.isRecurring && task.step.dateOnWeekly) {
-      const today = getTodayAtMidnightLocal();
-      return today > task.step.dateOnWeekly;
-    }
-
-    return true;
+    return isStepOrTaskComplete(task);
   }
 
   updateTask(task: StepTask) {
