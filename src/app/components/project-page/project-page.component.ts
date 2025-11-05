@@ -27,7 +27,7 @@ import { HourlyWorkSession } from '../../models/hourlyWorkSession';
 import { NewStepModalComponent } from '../../modals/new-step-modal/new-step-modal.component';
 import { PaymentHistoryModalComponent } from '../../modals/payment-history-modal/payment-history-modal.component';
 import { WorkSessionService } from '../../services/work-session.service';
-import { initRetainerSteps } from '../../helpers/retainerFunctions';
+import { createNextOccurenceDate, getNextRetainerOccurrenceDate, initRetainerSteps } from '../../helpers/retainerFunctions';
 import { updateDatesWithLocalTime } from '../../helpers/functions';
 
 @Component({
@@ -529,6 +529,8 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         }
 
         if (this.isRetainer) {
+          step.nextOccurrence = getNextRetainerOccurrenceDate(step);
+          step.dateOnWeekly = step.nextOccurrence;
           this.initRetainerSteps();
         }
         this.activeStepId = this.project()?.steps?.find(s => !s.isComplete)?.id;

@@ -10,7 +10,7 @@ import { HttpService } from '../../services/http.service';
 import { AnimationsService } from '../../services/animations.service';
 import { StepTask } from '../../models/stepTask';
 import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
-import { getNextRetainerOccurrenceDate } from '../../helpers/retainerFunctions';
+import { createNextOccurenceDate, getNextRetainerOccurrenceDate } from '../../helpers/retainerFunctions';
 import { areDatesEqual, updateDatesWithLocalTime } from '../../helpers/functions';
 
 @Component({
@@ -227,7 +227,7 @@ export class NewStepComponent implements AfterViewInit {
       }
 
       if (this.newStep.isRecurring) {
-        this.newStep.nextOccurrence = getNextRetainerOccurrenceDate(this.newStep);
+        this.newStep.nextOccurrence = createNextOccurenceDate(this.newStep);
         updateDatesWithLocalTime(this.newStep);
         this.newStep.isComplete = !areDatesEqual(new Date(), this.newStep.nextOccurrence)
         this.newStep.dateOnWeekly = this.newStep.nextOccurrence;
