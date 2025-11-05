@@ -16,6 +16,7 @@ import { ProjectsService } from '../../services/projects.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-feature-modal.component';
 import { Step } from '../../models/step';
+import { getTodayAtMidnightLocal } from '../../helpers/functions';
 
 @Component({
   selector: 'app-projects-list',
@@ -206,6 +207,13 @@ export class ProjectsListComponent implements OnInit {
               newStep.recurringEvery = 1;
               newStep.stepType = StepType.payment;
               newStep.dateDue = new Date();
+              if (newProject.monthlyPaymentDay === new Date().getDate()) {
+                newStep.nextOccurrence = getTodayAtMidnightLocal();
+              } else {
+                const nextOccurrence = getTodayAtMidnightLocal();
+                nextOccurrence.setDate(newProject.monthlyPaymentDay);
+                nextOccurrence.setMonth(nextOccurrence.getMonth() + newStep.recurringEvery);
+              }
               this.httpService.createStep(newStep).subscribe(res => {
                 newProject.steps.push(res);
                 setTimeout(() => {

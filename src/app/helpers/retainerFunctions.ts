@@ -1,6 +1,6 @@
-import { recurringDateTypeEnum } from "../models/enums";
+import { recurringDateTypeEnum, StepType } from "../models/enums";
 import { Step } from "../models/step";
-import { areTwoDaysInTheSameWeek, isDateGreaterOrEqual, parseLocalDate } from "./functions";
+import { areTwoDaysInTheSameWeek, isDateGreaterOrEqual, isDateSmallerOrEqual, parseLocalDate } from "./functions";
 
 
 // export function initRetainerSteps(steps: Step[], retainerActiveSteps: Step[], retainerFutureSteps: Step[], retainerFinishedSteps: Step[]) {
@@ -154,11 +154,57 @@ export function getNextRetainerOccurrenceDate(step: Step): Date {
             while (!isDateGreaterOrEqual(nextOccurrenceDate, today)) {
                 nextOccurrenceDate.setMonth(nextOccurrenceDate.getMonth() + (step.recurringEvery ?? 1));
             }
-            
+
             return nextOccurrenceDate;
         }
     }
     return today;
+}
+
+export function getOcurencesInRange(step: Step, start: Date, end: Date): Date[] {
+    const results: Date[] = [];
+    let nextOcurence = new Date(step.nextOccurrence ?? new Date());
+    if (nextOcurence < new Date()) return results;
+    if (step.recurringDateType === recurringDateTypeEnum.day) {
+        while (isDateSmallerOrEqual(nextOcurence, end)) {
+            nextOcurence.setDate(nextOcurence.getDate() + (step.recurringEvery ?? 1));
+            if (isDateGreaterOrEqual(nextOcurence, start)) {
+                results.push(new Date(nextOcurence));
+            }
+        }
+    } else if (step.recurringDateType === recurringDateTypeEnum.week) {
+        const days = step.recurringDaysInWeek ?? [];
+        if (nextOcurence <= end){
+            const nextOcurenceDay = nextOcurence.getDay();
+            days.forEach(day => {
+                if (day > nextOcurenceDay){
+                    const newDay = new Date(nextOcurence);
+                    newDay.setDate(newDay.getDate() + day);
+                }
+            });
+            return results;
+        }
+        // return to sunday
+        nextOcurence.setDate(nextOcurence.getDate() - nextOcurence.getDay());
+        while (nextOcurence < start) {
+            nextOcurence.setDate(nextOcurence.getDate() + (7 * (step.recurringEvery ?? 1)));
+        }
+        // take the days
+        days.forEach(day => {
+            const newDate = new Date(nextOcurence);
+            newDate.setDate(newDate.getDate() + day);
+            results.push(newDate);
+        });
+    } else if (step.recurringDateType === recurringDateTypeEnum.month) {
+        while (!isDateGreaterOrEqual(nextOcurence, start)) {
+            nextOcurence.setMonth(nextOcurence.getMonth() + (step.recurringEvery ?? 1));
+        }
+        if (isDateSmallerOrEqual(nextOcurence, end)) {
+            results.push(nextOcurence);
+        }
+    }
+
+    return results
 }
 
 // export function handleNotCompletedRetainerStep(step: Step, retainerActiveSteps: Step[], retainerFutureSteps: Step[]) {
