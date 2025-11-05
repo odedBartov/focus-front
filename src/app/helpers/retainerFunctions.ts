@@ -131,7 +131,9 @@ export function getNextRetainerOccurrenceDate(step: Step): Date {
             const currentDayInWeek = nextOccurrenceDate.getDay();
             const firstDayOfWeek = step.recurringDaysInWeek[0];
             nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() - (currentDayInWeek - firstDayOfWeek));
-            while (!isDateGreaterOrEqual(nextOccurrenceDate, today)) {
+            let atleastOnce = true;
+            while (atleastOnce || !isDateGreaterOrEqual(nextOccurrenceDate, today)) {
+                atleastOnce = false;
                 let didFound = false;
                 step.recurringDaysInWeek.forEach(day => {
                     const potentialDate = new Date(nextOccurrenceDate);
