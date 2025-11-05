@@ -33,7 +33,7 @@ export class ProjectsService {
   getCurrentProject() {
     return this.currentProject;
   }
-  
+
   populateCalendarTasks() {
     const projects = this.activeProjects();
     this.tasksWithDate = [];
@@ -53,7 +53,7 @@ export class ProjectsService {
     }
 
     projects.forEach(project => {
-      project.steps.sort((a, b) => a.positionInWeeklyList - b.positionInWeeklyList);
+      project.steps.sort((a, b) => a.positionInList - b.positionInList);
       let foundActiveStep = false;
       project.steps.forEach(step => {
         if (step.tasks?.length) {
@@ -83,7 +83,6 @@ export class ProjectsService {
 
     this.tasksWithDate = this.tasksWithDate.sort((a, b) => this.sortTasksAndSteps(a, b));
     this.tasksWithoutDate = this.tasksWithoutDate.sort((a, b) => this.sortTasksAndSteps(a, b));
-
     return { tasksWithDate: this.tasksWithDate, tasksWithoutDate: this.tasksWithoutDate, currentAndFutureTasks: this.currentAndFutureTasks };
   }
 
