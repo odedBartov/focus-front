@@ -155,13 +155,13 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   //insertTaskToList(list: StepOrTask[], parentStep: Step, project?: Project, task?: StepTask, step?: Step) {
-    //this.projectsService.insertTaskToList(list, parentStep, project, task, step);
-    // const taskOrStep = new StepOrTask();
-    // taskOrStep.task = task;
-    // taskOrStep.step = step;
-    // taskOrStep.parentStep = parentStep;
-    // taskOrStep.project = project;
-    // list.push(taskOrStep);
+  //this.projectsService.insertTaskToList(list, parentStep, project, task, step);
+  // const taskOrStep = new StepOrTask();
+  // taskOrStep.task = task;
+  // taskOrStep.step = step;
+  // taskOrStep.parentStep = parentStep;
+  // taskOrStep.project = project;
+  // list.push(taskOrStep);
   //}
 
   // insertTaskToFutueTasks(project: Project, parentStep: Step, task?: StepTask, step?: Step) {
@@ -195,7 +195,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
     this.tasksWithDate = this.tasksWithDate.sort((a, b) => this.sortTasksAndSteps(a, b));
 
     this.tasksWithDate.forEach(taskOrStep => {
-      const taskDate = taskOrStep.task?.dateOnWeekly || taskOrStep.step?.dateOnWeekly;
+      const taskDate = this.getDateForCalendarTask(taskOrStep);
       for (const day of this.presentedDays) {
         if (taskDate && this.compareDates(day.date, new Date(taskDate))) {
           day.tasks.push(taskOrStep);
@@ -203,6 +203,14 @@ export class WeeklyTasksComponent implements AfterViewInit {
         }
       }
     });
+  }
+
+  getDateForCalendarTask(task: StepOrTask) {
+    if (task.step) {
+      return task.step.isComplete ? task.step.dateCompleted : task.step.dateOnWeekly;
+    } else {
+      return task.task?.dateOnWeekly;
+    }
   }
 
   sortTasksAndSteps(first: StepOrTask, second: StepOrTask): number {
@@ -390,7 +398,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
 
   completeTask(task: StepOrTask, container: StepOrTask[]) {
     let previousIndex: number | undefined = undefined;
-    
+
     if (task.task) {
       if (task.task.isComplete) {
         previousIndex = task.task.positionInWeeklyList;

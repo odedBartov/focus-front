@@ -126,10 +126,11 @@ export function createNextOccurenceDate(step: Step): Date {
         }
         const daysGap = result.getDay() - days[0];
         const futureWeeks = ((step.recurringEvery ?? 1) * 7) - daysGap;
-        result.setDate(result.getDate()+futureWeeks);
+        result.setDate(result.getDate() + futureWeeks);
     } else { // month
         if (result.getDate() !== step.recurringDayInMonth) {
             result.setMonth(result.getMonth() + (step.recurringEvery ?? 1));
+            result.setDate(step.recurringDayInMonth ?? result.getDate());
         }
     }
 
@@ -153,27 +154,25 @@ export function getNextRetainerOccurrenceDate(step: Step): Date {
             }
             return nextOccurrenceDate;
         } else if (step.recurringDateType === recurringDateTypeEnum.week && step.recurringDaysInWeek?.length) {
-            // reset created date to the first day of the week
+            // check if there is another day in the week
+            const days = step.recurringDaysInWeek ?? [];
+            for (let index = 0; index < days.length; index++) {
+                const day = days[index];
+                if (day > nextOccurrenceDate.getDay() + 1) {
+                    const daysGap = day - nextOccurrenceDate.getDay();
+                    nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() - daysGap);
+                    return nextOccurrenceDate;
+                }
+            }
+            // if not, rturn to sunday and do a while
             const currentDayInWeek = nextOccurrenceDate.getDay();
             const firstDayOfWeek = step.recurringDaysInWeek[0];
             nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() - (currentDayInWeek - firstDayOfWeek));
-            let atleastOnce = true;
-            while (atleastOnce || !isDateGreaterOrEqual(nextOccurrenceDate, today)) {
-                atleastOnce = false;
-                let didFound = false;
-                step.recurringDaysInWeek.forEach(day => {
-                    const potentialDate = new Date(nextOccurrenceDate);
-                    potentialDate.setDate(potentialDate.getDate() + (day - firstDayOfWeek));
-                    if (isDateGreaterOrEqual(potentialDate, today)) {
-                        nextOccurrenceDate = potentialDate;
-                        didFound = true;
-                        return;
-                    }
-                    if (didFound) return;
-                });
-                if (didFound) return nextOccurrenceDate;
-                nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + (step.recurringEvery ?? 1) * 7);
+            nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + ((step.recurringEvery ?? 1) * 7));
+            while (!isDateGreaterOrEqual(nextOccurrenceDate, today)) {
+                nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + ((step.recurringEvery ?? 1) * 7));
             }
+
             return nextOccurrenceDate;
         } else { // month
             nextOccurrenceDate.setMonth(nextOccurrenceDate.getMonth() + (step.recurringEvery ?? 1));
