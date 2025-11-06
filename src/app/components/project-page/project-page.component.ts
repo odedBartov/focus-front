@@ -244,18 +244,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.retainerFinishedSteps = retainerSteps.retainerFinishedSteps;
   }
 
-  updateRetainerStepDate(step: Step) {
-    const today = new Date();
-    let newCreatedDate = new Date(step.dateCreated ?? new Date(0));
-    while (newCreatedDate <= today) {
-      const deltaDays = step.recurringDateType === recurringDateTypeEnum.day ? (step.recurringEvery ?? 1) :
-        step.recurringDateType === recurringDateTypeEnum.week ? (step.recurringEvery ?? 1) * 7 :
-          (step.recurringEvery ?? 1) * 30;
-      step.dateCreated?.setDate(newCreatedDate.getDate() + deltaDays);
-      newCreatedDate.setDate(newCreatedDate.getDate() + deltaDays);
-    }
-  }
-
   getProjectPrice(): number {
     if (this.isRetainer && this.project().paymentModel === paymentModelEnum.hourly) {
       const totalHours = this.project().hourlyWorkSessions.reduce((acc, session) => acc + (session.workTime / 3600000), 0);
