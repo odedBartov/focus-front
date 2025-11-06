@@ -517,3 +517,11 @@ input::-webkit-inner-spin-button {
         content: url('/assets/icons/confirm_transparent_white.svg');
     }
 }
+
+.icon-send {
+    content: url('/assets/icons/send.svg');
+
+    &:hover {
+        content: url('/assets/icons/send_blue.svg');
+    }
+}

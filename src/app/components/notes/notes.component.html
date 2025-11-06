@@ -1,10 +1,18 @@
 <div class="main" [ngClass]="{'show-notes': notesPopup}">
     <div class="header" *ngIf="!notesPopup">
-        <span class="pointer new-h2" [class.selected]="notesSelected" (click)="notesSelected = true">רשימות וסיכומים</span>
-        <span class="pointer new-h2" [class.selected]="!notesSelected" (click)="notesSelected = false">קישורים</span>
-        <img class="pointer icon-expand" (click)="showNotes()"/>
+        <span class="pointer new-h2" [class.selected]="tabSelected === 1" (click)="tabSelected = 1">רשימות
+            וסיכומים</span>
+        <span class="pointer new-h2" [class.selected]="tabSelected === 2" (click)="tabSelected = 2">קישורים</span>
+        <!-- <span class="pointer new-h3" [class.selected]="tabSelected === 3" (click)="tabSelected = 3">פוקוס מאסטר</span> -->
+        <img class="pointer icon-expand" (click)="showNotes()" />
     </div>
-    <ng-container *ngIf="notesSelected && !notesPopup; then editorTemplate; else linksTemplate"></ng-container>
+    <ng-container *ngIf="!notesPopup; else linksTemplate">
+        <ng-container [ngSwitch]="tabSelected">
+            <ng-container *ngSwitchCase="1" [ngTemplateOutlet]="editorTemplate"></ng-container>
+            <ng-container *ngSwitchCase="2" [ngTemplateOutlet]="linksTemplate"></ng-container>
+            <ng-container *ngSwitchCase="3" [ngTemplateOutlet]="masterTermplate"></ng-container>
+        </ng-container>
+    </ng-container>
 </div>
 
 <ng-template #editorTemplate>
@@ -25,10 +33,12 @@
                 <img [src]="`/assets/icons/${hoveredLink === link? 'link_yes' : 'link_not'}.svg`"
                     (click)="openLink(link.url)" />
             </div>
-            <img class="icon-garbage-can pointer" *ngIf="hoveredLink === link && !isReadOnly()" (click)="deleteLink(link)"/>
+            <img class="icon-garbage-can pointer" *ngIf="hoveredLink === link && !isReadOnly()"
+                (click)="deleteLink(link)" />
         </div>
         <div class="add-link" *ngIf="!isReadOnly()">
-            <span class="pointer new-small" (click)="addingNewLink = true; resetLinkForm()" *ngIf="!addingNewLink">+ קישור
+            <span class="pointer new-small" (click)="addingNewLink = true; resetLinkForm()" *ngIf="!addingNewLink">+
+                קישור
                 חדש</span>
         </div>
         <form class="new-link" *ngIf="addingNewLink" [formGroup]="form" #newLinkDiv>
@@ -51,5 +61,11 @@
                 <img class="icon-confirm-circle pointer" (click)="addLink()" />
             </div>
         </form>
+    </div>
+</ng-template>
+
+<ng-template #masterTermplate>
+    <div class="aiChat">
+        <app-ai-chat [project]="project" style="height: 100%;"></app-ai-chat>
     </div>
 </ng-template>

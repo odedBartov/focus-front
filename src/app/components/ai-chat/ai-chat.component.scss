@@ -1,0 +1,53 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+    .conversation {
+        height: 100%;
+        overflow: auto;
+        margin-bottom: 30px;
+
+        .message {
+            margin-bottom: 25px;
+            
+            span {
+                padding: 5px;
+                border-radius: 20px;
+                display: inline-block;
+            }
+
+            .user-message {
+                background-color: rgb(143, 193, 238);
+            }
+
+            .ai-message {
+                background-color: beige;
+            }
+        }
+    }
+
+    .input {
+        width: 100%;
+        height: auto;
+        margin-bottom: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+
+        input {
+            border: none;
+            width: 90%;
+            background-color: var(--default-white);
+            box-shadow: var(--common-shadow);
+        }
+
+        img {
+            cursor: pointer;
+            position: absolute;
+            left: 20px;
+        }
+    }
+}

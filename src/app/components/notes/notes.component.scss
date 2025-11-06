@@ -118,4 +118,11 @@
             }
         }
     }
+
+    .aiChat {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: var(--big-window-height);
+    }
 }

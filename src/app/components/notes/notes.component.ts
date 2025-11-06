@@ -8,10 +8,11 @@ import { HttpService } from '../../services/http.service';
 import { NgxEditorModule } from 'ngx-editor';
 import { RichTextComponent } from "../rich-text/rich-text.component";
 import { AuthenticationService } from '../../services/authentication.service';
+import { AiChatComponent } from '../ai-chat/ai-chat.component';
 
 @Component({
   selector: 'app-notes',
-  imports: [CommonModule, ReactiveFormsModule, NgxEditorModule, FormsModule, RichTextComponent],
+  imports: [CommonModule, ReactiveFormsModule, NgxEditorModule, FormsModule, RichTextComponent, AiChatComponent],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.scss'
 })
@@ -31,6 +32,7 @@ export class NotesComponent {
   hoveredLink = undefined;
   addingNewLink = false;
   submitted = false;
+  tabSelected = 1;
   
 
   constructor() {

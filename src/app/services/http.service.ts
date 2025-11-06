@@ -10,6 +10,7 @@ import { Title } from '@angular/platform-browser';
 import { HourlyWorkSession } from '../models/hourlyWorkSession';
 import { RetainerPayment } from '../models/RetainerPayment';
 import { Feature } from '../models/feature';
+import { ChatRequest, ChatResponse } from '../models/aiModels';
 
 @Injectable({
   providedIn: 'root'
@@ -144,5 +145,10 @@ export class HttpService {
   getUser(): Observable<User> {
     const headers = this.generateHeaders();
     return this.httpClient.get<User>(this.apiUrl + 'Auth/getUser', headers)
+  }
+
+  sendAiMessage(request: ChatRequest): Observable<ChatResponse> {
+    const headers = this.generateHeaders();
+    return this.httpClient.post<ChatResponse>(this.apiUrl + "Ai/chatWithAi", request, headers);
   }
 }

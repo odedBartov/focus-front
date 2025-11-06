@@ -1,0 +1,11 @@
+<div class="main">
+    <div class="conversation" #conversationContainer>
+        <div class="message new-h2" *ngFor="let message of conversation.messages">
+            <span [ngClass]="{'user-message': message.sentByUser, 'ai-message': !message.sentByUser}">{{message.value}}</span>
+        </div>
+    </div>
+    <div class="input">
+        <input class="new-small" [(ngModel)]="userMessageText" (keydown.enter)="sendMessage()" placeholder="אפשר לשאול אותי הכל">
+        <img class="icon-send" (click)="sendMessage()"/>
+    </div>
+</div>
