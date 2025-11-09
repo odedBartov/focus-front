@@ -212,28 +212,33 @@ export class WeeklyTasksComponent implements AfterViewInit {
     sunday.setDate(sunday.getDate() - sunday.getDay() + this.deltaDays);
     const saturday = new Date();
     saturday.setDate(saturday.getDate() - saturday.getDay() + 6 + this.deltaDays);
-    this.tasksWithDate.forEach((t: StepOrTask) => {
-      if (t.step?.isRecurring) {
-        const retainerDates = getOcurencesInRange(t.step, sunday, saturday);
-        retainerDates.forEach(date => {
-          if (t.step) {
-            const tempStep: Step = structuredClone(t.step);
-            tempStep.id = undefined;
-            tempStep.dateCreated = getTodayAtMidnightLocal();
-            tempStep.dateOnWeekly = date;
-            tempStep.isRecurring = false;
-            tempStep.isComplete = false;
-            tempStep.isRetainerCopy = true;
-            tempStep.positionInWeeklyList = 9999;
-            const tempTaskWithStep = new StepOrTask();
-            tempTaskWithStep.step = tempStep;
-            tempTaskWithStep.project = t.project;
-            tempTaskWithStep.parentStep = t.parentStep;
-            this.tasksWithDate.push(tempTaskWithStep);
+    if (this.deltaDays >= 0) {
+      this.tasksWithDate.forEach((t: StepOrTask) => {
+        if (t.step?.isRecurring) {
+          if (sunday.getDate() === new Date().getDate()) { // we dont want today, just future
+            sunday.setDate(sunday.getDate() + 1);
           }
-        });
-      }
-    });
+          const retainerDates = getOcurencesInRange(t.step, sunday, saturday);
+          retainerDates.forEach(date => {
+            if (t.step) {
+              const tempStep: Step = structuredClone(t.step);
+              tempStep.id = undefined;
+              tempStep.dateCreated = getTodayAtMidnightLocal();
+              tempStep.dateOnWeekly = date;
+              tempStep.isRecurring = false;
+              tempStep.isComplete = false;
+              tempStep.isRetainerCopy = true;
+              tempStep.positionInWeeklyList = 9999;
+              const tempTaskWithStep = new StepOrTask();
+              tempTaskWithStep.step = tempStep;
+              tempTaskWithStep.project = t.project;
+              tempTaskWithStep.parentStep = t.parentStep;
+              this.tasksWithDate.push(tempTaskWithStep);
+            }
+          });
+        }
+      });
+    }
   }
 
   getDateForCalendarTask(task: StepOrTask) {
@@ -428,12 +433,12 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   completeTask(task: StepOrTask, container: StepOrTask[]) {
-    if (task.step?.isRetainerCopy) {
+    if (task.step?.isRetainerCopy) { // todo: what the hell should i do here?
       const index = container.indexOf(task);
       this.httpService.createStep(task.step).subscribe((res: Step) => {
         if (task.step) {
           this.httpService.createStep(task.step).subscribe((res: Step) => {
-            if (index !== undefined && index > -1 ) {
+            if (index !== undefined && index > -1) {
               container[index].step = res;
             }
           });
