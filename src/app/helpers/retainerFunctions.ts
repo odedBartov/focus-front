@@ -200,19 +200,19 @@ export function getOcurencesInRange(step: Step, start: Date, end: Date): Date[] 
         }
     } else if (step.recurringDateType === recurringDateTypeEnum.week) {
         const days = step.recurringDaysInWeek ?? [];
-        if (nextOcurence <= end) {
-            const nextOcurenceDay = nextOcurence.getDay();
-            days.forEach(day => {
-                if (day > nextOcurenceDay) {
-                    const newDay = new Date(nextOcurence);
-                    newDay.setDate(newDay.getDate() + day);
-                }
-            });
-            return results;
-        }
+        // if (nextOcurence <= end) {
+        //     const nextOcurenceDay = nextOcurence.getDay();
+        //     days.forEach(day => {
+        //         if (day >= nextOcurenceDay) {
+        //             const newDay = new Date(nextOcurence);
+        //             newDay.setDate(newDay.getDate() + day);
+        //         }
+        //     });
+        //     return results;
+        // }
         // return to sunday
         nextOcurence.setDate(nextOcurence.getDate() - nextOcurence.getDay());
-        while (nextOcurence < start) {
+        while (!isDateGreaterOrEqual(nextOcurence, start)) {
             nextOcurence.setDate(nextOcurence.getDate() + (7 * (step.recurringEvery ?? 1)));
         }
         // take the days

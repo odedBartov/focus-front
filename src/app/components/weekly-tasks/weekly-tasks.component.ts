@@ -13,7 +13,8 @@ import { HttpService } from '../../services/http.service';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
-import { getTextForTask, isDateBeforeToday } from '../../helpers/functions';
+import { getTextForTask, getTodayAtMidnightLocal, isDateBeforeToday } from '../../helpers/functions';
+import { getOcurencesInRange } from '../../helpers/retainerFunctions';
 
 @Component({
   selector: 'app-weekly-tasks',
@@ -187,6 +188,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
         this.presentedDays.push(weeklyDay);
       }
 
+      //this.generateRetainerSteps();
       this.assignTasksToDays();
     }, 1);
   }
@@ -201,6 +203,35 @@ export class WeeklyTasksComponent implements AfterViewInit {
           day.tasks.push(taskOrStep);
           return; // stop searching once we found the right day
         }
+      }
+    });
+  }
+
+  generateRetainerSteps() {
+    const sunday = new Date();
+    sunday.setDate(sunday.getDate() - sunday.getDay() + this.deltaDays);
+    const saturday = new Date();
+    saturday.setDate(saturday.getDate() - saturday.getDay() + 6 + this.deltaDays);
+    this.tasksWithDate.forEach((t: StepOrTask) => {
+      if (t.step?.isRecurring) {
+        const retainerDates = getOcurencesInRange(t.step, sunday, saturday);
+        retainerDates.forEach(date => {
+          if (t.step) { 
+            const tempStep: Step = structuredClone(t.step);
+            tempStep.id = undefined;
+            tempStep.dateCreated = getTodayAtMidnightLocal();
+            tempStep.dateOnWeekly = date;
+            tempStep.isRecurring = false;
+            tempStep.isComplete = false;
+            tempStep.isRetainerCopy = true;
+            tempStep.positionInWeeklyList = 9999;
+            const tempTaskWithStep = new StepOrTask();
+            tempTaskWithStep.step = tempStep;
+            tempTaskWithStep.project = t.project;
+            tempTaskWithStep.parentStep = t.parentStep;
+            this.tasksWithDate.push(tempTaskWithStep);
+          }
+        });
       }
     });
   }
@@ -415,6 +446,10 @@ export class WeeklyTasksComponent implements AfterViewInit {
       this.updateTasksPosition(container);
     }
 
-    this.updateTasks(container)
+    if (task.step?.isRetainerCopy) {
+      // create
+    } else {
+      this.updateTasks(container)
+    }
   }
 }

@@ -24,6 +24,7 @@ export class Step {
     recurringDaysInWeek?: number[]; // 1 - Sunday, 7 - Saturday
     recurringDayInMonth?: number; // day in the month. 1-30
     nextOccurrence?: Date;
+    isRetainerCopy = false;
 
     constructor() {
         this.userId = "newStep";
