@@ -188,7 +188,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
         this.presentedDays.push(weeklyDay);
       }
 
-      //this.generateRetainerSteps();
+      // this.generateRetainerSteps();
       this.assignTasksToDays();
     }, 1);
   }
@@ -216,7 +216,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
       if (t.step?.isRecurring) {
         const retainerDates = getOcurencesInRange(t.step, sunday, saturday);
         retainerDates.forEach(date => {
-          if (t.step) { 
+          if (t.step) {
             const tempStep: Step = structuredClone(t.step);
             tempStep.id = undefined;
             tempStep.dateCreated = getTodayAtMidnightLocal();
@@ -428,27 +428,36 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   completeTask(task: StepOrTask, container: StepOrTask[]) {
-    let previousIndex: number | undefined = undefined;
-
-    if (task.task) {
-      if (task.task.isComplete) {
-        previousIndex = task.task.positionInWeeklyList;
-      }
-    } else if (task.step) {
-      task.step.dateCompleted = new Date();
-      if (task.step.isComplete) {
-        previousIndex = task.step?.positionInWeeklyList;
-      }
-    }
-
-    if (previousIndex !== undefined) {
-      moveItemInArray(container, previousIndex, 0)
-      this.updateTasksPosition(container);
-    }
-
     if (task.step?.isRetainerCopy) {
-      // create
+      const index = container.indexOf(task);
+      this.httpService.createStep(task.step).subscribe((res: Step) => {
+        if (task.step) {
+          this.httpService.createStep(task.step).subscribe((res: Step) => {
+            if (index !== undefined && index > -1 ) {
+              container[index].step = res;
+            }
+          });
+        }
+      });
     } else {
+      let previousIndex: number | undefined = undefined;
+
+      if (task.task) {
+        if (task.task.isComplete) {
+          previousIndex = task.task.positionInWeeklyList;
+        }
+      } else if (task.step) {
+        task.step.dateCompleted = new Date();
+        if (task.step.isComplete) {
+          previousIndex = task.step?.positionInWeeklyList;
+        }
+      }
+
+      if (previousIndex !== undefined) {
+        moveItemInArray(container, previousIndex, 0)
+        this.updateTasksPosition(container);
+      }
+
       this.updateTasks(container)
     }
   }
