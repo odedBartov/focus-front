@@ -1,8 +1,4 @@
-<div class="main" [class.shadow-and-background]="expanded">
-    <div class="header" *ngIf="expanded">
-        <span class="new-h2">רשימות וסיכומים</span>
-        <span class="new-small">כל מי שצופה בפרויקט יכול לקרוא את הרשימות שלך</span>
-    </div>
+<div class="main" [class.shadow-and-background]="false">
     <div class="toolbar" *ngIf="!isReadOnly()">
         <img class="icon-ordered-list pointer" (click)="toggleOrderedList()" />
         <img class="icon-bullet-list pointer" (click)="toggleBulletList()" />
@@ -12,8 +8,7 @@
         <img class="icon-h2 pointer" (click)="setHeading(2)" />
         <img class="icon-h1 pointer" (click)="setHeading(1)" />
     </div>
-    <ngx-editor class="editor new-text" [ngClass]="{ 'big-fonts': expanded}"
-        (ngModelChange)="editorChanged($event)" [class.editor-border]="expanded"
-        [class.shadow-and-background]="!expanded" [editor]="editor" [formControl]="editorControl"
+    <ngx-editor class="editor new-text shadow-and-background" [ngClass]="{ 'big-fonts': expanded}"
+        (ngModelChange)="editorChanged($event)" [editor]="editor" [formControl]="editorControl"
         placeholder="הקלד כאן..."></ngx-editor>
 </div>

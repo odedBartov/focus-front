@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, inject, Input, OnInit, ViewChild, viewChild, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, inject, Input, ViewChild, WritableSignal } from '@angular/core';
 import { Project } from '../../models/project';
 import { HttpService } from '../../services/http.service';
 import { AiConversation, chatMessage, ChatRequest, ChatResponse } from '../../models/aiModels';
@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AnimationsService } from '../../services/animations.service';
 import { AiChatService } from '../../services/ai-chat.service';
+import { User } from '../../models/user';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-ai-chat',
@@ -13,15 +15,18 @@ import { AiChatService } from '../../services/ai-chat.service';
   templateUrl: './ai-chat.component.html',
   styleUrl: './ai-chat.component.scss'
 })
-export class AiChatComponent {
+export class AiChatComponent implements AfterViewInit {
   @Input() project!: WritableSignal<Project>;
   @ViewChild('conversationContainer') conversationContainer!: ElementRef;
   httpService = inject(HttpService);
   animationService = inject(AnimationsService);
   aiChatService = inject(AiChatService);
+  userServcie = inject(UserService);
   chatId = "";
   conversation = new AiConversation();
   userMessageText = "";
+  isConsentForAi: boolean | undefined = true;
+  user?: User;
 
   constructor() {
     this.chatId = crypto.randomUUID();
@@ -30,6 +35,23 @@ export class AiChatComponent {
       this.project();
       this.conversation = this.aiChatService.getConversation(this.project().id ?? "unKnown");
     });
+
+  }
+
+  ngAfterViewInit(): void {
+    this.userServcie.getUser().subscribe(res => {
+      this.user = res;
+      this.isConsentForAi = this.user.isConsentForAi
+    });
+    this.scrollToBottom();
+  }
+
+  consent() {
+    this.isConsentForAi = true;
+    if (this.user) { 
+      this.user.isConsentForAi = this.isConsentForAi;
+      this.httpService.updateUser(this.user).subscribe()
+    }
   }
 
   sendMessage() {
@@ -54,7 +76,7 @@ export class AiChatComponent {
   }
 
   scrollToBottom() {
-    const container = this.conversationContainer?.nativeElement;
+    const container = this.conversationContainer?.nativeElement?.parentElement;
     setTimeout(() => {
       container.scrollTop = container.scrollHeight;
     }, 1);

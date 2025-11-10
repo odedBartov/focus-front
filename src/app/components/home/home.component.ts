@@ -64,8 +64,10 @@ export class HomeComponent implements OnInit {
   activeTab: ProjectTab = { id: 'none' };
   tabs: ProjectTab[] = [];
   projectsForPayment: Project[] = [];
+  openNotesSignal: WritableSignal<Project | undefined>;
 
   constructor() {
+    this.openNotesSignal = this.projectsService.getProjectWithOpenNotes();
     effect(() => {
       const selectedProject = this.selectedProject();
       if (selectedProject) {
@@ -167,7 +169,7 @@ export class HomeComponent implements OnInit {
       this.tabs = [this.homeTab, this.tasksTab];
     }
 
-    this.activeProjects().sort((a,b) => a.positionInList - b.positionInList)
+    this.activeProjects().sort((a, b) => a.positionInList - b.positionInList)
     const activeProjectTabs = this.activeProjects().map(p => { return { id: p.id ?? '', label: p.name, project: p } });
     this.tabs.push(...activeProjectTabs);
     if (this.unActiveProjects().length) {
@@ -254,6 +256,10 @@ export class HomeComponent implements OnInit {
       this.activeTab = { id: 'none' };
       this.selectedProject?.set(project);
     }
+  }
+
+  closeOpenNotes() {
+    this.openNotesSignal.set(undefined);
   }
 
   projectUpdated(project: Project) {

@@ -14,6 +14,7 @@ export class AuthenticationService {
   userPicture = "user-picture";
   isReadOnly = "is-read-only";
   subscription = "subscription";
+  isConsentAi: boolean | undefined = false;
   isReadOnlySignal = signal<boolean>(false);
 
   getToken() {
@@ -81,6 +82,14 @@ export class AuthenticationService {
       return subscriptionValue as subscriptionEnum;
     }
     return subscriptionEnum.free; // Default to free if not set
+  }
+
+  getIsConsentForAi() {
+    return this.isConsentAi;
+  }
+
+  setIsConsentForAi(isConsent: boolean | undefined) {
+    this.isConsentAi = isConsent;
   }
 
   logOut() {

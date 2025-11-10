@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, EventEmitter, HostListener, inject, input, Input, OnChanges, OnDestroy, Output, output, SimpleChanges, ViewChild, WritableSignal } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, effect, inject, Input, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Project } from '../../models/project';
 import { AnimationsService } from '../../services/animations.service';
@@ -9,101 +8,50 @@ import { NgxEditorModule } from 'ngx-editor';
 import { RichTextComponent } from "../rich-text/rich-text.component";
 import { AuthenticationService } from '../../services/authentication.service';
 import { AiChatComponent } from '../ai-chat/ai-chat.component';
+import { subscriptionEnum } from '../../models/enums';
+import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-feature-modal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ProjectsService } from '../../services/projects.service';
+import { ProjectLinksComponent } from '../project-links/project-links.component';
 
 @Component({
   selector: 'app-notes',
-  imports: [CommonModule, ReactiveFormsModule, NgxEditorModule, FormsModule, RichTextComponent, AiChatComponent],
+  imports: [CommonModule, NgxEditorModule, RichTextComponent, AiChatComponent, ProjectLinksComponent],
   templateUrl: './notes.component.html',
   styleUrl: './notes.component.scss'
 })
 export class NotesComponent {
   @Input() project!:  WritableSignal<Project>;
-  @Input({ required: false }) notesPopup?: boolean;
-  @Output() showNotesEmitter: EventEmitter<boolean> = new EventEmitter();
-  @ViewChild('newLinkDiv', { static: false }) newLinkDiv?: ElementRef;
   router = inject(Router);
-  formBuilder = inject(FormBuilder);
   animationsService = inject(AnimationsService);
   httpService = inject(HttpService);
   authenticationService = inject(AuthenticationService);
+  projectService = inject(ProjectsService);
   isReadOnly!: WritableSignal<boolean>;
-  form: FormGroup;
-  notesSelected = true;
-  hoveredLink = undefined;
-  addingNewLink = false;
   submitted = false;
   tabSelected = 1;
-  
+  dialog = inject(MatDialog);
+  openNotesSignal: WritableSignal<Project | undefined>;
 
   constructor() {
-    this.form = this.formBuilder.group({
-      name: ['', [Validators.required]],
-      url: ['', [Validators.required]]
-    });
+    this.openNotesSignal = this.projectService.getProjectWithOpenNotes();
     this.isReadOnly = this.authenticationService.getIsReadOnly();
 
     effect(() => {
       this.project();
-      this.notesSelected = true;
     });
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    if (this.newLinkDiv?.nativeElement) {
-      if (!this.newLinkDiv.nativeElement.contains(event.target)) {
-        this.addingNewLink = false;
-      }
-    }
-  }
-
-  hoverLink(link: any) {
-    this.hoveredLink = link;
-  }
-
-  leaveLink() {
-    this.hoveredLink = undefined;
-  }
-
-  deleteLink(link: { name: string, url: string }) {
-    if (this.project()) {
-      const index = this.project().links.indexOf(link);
-      this.project().links.splice(index, 1);
-      this.animationsService.changeIsLoadingWithDelay();
-      this.httpService.updateProjects([this.project()]).subscribe(res => {
-        this.animationsService.changeIsloading(false);
-      })
-    }
-  }
-
-  openLink(url: string) {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  }
-
-  resetLinkForm() {
-    this.form.reset();
-    this.submitted = false;
-  }
-
-  addLink() {
-    this.submitted = true;
-    if (this.form.valid && this.project) {
-      const name = this.form.get("name")?.value;
-      const url = this.form.get("url")?.value;
-      if (!this.project().links) {
-        this.project().links = [];
-      }
-      this.project().links.push({ name: name, url: url });
-      this.animationsService.changeIsloading(true);
-      this.httpService.updateProjects([this.project()]).subscribe(res => {
-        this.animationsService.changeIsloading(false);
-        this.addingNewLink = false;
-        this.resetLinkForm();
-      })
+  openAiChat() {
+    const userSubscription = this.authenticationService.getSubscription();
+    if (userSubscription === subscriptionEnum.full || userSubscription == subscriptionEnum.trial) { 
+      this.tabSelected = 3;
+    } else {
+      this.dialog.open(PaidFeatureModalComponent);
     }
   }
 
   showNotes() {
-    this.showNotesEmitter.emit(true);
+    this.openNotesSignal.set(this.project());
   }
 }

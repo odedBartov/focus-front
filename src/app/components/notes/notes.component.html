@@ -1,12 +1,21 @@
-<div class="main" [ngClass]="{'show-notes': notesPopup}">
-    <div class="header" *ngIf="!notesPopup">
-        <span class="pointer new-h2" [class.selected]="tabSelected === 1" (click)="tabSelected = 1">רשימות
-            וסיכומים</span>
-        <span class="pointer new-h2" [class.selected]="tabSelected === 2" (click)="tabSelected = 2">קישורים</span>
-        <!-- <span class="pointer new-h3" [class.selected]="tabSelected === 3" (click)="tabSelected = 3">פוקוס מאסטר</span> -->
+<div class="main">
+    <div class="header">
+        <div class="title" [class.selected]="tabSelected === 1">
+            <img [src]="'assets/icons/' + (tabSelected === 1? 'note_white' : 'note_black') + '.svg'" />
+            <span class="pointer new-small-bold" (click)="tabSelected = 1">רשימות</span>
+        </div>
+        <div class="title" [class.selected]="tabSelected === 2">
+            <img [src]="'assets/icons/' + (tabSelected === 2? 'paper_clip_white' : 'paper_clip_black') + '.svg'" />
+            <span class="pointer new-small-bold" (click)="tabSelected = 2">קישורים</span>
+        </div>
+        <div class="title" [class.selected]="tabSelected === 3">
+            <img [src]="'assets/icons/' + (tabSelected === 3? 'stars_white' : 'stars_black') + '.svg'" />
+            <span class="pointer new-small-bold" (click)="this.openAiChat()">פוקוס
+                מאסטר</span>
+        </div>
         <img class="pointer icon-expand" (click)="showNotes()" />
     </div>
-    <ng-container *ngIf="!notesPopup; else linksTemplate">
+    <ng-container>
         <ng-container [ngSwitch]="tabSelected">
             <ng-container *ngSwitchCase="1" [ngTemplateOutlet]="editorTemplate"></ng-container>
             <ng-container *ngSwitchCase="2" [ngTemplateOutlet]="linksTemplate"></ng-container>
@@ -22,50 +31,11 @@
 </ng-template>
 
 <ng-template #linksTemplate>
-    <div class="links" [ngClass]="{'padding-links': notesPopup}">
-        <div *ngIf="notesPopup" class="new-h2">
-            <span>קישורים</span>
-        </div>
-        <div class="link new-text" *ngFor="let link of project()?.links" #link (mouseenter)="hoverLink(link)"
-            (mouseleave)="leaveLink()">
-            <div class="pointer">
-                <span (click)="openLink(link.url)">{{link.name}}</span>
-                <img [src]="`/assets/icons/${hoveredLink === link? 'link_yes' : 'link_not'}.svg`"
-                    (click)="openLink(link.url)" />
-            </div>
-            <img class="icon-garbage-can pointer" *ngIf="hoveredLink === link && !isReadOnly()"
-                (click)="deleteLink(link)" />
-        </div>
-        <div class="add-link" *ngIf="!isReadOnly()">
-            <span class="pointer new-small" (click)="addingNewLink = true; resetLinkForm()" *ngIf="!addingNewLink">+
-                קישור
-                חדש</span>
-        </div>
-        <form class="new-link" *ngIf="addingNewLink" [formGroup]="form" #newLinkDiv>
-            <span class="title new-h2">קישור חדש</span>
-            <div class="text-and-input new-small">
-                <span>שם</span>
-                <input class="small-text new-text" type="text" formControlName="name">
-                <div class="error-container">
-                    <span *ngIf="submitted && form.get('name')?.errors" class="error">אנא הזינו שם</span>
-                </div>
-            </div>
-            <div class="text-and-input new-small">
-                <span>קישור</span>
-                <input class="small-text new-text" type="text" formControlName="url">
-                <div class="error-container">
-                    <span *ngIf="submitted && form.get('url')?.errors" class="error">אנא הזינו קישור</span>
-                </div>
-            </div>
-            <div class="confirm">
-                <img class="icon-confirm-circle pointer" (click)="addLink()" />
-            </div>
-        </form>
-    </div>
+    <app-project-links [project]="project()"></app-project-links>
 </ng-template>
 
 <ng-template #masterTermplate>
-    <div class="aiChat">
-        <app-ai-chat [project]="project" style="height: 100%;"></app-ai-chat>
+    <div class="ai-chat">
+        <app-ai-chat [project]="project" style="height: 100%; overflow: auto; margin-bottom: 50px;"></app-ai-chat>
     </div>
 </ng-template>

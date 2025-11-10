@@ -15,7 +15,6 @@ import { ProjectModalComponent } from '../../modals/project-modal/project-modal.
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NotesComponent } from '../notes/notes.component';
 import { ProjectHoverService } from '../../services/project-hover.service';
-import { RichTextComponent } from "../rich-text/rich-text.component";
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
 import { ProjectsService } from '../../services/projects.service';
 import { AuthenticationService } from '../../services/authentication.service';
@@ -27,12 +26,12 @@ import { HourlyWorkSession } from '../../models/hourlyWorkSession';
 import { NewStepModalComponent } from '../../modals/new-step-modal/new-step-modal.component';
 import { PaymentHistoryModalComponent } from '../../modals/payment-history-modal/payment-history-modal.component';
 import { WorkSessionService } from '../../services/work-session.service';
-import { createNextOccurenceDate, getNextRetainerOccurrenceDate, initRetainerSteps } from '../../helpers/retainerFunctions';
-import { updateDatesWithLocalTime } from '../../helpers/functions';
+import { getNextRetainerOccurrenceDate, initRetainerSteps } from '../../helpers/retainerFunctions';
+import { OpenNotesComponent } from '../open-notes/open-notes.component';
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, RichTextComponent, LottieComponent, AutoResizeInputDirective],
+  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, LottieComponent, AutoResizeInputDirective, OpenNotesComponent],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss',
   animations: [
@@ -76,7 +75,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   @ViewChild('stepsContainer', { static: false }) stepsContainer?: ElementRef;
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
-  @ViewChild('richTextDiv', { static: false }) richTextDiv?: ElementRef;
   @ViewChild('addStepDiv', { static: false }) addStepDiv!: ElementRef;
   @ViewChildren('descriptions') descriptions!: QueryList<ElementRef<HTMLTextAreaElement>>;
   @ViewChildren('stepHeader') stepHeaders!: QueryList<ElementRef<HTMLSpanElement>>;
@@ -93,7 +91,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   isShowNewStep = false;
   editStepId: string | undefined = '';
   hoverStepId? = '';
-  showNotes = false;
+  openNotesSignal: WritableSignal<Project | undefined>;
   baseProjectPrice = 0;
   paidMoney = 0;
   lottieOptions: AnimationOptions = {
@@ -124,6 +122,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   buzzWorkSession = false;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
+    this.openNotesSignal = this.projectsService.getProjectWithOpenNotes();
     this.project = this.projectsService.getCurrentProject();
     effect(() => {
       const value = this.project();
@@ -174,9 +173,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     }
 
     if (this.notesDiv?.nativeElement &&
-      !this.notesDiv.nativeElement.contains(event.target) &&
-      !this.richTextDiv?.nativeElement.contains(event.target)) {
-      this.showNotes = false;
+      !this.notesDiv.nativeElement.contains(event.target)) {
       this.projectHoverService.projectHover();
     }
 
@@ -696,10 +693,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  showNotesPopup(show: boolean) {
-    this.showNotes = show;
-    this.projectHoverService.projectHover('empty');
-  }
+  // showNotesPopup(show: boolean) {
+  //   this.showNotes = show;
+  //   this.projectHoverService.projectHover('empty');
+  // }
 
   scrollToBottom() {
     const container = this.stepsContainer?.nativeElement;

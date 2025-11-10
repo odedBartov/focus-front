@@ -416,6 +416,7 @@
     }
 
     .new-step {
+        justify-content: center;
         display: flex;
         width: 400px;
         margin-bottom: 28px;
@@ -445,12 +446,6 @@
         @include extra-not-finished-style;
     }
 
-    .rich-text {
-        height: var(--big-window-height);
-        @include mixins.big-popup;
-        z-index: 2;
-    }
-
     .notes {
         z-index: 2;
         width: 360px;
@@ -460,6 +455,11 @@
     .icon {
         height: 20px;
         width: 20px;
+    }
+
+    .open-notes {
+        height: var(--big-window-height);
+        width: 100%;
     }
 }
 

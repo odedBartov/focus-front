@@ -6,7 +6,6 @@ import { Project } from '../../models/project';
 import { HttpService } from '../../services/http.service';
 import { CommonModule } from '@angular/common';
 import { Plugin } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
 import { AuthenticationService } from '../../services/authentication.service';
 import { DOMParser as ProseMirrorDOMParser } from 'prosemirror-model';
 

@@ -17,6 +17,7 @@ export class ProjectsService {
   tasksWithDate: StepOrTask[] = [];
   tasksWithoutDate: StepOrTask[] = [];
   currentAndFutureTasks: { project: Project, tasks: StepOrTask[] }[] = []; // without date, no matter if active or not
+  projectWithOpenNotes = signal<Project | undefined>(undefined);
 
   getActiveProjects() {
     return this.activeProjects;
@@ -32,6 +33,10 @@ export class ProjectsService {
 
   getCurrentProject() {
     return this.currentProject;
+  }
+
+  getProjectWithOpenNotes() {
+    return this.projectWithOpenNotes;
   }
 
   populateCalendarTasks() {

@@ -1,11 +1,27 @@
-<div class="main">
-    <div class="conversation" #conversationContainer>
-        <div class="message new-h2" *ngFor="let message of conversation.messages">
-            <span [ngClass]="{'user-message': message.sentByUser, 'ai-message': !message.sentByUser}">{{message.value}}</span>
+<div class="main" #conversationContainer>
+    <div class="chat" *ngIf="isConsentForAi">
+        <div class="conversation">
+            <div class="message new-small" *ngFor="let message of conversation.messages">
+                <span
+                    [ngClass]="{'user-message': message.sentByUser, 'ai-message': !message.sentByUser}">{{message.value}}</span>
+            </div>
+        </div>
+        <div class="input">
+            <input class="new-small" [(ngModel)]="userMessageText" (keydown.enter)="sendMessage()"
+                placeholder="אפשר לשאול אותי הכל">
+            <img class="icon-send" (click)="sendMessage()" />
         </div>
     </div>
-    <div class="input">
-        <input class="new-small" [(ngModel)]="userMessageText" (keydown.enter)="sendMessage()" placeholder="אפשר לשאול אותי הכל">
-        <img class="icon-send" (click)="sendMessage()"/>
+    <div class="consent" *ngIf="!isConsentForAi">
+        <span class="new-small">׳פוקוס מאסטר׳ הוא מנטור AI מבוסס Gemini שמאומן במיוחד כדי לעזור לפרילנסרים. הוא קורא את הנתונים שנמצאים על
+            המסך שלך ויכול לעזור לך יד ביד לאורך פרויקט ספציפי או בניהול העסק הכולל. אף נתון או שיחה לא מגיעים אלינו,
+            ומדיניות הפרטיות היא לפי המדיניות של OpenAI.
+            בלחיצה על הכפתור למטה את/ה מאשר/ת שברצונך לחלוק עם ׳פוקוס מאסטר׳ את המידע שלך ב׳פוקוס׳:</span>
+
+        <div class="new-small confirm">
+            <span (click)="consent()">
+                אני מאשר/ת, בוא נתחיל
+            </span>
+        </div>
     </div>
 </div>

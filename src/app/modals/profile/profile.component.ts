@@ -9,6 +9,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { environment } from '../../../environments/environment';
 import { subscriptionEnum } from '../../models/enums';
 import { UserSubscription } from '../../models/userSubscription';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-profile',
@@ -19,6 +20,7 @@ import { UserSubscription } from '../../models/userSubscription';
 export class ProfileComponent implements AfterViewInit {
   httpService = inject(HttpService);
   authenticationService = inject(AuthenticationService);
+  userService = inject(UserService);
   animationsService = inject(AnimationsService);
   dialogRef = inject(MatDialogRef<ProfileComponent>);
   cd = inject(ChangeDetectorRef);
@@ -39,7 +41,7 @@ export class ProfileComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.getUserSubscription();
     this.animationsService.changeIsloading(true);
-    this.httpService.getUser().subscribe(user => {
+    this.userService.getUser().subscribe(user => {
       this.user = user;
       this.animationsService.changeIsloading(false);
     });
@@ -77,7 +79,7 @@ export class ProfileComponent implements AfterViewInit {
   }
 
   updateUser() {
-    this.httpService.updateUser(this.user).subscribe(res => { });
+    this.userService.updateUser(this.user).subscribe(res => { });
   }
 
   navigateToSubscription() {

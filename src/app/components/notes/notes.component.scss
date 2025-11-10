@@ -4,25 +4,29 @@
     width: 100%;
     height: var(--big-window-height);
 
-    &.show-notes {
-        background-color: var(--default-white);
-        border-radius: var(--common-radius);
-        box-shadow: var(--common-shadow);
-    }
-
     .header {
         margin-bottom: 20px;
         width: 100%;
         display: flex;
+        align-items: center;
         justify-content: space-between;
-        color: #ACACBC;
+        color: var(--default-black);
 
-        .icon-expand {
-            align-self: flex-start;
+        .title {
+            display: flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: var(--common-radius);
+
+            span {
+                margin-bottom: 3px;
+                margin-right: 7px;
+            }
         }
 
         .selected {
-            color: var(--default-black);
+            color: var(--default-white);
+            background-color: var(--main-color);
         }
     }
 
@@ -33,93 +37,7 @@
         height: var(--big-window-height);
     }
 
-    .links {
-        display: flex;
-        flex-direction: column;
-
-        &.padding-links {
-            padding: 1rem 2rem;
-        }
-
-        .links-header {
-            margin-bottom: 1rem;
-        }
-
-        .link {
-            align-items: center;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-
-            .icon-garbage-can {
-                height: 14px;
-                width: 12px;
-            }
-
-            span {
-                cursor: pointer;
-                margin-left: 0.5rem;
-
-            }
-
-            &:hover {
-                color: var(--main-color);
-            }
-        }
-
-        .add-link {
-            display: flex;
-            justify-content: center;
-
-            span {
-                border-radius: var(--common-radius);
-                padding: 0.2rem 1rem 0.4rem;
-                background-color: var(--hover-color);
-
-                &:hover {
-                    color: var(--default-white);
-                    background-color: var(--main-color);
-                }
-            }
-        }
-
-        .new-link {
-            @include mixins.regular-border;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            flex-direction: column;
-            align-items: flex-start;
-
-            .title {
-                margin-bottom: 20px;
-            }
-
-            .text-and-input {
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-                margin-bottom: 20px;
-
-                .small-text {
-                    margin-bottom: 4px;
-                }
-
-                input {
-                    background-color: transparent;
-                    @include mixins.regular-border;
-                }
-            }
-
-            .confirm {
-                display: flex;
-                justify-content: center;
-                width: 100%;
-            }
-        }
-    }
-
-    .aiChat {
+    .ai-chat {
         display: flex;
         flex-direction: column;
         width: 100%;

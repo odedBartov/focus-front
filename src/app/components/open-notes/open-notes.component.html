@@ -1,0 +1,26 @@
+<div class="main">
+    <div class="links">
+        <div class="header">
+            <img src="assets/icons/paper_clip_black.svg" style="height: 15px;" />
+            <span class="new-h2">קישורים</span>
+        </div>
+        <app-project-links [project]="project()"></app-project-links>
+    </div>
+    <div class="notes">
+        <div class="header">
+            <img src="assets/icons/note_black.svg" style="height: 21px;" />
+            <span class="new-h2">רשימות</span>
+        </div>
+        <div style="margin-top: -15px;">
+            <span class="new-small">כל מי שצופה בפרויקט יכול לקרוא את הרשימות שלך.</span>
+        </div>
+        <app-rich-text [project]="project()" [expanded]="true" style="height: 100%;"></app-rich-text>
+    </div>
+    <div class="chat">
+        <div class="header">
+            <img src="assets/icons/stars_black.svg" style="height: 24px;" />
+            <span class="new-h2">פוקוס מאסטר</span>
+        </div>
+        <app-ai-chat [project]="project" class="chat-component"></app-ai-chat>
+    </div>
+</div>

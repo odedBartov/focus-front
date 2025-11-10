@@ -1,13 +1,21 @@
 <div class="main-window">
   <div class="tabs-container">
-    <div class="tab-list">
-      <img src="assets/focus_logo.svg" class="logo" />
-      <div *ngFor="let tab of tabs" [class.active]="tab.id === activeTab.id" class="tab new-small" (click)="setActiveTab(tab)">
-        <span>{{ tab.label }}</span>
-        <img [src]="tab.id === activeTab.id ?tab.icon : tab.disabledIcon" />
+    <ng-container *ngIf="!openNotesSignal()">
+      <div class="tab-list">
+        <img src="assets/focus_logo.svg" class="logo" />
+        <div *ngFor="let tab of tabs" [class.active]="tab.id === activeTab.id" class="tab new-small"
+          (click)="setActiveTab(tab)">
+          <span>{{ tab.label }}</span>
+          <img [src]="tab.id === activeTab.id ?tab.icon : tab.disabledIcon" />
+        </div>
       </div>
-    </div>
-    <img class="profile" [ngClass]="{pointer: !isReadOnly()}" [src]="userPicture" (click)="isReadOnly()? '' : navigateToProfile()" />
+      <img class="profile" [ngClass]="{pointer: !isReadOnly()}" [src]="userPicture"
+        (click)="isReadOnly()? '' : navigateToProfile()" />
+    </ng-container>
+    <ng-container *ngIf="openNotesSignal()">
+      <span class="new-h2">{{openNotesSignal()?.name}}</span>
+      <img class="pointer" src="assets/icons/x_mark_black.svg" (click)="closeOpenNotes()" />
+    </ng-container>
   </div>
 
   <div class="main-content">
@@ -26,8 +34,10 @@
       </div>
     </div>
 
-    <div class="project-container" *ngIf="activeTab?.id !== 'none' && activeTab?.id !== homeTab?.id && activeTab.id !== archiveTab.id && activeTab.id !== tasksTab.id">
-      <app-project-page class="project-page" (navigateToHomeEmitter)="setActiveTab(tabs[0])" #projectPage></app-project-page>
+    <div class="project-container"
+      *ngIf="activeTab?.id !== 'none' && activeTab?.id !== homeTab?.id && activeTab.id !== archiveTab.id && activeTab.id !== tasksTab.id">
+      <app-project-page class="project-page" (navigateToHomeEmitter)="setActiveTab(tabs[0])"
+        #projectPage></app-project-page>
     </div>
 
     <div class="weekly-tasks-container" *ngIf="activeTab?.id === tasksTab.id">
@@ -40,8 +50,7 @@
           <app-summary [projects]="activeProjects()"></app-summary>
         </div>
         <div class="projects-list">
-          <app-archive
-            (unActiveProjectsEmitter)="refreshProjects()"></app-archive>
+          <app-archive (unActiveProjectsEmitter)="refreshProjects()"></app-archive>
         </div>
         <div class="updates">
           <app-updates></app-updates>

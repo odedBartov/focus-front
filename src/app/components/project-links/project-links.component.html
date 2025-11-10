@@ -1,0 +1,36 @@
+<div class="links">
+    <div class="link new-text" *ngFor="let link of project?.links" #link (mouseenter)="hoverLink(link)"
+        (mouseleave)="leaveLink()">
+        <div class="pointer">
+            <span (click)="openLink(link.url)">{{link.name}}</span>
+            <img [src]="`/assets/icons/${hoveredLink === link? 'link_yes' : 'link_not'}.svg`"
+                (click)="openLink(link.url)" />
+        </div>
+        <img class="icon-garbage-can pointer" *ngIf="hoveredLink === link && !isReadOnly()"
+            (click)="deleteLink(link)" />
+    </div>
+    <div class="add-link" *ngIf="!isReadOnly()">
+        <span class="pointer new-small" (click)="addingNewLink = true; resetLinkForm()" *ngIf="!addingNewLink">+
+            קישור חדש</span>
+    </div>
+    <form class="new-link" *ngIf="addingNewLink" [formGroup]="form" #newLinkDiv>
+        <span class="title new-h2">קישור חדש</span>
+        <div class="text-and-input new-small">
+            <span>שם</span>
+            <input class="small-text new-text" type="text" formControlName="name" tabindex="0">
+            <div class="error-container">
+                <span *ngIf="submitted && form.get('name')?.errors" class="error">אנא הזינו שם</span>
+            </div>
+        </div>
+        <div class="text-and-input new-small">
+            <span>קישור</span>
+            <input class="small-text new-text" type="text" formControlName="url" tabindex="0">
+            <div class="error-container">
+                <span *ngIf="submitted && form.get('url')?.errors" class="error">אנא הזינו קישור</span>
+            </div>
+        </div>
+        <div class="confirm" tabindex="0" (keydown.enter)="addLink()">
+            <img class="icon-confirm-circle pointer" (click)="addLink()"/>
+        </div>
+    </form>
+</div>
