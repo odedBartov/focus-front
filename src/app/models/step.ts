@@ -1,7 +1,8 @@
 import { recurringDateTypeEnum, StepType } from "./enums";
+import { IStepOrTask } from "./stepOrTask";
 import { StepTask } from "./stepTask";
 
-export class Step {
+export class Step implements IStepOrTask {
     id?: string;
     projectId?: string | null;
     dateCreated?: Date;

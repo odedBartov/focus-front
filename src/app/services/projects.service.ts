@@ -1,7 +1,7 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
 import { HttpService } from './http.service';
 import { Project } from '../models/project';
-import { StepOrTask } from '../models/stepOrTask';
+import { IStepOrTask, StepOrTask } from '../models/stepOrTask';
 import { Step } from '../models/step';
 import { StepTask } from '../models/stepTask';
 
@@ -49,10 +49,10 @@ export class ProjectsService {
     if (weeklyTasksStep) {
       weeklyTasksStep.tasks?.forEach(task => {
         if (task.dateOnWeekly) {
-          this.insertTaskToList(this.tasksWithDate, weeklyTasksStep, this.noProject(), task, undefined);
+          this.insertTaskToList(this.tasksWithDate, weeklyTasksStep, task, this.noProject());
         } else {
-          this.insertTaskToFutueTasks(this.noProject(), weeklyTasksStep, task, undefined);
-          this.insertTaskToList(this.tasksWithoutDate, weeklyTasksStep, this.noProject(), task, undefined);
+          this.insertTaskToFutueTasks(this.noProject(), weeklyTasksStep, task);
+          this.insertTaskToList(this.tasksWithoutDate, weeklyTasksStep, task, this.noProject());
         }
       });
     }
@@ -64,21 +64,21 @@ export class ProjectsService {
         if (step.tasks?.length) {
           step.tasks.forEach(task => {
             if (task.dateOnWeekly) {
-              this.insertTaskToList(this.tasksWithDate, step, project, task, undefined);
+              this.insertTaskToList(this.tasksWithDate, step, task, project);
             } else if (!task.isComplete) {
-              this.insertTaskToFutueTasks(project, step, task, undefined);
+              this.insertTaskToFutueTasks(project, step, task);
               if (!foundActiveStep) { // this is the first not complete step, so its the active one
-                this.insertTaskToList(this.tasksWithoutDate, step, project, task, undefined);
+                this.insertTaskToList(this.tasksWithoutDate, step, task, project);
               }
             }
           });
         } else {
           if (step.dateOnWeekly) {
-            this.insertTaskToList(this.tasksWithDate, step, project, undefined, step);
+            this.insertTaskToList(this.tasksWithDate, step, step, project);
           } else if (!step.isComplete) {
-            this.insertTaskToFutueTasks(project, step, undefined, step);
+            this.insertTaskToFutueTasks(project, step, step);
             if (!foundActiveStep) { // this is the first not complete step, so its the active one
-              this.insertTaskToList(this.tasksWithoutDate, step, project, undefined, step);
+              this.insertTaskToList(this.tasksWithoutDate, step, step, project);
             }
           }
         }
@@ -91,27 +91,28 @@ export class ProjectsService {
     return { tasksWithDate: this.tasksWithDate, tasksWithoutDate: this.tasksWithoutDate, currentAndFutureTasks: this.currentAndFutureTasks };
   }
 
-  insertTaskToList(list: StepOrTask[], parentStep: Step, project?: Project, task?: StepTask, step?: Step) {
+  insertTaskToList(list: StepOrTask[], parentStep: Step, data: IStepOrTask, project?: Project) {
     const taskOrStep = new StepOrTask();
-    taskOrStep.task = task;
-    taskOrStep.step = step;
+    // taskOrStep.task = task;
+    // taskOrStep.step = step;
+    taskOrStep.data = data;
     taskOrStep.parentStep = parentStep;
     taskOrStep.project = project;
     list.push(taskOrStep);
   }
 
-  insertTaskToFutueTasks(project: Project, parentStep: Step, task?: StepTask, step?: Step) {
+  insertTaskToFutueTasks(project: Project, parentStep: Step, data: IStepOrTask) {
     let currentProject = this.currentAndFutureTasks.find(p => p.project?.id === project.id);
     if (!currentProject) {
       currentProject = { project, tasks: [] };
       this.currentAndFutureTasks.push(currentProject);
     }
-    this.insertTaskToList(currentProject.tasks, parentStep, currentProject.project, task, step);
+    this.insertTaskToList(currentProject.tasks, parentStep, data, currentProject.project);
   }
 
   sortTasksAndSteps(first: StepOrTask, second: StepOrTask): number {
-    const firstPosition = first.task?.positionInWeeklyList ?? first.step?.positionInWeeklyList ?? 0;
-    const secondPosition = second.task?.positionInWeeklyList ?? second.step?.positionInWeeklyList ?? 0;
+    const firstPosition = first.data.positionInWeeklyList ?? 0;
+    const secondPosition = second.data.positionInWeeklyList ?? 0;
     return firstPosition - secondPosition;
   }
 }

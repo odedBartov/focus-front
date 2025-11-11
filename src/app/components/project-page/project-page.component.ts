@@ -653,6 +653,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     step.projectId = this.project()?.id;
     step.positionInList = (this.project()?.steps?.length ?? 0) + 1;
     this.httpService.createStep(step).subscribe(res => {
+      if (this.project().steps.length === 0) {
+        this.activeStepId = res.id;
+      }
       this.project()?.steps?.push(res);
       this.initRetainerSteps();
       this.isShowNewStep = false;

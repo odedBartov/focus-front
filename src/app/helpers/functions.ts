@@ -1,5 +1,5 @@
 import { Step } from "../models/step";
-import { StepOrTask } from "../models/stepOrTask";
+import { isStep, StepOrTask } from "../models/stepOrTask";
 
 export function parseDate(input?: string): Date | null {
   if (input) {
@@ -28,10 +28,10 @@ export function isDateBeforeToday(date: Date): boolean {
 }
 
 export function getTextForTask(task: StepOrTask): string | undefined {
-  if (task.task) {
-    return task.task.text;
+  if (isStep(task.data)) {
+    return task.data.name;
   } else
-    return task.step?.name;
+    return task.data.text;
 }
 
 export function areTwoDaysInTheSameWeek(date1: Date, date2: Date): boolean {
@@ -65,7 +65,7 @@ export function isDateGreaterOrEqual(d1: Date, d2: Date): boolean {
   return date1.getTime() >= date2.getTime();
 }
 
-export function isDateSmallerOrEqual(d1: Date, d2: Date){
+export function isDateSmallerOrEqual(d1: Date, d2: Date) {
   const date1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
   const date2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
   return date1.getTime() <= date2.getTime();

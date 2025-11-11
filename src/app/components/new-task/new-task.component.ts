@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { StepTask } from '../../models/stepTask';
 import { FormsModule } from '@angular/forms';
+import { IStepOrTask } from '../../models/stepOrTask';
 
 @Component({
   selector: 'app-new-task',
@@ -13,8 +14,8 @@ export class NewTaskComponent {
   @ViewChild('newTaskDiv', { static: false }) newTaskDiv?: ElementRef;
   @ViewChild('taskText', { static: false }) taskText!: ElementRef;
   @Output() createNewTask = new EventEmitter<StepTask>();
-  @Input() set taskInput(value: StepTask | undefined) {
-    if (value) {
+  @Input() set taskInput(value: IStepOrTask | undefined) {
+    if (value && value instanceof StepTask) {
       this.isEdit = true;
       this.newTask = structuredClone(value);
       this.startNewTask();

@@ -1,6 +1,7 @@
+import { IStepOrTask } from "./stepOrTask";
 
 
-export class StepTask {
+export class StepTask implements IStepOrTask {
     id: string;
     text?: string;
     isComplete?: boolean;

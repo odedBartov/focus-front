@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 import { Step } from '../../models/step';
 import { Project } from '../../models/project';
 import { ProjectsService } from '../../services/projects.service';
-import { isStepOrTaskComplete, StepOrTask } from '../../models/stepOrTask';
+import { isStep, isStepOrTaskComplete, StepOrTask } from '../../models/stepOrTask';
 import { areDatesEqual } from '../../helpers/functions';
 import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
 import { StepTask } from '../../models/stepTask';
@@ -73,7 +73,7 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     const allTasks = lists.tasksWithDate;
     const today = new Date();
     allTasks.forEach(t => {
-      const taskDate = t.task?.dateOnWeekly || t.step?.dateOnWeekly;
+      const taskDate = t.data.dateOnWeekly;
       if (taskDate && areDatesEqual(new Date(taskDate), today)) {
         this.stepsAndTasks.push(t);
       }
@@ -134,8 +134,8 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     const stepsToUpdate: Step[] = [];
     this.stepsAndTasks.forEach(taskOrStep => {
       if (!stepsToUpdate.find(s => s.id === taskOrStep.parentStep?.id)) {
-        if (taskOrStep.step) {
-          taskOrStep.parentStep = taskOrStep.step;
+        if (isStep(taskOrStep.data)) {
+          taskOrStep.parentStep = taskOrStep.data;
         }
         stepsToUpdate.push(taskOrStep.parentStep);
       }
@@ -149,8 +149,8 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
 
   sortSteps() {
     this.stepsAndTasks.sort((a, b) => {
-      const posA = a.task ? a.task.positionInWeeklyList : a.step!.positionInWeeklyList;
-      const posB = b.task ? b.task.positionInWeeklyList : b.step!.positionInWeeklyList;
+      const posA = a.data.positionInWeeklyList;
+      const posB = b.data.positionInWeeklyList;
       return posA - posB;
     });
   }
@@ -158,11 +158,12 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
   updateStepsPosition() {
     for (let index = 0; index < this.stepsAndTasks.length; index++) {
       const task = this.stepsAndTasks[index];
-      if (task.task) {
-        task.task.positionInWeeklyList = index;
-      } else if (task.step) {
-        task.step.positionInWeeklyList = index;
-      }
+      task.data.positionInWeeklyList = index;
+      // if (task.task) {
+      //   task.task.positionInWeeklyList = index;
+      // } else if (task.step) {
+      //   task.step.positionInWeeklyList = index;
+      // }
     }
   }
 
@@ -208,7 +209,7 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
       this.httpService.updateSteps([tasksStep]).subscribe(res => { });
     }
     const newTask = new StepOrTask();
-    newTask.task = task;
+    newTask.data = task;
     newTask.parentStep = tasksStep;
     newTask.project = this.noProject();
     this.stepsAndTasks.push(newTask);
@@ -216,22 +217,23 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
 
   completeTask(task: StepOrTask) {
     const index = this.stepsAndTasks.findIndex(t => {
-      if (task.task) {
-        return t.task?.id === task.task.id;
-      } else if (task.step) {
-        return t.step?.id === task.step.id;
-      }
-      return false;
+      return t.data.id === task.data.id;
+      // if (task.task) {
+      //   return t.task?.id === task.task.id;
+      // } else if (task.step) {
+      //   return t.step?.id === task.step.id;
+      // }
+      // return false;
     });
-    if (index > -1 && (task.task?.isComplete || task.step?.isComplete)) {
+    if (index > -1 && (task.data.isComplete)) {
       moveItemInArray(this.stepsAndTasks, index, 0);
     }
     this.updateStepsPosition();
     const stepsToUpdate: Step[] = [];
     this.stepsAndTasks.forEach(taskOrStep => {
       if (!stepsToUpdate.find(s => s.id === taskOrStep.parentStep?.id)) {
-        if (taskOrStep.step) {
-          taskOrStep.parentStep = taskOrStep.step;
+        if (isStep(taskOrStep.data)) {
+          taskOrStep.parentStep = taskOrStep.data;
         }
         stepsToUpdate.push(taskOrStep.parentStep);
       }

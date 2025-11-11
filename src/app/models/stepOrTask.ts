@@ -4,15 +4,23 @@ import { StepTask } from "./stepTask";
 import { Task } from "./task";
 
 export class StepOrTask {
-    task?: StepTask;
-    step?: Step;
+    data!: IStepOrTask;
     parentStep!: Step;
     project?: Project;
 }
 
+export interface IStepOrTask {
+    id?: string;
+    text?: string;
+    isComplete?: boolean;
+    dateOnWeekly?: Date;
+    positionInWeeklyList: number;
+}
+
 export function isStepOrTaskComplete(task: StepOrTask) {
-    if (task.step) {
-        return task.step.isComplete;
-    }
-    return task.task?.isComplete;
+    return task.data?.isComplete;
+}
+
+export function isStep(stepOrTask: any): stepOrTask is Step {
+    return stepOrTask.userId !== undefined;
 }

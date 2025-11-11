@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output, Renderer2, ViewChild } from '@angular/core';
-import { isStepOrTaskComplete, StepOrTask } from '../../models/stepOrTask';
+import { isStep, isStepOrTaskComplete, StepOrTask } from '../../models/stepOrTask';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { Project } from '../../models/project';
@@ -43,6 +43,7 @@ export class WeeklyDayTaskComponent {
     }
   }
 
+  isStep = isStep;
   getTextForTask = getTextForTask;
   test = true;
   isHovering = false;
@@ -70,24 +71,19 @@ export class WeeklyDayTaskComponent {
   updateTask(task: StepTask) {
     this.isEditing = false;
     if (task.text) {
-      this.task.task = task;
+      this.task.data = task;
       this.createNewTaskEmitter.emit(task);
     }
   }
 
   isDateBeforeToday() {
-    const taskDate = this.task.task ? this.task.task.dateOnWeekly : this.task.step?.dateOnWeekly;
+    const taskDate = this.task.data.dateOnWeekly;
     return taskDate && isDateBeforeToday(new Date(taskDate));
   }
 
   changeTaskStatus(isComplete: boolean) {
     if (!this.isDateBeforeToday()) {
-      if (this.task.task) {
-        this.task.task.isComplete = isComplete;
-      } else if (this.task.step) {
-        this.task.step.isComplete = isComplete;
-      }
-
+      this.task.data.isComplete = isComplete;
       this.completeTask.emit(this.task);
     }
   }

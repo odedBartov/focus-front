@@ -8,13 +8,13 @@
         </div>
         <span class="new-small">{{getTextForTask(task)}}</span>
         <div class="buttons" [@expandCollapse]="(isHovering && !isDragging.dragging) ? 'expanded' : 'collapsed'">
-            <img class="icon-expand" style="width: 16px;" *ngIf="task.step" (click)="openProject.emit(task.project)" />
-            <img class="icon-pencil" style="width: 16px;" (click)="isEditing = true" *ngIf="task.task" />
+            <img class="icon-expand" style="width: 16px;" *ngIf="isStep(task.data)" (click)="openProject.emit(task.project)" />
+            <img class="icon-pencil" style="width: 16px;" (click)="isEditing = true" *ngIf="!isStep(task.data)" />
             <img class="icon-confirm-circle" style="width: 24px;" (click)="changeTaskStatus(true)" />
         </div>
     </div>
     <div *ngIf="isEditing">
-        <app-new-task (createNewTask)="updateTask($event)" [taskInput]="task.task"></app-new-task>
+        <app-new-task (createNewTask)="updateTask($event)" [taskInput]="task.data"></app-new-task>
     </div>
     <div class="completed-task" *ngIf="isStepOrTaskComplete(task)" (click)="changeTaskStatus(false)"
         [ngClass]="{'pointer': !isDateBeforeToday()}">
