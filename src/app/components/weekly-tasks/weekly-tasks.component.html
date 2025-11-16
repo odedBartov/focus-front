@@ -22,6 +22,7 @@
                                 (openProject)="openProject(task.project)"
                                 (createNewTaskEmitter)="updateTaskText($event, task.parentStep)"
                                 (completeTask)="completeTask($event, day.tasks)"
+                                (createFutureRetainerStep)="createFutureRetainerStep($event)"
                                 [shouldHidePlaceHolder]="isDraggingTaskToProjects"></app-weekly-day-task>
                         </div>
                     </div>

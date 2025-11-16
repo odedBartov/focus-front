@@ -26,6 +26,8 @@ export class Step implements IStepOrTask {
     recurringDayInMonth?: number; // day in the month. 1-30
     nextOccurrence?: Date;
     isRetainerCopy = false;
+    futureModifiedTasks?: Date[] = [];
+    originalRetainerStep?: Step;
 
     constructor() {
         this.userId = "newStep";

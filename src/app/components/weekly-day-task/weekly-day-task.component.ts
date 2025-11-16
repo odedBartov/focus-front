@@ -7,6 +7,7 @@ import { Project } from '../../models/project';
 import { StepTask } from '../../models/stepTask';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { areDatesEqual, getTextForTask, getTodayAtMidnightLocal, isDateBeforeToday } from '../../helpers/functions';
+import { FutureRetainerStep } from '../../services/futureRetainerStep';
 
 @Component({
   selector: 'app-weekly-day-task',
@@ -34,6 +35,7 @@ export class WeeklyDayTaskComponent {
   @Output() openProject = new EventEmitter<Project>();
   @Output() completeTask = new EventEmitter<StepOrTask>();
   @Output() createNewTaskEmitter = new EventEmitter<StepTask>();
+  @Output() createFutureRetainerStep = new EventEmitter<FutureRetainerStep>();
   @Input() task!: StepOrTask;
   @Input() isDragging!: { dragging: boolean };
   @Input() set shouldHidePlaceHolder(value: boolean) {
@@ -82,9 +84,16 @@ export class WeeklyDayTaskComponent {
   }
 
   changeTaskStatus(isComplete: boolean) {
+    this.task.data.isComplete = isComplete;
     if (!this.isDateBeforeToday()) {
-      this.task.data.isComplete = isComplete;
-      this.completeTask.emit(this.task);
+      if (isStep(this.task.data) && this.task.data.isRetainerCopy) {
+        const futureRetainerStep = new FutureRetainerStep();
+        futureRetainerStep.modifiedDate = this.task.data.dateCreated ?? new Date();
+        futureRetainerStep.newStep = this.task.data;
+        this.createFutureRetainerStep.emit();
+      } else {
+        this.completeTask.emit(this.task);
+      }
     }
   }
 }

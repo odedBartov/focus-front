@@ -15,6 +15,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
 import { getTextForTask, getTodayAtMidnightLocal, isDateBeforeToday } from '../../helpers/functions';
 import { getOcurencesInRange } from '../../helpers/retainerFunctions';
+import { FutureRetainerStep } from '../../services/futureRetainerStep';
 
 @Component({
   selector: 'app-weekly-tasks',
@@ -225,12 +226,13 @@ export class WeeklyTasksComponent implements AfterViewInit {
               if (castedStep) {
                 const tempStep: Step = structuredClone(castedStep);
                 tempStep.id = undefined;
-                tempStep.dateCreated = getTodayAtMidnightLocal();
+                tempStep.dateCreated = date;
                 tempStep.dateOnWeekly = date;
                 tempStep.isRecurring = false;
                 tempStep.isComplete = false;
                 tempStep.isRetainerCopy = true;
                 tempStep.positionInWeeklyList = 9999;
+                tempStep.originalRetainerStep = castedStep;
                 const tempTaskWithStep = new StepOrTask();
                 tempTaskWithStep.data = tempStep;
                 tempTaskWithStep.project = t.project;
@@ -434,6 +436,25 @@ export class WeeklyTasksComponent implements AfterViewInit {
     this.tasksWithDate.push(newTask);
   }
 
+  createFutureRetainerStep(modifiedStep: FutureRetainerStep) {
+    // create the new step
+    modifiedStep.newStep.isRetainerCopy = false;
+    modifiedStep.newStep.positionInWeeklyList = -1;
+    this.httpService.createStep(modifiedStep.newStep).subscribe(res => {
+      modifiedStep.newStep = res;
+      // todo: check if original gets modified
+    });
+
+    // update original retainer
+    if (modifiedStep.newStep.originalRetainerStep) {
+      if (!modifiedStep.newStep.originalRetainerStep.futureModifiedTasks) {
+        modifiedStep.newStep.originalRetainerStep.futureModifiedTasks = [];
+      }
+      modifiedStep.newStep.originalRetainerStep.futureModifiedTasks.push(modifiedStep.modifiedDate);
+      this.httpService.updateSteps([modifiedStep.newStep.originalRetainerStep]).subscribe(res => { });
+    }
+  }
+
   updateTaskText(task: StepTask, step: Step) {
     if (step.tasks) {
       const index = step.tasks.findIndex(t => t.id === task.id);
@@ -452,6 +473,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
 
   completeTask(task: StepOrTask, container: StepOrTask[]) {
     if (false) {
+      // update step future tasks
     // if (task.step?.isRetainerCopy) { // todo: what the hell should i do here?
     //   const index = container.indexOf(task);
     //   this.httpService.createStep(task.step).subscribe((res: Step) => {
