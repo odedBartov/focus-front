@@ -22,14 +22,14 @@ export class AiChatComponent implements AfterViewInit {
   animationService = inject(AnimationsService);
   aiChatService = inject(AiChatService);
   userServcie = inject(UserService);
-  chatId = "";
+  conversationId = "";
   conversation = new AiConversation();
   userMessageText = "";
   isConsentForAi: boolean | undefined = true;
   user?: User;
 
   constructor() {
-    this.chatId = crypto.randomUUID();
+    this.conversationId = crypto.randomUUID();
 
     effect(() => {
       this.project();
@@ -61,7 +61,7 @@ export class AiChatComponent implements AfterViewInit {
     const request = new ChatRequest();
     request.message = this.userMessageText;
     request.projectId = this.project().id ?? "unKnown";
-    request.chatId = this.chatId;
+    request.ConversationId = this.conversationId;
     this.animationService.changeIsloading(true);
     this.httpService.sendAiMessage(request).subscribe((res: ChatResponse) => {
       this.animationService.changeIsloading(false);

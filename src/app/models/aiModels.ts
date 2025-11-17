@@ -1,5 +1,5 @@
 export class ChatRequest {
-    chatId = "";
+    ConversationId = "";
     message = "";
     projectId = "";
 }
