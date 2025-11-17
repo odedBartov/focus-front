@@ -1,16 +1,16 @@
 <div class="main">
     <div class="header">
-        <div class="title" [class.selected]="tabSelected === 1">
+        <div class="title pointer" [class.selected]="tabSelected === 1" (click)="tabSelected = 1">
             <img [src]="'assets/icons/' + (tabSelected === 1? 'note_white' : 'note_black') + '.svg'" />
-            <span class="pointer new-small-bold" (click)="tabSelected = 1">רשימות</span>
+            <span class="new-small-bold">רשימות</span>
         </div>
-        <div class="title" [class.selected]="tabSelected === 2">
+        <div class="title pointer" [class.selected]="tabSelected === 2" (click)="tabSelected = 2">
             <img [src]="'assets/icons/' + (tabSelected === 2? 'paper_clip_white' : 'paper_clip_black') + '.svg'" />
-            <span class="pointer new-small-bold" (click)="tabSelected = 2">קישורים</span>
+            <span class="new-small-bold">קישורים</span>
         </div>
-        <div class="title" [class.selected]="tabSelected === 3">
+        <div class="title pointer" [class.selected]="tabSelected === 3" (click)="this.openAiChat()">
             <img [src]="'assets/icons/' + (tabSelected === 3? 'stars_white' : 'stars_black') + '.svg'" />
-            <span class="pointer new-small-bold" (click)="this.openAiChat()">פוקוס
+            <span class="new-small-bold">פוקוס
                 מאסטר</span>
         </div>
         <img class="pointer icon-expand" (click)="showNotes()" />
