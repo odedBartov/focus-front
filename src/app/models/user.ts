@@ -7,7 +7,7 @@ export class User {
     profession?: profession;
     email?: string;
     subscription?: subscriptionEnum;
-    isConsentForAi?: boolean;
+    projectsConsentForAi?: string[];
 }
 
 export enum UserStatus {

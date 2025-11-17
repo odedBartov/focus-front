@@ -8,10 +8,12 @@ import { AnimationsService } from '../../services/animations.service';
 import { AiChatService } from '../../services/ai-chat.service';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
+import { AnimationOptions, LottieComponent } from 'ngx-lottie';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-ai-chat',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LottieComponent],
   templateUrl: './ai-chat.component.html',
   styleUrl: './ai-chat.component.scss'
 })
@@ -22,11 +24,16 @@ export class AiChatComponent implements AfterViewInit {
   animationService = inject(AnimationsService);
   aiChatService = inject(AiChatService);
   userServcie = inject(UserService);
+  authenticationService = inject(AuthenticationService);
   conversationId = "";
   conversation = new AiConversation();
   userMessageText = "";
   isConsentForAi: boolean | undefined = true;
   user?: User;
+  isWaitingForChat = false;
+  loadingOptions: AnimationOptions = {
+    path: '/assets/animations/loader.json',
+  };
 
   constructor() {
     this.conversationId = crypto.randomUUID();
@@ -34,6 +41,7 @@ export class AiChatComponent implements AfterViewInit {
     effect(() => {
       this.project();
       this.conversation = this.aiChatService.getConversation(this.project().id ?? "unKnown");
+      this.isConsentForAi = this.user?.projectsConsentForAi?.includes(this.project().id ?? "") ?? false;
     });
 
   }
@@ -41,16 +49,21 @@ export class AiChatComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.userServcie.getUser().subscribe(res => {
       this.user = res;
-      this.isConsentForAi = this.user.isConsentForAi
+      this.isConsentForAi = this.user.projectsConsentForAi?.includes(this.project().id ?? "") ?? false;
     });
     this.scrollToBottom();
   }
 
   consent() {
     this.isConsentForAi = true;
-    if (this.user) { 
-      this.user.isConsentForAi = this.isConsentForAi;
-      this.httpService.updateUser(this.user).subscribe()
+    if (this.user) {
+      if (!this.user.projectsConsentForAi) {
+        this.user.projectsConsentForAi = [];
+      }
+      this.user.projectsConsentForAi?.push(this.project().id ?? "");
+      this.httpService.updateUser(this.user).subscribe(res => {
+        this.authenticationService.setProjectsConsentForAi(res.projectsConsentForAi ?? []);
+      });
     }
   }
 
@@ -62,9 +75,9 @@ export class AiChatComponent implements AfterViewInit {
     request.message = this.userMessageText;
     request.projectId = this.project().id ?? "unKnown";
     request.ConversationId = this.conversationId;
-    this.animationService.changeIsloading(true);
+    this.isWaitingForChat = true;
     this.httpService.sendAiMessage(request).subscribe((res: ChatResponse) => {
-      this.animationService.changeIsloading(false);
+      this.isWaitingForChat = false;
       this.userMessageText = '';
       const reply = new chatMessage;
       reply.sentByUser = false;

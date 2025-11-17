@@ -7,17 +7,24 @@
             </div>
         </div>
         <div class="input">
-            <input class="new-small" [(ngModel)]="userMessageText" (keydown.enter)="sendMessage()"
-                placeholder="אפשר לשאול אותי הכל">
-            <img class="icon-send" (click)="sendMessage()" />
+            <ng-lottie [options]="loadingOptions" class="loading-animation" *ngIf="isWaitingForChat" />
+            <ng-container *ngIf="!isWaitingForChat">
+                <input class="new-small" [(ngModel)]="userMessageText" (keydown.enter)="sendMessage()"
+                    placeholder="אפשר לשאול אותי הכל">
+                <img class="icon-send" (click)="sendMessage()" />
+            </ng-container>
         </div>
     </div>
     <div class="consent" *ngIf="!isConsentForAi">
-        <span class="new-small">׳פוקוס מאסטר׳ הוא מנטור AI מבוסס Gemini שמאומן במיוחד כדי לעזור לפרילנסרים. הוא קורא את הנתונים שנמצאים על
-            המסך שלך ויכול לעזור לך יד ביד לאורך פרויקט ספציפי או בניהול העסק הכולל. אף נתון או שיחה לא מגיעים אלינו,
-            ומדיניות הפרטיות היא לפי המדיניות של OpenAI.
-            בלחיצה על הכפתור למטה את/ה מאשר/ת שברצונך לחלוק עם ׳פוקוס מאסטר׳ את המידע שלך ב׳פוקוס׳:</span>
-
+        <span class="new-small">
+            ׳פוקוס מאסטר׳ הוא מנטור AI מבוסס Gemini שמאומן במיוחד כדי לעזור לפרילנסרים. הוא קורא את הנתונים שנמצאים על
+            המסך שלך ויכול לעזור לך יד ביד לאורך הפרויקט.
+            <br>
+            השיחה עם ׳פוקוס מאסטר׳ היא זמנית, וכל ההודעות נמחקות לאחר 8 שעות ללא פעילות. לכן, מידע חשוב שברצונך לשמור -
+            כדאי להעתיק ל׳רשימות׳.
+            <br>
+            בלחיצה על הכפתור למטה את/ה מאשר/ת שברצונך לחלוק עם ׳פוקוס מאסטר׳ ו-Gemini את המידע שלך בפרויקט {{project().name}}
+        </span>
         <div class="new-small confirm">
             <span (click)="consent()">
                 אני מאשר/ת, בוא נתחיל

@@ -14,7 +14,7 @@ export class AuthenticationService {
   userPicture = "user-picture";
   isReadOnly = "is-read-only";
   subscription = "subscription";
-  isConsentAi: boolean | undefined = false;
+  projectsConsentForAi: string[] | undefined = [];
   isReadOnlySignal = signal<boolean>(false);
 
   getToken() {
@@ -84,12 +84,12 @@ export class AuthenticationService {
     return subscriptionEnum.free; // Default to free if not set
   }
 
-  getIsConsentForAi() {
-    return this.isConsentAi;
+  getProjectsConsentForAi() {
+    return this.projectsConsentForAi;
   }
 
-  setIsConsentForAi(isConsent: boolean | undefined) {
-    this.isConsentAi = isConsent;
+  setProjectsConsentForAi(consetnForProject: string[] | undefined) {
+    this.projectsConsentForAi = consetnForProject;
   }
 
   logOut() {
