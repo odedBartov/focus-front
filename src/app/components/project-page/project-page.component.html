@@ -6,7 +6,7 @@
                     <span class="title new-h1">{{project().name}}</span>
                     <img class="pointer icon-expand" (click)="openProjectModal()" *ngIf="!isReadOnly()" />
                 </div>
-                <span class="description new-small" *ngIf="project()?.description">
+                <span class="description new-small" *ngIf="project().description">
                     {{project().description}}
                 </span>
                 <div class="dates">
