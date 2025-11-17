@@ -208,16 +208,22 @@ export class NewStepComponent implements AfterViewInit {
         }
         this.newStep.nextOccurrence = createNextOccurenceDate(this.newStep);
         updateDatesWithLocalTime(this.newStep);
-        if (this.newStep.isRecurring && this.newStep.recurringDateType === recurringDateTypeEnum.day) {
-          this.newStep.isComplete = false;
-        } else {
-          this.newStep.isComplete = !areDatesEqual(new Date(), this.newStep.nextOccurrence)
-        }
+        this.setIsCompleteForRecurringStep();
         this.newStep.dateOnWeekly = this.newStep.nextOccurrence;
         this.newStep.positionInWeeklyList = 9999;
       }
 
       this.stepsEmitter.emit(this.newStep);
+    }
+  }
+
+  setIsCompleteForRecurringStep() {
+    if (!this.isEdit) {
+      if (this.newStep.isRecurring && this.newStep.recurringDateType === recurringDateTypeEnum.day) {
+        this.newStep.isComplete = false;
+      } else {
+        this.newStep.isComplete = !areDatesEqual(new Date(), this.newStep.nextOccurrence)
+      }
     }
   }
 
