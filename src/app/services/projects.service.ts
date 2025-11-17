@@ -91,6 +91,12 @@ export class ProjectsService {
     return { tasksWithDate: this.tasksWithDate, tasksWithoutDate: this.tasksWithoutDate, currentAndFutureTasks: this.currentAndFutureTasks };
   }
 
+  addStepToProject(projectId: string, step: Step) {
+    const project = this.activeProjects().find(p => p.id === projectId) || this.unActiveProjects().find(p => p.id === projectId);
+    if (project) project.steps.push(step);
+  }
+
+
   insertTaskToList(list: StepOrTask[], parentStep: Step, data: IStepOrTask, project?: Project) {
     const taskOrStep = new StepOrTask();
     // taskOrStep.task = task;

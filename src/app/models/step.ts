@@ -25,7 +25,11 @@ export class Step implements IStepOrTask {
     recurringDaysInWeek?: number[]; // 1 - Sunday, 7 - Saturday
     recurringDayInMonth?: number; // day in the month. 1-30
     nextOccurrence?: Date;
+    futureModifiedTasks?: Date[] = [];
+    
+    // these are not stored in db
     isRetainerCopy = false;
+    originalRetainerStep?: Step;
 
     constructor() {
         this.userId = "newStep";

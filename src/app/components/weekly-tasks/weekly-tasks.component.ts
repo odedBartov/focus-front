@@ -15,6 +15,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
 import { getTextForTask, getTodayAtMidnightLocal, isDateBeforeToday } from '../../helpers/functions';
 import { getOcurencesInRange } from '../../helpers/retainerFunctions';
+import { FutureRetainerStep } from '../../services/futureRetainerStep';
 
 @Component({
   selector: 'app-weekly-tasks',
@@ -106,7 +107,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
     this.currentAndFutureTasks = lists.currentAndFutureTasks;
   }
 
-
   initPresentedDays() {
     setTimeout(() => {
       this.presentedDays = [];
@@ -121,6 +121,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
         this.presentedDays.push(weeklyDay);
       }
 
+      this.tasksWithDate = this.tasksWithDate.filter(t => !(isStep(t.data) && t.data.isRetainerCopy));
       this.generateRetainerSteps();
       this.assignTasksToDays();
     }, 1);
@@ -155,15 +156,16 @@ export class WeeklyTasksComponent implements AfterViewInit {
             }
             const retainerDates = getOcurencesInRange(castedStep, sunday, saturday);
             retainerDates.forEach(date => {
-              if (castedStep) {
+              if (castedStep && (!castedStep.futureModifiedTasks || !castedStep.futureModifiedTasks.find(d => this.compareDates(d, date)))) {
                 const tempStep: Step = structuredClone(castedStep);
                 tempStep.id = undefined;
-                tempStep.dateCreated = getTodayAtMidnightLocal();
+                tempStep.dateCreated = date;
                 tempStep.dateOnWeekly = date;
                 tempStep.isRecurring = false;
                 tempStep.isComplete = false;
                 tempStep.isRetainerCopy = true;
                 tempStep.positionInWeeklyList = 9999;
+                tempStep.originalRetainerStep = castedStep;
                 const tempTaskWithStep = new StepOrTask();
                 tempTaskWithStep.data = tempStep;
                 tempTaskWithStep.project = t.project;
@@ -198,7 +200,9 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   dropTask(event: CdkDragDrop<any[]>, date?: Date) {
+    let isFutureRetainer = false;
     this.isDraggingTaskToProjects = false;
+    const oldDate = event.item.data.data.dateOnWeekly;
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.updateTasksPosition(event.container.data);
@@ -206,12 +210,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
       if (!date) {
         event.currentIndex = event.container.data.length;
       }
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
 
       const item = event.container.data[event.currentIndex] as StepOrTask;
       if (!item.data.dateOnWeekly) {
@@ -224,37 +223,38 @@ export class WeeklyTasksComponent implements AfterViewInit {
         }
       }
       item.data.dateOnWeekly = date;
-      // if (item.task) {
-      //   if (!item.task.dateOnWeekly) {
-      //     item.positionInWeeklyList = event.currentIndex;
-      //     this.tasksWithDate.push(item);
-      //   } else if (!date) {
-      //     const index = this.tasksWithDate.findIndex(t => t.task?.id === item.task.id);
-      //     if (index !== -1) {
-      //       this.tasksWithDate.splice(index, 1);
-      //     }
-      //   }
-      //   item.task.dateOnWeekly = date;
-      // } else if (item.step) {
-      //   if (!item.step.dateOnWeekly) {
-      //     item.positionInWeeklyList = event.currentIndex;
-      //     this.tasksWithDate.push(item);
-      //   } else if (!date) {
-      //     const index = this.tasksWithDate.findIndex(t => t.step?.id === item.step.id);
-      //     if (index !== -1) {
-      //       this.tasksWithDate.splice(index, 1);
-      //     }
-      //   }
-      //   item.step.dateOnWeekly = date;
-      // }
-
       this.updateTasksPosition(event.container.data);
       this.updateTasksPosition(event.previousContainer.data);
+      if (isStep(item.data) && item.data.isRetainerCopy) {
+        item.data.futureModifiedTasks = undefined;
+        item.data.isRecurring = false;
+        item.data.isRetainerCopy = false;
+        // create the step
+        isFutureRetainer = true;
+        this.httpService.createStep(item.data).subscribe((res: Step) => {
+          const stepsToUpdate: Step[] = [];
+          if (isStep(item.data) && item.data.originalRetainerStep) {
+            if (!item.data.originalRetainerStep?.futureModifiedTasks) {
+              item.data.originalRetainerStep.futureModifiedTasks = [];
+            }
+            item.data.originalRetainerStep.futureModifiedTasks.push(oldDate);
+            stepsToUpdate.push(item.data.originalRetainerStep);            
+          }
+          
+          item.data = res;
+          this.initPresentedDays();
+          this.updateTasks(event.previousContainer === event.container ? [] : event.previousContainer.data, event.container.data, stepsToUpdate);
+          this.projectsService.addStepToProject(item.project?.id ?? '', item.data as Step);
+          this.initTasks()
+        });
+      }
     }
 
-    this.initPresentedDays();
-    this.updateTasks(event.previousContainer === event.container ? [] : event.previousContainer.data, event.container.data);
-    this.initTasks()
+    if (!isFutureRetainer) {
+      this.initPresentedDays();
+      this.updateTasks(event.previousContainer === event.container ? [] : event.previousContainer.data, event.container.data);
+      this.initTasks()
+    }
   }
 
   dropTaskInProjectsList(event: CdkDragDrop<any[]>) {
@@ -307,8 +307,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
     }
   }
 
-  updateTasks(fromList?: StepOrTask[], toList?: StepOrTask[]) {
-    const stepsToUpdate: Step[] = [];
+  updateTasks(fromList?: StepOrTask[], toList?: StepOrTask[], stepsToUpdate: Step[] = []) {
     if (fromList && fromList.length) {
       fromList.forEach(taskOrStep => {
         if (!stepsToUpdate.find(s => s.id === taskOrStep.parentStep.id)) {
@@ -335,7 +334,9 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   compareDates(first: Date, second = new Date(), daysDelta = 0) {
-    return first.getDate() + daysDelta === second.getDate() && first.getMonth() === second.getMonth() && first.getFullYear() === second.getFullYear();
+    const castedFirst = new Date(first);
+    const castedSecond = new Date(second);
+    return castedFirst.getDate() + daysDelta === castedSecond.getDate() && castedFirst.getMonth() === castedSecond.getMonth() && castedFirst.getFullYear() === castedSecond.getFullYear();
   }
 
   createNewTask(task: StepTask, day: WeeklyDay) {
@@ -367,6 +368,26 @@ export class WeeklyTasksComponent implements AfterViewInit {
     this.tasksWithDate.push(newTask);
   }
 
+  createFutureRetainerStep(modifiedStep: FutureRetainerStep) {
+    // create the new step
+    modifiedStep.newStep.isRetainerCopy = false;
+    modifiedStep.newStep.dateCompleted = modifiedStep.newStep.dateOnWeekly;
+    modifiedStep.newStep.futureModifiedTasks = [];
+    this.httpService.createStep(modifiedStep.newStep).subscribe(res => {
+      modifiedStep.newStep = res;
+      this.projectsService.addStepToProject(modifiedStep.newStep.projectId ?? '', modifiedStep.newStep);
+    });
+
+    // update original retainer
+    if (modifiedStep.newStep.originalRetainerStep) {
+      if (!modifiedStep.newStep.originalRetainerStep.futureModifiedTasks) {
+        modifiedStep.newStep.originalRetainerStep.futureModifiedTasks = [];
+      }
+      modifiedStep.newStep.originalRetainerStep.futureModifiedTasks.push(modifiedStep.modifiedDate);
+      this.httpService.updateSteps([modifiedStep.newStep.originalRetainerStep]).subscribe(res => { });
+    }
+  }
+
   updateTaskText(task: StepTask, step: Step) {
     if (step.tasks) {
       const index = step.tasks.findIndex(t => t.id === task.id);
@@ -384,43 +405,17 @@ export class WeeklyTasksComponent implements AfterViewInit {
   }
 
   completeTask(task: StepOrTask, container: StepOrTask[]) {
-    if (false) {
-      // if (task.step?.isRetainerCopy) { // todo: what the hell should i do here?
-      //   const index = container.indexOf(task);
-      //   this.httpService.createStep(task.step).subscribe((res: Step) => {
-      //     if (task.step) {
-      //       this.httpService.createStep(task.step).subscribe((res: Step) => {
-      //         if (index !== undefined && index > -1) {
-      //           container[index].step = res;
-      //         }
-      //       });
-      //     }
-      //   });
-    } else {
-      let previousIndex: number | undefined = undefined;
-
-      // if (task.task) {
-      //   if (task.task.isComplete) {
-      //     previousIndex = task.task.positionInWeeklyList;
-      //   }
-      // } else if (task.step) {
-      //   task.step.dateCompleted = new Date();
-      //   if (task.step.isComplete) {
-      //     previousIndex = task.step?.positionInWeeklyList;
-      //   }
-      // }
-
-      if (isStep(task.data)) {
-        task.data.dateCompleted = new Date();
-      }
-      previousIndex = task.data?.positionInWeeklyList;
-
-      if (previousIndex !== undefined) {
-        moveItemInArray(container, previousIndex, 0)
-        this.updateTasksPosition(container);
-      }
-
-      this.updateTasks(container)
+    let previousIndex: number | undefined = undefined;
+    if (isStep(task.data)) {
+      task.data.dateCompleted = new Date();
     }
+    previousIndex = task.data?.positionInWeeklyList;
+
+    if (previousIndex !== undefined) {
+      moveItemInArray(container, previousIndex, 0)
+      this.updateTasksPosition(container);
+    }
+
+    this.updateTasks(container)
   }
 }

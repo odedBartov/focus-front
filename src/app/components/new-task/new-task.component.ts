@@ -47,11 +47,6 @@ export class NewTaskComponent {
     this.mouseDownInside = false;
   }
 
-  @HostListener('document:keydown.enter', ['$event'])
-  handleEnterKey(event: KeyboardEvent) {
-    this.createTask();
-  }
-
   createTask() {
     if (this.newTask.text || this.isEdit) {
       this.isShowNewStep = false;

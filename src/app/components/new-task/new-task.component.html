@@ -5,6 +5,6 @@
     <div *ngIf="isShowNewStep" class="new-task">
         <span class="new-small">{{isEdit? 'עריכת משימה' : 'משימה חדשה'}}</span>
         <textarea class="new-small" [(ngModel)]="newTask.text" tabindex="0" #taskText></textarea>
-        <img class="icon-confirm-circle" (click)="createTask()" tabindex="0" />
+        <img class="icon-confirm-circle" (click)="createTask()" tabindex="0" (keydown.enter)="createTask()"/>
     </div>
 </div>
