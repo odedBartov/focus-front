@@ -17,11 +17,13 @@ export class NewStepModalComponent {
   isActive = false;
   projectType = projectTypeEnum.retainer;
   paymentModel?: paymentModelEnum;
+  defaultPrice?: number;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { step: Step, isActive: boolean, paymentModel: paymentModelEnum }) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { step: Step, isActive: boolean, paymentModel: paymentModelEnum, defaultPrice: number|undefined }) {
     this.step = data.step;
     this.paymentModel = data.paymentModel;
     this.isActive = data.isActive;
+    this.defaultPrice = data.defaultPrice;
     if (!this.step?.stepType) {
       document.body.classList.add('hide-modal-background');
     }

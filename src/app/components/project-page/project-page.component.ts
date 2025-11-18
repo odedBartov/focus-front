@@ -641,7 +641,8 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   showNewStepModal() {
-    const dialogRef = this.dialog.open(NewStepModalComponent, { autoFocus: false, data: { paymentModel: this.project().paymentModel } });
+    const remainPrice = this.getProjectPrice() - this.paidMoney;
+    const dialogRef = this.dialog.open(NewStepModalComponent, { autoFocus: false, data: { paymentModel: this.project().paymentModel, defaultPrice: remainPrice } });
     const childInstance = dialogRef.componentInstance;
     childInstance.stepUpdated.subscribe(newStep => {
       this.createNewStep(newStep);
@@ -695,11 +696,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       });
     }
   }
-
-  // showNotesPopup(show: boolean) {
-  //   this.showNotes = show;
-  //   this.projectHoverService.projectHover('empty');
-  // }
 
   scrollToBottom() {
     const container = this.stepsContainer?.nativeElement;

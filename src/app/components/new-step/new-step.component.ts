@@ -31,6 +31,7 @@ export class NewStepComponent implements AfterViewInit {
   @Input() defaultType?: StepType;
   @Input() projectType: projectTypeEnum = projectTypeEnum.proccess;
   @Input() paymentModel?: paymentModelEnum;
+  @Input() defaultPrice?: number;
   @Input() isActive = false;
   @Input() isInModal = false;
   @Input() set steptInput(value: Step | undefined) {
@@ -93,6 +94,9 @@ export class NewStepComponent implements AfterViewInit {
   selectType(type: StepType) {
     document.body.classList.remove('hide-modal-background');
     this.newStep = new Step();
+    if (this.defaultPrice !== undefined) {
+      this.newStep.price = this.defaultPrice;
+    }
     this.newStep.stepType = type;
     this.scrollToBottom.emit();
     setTimeout(() => {
