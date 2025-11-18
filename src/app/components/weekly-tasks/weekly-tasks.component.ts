@@ -202,7 +202,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
   dropTask(event: CdkDragDrop<any[]>, date?: Date) {
     let isFutureRetainer = false;
     this.isDraggingTaskToProjects = false;
-    const oldDate = event.item.data.data.dateOnWeekly;
+    const oldDate = event.item.data?.dateOnWeekly;
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.updateTasksPosition(event.container.data);
