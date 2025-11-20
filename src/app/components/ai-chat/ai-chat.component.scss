@@ -60,6 +60,14 @@
         }
     }
 
+    .reset-chat-note {
+        display: flex;
+        text-align: center;
+        color: var(--default-gray);
+        font-size: 12px;
+        font-family: 'regular';
+    }
+
     .consent {
         .confirm {
             margin-top: 30px;

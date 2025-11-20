@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, effect, ElementRef, inject, Input, ViewChild, WritableSignal } from '@angular/core';
+import { Component, effect, ElementRef, inject, Input, ViewChild, WritableSignal } from '@angular/core';
 import { Project } from '../../models/project';
 import { HttpService } from '../../services/http.service';
 import { AiConversation, chatMessage, ChatRequest, ChatResponse } from '../../models/aiModels';
@@ -17,9 +17,11 @@ import { AuthenticationService } from '../../services/authentication.service';
   templateUrl: './ai-chat.component.html',
   styleUrl: './ai-chat.component.scss'
 })
-export class AiChatComponent implements AfterViewInit {
+export class AiChatComponent {
   @Input() project!: WritableSignal<Project>;
+  @Input() isExpand?: boolean;
   @ViewChild('conversationContainer') conversationContainer!: ElementRef;
+  @ViewChild('input') input!: ElementRef<HTMLInputElement>;
   httpService = inject(HttpService);
   animationService = inject(AnimationsService);
   aiChatService = inject(AiChatService);
@@ -41,17 +43,19 @@ export class AiChatComponent implements AfterViewInit {
     effect(() => {
       this.project();
       this.conversation = this.aiChatService.getConversation(this.project().id ?? "unKnown");
-      this.isConsentForAi = this.user?.projectsConsentForAi?.includes(this.project().id ?? "") ?? false;
+      if (!this.user) {
+        this.userServcie.getUser().subscribe(res => {
+          this.user = res;
+          this.isConsentForAi = this.user?.projectsConsentForAi?.includes(this.project().id ?? "") ?? false;
+        });
+      } else {
+        this.isConsentForAi = this.user?.projectsConsentForAi?.includes(this.project().id ?? "") ?? false;
+      }
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 1);
     });
 
-  }
-
-  ngAfterViewInit(): void {
-    this.userServcie.getUser().subscribe(res => {
-      this.user = res;
-      this.isConsentForAi = this.user.projectsConsentForAi?.includes(this.project().id ?? "") ?? false;
-    });
-    this.scrollToBottom();
   }
 
   consent() {
@@ -76,6 +80,7 @@ export class AiChatComponent implements AfterViewInit {
     request.projectId = this.project().id ?? "unKnown";
     request.ConversationId = this.conversationId;
     this.isWaitingForChat = true;
+    this.scrollToBottom();
     this.httpService.sendAiMessage(request).subscribe((res: ChatResponse) => {
       this.isWaitingForChat = false;
       this.userMessageText = '';
@@ -92,6 +97,9 @@ export class AiChatComponent implements AfterViewInit {
     const container = this.conversationContainer?.nativeElement?.parentElement;
     setTimeout(() => {
       container.scrollTop = container.scrollHeight;
+      if (this.input?.nativeElement) {
+        this.input.nativeElement.focus();
+      }
     }, 1);
   }
 

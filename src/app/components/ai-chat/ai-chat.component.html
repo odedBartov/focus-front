@@ -10,10 +10,16 @@
             <ng-lottie [options]="loadingOptions" class="loading-animation" *ngIf="isWaitingForChat" />
             <ng-container *ngIf="!isWaitingForChat">
                 <input class="new-small" [(ngModel)]="userMessageText" (keydown.enter)="sendMessage()"
-                    placeholder="אפשר לשאול אותי הכל">
+                    placeholder="אפשר לשאול אותי הכל" #input>
                 <img class="icon-send" (click)="sendMessage()" />
             </ng-container>
         </div>
+
+        <span *ngIf="isExpand" class="reset-chat-note">
+            תזכורת: 
+            <br>
+            השיחה עם ׳מאסטר פוקוס׳ מתאפסת לאחר 8 שעות ללא פעילות
+        </span>
     </div>
     <div class="consent" *ngIf="!isConsentForAi">
         <span class="new-small">
