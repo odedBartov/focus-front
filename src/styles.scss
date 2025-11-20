@@ -115,6 +115,11 @@
         max-width: 320px;
         font-size: var(--font-size-1);
         font-family: 'regular';
+        white-space: pre-line;
+
+        .mat-mdc-tooltip-surface {
+            text-align: start;
+        }
     }
 
     input,

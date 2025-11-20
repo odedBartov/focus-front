@@ -196,6 +196,11 @@ export class SummaryComponent implements OnInit {
     return greeting;
   }
 
+  tooltipText(i: number) {
+  return 'הכנסות צפויות: ' + this.futurePayments[i] + ' ₪\n' +'הכנסות: ' + this.pastPayments[i] + ' ₪\n' +'סך הכל: ' + (this.pastPayments[i] + this.futurePayments[i]) + ' ₪';
+}
+
+
   monthDiffCalendar(from: Date, to: Date = new Date()): number {
     const a = to.getFullYear() * 12 + to.getMonth();
     const b = from.getFullYear() * 12 + from.getMonth();
