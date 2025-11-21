@@ -2,7 +2,7 @@ import { IStepOrTask } from "./stepOrTask";
 
 
 export class StepTask implements IStepOrTask {
-    id: string;
+    id?: string;
     text?: string;
     isComplete?: boolean;
     dateOnWeekly?: Date;

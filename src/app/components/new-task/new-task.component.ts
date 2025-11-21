@@ -15,8 +15,9 @@ export class NewTaskComponent {
   @ViewChild('taskText', { static: false }) taskText!: ElementRef;
   @Output() createNewTask = new EventEmitter<StepTask>();
   @Input() set taskInput(value: IStepOrTask | undefined) {
-    if (value && value instanceof StepTask) {
+    if (value) {
       this.isEdit = true;
+      this.isShowNewStep = true;
       this.newTask = structuredClone(value);
       this.startNewTask();
     }
