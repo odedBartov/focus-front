@@ -14,9 +14,9 @@
             </div>
         </div>
     </div>
-    <div *ngIf="newStep.stepType !== undefined" class="details"
+    <div *ngIf="newStep?.stepType !== undefined" class="details"
         [ngClass]="{'details-padding': newStep && newStep.stepType !== undefined}">
-        <div class="task" *ngIf="newStep.stepType === stepTypeEnum.task">
+        <div class="task" *ngIf="newStep?.stepType === stepTypeEnum.task">
             <div class="title">
                 <div class="new-h2">
                     <span *ngIf="isEdit">{{isRetainer? 'עריכת משימה' : 'עריכת שלב'}}</span>
@@ -104,7 +104,7 @@
             </div>
         </div>
 
-        <div class="payment" *ngIf="newStep.stepType === stepTypeEnum.payment">
+        <div class="payment" *ngIf="newStep?.stepType === stepTypeEnum.payment">
             <div class="title">
                 <div class="new-h2">
                     <span *ngIf="isEdit">עריכת שלב </span>תשלום <span></span><span *ngIf="!isEdit">חדש</span>
@@ -143,7 +143,7 @@
             </div>
         </div>
 
-        <div class="create-step" *ngIf="newStep && newStep.stepType !== undefined">
+        <div class="create-step" *ngIf="newStep && newStep?.stepType !== undefined">
             <img class="icon-confirm-circle" (click)="createStep()" (keydown.enter)="createStep()" tabindex="1"/>
         </div>
     </div>

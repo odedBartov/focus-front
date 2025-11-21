@@ -468,6 +468,8 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         step.isComplete = step.isRecurring ? true : !step.isComplete;
         if (step.isComplete) {
           step.dateCompleted = new Date();
+          step.dateOnWeekly = new Date();
+          step.positionInWeeklyList = -1;
           if (this.project()) {
             let finishedSteps = 0;
             let notFinishedSteps = 0;
