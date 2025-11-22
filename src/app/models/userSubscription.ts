@@ -4,5 +4,5 @@ export class UserSubscription {
     title!: string;
     subscription!: subscriptionEnum;
     text!: string;
-    price?: number;
+    price?: string;
 }

@@ -33,8 +33,9 @@ export class ProfileComponent implements AfterViewInit {
   subscriptionEnum = subscriptionEnum;
   userSubscriptions: UserSubscription[] = [
     { title: 'פוקוס בקטנה', subscription: subscriptionEnum.free, text: 'פרויקט פעיל אחד, ללא פיצ׳רים מתקדמים וללא תמיכה טכנית' },
-    { title: 'פוקוס בצמיחה', subscription: subscriptionEnum.partial, text: 'עד 3 פרויקטים פעילים, ללא מנטור AI ואינטגרציות חכמות', price: 10 },
-    { title: 'פוקוס על מלא', subscription: subscriptionEnum.full, text: 'ללא מגבלת פרויקטים, פיצ׳רים מתקדמים ותמיכה טכנית', price: 29 }
+    { title: 'פוקוס בצמיחה', subscription: subscriptionEnum.partial, text: 'עד 3 פרויקטים פעילים, ללא מנטור AI ואינטגרציות חכמות', price: '10 ₪ לחודש' },
+    { title: 'פוקוס על מלא', subscription: subscriptionEnum.full, text: 'ללא מגבלת פרויקטים, פיצ׳רים מתקדמים ותמיכה טכנית', price: '30 ₪ לחודש' },
+    { title: 'פוקוס על מלא', subscription: subscriptionEnum.full, text: 'ללא מגבלת פרויקטים, פיצ׳רים מתקדמים ותמיכה טכנית', price: 'גרסת נסיון' }
   ]
   currentUserSubscription: UserSubscription = this.userSubscriptions[0];
 

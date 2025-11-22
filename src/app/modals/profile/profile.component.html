@@ -52,7 +52,7 @@
         <div class="subscription">
             <span class="new-text-bold">{{currentUserSubscription.title}}</span>
             <span class="new-small">{{currentUserSubscription.text}}</span>
-            <span class="new-small">{{currentUserSubscription.price? currentUserSubscription.price + ' ₪ + מע״מ לחודש' :  'חינם'}}</span>
+            <span class="new-small">{{currentUserSubscription.price? currentUserSubscription.price :  'חינם'}}</span>
             <div class="un-subscribe new-small">
                 <span (click)="unSubscribe()">ביטול התכנית</span>
             </div>
