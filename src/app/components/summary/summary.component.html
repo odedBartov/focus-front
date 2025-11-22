@@ -23,11 +23,14 @@
             <div class="background">
                 <div class="bars">
                     <div class="month" *ngFor="let month of graphMonths; let i = index">
-                        <div class="progress" [style.height.%]="getFutureGraphValue(i)" matTooltipPosition="above"
-                            matTooltipClass="custom-tooltip" [matTooltip]="tooltipText(i)">
-                            <div class="progress-bar-vertical">
+                        <div class="progress" [style.height.%]="getFutureGraphValue(i)" [matTooltipDisabled]="i !== 2"
+                            [matTooltip]="tooltipText(i)" matTooltipPosition="above" matTooltipClass="custom-tooltip">
+                            <div class="progress-bar-vertical" [matTooltip]="tooltipText(i)" matTooltipPosition="above"
+                                matTooltipClass="custom-tooltip" [matTooltipDisabled]="isPayedHovered || i == 2">
                                 <div class="progress-fill-vertical" [style.height.%]="getPastGraphValue(i)"
-                                    (mouseenter)="onInnerEnter()" (mouseleave)="onInnerLeave()"></div>
+                                    matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                                    (mouseenter)="onInnerEnter()" (mouseleave)="onInnerLeave()"
+                                    [matTooltip]="tooltipText(i)" [matTooltipDisabled]="i == 2"></div>
                             </div>
                         </div>
                     </div>

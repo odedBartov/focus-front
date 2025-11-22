@@ -197,8 +197,14 @@ export class SummaryComponent implements OnInit {
   }
 
   tooltipText(i: number) {
-  return 'הכנסות צפויות: ' + this.futurePayments[i] + ' ₪\n' +'הכנסות: ' + this.pastPayments[i] + ' ₪\n' +'סך הכל: ' + (this.pastPayments[i] + this.futurePayments[i]) + ' ₪';
-}
+    if (i  < 2) {
+      return 'הכנסות צפויות: '+this.futurePayments[i]+' ₪';
+    } else if (i == 2) {
+      return 'הכנסות: ' + this.pastPayments[i] + ' ₪\n' + 'הכנסות צפויות: ' + this.futurePayments[i] + ' ₪\n' + 'סך הכל: ' + (this.pastPayments[i] + this.futurePayments[i]) + ' ₪';
+    } else {
+      return 'הכנסות: '+this.pastPayments[i]+' ₪';
+    }
+  }
 
 
   monthDiffCalendar(from: Date, to: Date = new Date()): number {
