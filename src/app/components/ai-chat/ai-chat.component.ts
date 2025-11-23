@@ -36,9 +36,13 @@ export class AiChatComponent {
   loadingOptions: AnimationOptions = {
     path: '/assets/animations/loader.json',
   };
+  chatCleaner: any;
 
   constructor() {
     this.conversationId = crypto.randomUUID();
+    this.chatCleaner = setInterval(() => {
+      this.aiChatService.handleStaleChat(this.conversation);
+    }, 60000);
 
     effect(() => {
       this.project();

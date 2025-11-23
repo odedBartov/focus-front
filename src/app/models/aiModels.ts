@@ -18,8 +18,10 @@ export class AiConversation {
     messages: chatMessage[] = [];
     chatId = "";
     projectId = "";
+    lastDate!: Date;
 
     constructor() {
         this.chatId = crypto.randomUUID();
+        this.lastDate = new Date();
     }
 }
