@@ -151,4 +151,8 @@ export class HttpService {
     const headers = this.generateHeaders();
     return this.httpClient.post<ChatResponse>(this.apiUrl + "Ai/chatWithAi", request, headers);
   }
+
+  giveUserBonusSubscription(email: string) {
+    return this.httpClient.post(this.apiUrl + "Auth/giveUserBonusSubscription", {email: email});
+  }
 }
