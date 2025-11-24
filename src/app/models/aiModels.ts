@@ -1,5 +1,5 @@
 export class ChatRequest {
-    ConversationId = "";
+    ConversationId? = "";
     message = "";
     projectId = "";
 }
@@ -21,7 +21,6 @@ export class AiConversation {
     lastDate!: Date;
 
     constructor() {
-        this.chatId = crypto.randomUUID();
         this.lastDate = new Date();
     }
 }

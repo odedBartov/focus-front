@@ -27,7 +27,7 @@ export class AiChatComponent {
   aiChatService = inject(AiChatService);
   userServcie = inject(UserService);
   authenticationService = inject(AuthenticationService);
-  conversationId = "";
+  conversationId?: string;
   conversation = new AiConversation();
   userMessageText = "";
   isConsentForAi: boolean | undefined = true;
@@ -39,7 +39,6 @@ export class AiChatComponent {
   chatCleaner: any;
 
   constructor() {
-    this.conversationId = crypto.randomUUID();
     this.chatCleaner = setInterval(() => {
       this.aiChatService.handleStaleChat(this.conversation);
     }, 60000);
