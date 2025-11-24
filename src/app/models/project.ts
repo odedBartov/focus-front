@@ -26,6 +26,7 @@ export class Project {
     monthlyPaymentDay?: number; // day in the month. 1-30
     retainerPayments: RetainerPayment[]; // list of all retainer payments logged for this project - only for monthly retainer
     hourlyWorkSessions: HourlyWorkSession[]; // list of all hourly work sessions logged for this project - only for hourly retainer
+    isConcentForAi?: boolean;
 
     constructor() {
         this.id = '';

@@ -50,11 +50,10 @@ export class AiChatComponent {
       if (!this.user) {
         this.userServcie.getUser().subscribe(res => {
           this.user = res;
-          this.isConsentForAi = this.user?.projectsConsentForAi?.includes(this.project().id ?? "") ?? false;
         });
-      } else {
-        this.isConsentForAi = this.user?.projectsConsentForAi?.includes(this.project().id ?? "") ?? false;
       }
+      this.isConsentForAi = this.project().isConcentForAi;
+      
       setTimeout(() => {
         this.scrollToBottom();
       }, 1);
@@ -65,13 +64,8 @@ export class AiChatComponent {
   consent() {
     this.isConsentForAi = true;
     if (this.user) {
-      if (!this.user.projectsConsentForAi) {
-        this.user.projectsConsentForAi = [];
-      }
-      this.user.projectsConsentForAi?.push(this.project().id ?? "");
-      this.httpService.updateUser(this.user).subscribe(res => {
-        this.authenticationService.setProjectsConsentForAi(res.projectsConsentForAi ?? []);
-      });
+      this.project().isConcentForAi = true;
+      this.httpService.updateProjects([this.project()]).subscribe(res => { });
     }
   }
 

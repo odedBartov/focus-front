@@ -34,7 +34,6 @@ export class AuthenticationComponent {
               this.httpService.updateUser(res).subscribe(newUser => {
                 this.animationsService.changeIsloading(false);
                 this.authenticationService.setUserName(newUser.firstName, newUser.lastName);
-                this.authenticationService.setProjectsConsentForAi(newUser.projectsConsentForAi);
                 if (this.authenticationService.getIsNewUser()) {
                   this.authenticationService.setNewUser(false);
                   this.dialog.open(FreeTrialStartComponent).afterClosed().subscribe(() => {
