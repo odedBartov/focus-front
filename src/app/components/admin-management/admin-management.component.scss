@@ -1,9 +1,21 @@
 .main {
     padding-top: 200px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     gap: 30px;
     align-items: center;
     width: 100%;
     height: 100%;
+
+    .bonus {
+        gap: 30px;;
+        display: flex;
+    }
+
+    .users {
+        display: flex;
+        flex-direction: column;
+        white-space: pre-line;
+    }
 }

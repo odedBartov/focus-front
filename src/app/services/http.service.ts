@@ -155,4 +155,9 @@ export class HttpService {
   giveUserBonusSubscription(email: string) {
     return this.httpClient.post(this.apiUrl + "Auth/giveUserBonusSubscription", {email: email});
   }
+
+  getAllUsers() {
+    const headers = this.generateHeaders();
+    return this.httpClient.get<User[]>(this.apiUrl + "Auth/getAllUsers", headers);
+  }
 }

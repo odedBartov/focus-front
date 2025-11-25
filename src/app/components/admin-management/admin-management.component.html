@@ -1,4 +1,22 @@
 <div class="main">
-    <input [(ngModel)]="email"/>
-    <button (click)="giveBonusDayes()">תן למשתמש זה 30 ימי פרימיום</button>
+    <div class="bonus">
+        <input [(ngModel)]="email" />
+        <button (click)="giveBonusDayes()">תן למשתמש זה 30 ימי פרימיום</button>
+    </div>
+
+    <div class="users">
+        ישנם במערכת:
+        <span>
+            {{freeUSers}} משתמשים חינמיים
+        </span>
+        <span>
+            {{partialUsers}} משתמשים במנוי חלקי
+        </span>
+        <span>
+            {{fullUsers}} משתמשים במנוי מלא
+        </span>
+        <span>
+            {{trialUsers}} משתמשים בתקופת נסיון
+        </span>
+    </div>
 </div>
