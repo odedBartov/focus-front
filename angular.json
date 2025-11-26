@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "projectsManager": {
+    "Focus": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -68,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "projectsManager:build:production"
+              "buildTarget": "Focus:build:production"
             },
             "development": {
-              "buildTarget": "projectsManager:build:development"
+              "buildTarget": "Focus:build:development"
             }
           },
           "defaultConfiguration": "development"
