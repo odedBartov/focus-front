@@ -1,4 +1,5 @@
 <div class="main">
+    <span tabindex="0"></span>
     <div class="header">
         <img src="assets/icons/coffee_beans.svg" />
         <span class="new-h1">סליחה,</span>
@@ -12,7 +13,7 @@
         נשמח לקבל עדכון ולעזור:
     </span>
     <div class="whatsapp-div" (click)="openWhatsapp()">
-        <div class="whatsapp">
+        <div class="whatsapp" (keydown.enter)="openWhatsapp()" tabindex="0">
             <span>פנייה בוואטסאפ</span>
         </div>
     </div>
