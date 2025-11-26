@@ -187,9 +187,8 @@
                 <span class="title" [ngClass]="{'opened': openedAccordion == 1}" (click)="clickOnAccordion(1)">משימות
                     פתוחות</span>
                 <div class="content" [class]="(openedAccordion === 1) ? 'expanded' : 'collapsed'">
-                    <div class="retainer-steps" *ngIf="isRetainer" cdkDropList
-                        cdkDropListOrientation="mixed" #stepsContainer
-                        (cdkDropListDropped)="dropStep($event, retainerActiveSteps)">
+                    <div class="retainer-steps" *ngIf="isRetainer" cdkDropList cdkDropListOrientation="mixed"
+                        #stepsContainer (cdkDropListDropped)="dropStep($event, retainerActiveSteps)">
                         <div class="retainer-step" *ngFor="let step of retainerActiveSteps; let i = index" #stepDiv
                             cdkDrag>
                             <div *ngIf="animationHackFlag">
@@ -262,12 +261,12 @@
                 <span class="title" [ngClass]="{'opened': openedAccordion == 2}" (click)="clickOnAccordion(2)">משימות
                     עתידיות</span>
                 <div class="content" [class]="(openedAccordion === 2) ? 'expanded' : 'collapsed'">
-                    <div class="retainer-steps" *ngIf="isRetainer" cdkDropList
-                        cdkDropListOrientation="mixed" #stepsContainer
-                        (cdkDropListDropped)="dropStep($event, retainerFutureSteps)">
+                    <div class="retainer-steps" *ngIf="isRetainer" cdkDropList cdkDropListOrientation="mixed"
+                        #stepsContainer (cdkDropListDropped)="dropStep($event, retainerFutureSteps)">
                         <div class="retainer-step-future not-finished" style="break-inside: avoid;"
-                            *ngFor="let step of retainerFutureSteps; let i = index"
-                            (cdkDragStarted)="adjustCdkPreviewHeight(stepDiv)" #stepDiv cdkDrag>
+                            *ngFor="let step of retainerFutureSteps; let i = index" (mouseenter)="hoverStep(step.id, i)"
+                            (mouseleave)="hoverStepId = undefined" (cdkDragStarted)="adjustCdkPreviewHeight(stepDiv)"
+                            #stepDiv cdkDrag>
                             <div *ngIf="animationHackFlag">
                                 <div class="step-header active">
                                     <span class="new-text-bold">{{step.name}}</span>
@@ -276,6 +275,7 @@
                                 <textarea class="new-small" disabled="true"
                                     *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
                                     #descriptions autoResize
+                                    [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"
                                     rows="1">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
                                 <div class="tasks" *ngIf="step.tasks">
                                     <div class="task-list">

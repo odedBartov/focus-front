@@ -187,8 +187,8 @@ export class ProjectsListComponent implements OnInit {
 
   openProjectModal() {
     const maxProjects = this.userSubscription == subscriptionEnum.free ? 1 : (this.userSubscription == subscriptionEnum.partial ? 3 : -1);
-    if (maxProjects > -1 && maxProjects <= this.projects().length) {
-      this.dialog.open(PaidFeatureModalComponent);
+    if (maxProjects > -1 && maxProjects <= this.projects().length) {      
+      this.dialog.open(PaidFeatureModalComponent, { data: { subscription:  this.userSubscription === subscriptionEnum.partial? subscriptionEnum.full : subscriptionEnum.free} });
     } else {
       const dialogRef = this.dialog.open(NewProjectComponent);
       dialogRef.afterClosed().subscribe(res => {
