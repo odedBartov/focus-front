@@ -27,7 +27,6 @@ export class AiChatComponent {
   aiChatService = inject(AiChatService);
   userServcie = inject(UserService);
   authenticationService = inject(AuthenticationService);
-  conversationId?: string;
   conversation = new AiConversation();
   userMessageText = "";
   isConsentForAi: boolean | undefined = true;
@@ -45,7 +44,7 @@ export class AiChatComponent {
 
     effect(() => {
       this.project();
-      this.conversation = this.aiChatService.getConversation(this.project().id ?? "unKnown");
+      this.conversation = this.aiChatService.getConversation(this.project().id ?? "unKnown");        
       if (!this.user) {
         this.userServcie.getUser().subscribe(res => {
           this.user = res;
@@ -70,21 +69,21 @@ export class AiChatComponent {
 
   sendMessage() {
     const userMessage = new chatMessage();
-    userMessage.value = this.userMessageText;
+    userMessage.role = 'user';
+    userMessage.content = this.userMessageText;
     this.conversation.messages.push(userMessage);
     const request = new ChatRequest();
     request.message = this.userMessageText;
     request.projectId = this.project().id ?? "unKnown";
-    request.ConversationId = this.conversationId;
+    request.ConversationId = this.conversation.id;
     this.isWaitingForChat = true;
     this.scrollToBottom();
     this.httpService.sendAiMessage(request).subscribe((res: ChatResponse) => {
-      this.conversationId = res.conversationId;
+      this.conversation.id = res.conversationId;
       this.isWaitingForChat = false;
       this.userMessageText = '';
       const reply = new chatMessage;
-      reply.sentByUser = false;
-      reply.value = res.reply;
+      reply.content = res.reply;
       this.conversation.messages.push(reply);
       this.aiChatService.setConversation(this.conversation);
       this.scrollToBottom();

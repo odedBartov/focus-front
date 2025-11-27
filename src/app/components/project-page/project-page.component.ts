@@ -28,6 +28,7 @@ import { PaymentHistoryModalComponent } from '../../modals/payment-history-modal
 import { WorkSessionService } from '../../services/work-session.service';
 import { getNextRetainerOccurrenceDate, initRetainerSteps } from '../../helpers/retainerFunctions';
 import { OpenNotesComponent } from '../open-notes/open-notes.component';
+import { AiChatService } from '../../services/ai-chat.service';
 
 @Component({
   selector: 'app-project-page',
@@ -71,6 +72,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   projectsService = inject(ProjectsService);
   authenticationService = inject(AuthenticationService);
   WorkSessionService = inject(WorkSessionService);
+  aiChatService = inject(AiChatService);
   @Output() navigateToHomeEmitter = new EventEmitter<void>();
   @ViewChild('stepsContainer', { static: false }) stepsContainer?: ElementRef;
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
@@ -126,6 +128,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.project = this.projectsService.getCurrentProject();
     effect(() => {
       const value = this.project();
+      this.aiChatService.initProjectConversation(value.id);
       if (value?.steps) {
         value.steps.sort((a, b) => a.positionInList - b.positionInList);
         if (value.projectType === projectTypeEnum.retainer) {

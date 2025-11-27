@@ -1,5 +1,5 @@
 export class ChatRequest {
-    ConversationId? = "";
+    ConversationId?: string;
     message = "";
     projectId = "";
 }
@@ -10,15 +10,15 @@ export class ChatResponse {
 }
 
 export class chatMessage {
-    value = "";
-    sentByUser = true;
+    content = "";
+    role = "";
 }
 
 export class AiConversation {
+    id?: string;
     messages: chatMessage[] = [];
-    chatId = "";
     projectId = "";
-    lastDate!: Date;
+    lastDate: Date;
 
     constructor() {
         this.lastDate = new Date();

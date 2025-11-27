@@ -1,13 +1,28 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { AiConversation } from '../models/aiModels';
+import { HttpService } from './http.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AiChatService {
+  httpService = inject(HttpService);
   storageKey = "aiChat-";
   CONVERSATION_TTL = 8 * 60 * 60 * 1000; // 8 hours
-  constructor() { 
+  constructor() {
+  }
+
+  initProjectConversation(projectId?: string) {
+    if (projectId) {
+      const chat = localStorage.getItem(this.storageKey + projectId);
+      if (!chat) {
+        this.httpService.getConversationWithProjectId(projectId).subscribe((res: AiConversation) => {
+          if (res) {
+            this.setConversation(res);
+          }
+        });
+      }
+    }
   }
 
   setConversation(chat: AiConversation) {

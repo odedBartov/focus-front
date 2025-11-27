@@ -3,7 +3,7 @@
         <div class="conversation">
             <div class="message new-small" *ngFor="let message of conversation.messages">
                 <span
-                    [ngClass]="{'user-message': message.sentByUser, 'ai-message': !message.sentByUser}">{{message.value}}</span>
+                    [ngClass]="{'user-message': message.role === 'user', 'ai-message': message.role !== 'user'}">{{message.content}}</span>
             </div>
         </div>
         <div class="input">
