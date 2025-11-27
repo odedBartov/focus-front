@@ -79,6 +79,7 @@ export class AiChatComponent {
     this.isWaitingForChat = true;
     this.scrollToBottom();
     this.httpService.sendAiMessage(request).subscribe((res: ChatResponse) => {
+      this.conversationId = res.conversationId;
       this.isWaitingForChat = false;
       this.userMessageText = '';
       const reply = new chatMessage;
@@ -87,6 +88,8 @@ export class AiChatComponent {
       this.conversation.messages.push(reply);
       this.aiChatService.setConversation(this.conversation);
       this.scrollToBottom();
+    }, error => {
+      this.isWaitingForChat = false;
     });
   }
 

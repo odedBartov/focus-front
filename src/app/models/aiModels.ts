@@ -5,7 +5,7 @@ export class ChatRequest {
 }
 
 export class ChatResponse {
-    chatId = "";
+    conversationId = "";
     reply = "";
 }
 
