@@ -274,7 +274,7 @@
                                 </div>
                                 <textarea class="new-small" disabled="true"
                                     *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
-                                    #descriptions autoResize
+                                    #descriptions
                                     [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"
                                     rows="1">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
                                 <div class="tasks" *ngIf="step.tasks">
