@@ -1,7 +1,12 @@
 <div class="main">
-    <div class="bonus">
-        <input [(ngModel)]="email" placeholder="כתובת אימייל"/>
+    <div class="button">
+        <input [(ngModel)]="bonusInput" placeholder="כתובת אימייל"/>
         <button (click)="giveBonusDayes()">תן למשתמש זה 30 ימי פרימיום</button>
+    </div>
+
+    <div class="button">
+        <input [(ngModel)]="deleteInput" placeholder="כתובת אימייל"/>
+        <button (click)="deleteUser()">מחק משתמש זה</button>
     </div>
 
     <div class="users">

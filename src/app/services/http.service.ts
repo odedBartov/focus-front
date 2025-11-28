@@ -165,4 +165,9 @@ export class HttpService {
     const headers = this.generateHeaders();
     return this.httpClient.get<User[]>(this.apiUrl + "Auth/getAllUsers", headers);
   }
+
+  deleteUser(email: string) {
+    const headers = this.generateHeaders();
+    return this.httpClient.delete(this.apiUrl + "Auth/deleteUser?email=" + email, headers);
+  }
 }

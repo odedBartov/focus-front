@@ -12,14 +12,15 @@ import { subscriptionEnum } from '../../models/enums';
 })
 export class AdminManagementComponent implements AfterViewInit {
   httpService = inject(HttpService);
-  email = "";
+  bonusInput = "";
+  deleteInput = "";
   freeUSers = 0;
   partialUsers = 0;
   fullUsers = 0;
   trialUsers = 0;
 
   giveBonusDayes() {
-    this.httpService.giveUserBonusSubscription(this.email).subscribe(res => {
+    this.httpService.giveUserBonusSubscription(this.bonusInput).subscribe(res => {
       alert("הפעולה בוצעה בהצלחה");
     }, err => {
       alert(err.error);
@@ -46,6 +47,14 @@ export class AdminManagementComponent implements AfterViewInit {
             break;
         }
       });
+    });
+  }
+
+  deleteUser() {
+    this.httpService.deleteUser(this.deleteInput).subscribe(res => {
+      alert("הפעולה בוצעה בהצלחה");
+    }, err => {
+      alert(err.error);
     });
   }
 }
