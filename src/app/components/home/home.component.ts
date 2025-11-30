@@ -27,6 +27,7 @@ import { FreeTrialEndComponent } from '../../modals/free-trial-end/free-trial-en
 import { WorkSessionService } from '../../services/work-session.service';
 import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-feature-modal.component';
 import { WebSocketService } from '../../services/web-socket.service';
+import { AutoRefreshService } from '../../services/auto-refresh.service';
 
 @Component({
   selector: 'app-home',
@@ -40,6 +41,7 @@ import { WebSocketService } from '../../services/web-socket.service';
 })
 export class HomeComponent implements OnInit {
   @ViewChild('projectPage', { static: false }) projectPage?: ProjectPageComponent;
+  autoRefreshService = inject(AutoRefreshService);
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
   projectHoverService = inject(ProjectHoverService);
