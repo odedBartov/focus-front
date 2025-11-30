@@ -26,6 +26,7 @@ import { WeeklyTasksComponent } from '../weekly-tasks/weekly-tasks.component';
 import { FreeTrialEndComponent } from '../../modals/free-trial-end/free-trial-end.component';
 import { WorkSessionService } from '../../services/work-session.service';
 import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-feature-modal.component';
+import { WebSocketService } from '../../services/web-socket.service';
 
 @Component({
   selector: 'app-home',
@@ -50,6 +51,7 @@ export class HomeComponent implements OnInit {
   router = inject(Router);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);
+  WebSocketService = inject(WebSocketService);
   activeProjects!: WritableSignal<Project[]>;
   unActiveProjects!: WritableSignal<Project[]>;
   noProject!: WritableSignal<Project>;
@@ -121,6 +123,7 @@ export class HomeComponent implements OnInit {
     }, 1);
 
     this.checkIfFreeTrialEnded();
+    this.WebSocketService.connect(this.authenticationService.getUserId() ?? "noUser");
   }
 
   checkIfFreeTrialEnded() {

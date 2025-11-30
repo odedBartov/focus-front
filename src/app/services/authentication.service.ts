@@ -14,6 +14,7 @@ export class AuthenticationService {
   userPicture = "user-picture";
   isReadOnly = "is-read-only";
   subscription = "subscription";
+  userId = "userId";
   isReadOnlySignal = signal<boolean>(false);
 
   getToken() {
@@ -81,6 +82,14 @@ export class AuthenticationService {
       return subscriptionValue as subscriptionEnum;
     }
     return subscriptionEnum.free; // Default to free if not set
+  }
+
+  getUserId() {
+    return localStorage.getItem(this.userId);
+  }
+
+  setUserId(userId: string) {
+    localStorage.setItem(this.userId, userId);
   }
 
   logOut() {
