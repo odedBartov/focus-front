@@ -3,7 +3,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/FOCUS-FRONT/browser",
+  "outputDirectory": "dist/FOCUS-FRONT",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ],
