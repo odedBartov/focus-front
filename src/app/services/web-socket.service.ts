@@ -10,6 +10,8 @@ export class WebSocketService {
   constructor() { }
 
   connect(userId: string) {
+    console.log("trying to connect to socket");
+    
     this.ws = new WebSocket(`wss://${this.wsUrl}/ws?userId=${userId}`);
     console.log("connected to socket with user id" + userId);
     
