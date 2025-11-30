@@ -19,7 +19,7 @@ export class GoogleSigninComponent implements OnInit {
   termsAndConditionsUrl: string = 'https://arieladler.co.il/focus/focus-terms/';
   privacyPolicyUrl: string = 'https://arieladler.co.il/focus/focus-privacy/';
   ngOnInit(): void {
-    //this.initGoogleClient();
+    this.initGoogleClient();
   }
 
   initGoogleClient() {
@@ -36,7 +36,7 @@ export class GoogleSigninComponent implements OnInit {
   }
 
   onGoogleSignInClick(): void {
-    this.initGoogleClient();
+    // this.initGoogleClient();
     this.codeClient.requestCode();
   }
 
