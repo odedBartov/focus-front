@@ -2,7 +2,8 @@
   "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
-  "buildCommand": "npm run build",
+  "framework": "angular",
+  "buildCommand": "npm run build -- --configuration production",
   "outputDirectory": "dist/focus/browser",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
