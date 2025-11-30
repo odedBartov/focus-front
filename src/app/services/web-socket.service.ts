@@ -12,6 +12,9 @@ export class WebSocketService {
   connect(userId: string) {
     this.ws = new WebSocket(`wss://${this.wsUrl}/ws?userId=${userId}`);
     this.ws.onmessage = (event) => {
+      console.log("got message!");
+      console.log(event.data);
+      
       const message = JSON.parse(event.data);
       if (message.shouldRefresh) {
         window.location.reload();
