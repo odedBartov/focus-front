@@ -1,10 +1,13 @@
 {
-  "version": 2,
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "buildCommand": "npm run build -- --configuration production",
-  "outputDirectory": "dist/focus/browser",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=1, must-revalidate"
+        }
+      ]
+    }
   ]
 }
