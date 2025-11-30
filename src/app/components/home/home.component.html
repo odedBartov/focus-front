@@ -9,7 +9,7 @@
           <img [src]="tab.id === activeTab.id ?tab.icon : tab.disabledIcon" />
         </div>
       </div>
-      <img class="profile" [ngClass]="{pointer: !isReadOnly()}" [src]="userPicture"
+      <img class="profile" [ngClass]="{pointer: !isReadOnly()}" [src]="userPicture" loading="lazy"
         (click)="isReadOnly()? '' : navigateToProfile()" />
     </ng-container>
     <ng-container *ngIf="openNotesSignal()">
