@@ -13,7 +13,7 @@ export class WebSocketService {
     console.log("trying to connect to socket");
     
     this.ws = new WebSocket(`wss://${this.wsUrl}/ws?userId=${userId}`);
-    console.log("connected to socket with user id" + userId);
+    console.log("connected to socket with user id - " + userId);
     
     this.ws.onmessage = (event) => {
       console.log("got message!");
