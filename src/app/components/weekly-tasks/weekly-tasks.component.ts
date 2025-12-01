@@ -102,7 +102,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
 
   initTasks() {
     const lists = this.projectsService.populateCalendarTasks();
-    this.tasksWithDate = lists.tasksWithDate;
+    this.tasksWithDate = lists.tasksWithDate;    
     this.tasksWithoutDate = lists.tasksWithoutDate;
     this.currentAndFutureTasks = lists.currentAndFutureTasks;
     this.tasksWithDate = this.tasksWithDate.sort((a, b) => this.sortTasksAndSteps(a, b));
@@ -212,6 +212,9 @@ export class WeeklyTasksComponent implements AfterViewInit {
       isFutureRetainer = true;
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
       item.data.positionInWeeklyList = event.currentIndex;
+      if (date) { 
+        item.data.dateOnWeekly = date;
+      }
       this.httpService.createStep(item.data).subscribe((res: Step) => {
         const stepsToUpdate: Step[] = [];
         if (isStep(item.data) && item.data.originalRetainerStep) {
@@ -221,7 +224,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
           item.data.originalRetainerStep.futureModifiedTasks.push(oldDate);
           stepsToUpdate.push(item.data.originalRetainerStep);
         }
-
+        
         item.data = res;
         if (res.projectId) {
           this.projectsService.addStepToProject(res.projectId, res);
@@ -229,7 +232,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
 
         this.initPresentedDays();
         this.updateTasks(event.previousContainer === event.container ? [] : event.previousContainer.data, event.container.data, stepsToUpdate);
-        this.projectsService.addStepToProject(item.project?.id ?? '', item.data as Step);
       });
     } else {
       if (event.previousContainer === event.container) {
@@ -259,7 +261,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
     if (!isFutureRetainer) {
       this.initPresentedDays();
       this.updateTasks(event.previousContainer === event.container ? [] : event.previousContainer.data, event.container.data);
-      this.initTasks()
+      // this.initTasks()
     }
   }
 
