@@ -114,6 +114,8 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.WorkSessionService.changeIsSessionActive(value !== 1);
   }
   sessionTime = 0;
+  lastStartTime = 0;
+  accumulatedTime = 0;
   sessionTimer?: any;
   retainerPaymentName = '';
   openedAccordion = 1;
@@ -270,9 +272,13 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   resumeSessionTimer() {
     this.WorkSessionService.changeIsSessionActive(true);
+    this.accumulatedTime = this.sessionTime;
+    this.lastStartTime = Date.now();
     if (!this.sessionTimer) {
       this.sessionTimer = setInterval(() => {
-        this.sessionTime += 1000;
+        const currentTime = Date.now();
+        const elapsed = currentTime - this.lastStartTime; // elapsed time since resume
+        this.sessionTime = this.accumulatedTime + elapsed;
       }, 1000);
     }
   }
@@ -283,14 +289,16 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.retainerPaymentName = this.retainerActiveSteps[0].name ?? 'שלב נוכחי';
   }
 
-  pauseSessionTimer() {
-    this.WorkSessionService.storeSession(this.project().id, this.sessionTime);
-    this.WorkSessionService.changeIsSessionActive(false);
-    if (this.sessionTimer) {
-      clearInterval(this.sessionTimer);
-      this.sessionTimer = undefined;
-    }
+  pauseSessionTimer() {  
+  this.WorkSessionService.storeSession(this.project().id, this.sessionTime);
+  this.WorkSessionService.changeIsSessionActive(false);
+  if (this.sessionTimer) {
+    clearInterval(this.sessionTimer);
+    this.sessionTimer = undefined;
+    this.lastStartTime = 0;
+    this.accumulatedTime = 0;
   }
+}
 
   deleteWorkingSession(event: Event) {
     this.WorkSessionService.deleteSession(this.project().id);
