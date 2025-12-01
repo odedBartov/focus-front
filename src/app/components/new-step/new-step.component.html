@@ -25,7 +25,7 @@
             </div>
             <div class="text-and-input">
                 <span class="text new-small">{{isRetainer? 'שם המשימה' : 'שם השלב'}}</span>
-                <input class="text new-text" type="text" [(ngModel)]="newStep.name" #stepNameInput tabindex="1">
+                <input class="text new-text" type="text" [(ngModel)]="newStep.name" #stepNameInput tabindex="1" (keydown.enter)="createStep()">
                 <div class="error-container new-small">
                     <span *ngIf="submitted && !newStep.name" class="error">אנא הזינו שם</span>
                 </div>
