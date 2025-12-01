@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 declare global {
   interface Window {
@@ -13,14 +13,11 @@ declare global {
   templateUrl: './google-signin.component.html',
   styleUrl: 'google-signin.component.scss'
 })
-export class GoogleSigninComponent implements OnInit {
+export class GoogleSigninComponent {
   @Output() googleLoginEmitter = new EventEmitter<string>();
   private codeClient: any;
   termsAndConditionsUrl: string = 'https://arieladler.co.il/focus/focus-terms/';
   privacyPolicyUrl: string = 'https://arieladler.co.il/focus/focus-privacy/';
-  ngOnInit(): void {
-    this.initGoogleClient();
-  }
 
   initGoogleClient() {
     this.codeClient = window.google.accounts.oauth2.initCodeClient({
@@ -36,8 +33,10 @@ export class GoogleSigninComponent implements OnInit {
   }
 
   onGoogleSignInClick(): void {
-    // this.initGoogleClient();
-    this.codeClient.requestCode();
+    this.initGoogleClient();
+    setTimeout(() => {
+      this.codeClient.requestCode();
+    }, 1);
   }
 
   goToTermsAndConditions() {
