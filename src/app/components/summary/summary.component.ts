@@ -3,7 +3,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { CommonModule } from '@angular/common';
 import { Project } from '../../models/project';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { paymentModelEnum, ProjectStatus, projectTypeEnum, StepType } from '../../models/enums';
+import { paymentModelEnum, ProjectStatus, projectTypeEnum, recurringDateTypeEnum, StepType } from '../../models/enums';
 import { Step } from '../../models/step';
 import { HourlyWorkSession } from '../../models/hourlyWorkSession';
 
@@ -92,7 +92,7 @@ export class SummaryComponent implements OnInit {
     this.futurePayments[2] = filteredMonths[2].reduce((sum, step) => sum + (!step.isComplete ? step.price : 0), 0);
     this.futurePayments[3] = 0;
     this.futurePayments[4] = 0;
-    this.calculateMonthlyRetainerPayments();
+    this.calculateMonthlyRetainerPayments(paymentSteps);
     this.calculateHourlyRetainerPayments();
 
     this.calculateGraphScale();
@@ -133,7 +133,7 @@ export class SummaryComponent implements OnInit {
     return (value / this.maxGraphValue) * 100;
   }
 
-  calculateMonthlyRetainerPayments() {
+  calculateMonthlyRetainerPayments(paymentSteps: Step[]) {
     if (this.updatedProjects) {
       this.updatedProjects.forEach(project => {
         if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.monthly) {
@@ -141,7 +141,23 @@ export class SummaryComponent implements OnInit {
           this.futurePayments[1] += project.reccuringPayment ?? 0;
         }
       });
+
     }
+
+    const now = new Date();
+    const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    paymentSteps.forEach(step => {
+      if (step.isComplete &&
+        step.stepType === StepType.payment &&
+        step.isRecurring &&
+        step.recurringDateType === recurringDateTypeEnum.month &&
+        step.dateCompleted) {
+        const dateCompleted = new Date(step.dateCompleted);
+        if (dateCompleted < startOfThisMonth) {
+          this.futurePayments[2] += step.price;
+        }
+      }
+    });
   }
 
   calculateHourlyRetainerPayments() {
@@ -199,12 +215,12 @@ export class SummaryComponent implements OnInit {
   }
 
   tooltipText(i: number) {
-    if (i  < 2) {
-      return 'הכנסות צפויות: '+this.futurePayments[i]+' ₪';
+    if (i < 2) {
+      return 'הכנסות צפויות: ' + this.futurePayments[i] + ' ₪';
     } else if (i == 2) {
       return 'הכנסות: ' + this.pastPayments[i] + ' ₪\n' + 'הכנסות צפויות: ' + this.futurePayments[i] + ' ₪\n' + 'סך הכל: ' + (this.pastPayments[i] + this.futurePayments[i]) + ' ₪';
     } else {
-      return 'הכנסות: '+this.pastPayments[i]+' ₪';
+      return 'הכנסות: ' + this.pastPayments[i] + ' ₪';
     }
   }
 
