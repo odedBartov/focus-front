@@ -34,9 +34,9 @@ export class FreeTrialEndComponent {
     this.httpService.endFreeTrial().subscribe({
       next: () => {
         this.animationsService.changeIsloading(false);
-        this.authSercvice.setSubscription(1);
         this.dialogRef.close();
         this.router.navigate(['/home']);
+        window.location.reload();
       }
     });
   }
