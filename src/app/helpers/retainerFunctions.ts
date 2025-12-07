@@ -113,7 +113,7 @@ export function initRetainerSteps(steps: Step[]) {
 export function createNextOccurenceDate(step: Step): Date {
     const result = getTodayAtMidnightLocal();
     if (step.recurringDateType === recurringDateTypeEnum.day) {
-        result.setDate(result.getDate() + (step.recurringEvery ?? 1) - 1);
+        result.setDate(result.getDate() + (step.recurringEvery ?? 1) - 1); // Minus 1 because in days we reduce one. i.e. every 2 days should be tomorrow
     } else if (step.recurringDateType === recurringDateTypeEnum.week) {
         const days = step.recurringDaysInWeek ?? [];
         for (let index = 0; index < days.length; index++) {
@@ -138,15 +138,12 @@ export function createNextOccurenceDate(step: Step): Date {
 }
 
 export function getNextRetainerOccurrenceDate(step: Step): Date {
-    const today = new Date();
+    const today = getTodayAtMidnightLocal();
     if (step.isRecurring) {
-        const dateCreated = parseLocalDate(step.dateCreated ?? new Date());
-        let nextOccurrenceDate = new Date(dateCreated);
-        nextOccurrenceDate = new Date(
-            nextOccurrenceDate.getFullYear(),
-            nextOccurrenceDate.getMonth(),
-            nextOccurrenceDate.getDate()
-        );
+        let nextOccurrenceDate = new Date(step.nextOccurrence ?? today);
+        today.setFullYear(nextOccurrenceDate.getFullYear());
+        today.setMonth(nextOccurrenceDate.getMonth());
+        today.setDate(nextOccurrenceDate.getDate());
         if (step.recurringDateType === recurringDateTypeEnum.day) {
             nextOccurrenceDate.setDate(nextOccurrenceDate.getDate() + (step.recurringEvery ?? 1) - 1);
             while (!isDateGreaterOrEqual(nextOccurrenceDate, today)) {
@@ -189,8 +186,9 @@ export function getNextRetainerOccurrenceDate(step: Step): Date {
 
 export function getOcurencesInRange(step: Step, start: Date, end: Date): Date[] {
     const results: Date[] = [];
-    let nextOcurence = new Date(step.nextOccurrence ?? new Date());
-    if (nextOcurence < new Date()) return results;
+    const today = getTodayAtMidnightLocal();
+    let nextOcurence = new Date(step.nextOccurrence ?? today);
+    if (nextOcurence < today) nextOcurence = today;
     if (step.recurringDateType === recurringDateTypeEnum.day) {
         while (isDateSmallerOrEqual(nextOcurence, end)) {
             nextOcurence.setDate(nextOcurence.getDate() + (step.recurringEvery ?? 1));
