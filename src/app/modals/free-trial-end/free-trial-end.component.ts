@@ -22,8 +22,8 @@ export class FreeTrialEndComponent {
   msg = "היי, אני רוצה לקבל חודש נוסף של פוקוס על מלא";
 
   subscribe() {
-    // window.location.href = environment.subscriptionUrl;
-    window.open(environment.subscriptionUrl, '_blank');
+    window.location.href = environment.subscriptionUrl;
+    // window.open(environment.subscriptionUrl, '_blank');
   }
 
   sendWhatsapp() {
