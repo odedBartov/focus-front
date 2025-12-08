@@ -41,6 +41,7 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
   isDragging = { dragging: false };
   fullName = "משתמש ללא שם";
   arielsNumber = environment.arielsNumber;
+  focusFacebookGroup = "https://www.facebook.com/groups/1244597577480607";
 
   constructor(private ngZone: NgZone) {
     this.projects = this.projectsService.getActiveProjects();
@@ -251,5 +252,9 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     `;
     const url = `https://wa.me/${this.arielsNumber}?text=${message}`;
     window.open(url, '_blank');
+  }
+
+  joinFacebook() {
+    window.open(this.focusFacebookGroup, '_blank');
   }
 }

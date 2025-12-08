@@ -35,8 +35,14 @@
             </ul>
         </div>
     </div>
-    <div class="contact" (click)="openWhatsapp()">
-        <span class="text new-text-bold">לתמיכה, שאלות והצעות</span>
-        <img src="assets/icons/whatsapp.svg" />
+    <div class="contact">
+        <div class="line">
+            <img class="icon" src="assets/icons/whatsapp.svg" (click)="openWhatsapp()"/>
+            <span class="new-text-bold">לתמיכה, שאלות והצעות</span>
+        </div>
+        <div class="line">
+            <img class="icon" src="assets/icons/whatsapp.svg"src="assets/icons/facebook.svg" (click)="joinFacebook()"/>
+            <span class="new-text-bold">הצטרפו לקבוצת הפייסבוק שלנו</span>
+        </div>
     </div>
 </div>
