@@ -1,6 +1,6 @@
-import { ApplicationRef, inject, Injectable, NgZone } from '@angular/core';
+import { ApplicationRef, inject, Injectable } from '@angular/core';
 import { SwUpdate, VersionEvent } from '@angular/service-worker';
-import { concat, filter, first, interval } from 'rxjs';
+import { filter, interval } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,6 @@ import { concat, filter, first, interval } from 'rxjs';
 export class VersionUpdatesService {
   swUpdate = inject(SwUpdate);
   appRef = inject(ApplicationRef);
-  ngZone = inject(NgZone);
 
   constructor() {
     this.checkForUpdateOnStable();
@@ -18,9 +17,6 @@ export class VersionUpdatesService {
   // 1. Checks for updates periodically (e.g., every 6 hours) once the app is stable
   private checkForUpdateOnStable() {
   if (this.swUpdate.isEnabled) {
-    // We run the interval check OUTSIDE the zone to prevent it from blocking stability.
-    this.ngZone.runOutsideAngular(() => {
-    });
       // The interval now starts immediately (every 5 seconds for testing)
       const checkInterval$ = interval(4 * 1000);
       // We only subscribe to the interval now
