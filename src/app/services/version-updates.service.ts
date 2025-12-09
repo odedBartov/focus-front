@@ -30,7 +30,7 @@ export class VersionUpdatesService {
 
       everySixHoursOnceAppIsStable$.subscribe(() => {
         console.log("in interval");
-        
+        alert("in interval")
         this.swUpdate.checkForUpdate()});
     } else {
       console.log("problem");
