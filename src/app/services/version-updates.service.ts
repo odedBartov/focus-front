@@ -1,4 +1,4 @@
-import { ApplicationRef, inject, Injectable } from '@angular/core';
+import { ApplicationRef, inject, Injectable, NgZone } from '@angular/core';
 import { SwUpdate, VersionEvent } from '@angular/service-worker';
 import { concat, filter, first, interval } from 'rxjs';
 
@@ -8,6 +8,7 @@ import { concat, filter, first, interval } from 'rxjs';
 export class VersionUpdatesService {
   swUpdate = inject(SwUpdate);
   appRef = inject(ApplicationRef);
+  ngZone = inject(NgZone);
 
   constructor() {
     this.checkForUpdateOnStable();
@@ -17,24 +18,36 @@ export class VersionUpdatesService {
   // 1. Checks for updates periodically (e.g., every 6 hours) once the app is stable
   private checkForUpdateOnStable() {
     if (this.swUpdate.isEnabled) {
-      // Allow the application to stabilize (finish initial rendering)
-      const appIsStable$ = this.appRef.isStable.pipe(first(isStable => isStable === true));
-      // Set the interval for checking (e.g., 6 hours = 6 * 60 * 60 * 1000)
-      const everySixHours$ = interval(6 * 60 * 60 * 1000);
-      const twoMinutes$ = interval(5 * 1000);
-      alert(5)
-      console.log(5);
-      
-      // Concatenate: Check immediately after stable, then check every 6 hours
-      const everySixHoursOnceAppIsStable$ = concat(appIsStable$, twoMinutes$);
+      // Run the entire polling setup OUTSIDE of NgZone to allow the app to stabilize
+      this.ngZone.runOutsideAngular(() => {
+        // Allow the application to stabilize (finish initial rendering)
+        const appIsStable$ = this.appRef.isStable.pipe(
+          first(isStable => isStable === true)
+        );
 
-      everySixHoursOnceAppIsStable$.subscribe(() => {
-        console.log("in interval");
-        alert("in interval")
-        this.swUpdate.checkForUpdate()});
+        // Set the interval for checking (5 seconds for testing)
+        // Use your final 6 hours interval here: interval(6 * 60 * 60 * 1000)
+        const checkInterval$ = interval(5 * 1000);
+
+        // Concatenate: Wait for stable, then start the interval checks
+        const everySixHoursOnceAppIsStable$ = concat(appIsStable$, checkInterval$);
+
+        everySixHoursOnceAppIsStable$.subscribe(() => {
+          // IMPORTANT: Use ngZone.run() to re-enter the zone for UI updates (like alert)
+          this.ngZone.run(() => {
+            console.log("in interval - RUNNING NOW");
+            alert("in interval - RUNNING NOW");
+          });
+
+          alert("outside zone")
+
+          // This Service Worker interaction is safe outside the zone
+          this.swUpdate.checkForUpdate();
+        });
+      });
     } else {
-      console.log("problem");
-      
+      // This is safe to run inside the zone
+      console.log("problem: Service Worker not enabled.");
     }
   }
 
