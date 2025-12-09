@@ -28,6 +28,7 @@ import { WorkSessionService } from '../../services/work-session.service';
 import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-feature-modal.component';
 import { WebSocketService } from '../../services/web-socket.service';
 import { AutoRefreshService } from '../../services/auto-refresh.service';
+import { VersionUpdatesService } from '../../services/version-updates.service';
 
 @Component({
   selector: 'app-home',
@@ -48,8 +49,9 @@ export class HomeComponent implements OnInit {
   authenticationService = inject(AuthenticationService);
   standAloneStepsService = inject(StandAloneStepsService);
   projectsService = inject(ProjectsService);
-  titleService = inject(Title);
   workSessionService = inject(WorkSessionService);
+  versionUpdatesService = inject(VersionUpdatesService);
+  titleService = inject(Title);
   router = inject(Router);
   route = inject(ActivatedRoute);
   dialog = inject(MatDialog);

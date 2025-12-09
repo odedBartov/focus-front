@@ -3,12 +3,13 @@ import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { importProvidersFrom } from '@angular/core';
+import { importProvidersFrom, isDevMode } from '@angular/core';
 import { SocialLoginModule } from '@abacritt/angularx-social-login';
 import { TokenInterceptor } from './helpers/jwtInterceptor';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { provideLottieOptions } from 'ngx-lottie';
 import player from 'lottie-web';
+import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
@@ -24,6 +25,12 @@ export const appConfig: ApplicationConfig = {
   importProvidersFrom(SocialLoginModule),
   provideLottieOptions({
       player: () => player,
-    })
+    }), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          })
   ]
 };
