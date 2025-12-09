@@ -36,7 +36,6 @@ export class VersionUpdatesService {
       // Filter for the specific event type that means a new version is downloaded and ready
       filter((event: VersionEvent): event is { type: 'VERSION_READY', currentVersion: any, latestVersion: any } => event.type === 'VERSION_READY')
     ).subscribe(() => {
-      alert("new version")
       console.log('New version downloaded and ready. Forcing update.');
       // Activate the update and force a full page reload to switch to the new version
       this.swUpdate.activateUpdate().then(() => document.location.reload());
