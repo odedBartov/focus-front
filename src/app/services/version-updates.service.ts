@@ -24,11 +24,9 @@ export class VersionUpdatesService {
         const appIsStable$ = this.appRef.isStable.pipe(
           first(isStable => isStable === true)
         );
-
         // Set the interval for checking (5 seconds for testing)
         // Use your final 6 hours interval here: interval(6 * 60 * 60 * 1000)
-        const checkInterval$ = interval(5 * 1000);
-
+        const checkInterval$ = interval(6 * 1000);
         // Concatenate: Wait for stable, then start the interval checks
         const everySixHoursOnceAppIsStable$ = concat(appIsStable$, checkInterval$);
 
