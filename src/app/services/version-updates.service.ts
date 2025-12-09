@@ -37,6 +37,7 @@ export class VersionUpdatesService {
       filter((event: VersionEvent): event is { type: 'VERSION_READY', currentVersion: any, latestVersion: any } => event.type === 'VERSION_READY')
     ).subscribe(() => {
       console.log('New version downloaded and ready. Forcing update.');
+      alert("got here")
       // Activate the update and force a full page reload to switch to the new version
       this.swUpdate.activateUpdate().then(() => document.location.reload());
     });
