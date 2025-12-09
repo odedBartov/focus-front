@@ -28,7 +28,10 @@ export class VersionUpdatesService {
       // Concatenate: Check immediately after stable, then check every 6 hours
       const everySixHoursOnceAppIsStable$ = concat(appIsStable$, twoMinutes$);
 
-      everySixHoursOnceAppIsStable$.subscribe(() => this.swUpdate.checkForUpdate());
+      everySixHoursOnceAppIsStable$.subscribe(() => {
+        console.log("in interval");
+        
+        this.swUpdate.checkForUpdate()});
     } else {
       console.log("problem");
       
