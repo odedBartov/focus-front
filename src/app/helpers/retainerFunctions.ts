@@ -110,10 +110,11 @@ export function initRetainerSteps(steps: Step[]) {
     };
 }
 
-export function createNextOccurenceDate(step: Step): Date {
+export function createNextOccurenceDate(step: Step, isExistsStep = false): Date {
     const result = getTodayAtMidnightLocal();
     if (step.recurringDateType === recurringDateTypeEnum.day) {
-        result.setDate(result.getDate() + (step.recurringEvery ?? 1) - 1); // Minus 1 because in days we reduce one. i.e. every 2 days should be tomorrow
+        const daysDelta = isExistsStep? 0 : 1; // Minus 1 because in days we reduce one. i.e. every 2 days should be tomorrow
+        result.setDate(result.getDate() + (step.recurringEvery ?? 1) - daysDelta);
     } else if (step.recurringDateType === recurringDateTypeEnum.week) {
         const days = step.recurringDaysInWeek ?? [];
         for (let index = 0; index < days.length; index++) {
