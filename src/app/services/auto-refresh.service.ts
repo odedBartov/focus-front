@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { debounceTime, fromEvent, merge, Subject, takeUntil } from 'rxjs';
+import { fromEvent, merge, Subject, takeUntil } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,9 @@ export class AutoRefreshService implements OnDestroy {
   private lastMidnight = this.getMidnight(new Date());
   private needsRefresh = false;
   private inactivityTimeout: any;
-  inactivityTimeSpan = 120000;
+  inactivityTimeSpan = 60000; 
+
+  private manualCountdownActive = false;
 
   constructor() {
     this.trackActivity();
@@ -19,7 +21,7 @@ export class AutoRefreshService implements OnDestroy {
 
   private getMidnight(date: Date): number {
     const midnight = new Date(date);
-    midnight.setHours(24, 0, 0, 0);
+    midnight.setHours(24, 0, 0, 0); 
     return midnight.getTime();
   }
 
@@ -27,14 +29,20 @@ export class AutoRefreshService implements OnDestroy {
     merge(
       fromEvent(document, 'mousedown'),
       fromEvent(document, 'keydown'),
-      fromEvent(document, 'touchstart')
+      fromEvent(document, 'touchstart'),
+      fromEvent(document, 'mousemove')
     ).pipe(
-      debounceTime(4000),
       takeUntil(this.destroy$)
     ).subscribe(() => {
+      // 1. Update activity time IMMEDIATELY
       this.lastActivityTime = Date.now();
 
-      // If refresh is needed and user becomes active, start inactivity countdown
+      // 2. Manual Countdown Reset Logic: Resets the timer instantly
+      if (this.manualCountdownActive) {
+        this.startManualCountdown(); 
+      }
+      
+      // 3. Midnight Refresh Logic 
       if (this.needsRefresh) {
         this.startInactivityCountdown();
       }
@@ -57,6 +65,7 @@ export class AutoRefreshService implements OnDestroy {
     this.startInactivityCountdown();
   }
 
+  // This method handles the scheduled check for midnight refresh.
   private startInactivityCountdown(): void {
     clearTimeout(this.inactivityTimeout);
 
@@ -69,6 +78,35 @@ export class AutoRefreshService implements OnDestroy {
         this.startInactivityCountdown();
       }
     }, this.inactivityTimeSpan);
+  }
+
+  // This method handles the manual countdown and acts as the reset target.
+  startManualCountdown(): void {
+    // 1. Activate the manual mode
+    if (!this.manualCountdownActive) {
+      this.manualCountdownActive = true;
+      // Ensure the countdown starts relative to now if it's the first call
+      this.lastActivityTime = Date.now(); 
+    }
+
+    // 2. Clear any existing timeout (the reset)
+    clearTimeout(this.inactivityTimeout);
+
+    // 3. Calculate remaining time based on the last recorded activity
+    const timeSinceLastActivity = Date.now() - this.lastActivityTime;
+    const remainingTime = Math.max(0, this.inactivityTimeSpan - timeSinceLastActivity);
+
+    // 4. Schedule the action
+    this.inactivityTimeout = setTimeout(() => {
+      const inactiveDuration = Date.now() - this.lastActivityTime;
+      if (inactiveDuration >= this.inactivityTimeSpan) {
+        window.location.reload();
+        this.manualCountdownActive = false; // Stop the manual countdown after success
+      } else {
+        // If activity was missed/delayed, restart the check
+        this.startManualCountdown(); 
+      }
+    }, remainingTime);
   }
 
   ngOnDestroy(): void {
