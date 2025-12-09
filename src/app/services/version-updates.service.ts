@@ -20,22 +20,14 @@ export class VersionUpdatesService {
   if (this.swUpdate.isEnabled) {
     // We run the interval check OUTSIDE the zone to prevent it from blocking stability.
     this.ngZone.runOutsideAngular(() => {
+    });
       // The interval now starts immediately (every 5 seconds for testing)
       const checkInterval$ = interval(5 * 1000);
-
       // We only subscribe to the interval now
       checkInterval$.subscribe(() => {
-        // Log/Alerts for testing can be kept inside NgZone.run()
-        // But for production, avoid UI updates here.
-        this.ngZone.run(() => {
-          // This will fire reliably every 5 seconds now
-          console.log("Polling for new version..."); 
-        });
-
         // This check is the crucial part, and runs safely outside the zone.
         this.swUpdate.checkForUpdate();
       });
-    });
   } else {
     console.log("problem: Service Worker not enabled.");
   }
