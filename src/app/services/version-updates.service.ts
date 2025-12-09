@@ -17,37 +17,29 @@ export class VersionUpdatesService {
 
   // 1. Checks for updates periodically (e.g., every 6 hours) once the app is stable
   private checkForUpdateOnStable() {
-    if (this.swUpdate.isEnabled) {
-      // Run the entire polling setup OUTSIDE of NgZone to allow the app to stabilize
-      this.ngZone.runOutsideAngular(() => {
-        // Allow the application to stabilize (finish initial rendering)
-        const appIsStable$ = this.appRef.isStable.pipe(
-          first(isStable => isStable === true)
-        );
-        // Set the interval for checking (5 seconds for testing)
-        // Use your final 6 hours interval here: interval(6 * 60 * 60 * 1000)
-        const checkInterval$ = interval(6 * 1000);
-        // Concatenate: Wait for stable, then start the interval checks
-        const everySixHoursOnceAppIsStable$ = concat(appIsStable$, checkInterval$);
+  if (this.swUpdate.isEnabled) {
+    // We run the interval check OUTSIDE the zone to prevent it from blocking stability.
+    this.ngZone.runOutsideAngular(() => {
+      // The interval now starts immediately (every 5 seconds for testing)
+      const checkInterval$ = interval(5 * 1000);
 
-        everySixHoursOnceAppIsStable$.subscribe(() => {
-          // IMPORTANT: Use ngZone.run() to re-enter the zone for UI updates (like alert)
-          this.ngZone.run(() => {
-            console.log("in interval - RUNNING NOW");
-            alert("in interval - RUNNING NOW");
-          });
-
-          alert("outside zone")
-
-          // This Service Worker interaction is safe outside the zone
-          this.swUpdate.checkForUpdate();
+      // We only subscribe to the interval now
+      checkInterval$.subscribe(() => {
+        // Log/Alerts for testing can be kept inside NgZone.run()
+        // But for production, avoid UI updates here.
+        this.ngZone.run(() => {
+          // This will fire reliably every 5 seconds now
+          console.log("Polling for new version..."); 
         });
+
+        // This check is the crucial part, and runs safely outside the zone.
+        this.swUpdate.checkForUpdate();
       });
-    } else {
-      // This is safe to run inside the zone
-      console.log("problem: Service Worker not enabled.");
-    }
+    });
+  } else {
+    console.log("problem: Service Worker not enabled.");
   }
+}
 
   // 2. Listen for a new version being ready and force the reload
   private subscribeToUpdateEvents() {
