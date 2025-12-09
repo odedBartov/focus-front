@@ -21,7 +21,7 @@ export class VersionUpdatesService {
     // We run the interval check OUTSIDE the zone to prevent it from blocking stability.
     this.ngZone.runOutsideAngular(() => {
       // The interval now starts immediately (every 5 seconds for testing)
-      const checkInterval$ = interval(5 * 1000);
+      const checkInterval$ = interval(4 * 1000);
 
       // We only subscribe to the interval now
       checkInterval$.subscribe(() => {
