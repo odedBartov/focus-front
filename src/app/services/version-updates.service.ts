@@ -22,7 +22,7 @@ export class VersionUpdatesService {
       // Set the interval for checking (e.g., 6 hours = 6 * 60 * 60 * 1000)
       const everySixHours$ = interval(6 * 60 * 60 * 1000);
       const twoMinutes$ = interval(17 * 1000);
-
+      alert(twoMinutes$)
       // Concatenate: Check immediately after stable, then check every 6 hours
       const everySixHoursOnceAppIsStable$ = concat(appIsStable$, twoMinutes$);
 
