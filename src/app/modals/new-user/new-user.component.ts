@@ -73,11 +73,12 @@ export class NewUserComponent {
         break
       case 3:
         if (this.user.profession !== undefined) {
-          this.dialogRef.close(this.user);
           const userAgent = navigator.userAgent.toLowerCase();
           const isMobile = /android|ipad|iphone|ipod|mobile|tablet/i.test(userAgent);
           if (isMobile) {
             window.location.href = this.mobileNotificationUrl + "?email=" + this.user.email;
+          } else {
+            this.dialogRef.close(this.user);
           }
         }
         break;
