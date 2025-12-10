@@ -134,6 +134,12 @@
     }
 }
 
+@media (max-width: 1000px) {
+    .mat-mdc-dialog-container {
+        scale: 1.8;
+    }
+}
+
 .card {
     background-color: var(--default-white);
     box-shadow: var(--common-shadow);
