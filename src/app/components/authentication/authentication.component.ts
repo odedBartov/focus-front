@@ -27,7 +27,7 @@ export class AuthenticationComponent {
       res => {
         this.animationsService.changeIsloading(false);
         if (this.authenticationService.getIsNewUser()) {
-          const dialogRef = this.dialog.open(NewUserComponent, { data: { user: res.body } });
+          const dialogRef = this.dialog.open(NewUserComponent, {width: '100%', height: '100%', data: { user: res.body } });
           dialogRef.afterClosed().subscribe(res => {
             if (res) {
               this.animationsService.changeIsloading(true);
