@@ -21,6 +21,7 @@ export class NewUserComponent {
   user: User;
   statuses = userStatusesWithText;
   professions = userProfessionsWithText;
+  mobileNotificationUrl = "https://join.focus-app.co.il/mobile";
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { user: User }) {
     this.user = data.user;    
@@ -73,6 +74,7 @@ export class NewUserComponent {
       case 3:
         if (this.user.profession !== undefined) {
           this.dialogRef.close(this.user);
+          window.location.href = this.mobileNotificationUrl;
         }
         break;
     }
