@@ -24,7 +24,7 @@ export class NewUserComponent {
   mobileNotificationUrl = "https://join.focus-app.co.il/mobile";
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { user: User }) {
-    this.user = data.user;    
+    this.user = data.user;
     this.userForm = this.formBuilder.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]]
@@ -74,7 +74,11 @@ export class NewUserComponent {
       case 3:
         if (this.user.profession !== undefined) {
           this.dialogRef.close(this.user);
-          window.location.href = this.mobileNotificationUrl + "?email=" + this.user.email;
+          const userAgent = navigator.userAgent.toLowerCase();
+          const isMobile = /android|ipad|iphone|ipod|mobile|tablet/i.test(userAgent);
+          if (isMobile) {
+            window.location.href = this.mobileNotificationUrl + "?email=" + this.user.email;
+          }
         }
         break;
     }
