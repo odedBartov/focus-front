@@ -62,3 +62,19 @@
         }
     }
 }
+
+@media (max-width: 1000px) {
+    .progress {
+        scale: 1.5;
+        padding-bottom: 50px;
+    }
+
+    form {
+        scale: 1.5;
+        padding-bottom: 40px;
+    }
+
+    .confirm-div {
+        scale: 1.5;
+    }
+}
