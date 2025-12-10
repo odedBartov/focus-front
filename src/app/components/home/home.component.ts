@@ -75,7 +75,7 @@ export class HomeComponent implements OnInit {
   openNotesSignal: WritableSignal<Project | undefined>;
 
   constructor() {
-    const dialogRef = this.dialog.open(NewUserComponent, { data: { user: new User() } });
+    const dialogRef = this.dialog.open(NewUserComponent, {width: '100%', height: '100%', data: { user: new User() } });
     this.openNotesSignal = this.projectsService.getProjectWithOpenNotes();
     effect(() => {
       const selectedProject = this.selectedProject();
