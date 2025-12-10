@@ -29,6 +29,8 @@ import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-
 import { WebSocketService } from '../../services/web-socket.service';
 import { AutoRefreshService } from '../../services/auto-refresh.service';
 import { VersionUpdatesService } from '../../services/version-updates.service';
+import { NewUserComponent } from '../../modals/new-user/new-user.component';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-home',
@@ -73,6 +75,7 @@ export class HomeComponent implements OnInit {
   openNotesSignal: WritableSignal<Project | undefined>;
 
   constructor() {
+    const dialogRef = this.dialog.open(NewUserComponent, {width: '100%', height: '100%', data: { user: new User() } });
     this.openNotesSignal = this.projectsService.getProjectWithOpenNotes();
     effect(() => {
       const selectedProject = this.selectedProject();

@@ -74,7 +74,7 @@ export class NewUserComponent {
       case 3:
         if (this.user.profession !== undefined) {
           this.dialogRef.close(this.user);
-          window.location.href = this.mobileNotificationUrl;
+          window.location.href = this.mobileNotificationUrl + "?email=" + this.user.email;
         }
         break;
     }
