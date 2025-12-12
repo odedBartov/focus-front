@@ -10,6 +10,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { provideLottieOptions } from 'ngx-lottie';
 import player from 'lottie-web';
 import { provideServiceWorker } from '@angular/service-worker';
+import { UpdateStepsInterceptor } from './helpers/updateStepsInterceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
@@ -22,15 +23,20 @@ export const appConfig: ApplicationConfig = {
     useClass: TokenInterceptor,
     multi: true
   },
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: UpdateStepsInterceptor,
+    multi: true
+  },
   importProvidersFrom(SocialLoginModule),
   provideLottieOptions({
-      player: () => player,
-    }), provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          }), provideServiceWorker('ngsw-worker.js', {
-            enabled: !isDevMode(),
-            registrationStrategy: 'registerWhenStable:30000'
-          })
+    player: () => player,
+  }), provideServiceWorker('ngsw-worker.js', {
+    enabled: !isDevMode(),
+    registrationStrategy: 'registerWhenStable:30000'
+  }), provideServiceWorker('ngsw-worker.js', {
+    enabled: !isDevMode(),
+    registrationStrategy: 'registerWhenStable:30000'
+  })
   ]
 };
