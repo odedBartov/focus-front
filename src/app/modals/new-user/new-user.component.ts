@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { User, userProfessionsWithText, UserStatus, userStatusesWithText } from '../../models/user';
 import { CommonModule } from '@angular/common';
+import { isUsingDesktop } from '../../helpers/functions';
 
 @Component({
   selector: 'app-new-user',
@@ -73,8 +74,7 @@ export class NewUserComponent {
         break
       case 3:
         if (this.user.profession !== undefined) {
-          const userAgent = navigator.userAgent.toLowerCase();
-          const isMobile = /android|ipad|iphone|ipod|mobile|tablet/i.test(userAgent);
+          const isMobile = !isUsingDesktop();
           if (isMobile) {
             window.location.href = this.mobileNotificationUrl + "?email=" + this.user.email;
           } else {

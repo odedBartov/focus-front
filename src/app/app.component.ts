@@ -8,6 +8,7 @@ import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 import { Title } from '@angular/platform-browser';
 import { BreakpointObserver, LayoutModule } from '@angular/cdk/layout';
 import { AnimationItem } from 'lottie-web';
+import { isUsingDesktop } from './helpers/functions';
 
 @Component({
   selector: 'app-root',
@@ -40,7 +41,7 @@ export class AppComponent implements OnInit {
   constructor() {
     this.isLoading = this.animationsService.getIsLoading();
 
-    if (this.isMobileOrTablet() && false) { // todo: return to real check
+    if (!isUsingDesktop() && false) { // todo: return to real check
       this.router.navigate(['unsupportedDevice']);
     } else {
       const fullName = this.authenticationService.getUserName();
@@ -62,11 +63,6 @@ export class AppComponent implements OnInit {
         this.showFinishProject = false;
       });
     });
-  }
-
-  isMobileOrTablet(): boolean {
-    const userAgent = navigator.userAgent.toLowerCase();
-    return /android|ipad|iphone|ipod|mobile|tablet/i.test(userAgent);
   }
 
   navigateToHomePage() {

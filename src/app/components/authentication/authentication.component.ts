@@ -7,6 +7,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NewUserComponent } from '../../modals/new-user/new-user.component';
 import { FreeTrialStartComponent } from '../../modals/free-trial-start/free-trial-start.component';
+import { isUsingDesktop } from '../../helpers/functions';
 
 @Component({
   selector: 'app-authentication',
@@ -27,7 +28,8 @@ export class AuthenticationComponent {
       res => {
         this.animationsService.changeIsloading(false);
         if (this.authenticationService.getIsNewUser()) {
-          const dialogRef = this.dialog.open(NewUserComponent, {width: '100%', height: '100%', data: { user: res.body } });
+          const dialogParams = isUsingDesktop()? {data: { user: res.body } } : {width: '100%', height: '100%', data: { user: res.body } };
+          const dialogRef = this.dialog.open(NewUserComponent, dialogParams);
           dialogRef.afterClosed().subscribe(res => {
             if (res) {
               this.animationsService.changeIsloading(true);

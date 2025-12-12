@@ -104,3 +104,8 @@ export function getTodayAtMidnightLocal() {
   const adjusted = new Date(localMidnight.getTime() - localMidnight.getTimezoneOffset() * 60000);
   return adjusted;
 }
+
+export function isUsingDesktop(): boolean {
+  const userAgent = navigator.userAgent.toLowerCase();
+  return !(/android|ipad|iphone|ipod|mobile|tablet/i.test(userAgent));
+}
