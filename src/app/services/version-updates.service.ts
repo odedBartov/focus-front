@@ -22,7 +22,7 @@ export class VersionUpdatesService {
   private checkForUpdateOnStable() {
     if (this.swUpdate.isEnabled) {
       // The interval now starts immediately (every 5 seconds for testing)
-      const checkInterval$ = interval(6 * 60 * 1000);
+      const checkInterval$ = interval(10 * 60 * 1000);
       // We only subscribe to the interval now
       checkInterval$.subscribe(() => this.swUpdate.checkForUpdate());
     } else {
