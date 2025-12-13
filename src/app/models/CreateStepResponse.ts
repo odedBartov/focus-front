@@ -1,6 +1,6 @@
 import { Step } from "./step";
 
-export class UpdateStepsResponse {
-    steps!: Step[];
+export class CrateStepResponse {
+    step!: Step;
     gotExtraDays!: boolean;
 }

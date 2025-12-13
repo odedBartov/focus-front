@@ -10,7 +10,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { provideLottieOptions } from 'ngx-lottie';
 import player from 'lottie-web';
 import { provideServiceWorker } from '@angular/service-worker';
-import { UpdateStepsInterceptor } from './helpers/updateStepsInterceptor';
+import { CreateStepInterceptor } from './helpers/createStepInterceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
@@ -25,7 +25,7 @@ export const appConfig: ApplicationConfig = {
   },
   {
     provide: HTTP_INTERCEPTORS,
-    useClass: UpdateStepsInterceptor,
+    useClass: CreateStepInterceptor,
     multi: true
   },
   importProvidersFrom(SocialLoginModule),

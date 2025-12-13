@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-bonus-for-activity',
@@ -7,5 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './bonus-for-activity.component.scss'
 })
 export class BonusForActivityComponent {
+  dialogRef = inject(MatDialogRef<BonusForActivityComponent>);
 
+  close() {
+    this.dialogRef.close();
+  }
 }
