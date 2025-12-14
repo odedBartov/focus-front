@@ -457,7 +457,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
     if (this.project().projectType === projectTypeEnum.retainer && this.project().paymentModel === paymentModelEnum.hourly) {
       this.baseProjectPrice = this.getProjectPrice();
-      this.paidMoney = this.retainerFinishedSteps.reduce((acc, step) => { return acc + step.price }, 0);
+      this.paidMoney = this.retainerFinishedSteps.reduce((acc, step) => acc + step.price, 0);      
     } else {
       this.project()?.steps?.forEach(step => {
         if (step.stepType === StepType.payment) {

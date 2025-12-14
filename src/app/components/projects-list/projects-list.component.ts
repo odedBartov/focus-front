@@ -89,14 +89,19 @@ export class ProjectsListComponent implements OnInit {
   getRemainingPayment(project: Project) {
     let base = 0;
     let paid = 0;
-    project.steps.forEach(step => {
-      if (step.stepType === StepType.payment) {
-        base += step.price;
-        if (step.isComplete) {
-          paid += step.price;
+    if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.hourly) {
+      base = project.hourlyWorkSessions.reduce((sum, ws) => sum + ws.price, 0);
+      paid = project.steps.filter(s => (s.stepType === StepType.payment && s.isComplete)).reduce((sum, step) => sum + step.price, 0);
+    } else {
+      project.steps.forEach(step => {
+        if (step.stepType === StepType.payment) {
+          base += step.price;
+          if (step.isComplete) {
+            paid += step.price;
+          }
         }
-      }
-    });
+      });
+    }
 
     return base - paid;
   }
