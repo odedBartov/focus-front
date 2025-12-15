@@ -29,7 +29,7 @@
             (activeProjectsEmitter)="refreshProjects()"></app-projects-list>
         </div>
         <div class="updates">
-          <app-updates (navigateToCalendarEmitter)="setActiveTab(tasksTab)"></app-updates>
+          <app-updates (navigateToCalendarEmitter)="setActiveTab(tasksTab)" (selectProject)="selectProject($event)"></app-updates>
         </div>
       </div>
     </div>
@@ -53,7 +53,7 @@
           <app-archive (unActiveProjectsEmitter)="refreshProjects()"></app-archive>
         </div>
         <div class="updates">
-          <app-updates></app-updates>
+          <app-updates (selectProject)="selectProject($event)"></app-updates>
         </div>
       </div>
     </div>
