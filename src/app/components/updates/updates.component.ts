@@ -198,6 +198,7 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
       tasksStep.name = 'weeklyTasks';
       tasksStep.stepType = StepType.task;
       tasksStep.tasks = [task];
+      tasksStep.userId = this.authenticationService.getUserId() ?? 'noUserId';
       this.noProject().steps.push(tasksStep);
       this.noProject().steps = [...this.noProject().steps];
       this.httpService.createStep(tasksStep).subscribe(res => {
@@ -219,12 +220,6 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
   completeTask(task: StepOrTask) {
     const index = this.stepsAndTasks.findIndex(t => {
       return t.data.id === task.data.id;
-      // if (task.task) {
-      //   return t.task?.id === task.task.id;
-      // } else if (task.step) {
-      //   return t.step?.id === task.step.id;
-      // }
-      // return false;
     });
     if (index > -1 && (task.data.isComplete)) {
       moveItemInArray(this.stepsAndTasks, index, 0);
