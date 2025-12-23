@@ -261,7 +261,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
     if (!isFutureRetainer) {
       this.initPresentedDays();
       this.updateTasks(event.previousContainer === event.container ? [] : event.previousContainer.data, event.container.data);
-      // this.initTasks()
     }
   }
 
@@ -282,15 +281,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
           projectList.tasks.length
         );
         let index = -1;
-        // if (data.task) {
-        //   data.task.dateOnWeekly = undefined;
-        //   data.task.positionInWeeklyList = -1;
-        //   index = this.tasksWithDate.findIndex(t => t.task?.id === data.task?.id);
-        // } else if (data.step) {
-        //   data.step.dateOnWeekly = undefined;
-        //   data.step.positionInWeeklyList = -1;
-        //   index = this.tasksWithDate.findIndex(t => t.task?.id === data.task?.id);
-        // }
         data.data.dateOnWeekly = undefined;
         data.data.positionInWeeklyList = -1;
         index = this.tasksWithDate.findIndex(t => t.data?.id === data.data?.id);
@@ -307,11 +297,6 @@ export class WeeklyTasksComponent implements AfterViewInit {
     for (let index = 0; index < list.length; index++) {
       const task = list[index];
       task.data.positionInWeeklyList = index;
-      // if (task.task) {
-      //   task.task.positionInWeeklyList = index;
-      // } else {
-      //   task.step!.positionInWeeklyList = index;
-      // }
     }
   }
 

@@ -80,16 +80,6 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
       }
     });
     this.sortSteps();
-
-    // const activeSteps = this.projects().flatMap(p => p.steps.filter(s => s.isRecurring));
-    // const retainerSteps: Step[] = [];
-    // // initRetainerSteps(activeSteps, retainerSteps, [], []);
-    // const retainerStepsOrTasks = retainerSteps.map(step => {
-    //   const stepOrTask = new StepOrTask();
-    //   stepOrTask.step = step;
-    //   return stepOrTask;
-    // });
-    // this.stepsAndTasks = this.stepsAndTasks.concat(retainerStepsOrTasks);
   }
 
   ngAfterViewInit(): void {

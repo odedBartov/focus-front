@@ -104,6 +104,7 @@ export function getNextRetainerOccurrenceDate(step: Step): Date {
 export function getOcurencesInRange(step: Step, start: Date, end: Date): Date[] {
     const results: Date[] = [];
     const today = getTodayAtMidnightLocal();
+    today.setDate(today.getDate() + 1); // we dont want to calculate today, so we start from tomorrow
     let nextOcurence = new Date(step.nextOccurrence ?? today);
     if (nextOcurence < today) nextOcurence = today;
     if (step.recurringDateType === recurringDateTypeEnum.day) {
