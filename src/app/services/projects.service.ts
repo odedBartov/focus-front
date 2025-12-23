@@ -3,7 +3,7 @@ import { HttpService } from './http.service';
 import { Project } from '../models/project';
 import { IStepOrTask, StepOrTask } from '../models/stepOrTask';
 import { Step } from '../models/step';
-import { StepTask } from '../models/stepTask';
+import { areDatesEqual, getTodayAtMidnightLocal } from '../helpers/functions';
 
 @Injectable({
   providedIn: 'root'
@@ -73,7 +73,11 @@ export class ProjectsService {
             }
           });
         } else {
-          if (step.dateOnWeekly) {
+          const today = getTodayAtMidnightLocal();
+          const isStepToday = areDatesEqual(step.dateOnWeekly, today);
+          const isRecurrenceModifiedToday = step.futureModifiedTasks && step.futureModifiedTasks.find(d => areDatesEqual(d, today));
+          const shouldHideTodayStep = isStepToday && isRecurrenceModifiedToday;
+          if (step.dateOnWeekly && !shouldHideTodayStep) {
             this.insertTaskToList(this.tasksWithDate, step, step, project);
           } else if (!step.isComplete) {
             this.insertTaskToFutueTasks(project, step, step);
