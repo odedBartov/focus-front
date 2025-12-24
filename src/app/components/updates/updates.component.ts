@@ -77,7 +77,7 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
       const taskDate = t.data.dateOnWeekly;
       let isRecurrenceModifiedToday = false;
       if (isStep(t.data)) {
-        isRecurrenceModifiedToday = (t.data.futureModifiedTasks !== undefined && t.data.futureModifiedTasks.find(d => areDatesEqual(d, today)) !== undefined);
+        isRecurrenceModifiedToday = (t.data?.futureModifiedTasks?.find(d => areDatesEqual(d, today)) !== undefined);
       }
       if (taskDate && areDatesEqual(new Date(taskDate), today) && !isRecurrenceModifiedToday) {
         this.stepsAndTasks.push(t);
