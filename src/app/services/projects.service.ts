@@ -73,11 +73,7 @@ export class ProjectsService {
             }
           });
         } else {
-          const today = getTodayAtMidnightLocal();
-          const isStepToday = areDatesEqual(step.dateOnWeekly, today);
-          const isRecurrenceModifiedToday = step.futureModifiedTasks && step.futureModifiedTasks.find(d => areDatesEqual(d, today));
-          const shouldHideTodayStep = isStepToday && isRecurrenceModifiedToday;
-          if (step.dateOnWeekly && !shouldHideTodayStep) {
+          if (step.dateOnWeekly) {
             this.insertTaskToList(this.tasksWithDate, step, step, project);
           } else if (!step.isComplete) {
             this.insertTaskToFutueTasks(project, step, step);
@@ -103,8 +99,6 @@ export class ProjectsService {
 
   insertTaskToList(list: StepOrTask[], parentStep: Step, data: IStepOrTask, project?: Project) {
     const taskOrStep = new StepOrTask();
-    // taskOrStep.task = task;
-    // taskOrStep.step = step;
     taskOrStep.data = data;
     taskOrStep.parentStep = parentStep;
     taskOrStep.project = project;

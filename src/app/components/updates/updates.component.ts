@@ -10,7 +10,7 @@ import { Step } from '../../models/step';
 import { Project } from '../../models/project';
 import { ProjectsService } from '../../services/projects.service';
 import { isStep, isStepOrTaskComplete, StepOrTask } from '../../models/stepOrTask';
-import { areDatesEqual } from '../../helpers/functions';
+import { areDatesEqual, getTodayAtMidnightLocal } from '../../helpers/functions';
 import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
 import { StepTask } from '../../models/stepTask';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -72,10 +72,14 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     this.stepsAndTasks = [];
     const lists = this.projectsService.populateCalendarTasks();
     const allTasks = lists.tasksWithDate;
-    const today = new Date();
+    const today = getTodayAtMidnightLocal();
     allTasks.forEach(t => {
       const taskDate = t.data.dateOnWeekly;
-      if (taskDate && areDatesEqual(new Date(taskDate), today)) {
+      let isRecurrenceModifiedToday = false;
+      if (isStep(t.data)) {
+        isRecurrenceModifiedToday = (t.data.futureModifiedTasks !== undefined && t.data.futureModifiedTasks.find(d => areDatesEqual(d, today)) !== undefined);
+      }
+      if (taskDate && areDatesEqual(new Date(taskDate), today) && !isRecurrenceModifiedToday) {
         this.stepsAndTasks.push(t);
       }
     });

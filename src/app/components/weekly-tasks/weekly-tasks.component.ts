@@ -13,7 +13,7 @@ import { HttpService } from '../../services/http.service';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
-import { getTextForTask, getTodayAtMidnightLocal, isDateBeforeToday } from '../../helpers/functions';
+import { areDatesEqual, getTextForTask, getTodayAtMidnightLocal, isDateBeforeToday } from '../../helpers/functions';
 import { getOcurencesInRange } from '../../helpers/retainerFunctions';
 import { FutureRetainerStep } from '../../services/futureRetainerStep';
 
@@ -124,6 +124,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
 
       this.tasksWithDate = this.tasksWithDate.filter(t => !(isStep(t.data) && t.data.isRetainerCopy));
       this.generateRetainerSteps();
+      this.removeModifiedTodayRetainerSteps();
       this.assignTasksToDays();
     }, 1);
   }
@@ -177,6 +178,19 @@ export class WeeklyTasksComponent implements AfterViewInit {
         }
       });
     }
+  }
+
+  removeModifiedTodayRetainerSteps(): void {
+    const today = getTodayAtMidnightLocal();
+    this.tasksWithDate = this.tasksWithDate.filter(t => {
+      if (isStep(t.data)) {
+        const step = t.data;
+        const isStepToday = areDatesEqual(step.dateOnWeekly, today);
+        const isRecurrenceModifiedToday = step.futureModifiedTasks && step.futureModifiedTasks.find(d => areDatesEqual(d, today));
+        return !(isStepToday && isRecurrenceModifiedToday);
+      }
+      return true;
+    });
   }
 
   getDateForCalendarTask(task: StepOrTask) {
