@@ -154,11 +154,6 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     for (let index = 0; index < this.stepsAndTasks.length; index++) {
       const task = this.stepsAndTasks[index];
       task.data.positionInWeeklyList = index;
-      // if (task.task) {
-      //   task.task.positionInWeeklyList = index;
-      // } else if (task.step) {
-      //   task.step.positionInWeeklyList = index;
-      // }
     }
   }
 
@@ -237,7 +232,7 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
   }
 
   openWhatsapp() {
-    const message = `הי, זה ${this.fullName}. אני משתמש בפוקוס ויש לי משהו להגיד:
+    const message = `הי, כאן ${this.fullName}. אני משתמש/ת בפוקוס ויש לי משהו לומר:
     `;
     const url = `https://wa.me/${this.arielsNumber}?text=${message}`;
     window.open(url, '_blank');
