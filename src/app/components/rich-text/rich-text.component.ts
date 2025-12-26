@@ -76,7 +76,7 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit, AfterVie
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['project'] && this.project) {
       setTimeout(() => {
-        if (this.project) {
+        if (this.project?.notes) {
           this.editor.setContent(this.project.notes)
         }
       }, 1);
