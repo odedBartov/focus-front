@@ -520,6 +520,11 @@
 
     &.task {
         @include mixins.task;
+
+        .radio-button {
+            width: 17px;
+            margin-left: 6px;
+        }
     }
 }
 
