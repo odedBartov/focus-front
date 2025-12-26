@@ -7,6 +7,7 @@ export class StepTask implements IStepOrTask {
     isComplete?: boolean;
     dateOnWeekly?: Date;
     positionInWeeklyList: number;
+    positionInStep?: number;
 
     constructor() {
         this.id = crypto.randomUUID();

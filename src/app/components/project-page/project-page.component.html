@@ -201,8 +201,8 @@
                                     #descriptions autoResize
                                     rows="1">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
                                 <div class="tasks" *ngIf="step.tasks">
-                                    <div class="task-list">
-                                        <div class="task" *ngFor="let task of step.tasks; let i = index">
+                                    <div class="task-list" cdkDropList (cdkDropListDropped)="dropTask($event, step)">
+                                        <div class="task" *ngFor="let task of step.tasks; let i = index" cdkDrag>
                                             <div *ngIf="i < step.tasks.length" style="display: flex;">
                                                 <div [class]="'radio-button ' + (task.isComplete? 'checked-circle' : 'empty-circle')"
                                                     (click)="toggleTask(step, task)"
@@ -210,7 +210,7 @@
                                                     <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg" />
                                                 </div>
                                                 <textarea class="new-small future" [(ngModel)]="task.text" autoResize
-                                                    defaultHeight="20px" disabled #taskText></textarea>
+                                                    defaultHeight="20px" #taskText></textarea>
                                             </div>
                                         </div>
                                     </div>

@@ -289,16 +289,16 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.retainerPaymentName = this.retainerActiveSteps[0].name ?? 'שלב נוכחי';
   }
 
-  pauseSessionTimer() {  
-  this.WorkSessionService.storeSession(this.project().id, this.sessionTime);
-  this.WorkSessionService.changeIsSessionActive(false);
-  if (this.sessionTimer) {
-    clearInterval(this.sessionTimer);
-    this.sessionTimer = undefined;
-    this.lastStartTime = 0;
-    this.accumulatedTime = 0;
+  pauseSessionTimer() {
+    this.WorkSessionService.storeSession(this.project().id, this.sessionTime);
+    this.WorkSessionService.changeIsSessionActive(false);
+    if (this.sessionTimer) {
+      clearInterval(this.sessionTimer);
+      this.sessionTimer = undefined;
+      this.lastStartTime = 0;
+      this.accumulatedTime = 0;
+    }
   }
-}
 
   deleteWorkingSession(event: Event) {
     this.WorkSessionService.deleteSession(this.project().id);
@@ -435,6 +435,16 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     }
   }
 
+  dropTask(event: CdkDragDrop<any[]>, step: Step) {
+    if (step.tasks) {
+      moveItemInArray(step.tasks, event.previousIndex, event.currentIndex);
+      for (let index = 0; index < step.tasks.length; index++) {
+        step.tasks[index].positionInStep = index;
+      }
+      this.updateStep(step);
+    }
+  }
+
   loadProject() {
     if (this.projectId) {
       this.animationsService.changeIsloading(true);
@@ -457,7 +467,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
     if (this.project().projectType === projectTypeEnum.retainer && this.project().paymentModel === paymentModelEnum.hourly) {
       this.baseProjectPrice = this.getProjectPrice();
-      this.paidMoney = this.retainerFinishedSteps.reduce((acc, step) => acc + step.price, 0);      
+      this.paidMoney = this.retainerFinishedSteps.reduce((acc, step) => acc + step.price, 0);
     } else {
       this.project()?.steps?.forEach(step => {
         if (step.stepType === StepType.payment) {

@@ -9,31 +9,7 @@
             margin-bottom: 16px;
         }
 
-        .task {
-            display: flex;
-
-            .task-icon {
-                cursor: pointer;
-                height: 16px;
-                margin-top: 5px;
-            }
-
-            textarea {
-                width: 100%;
-                border: none;
-                resize: none;
-                padding: 0;
-                overflow: hidden;
-                border-radius: 0px;
-                margin-right: 6px;
-                margin-top: 0;
-
-                &.active {
-                    margin-bottom: 20px;
-                }
-
-            }
-        }
+        @include mixins.task;
     }
 
     textarea {
@@ -540,6 +516,10 @@
 
     &.active-step {
         width: 20rem !important;
+    }
+
+    &.task {
+        @include mixins.task;
     }
 }
 
