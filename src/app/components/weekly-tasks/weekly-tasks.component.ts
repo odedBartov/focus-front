@@ -157,7 +157,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
             }
             const retainerDates = getOcurencesInRange(castedStep, sunday, saturday);
             retainerDates.forEach(date => {
-              if (castedStep && (!castedStep.futureModifiedTasks || !castedStep.futureModifiedTasks.find(d => this.compareDates(d, date)))) {
+              if (castedStep && (!castedStep.futureModifiedTasks || !castedStep.futureModifiedTasks.find(d => this.compareDates(d, date))) && !areDatesEqual(castedStep.dateOnWeekly, date)) {
                 const tempStep: Step = structuredClone(castedStep);
                 tempStep.id = undefined;
                 tempStep.dateCreated = date;
