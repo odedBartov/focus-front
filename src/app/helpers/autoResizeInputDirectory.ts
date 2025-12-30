@@ -33,13 +33,13 @@ export class AutoResizeInputDirective {
 
     // Reset and resize
     textarea.style.height = this.defaultHeight;  // Reset height to shrink if needed
-    setTimeout(() => {
+    // setTimeout(() => {
       textarea.style.height = textarea.scrollHeight + 'px';
       // Restore scroll position
       if (scrollableParent && scrollTop !== undefined && scrollableParent.scrollTop !== scrollTop) {
         scrollableParent.scrollTop = scrollTop;
       }
-    }, 1);
+    // }, 1);
   }
 
   private findScrollableParent(element: HTMLElement): HTMLElement | null {
