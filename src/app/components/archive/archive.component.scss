@@ -20,7 +20,7 @@
     .cdk-drag-preview {
         background-color: var(--default-white);
         display: grid;
-        grid-template-columns: 1fr 3fr 3fr 2.5fr 1.5fr 1fr;
+        grid-template-columns: 1fr 3fr 3fr 1fr 1.5fr;
         gap: 1rem;
         align-items: center;
         border-radius: var(--common-radius);
@@ -29,7 +29,7 @@
         padding: 0 28px;
 
         .status-icon {
-            height: 32px;
+            height: 24px;
         }
 
         .title-and-text {

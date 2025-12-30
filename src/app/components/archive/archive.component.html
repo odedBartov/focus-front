@@ -6,7 +6,7 @@
         <div class="project-drag" *ngFor="let project of projects()" cdkDrag>
             <div class="project" (contextmenu)="openMenu($event, menuTrigger, menuAnchor)">
                 <img class="status-icon"
-                    [src]="`assets/icons/${project.status === projectStatusEnum.frozen?'hourglass' : 'confirm_yes'}.svg`" />
+                    [src]="`assets/icons/${projectStatusIcons[project.status]}.svg`" />
                 <span class="project-name new-text-bold" [matTooltipDisabled]="projectName.clientWidth >= projectName.scrollWidth"
                     matTooltipPosition="above" matTooltipClass="custom-tooltip" [matTooltip]="project.description"
                     #projectName>
@@ -36,10 +36,9 @@
                 <div class="menu" (click)="$event.stopPropagation()">
                     <img class="menu icon-kabab-menu pointer" [matMenuTriggerFor]="menu" style="padding: 10px;"/>
                     <mat-menu #menu="matMenu" class="pointer">
-                        <button mat-menu-item class="menu-item"
-                            (click)="activateProject(project)">הפעלה מחדש</button>
-                        <button mat-menu-item class="menu-item" (click)="cloneProject(project)">שכפול</button>
-                        <button mat-menu-item class="menu-item" (click)="deleteProject(project)">מחיקה</button>
+                        <button *ngFor="let btn of getMenuButtons(project)" mat-menu-item class="menu-item new-small" (click)="btn.action(project)">
+                            {{btn.text}}
+                        </button>
                     </mat-menu>
                     <div #menuAnchor style="position: fixed; top: 0; left: 0; width: 0; height: 0;"
                         [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger"></div>

@@ -163,6 +163,10 @@ export class WeeklyTasksComponent implements AfterViewInit {
                 tempStep.dateCreated = date;
                 tempStep.dateOnWeekly = date;
                 tempStep.isRecurring = false;
+                tempStep.recurringEvery = undefined;
+                tempStep.recurringDateType = undefined;
+                tempStep.recurringDayInMonth = undefined;
+                tempStep.recurringDaysInWeek = undefined;
                 tempStep.isComplete = false;
                 tempStep.isRetainerCopy = true;
                 tempStep.positionInWeeklyList = 9999;

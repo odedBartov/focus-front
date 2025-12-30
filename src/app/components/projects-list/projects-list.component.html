@@ -2,9 +2,12 @@
     <div class="projects-list">
         <div class="title new-h2">פרויקטים פעילים</div>
         <div class="projects-filter">
-            <span class="new-small" (click)="filterProjects()" [ngClass]="{'selected': projectsFilter === undefined}">כל הפרוייקטים</span>
-            <span class="new-small" (click)="filterProjects(projectTypeEnum.proccess)" [ngClass]="{'selected': projectsFilter === projectTypeEnum.proccess}">תהליכים</span>
-            <span class="new-small" (click)="filterProjects(projectTypeEnum.retainer)" [ngClass]="{'selected': projectsFilter === projectTypeEnum.retainer}">ריטיינרים</span>
+            <span class="new-small" (click)="filterProjects()" [ngClass]="{'selected': projectsFilter === undefined}">כל
+                הפרוייקטים</span>
+            <span class="new-small" (click)="filterProjects(projectTypeEnum.proccess)"
+                [ngClass]="{'selected': projectsFilter === projectTypeEnum.proccess}">תהליכים</span>
+            <span class="new-small" (click)="filterProjects(projectTypeEnum.retainer)"
+                [ngClass]="{'selected': projectsFilter === projectTypeEnum.retainer}">ריטיינרים</span>
         </div>
     </div>
     <div cdkDropList (cdkDropListDropped)="drop($event)">
@@ -22,8 +25,8 @@
                     <span class="disabled-text">
                         {{areThereOpenSteps(project)? 'שלב נוכחי' : 'אין משימות פתוחות'}}
                     </span>
-                    <span class="small-text" #stepRef matTooltip="{{getCurrentStep(project)?.name}}" *ngIf="areThereOpenSteps(project)"
-                        matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                    <span class="small-text" #stepRef matTooltip="{{getCurrentStep(project)?.name}}"
+                        *ngIf="areThereOpenSteps(project)" matTooltipPosition="above" matTooltipClass="custom-tooltip"
                         [matTooltipDisabled]="stepRef.offsetWidth >= stepRef.scrollWidth">
                         {{getCurrentStep(project)?.name}}
                     </span>
@@ -41,7 +44,6 @@
                     <div class="progress-bar">
                         <div class="progress-fill" [style.width.%]="getProjectProgress(project)"></div>
                     </div>
-                    <!-- <span style="margin-top: 15px;">{{getProjectProgress(project) | number:'1.0-0'}}%</span> -->
                 </div>
                 <div class="menu" (click)="$event.stopPropagation()">
                     <img class="menu icon-kabab-menu" [matMenuTriggerFor]="menu" style="padding: 10px;" />
@@ -50,7 +52,8 @@
                             (click)="changeProjectStatus(project, projectStatusEnum.frozen)">הקפאה</button>
                         <button mat-menu-item class="menu-item"
                             (click)="changeProjectStatus(project, projectStatusEnum.finished)">סיום</button>
-                        <button mat-menu-item class="menu-item" (click)="deleteProject(project)">מחיקה</button>
+                        <button mat-menu-item class="menu-item"
+                            (click)="changeProjectStatus(project, projectStatusEnum.deleted)">מחיקה</button>
                         <button mat-menu-item class="menu-item" (click)="cloneProject(project)">שכפול</button>
                     </mat-menu>
                     <div #menuAnchor style="position: fixed; top: 0; left: 0; width: 0; height: 0;"

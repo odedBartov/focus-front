@@ -1,7 +1,7 @@
-import { Component, EventEmitter, inject, Input, Output, WritableSignal } from '@angular/core';
+import { Component, inject, WritableSignal } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { AnimationsService } from '../../services/animations.service';
-import { Project } from '../../models/project';
+import { MenuButton, Project } from '../../models/project';
 import { ProjectStatus, StepType } from '../../models/enums';
 import { tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -23,9 +23,24 @@ export class ArchiveComponent {
   projectsService = inject(ProjectsService);
   projects: WritableSignal<Project[]>;
   projectStatusEnum = ProjectStatus;
+  projectStatusIcons: Record<ProjectStatus, string> = {[ProjectStatus.active]: "", [ProjectStatus.frozen]: "hourglass", [ProjectStatus.deleted]: "garbage_can_blue", [ProjectStatus.finished]: "confirm_yes"};
+  regularMenuButtons:MenuButton[] = [];
+  deletedProjectMenuButtons:MenuButton[] = [];
 
   constructor() {
+    this.initMenuButtons();
     this.projects = this.projectsService.getUnActiveProjects();
+  }
+
+  initMenuButtons() {
+    const duplicate: MenuButton = {text: "שכפול", action: (project) => this.cloneProject(project)};
+    this.regularMenuButtons = [{text: "הפעלה מחדש", action: (project) => this.activateProject(project)}, duplicate, {text: "מחיקה", action: (project) => this.softDeleteProject(project)}];
+    this.deletedProjectMenuButtons = [{text: "שחזור", action: (project) => this.activateProject(project)}, duplicate, {text: "מחיקה לנצח", action: (project) => this.deleteProject(project)}];
+  }
+
+  getMenuButtons(project: Project):MenuButton[] {
+    if (project.status === ProjectStatus.deleted) return this.deletedProjectMenuButtons;
+    return this.regularMenuButtons;
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -73,6 +88,12 @@ export class ArchiveComponent {
       this.projects.set(this.projects().concat(res))
       this.animationsService.changeIsloading(false);
     })
+  }
+
+  softDeleteProject(project: Project) {
+    project.status = ProjectStatus.deleted;
+    project.positionInList += 99999;
+    this.updateProjects([project]).subscribe();
   }
 
   deleteProject(project: Project) {

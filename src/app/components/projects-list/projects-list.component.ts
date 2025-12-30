@@ -123,19 +123,6 @@ export class ProjectsListComponent implements OnInit {
     });
   }
 
-  deleteProject(project: Project) {
-    if (project.id) {
-      this.animationsService.changeIsLoadingWithDelay();
-      const projectIndex = this.projects().indexOf(project);
-      const projects = [...this.projects()];
-      projects.splice(projectIndex, 1);
-      this.projects.set(projects);
-      this.httpService.deleteProject(project.id).subscribe(res => {
-        this.animationsService.changeIsloading(false);
-      })
-    }
-  }
-
   cloneProject(project: Project) {
     this.animationsService.changeIsLoadingWithDelay();
     const clonedProject = { ...project };

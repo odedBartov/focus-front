@@ -48,3 +48,8 @@ export class Project {
         this.startDate = new Date();
     }
 }
+
+export class MenuButton {
+    text = '';
+    action!: (project: Project) => void;
+}

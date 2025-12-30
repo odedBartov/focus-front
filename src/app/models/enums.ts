@@ -11,7 +11,8 @@ export const stepTypeLabels = {
 export enum ProjectStatus {
     active,
     frozen,
-    finished
+    finished,
+    deleted
 }
 
 export enum subscriptionEnum {
