@@ -6,7 +6,7 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 export class AutoResizeInputDirective {
   @Input() defaultHeight: string = 'auto';
   private resizePending = false;
-  
+
   constructor(private element: ElementRef) { }
 
   @HostListener('input')
@@ -33,9 +33,7 @@ export class AutoResizeInputDirective {
 
     // Reset and resize
     textarea.style.height = this.defaultHeight;  // Reset height to shrink if needed
-    setTimeout(() => {
-      textarea.style.height = textarea.scrollHeight + 'px';
-    }, 1);
+    textarea.style.height = textarea.scrollHeight + 'px';
     // Restore scroll position
     if (scrollableParent && scrollTop !== undefined && scrollableParent.scrollTop !== scrollTop) {
       scrollableParent.scrollTop = scrollTop;

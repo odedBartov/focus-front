@@ -441,6 +441,12 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       for (let index = 0; index < step.tasks.length; index++) {
         step.tasks[index].positionInStep = index;
       }
+      
+      const tmp = this.project().steps;
+      this.project().steps = [];
+      setTimeout(() => {
+        this.project().steps = tmp;
+      }, 0);
       this.updateStep(step);
     }
   }
