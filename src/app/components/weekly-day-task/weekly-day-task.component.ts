@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { isStep, isStepOrTaskComplete, StepOrTask } from '../../models/stepOrTask';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { Project } from '../../models/project';
 import { StepTask } from '../../models/stepTask';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { areDatesEqual, getTextForTask, getTodayAtMidnightLocal, isDateBeforeToday } from '../../helpers/functions';
+import { getTextForTask, isDateBeforeToday } from '../../helpers/functions';
 import { FutureRetainerStep } from '../../services/futureRetainerStep';
+import { StepType } from '../../models/enums';
 
 @Component({
   selector: 'app-weekly-day-task',
@@ -30,7 +31,7 @@ import { FutureRetainerStep } from '../../services/futureRetainerStep';
     ])
   ]
 })
-export class WeeklyDayTaskComponent {
+export class WeeklyDayTaskComponent implements OnInit {
   @ViewChild('weeklyDayTaskDiv', { static: false }) weeklyDayTaskDiv?: ElementRef;
   @Output() openProject = new EventEmitter<Project>();
   @Output() completeTask = new EventEmitter<StepOrTask>();
@@ -51,8 +52,14 @@ export class WeeklyDayTaskComponent {
   isHovering = false;
   isEditing = false;
   mouseDownInside = false;
+  isReadOnly = false;
 
   constructor(private renderer: Renderer2) { }
+
+  ngOnInit(): void {
+    // if its a monthly payment future task then it should be read only
+    this.isReadOnly = isStep(this.task.data) && this.task.data.isRetainerCopy && this.task.data.stepType == StepType.payment;
+  }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
@@ -66,11 +73,11 @@ export class WeeklyDayTaskComponent {
     this.mouseDownInside = false;
   }
 
-  isStepOrTaskComplete(task: StepOrTask) {
+  isStepOrTaskComplete(task: StepOrTask): boolean | undefined {
     return isStepOrTaskComplete(task);
   }
 
-  updateTask(task: StepTask) {
+  updateTask(task: StepTask): void {
     this.isEditing = false;
     if (task.text) {
       this.task.data = task;
@@ -78,12 +85,12 @@ export class WeeklyDayTaskComponent {
     }
   }
 
-  isDateBeforeToday() {
+  isDateBeforeToday(): boolean | undefined {
     const taskDate = this.task.data.dateOnWeekly;
     return taskDate && isDateBeforeToday(new Date(taskDate));
   }
 
-  changeTaskStatus(isComplete: boolean) {
+  changeTaskStatus(isComplete: boolean): void {
     this.task.data.isComplete = isComplete;
     if (!this.isDateBeforeToday()) {
       if (isStep(this.task.data) && this.task.data.isRetainerCopy) {

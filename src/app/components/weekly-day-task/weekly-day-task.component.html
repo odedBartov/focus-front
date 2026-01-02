@@ -1,4 +1,4 @@
-<div class="main" cdkDrag [cdkDragData]="task" [cdkDragDisabled]="isEditing || isStepOrTaskComplete(task)"
+<div class="main" cdkDrag [cdkDragData]="task" [cdkDragDisabled]="isEditing || isStepOrTaskComplete(task) || isReadOnly"
     (cdkDragStarted)="isDragging.dragging = true" (cdkDragEnded)="isDragging.dragging= false" (mousedown)="mouseDownInside = true"
     (mouseenter)="isHovering = true" (mouseleave)="isHovering = false" #weeklyDayTaskDiv>
     <div *ngIf="!isEditing && !isStepOrTaskComplete(task)" class="task">
@@ -10,7 +10,7 @@
         <div class="buttons" [@expandCollapse]="(isHovering && !isDragging.dragging) ? 'expanded' : 'collapsed'">
             <img class="icon-expand" style="width: 16px;" *ngIf="isStep(task.data)" (click)="openProject.emit(task.project)" />
             <img class="icon-pencil" style="width: 16px;" (click)="isEditing = true" *ngIf="!isStep(task.data)" />
-            <img class="icon-confirm-circle" style="width: 24px;" (click)="changeTaskStatus(true)" />
+            <img class="icon-confirm-circle" style="width: 24px;" (click)="changeTaskStatus(true)" *ngIf="!isReadOnly"/>
         </div>
     </div>
     <div *ngIf="isEditing">
