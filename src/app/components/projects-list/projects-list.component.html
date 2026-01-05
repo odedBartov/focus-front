@@ -2,12 +2,12 @@
     <div class="projects-list">
         <div class="title new-h2">פרויקטים פעילים</div>
         <div class="projects-filter">
-            <span class="new-small" (click)="filterProjects()" [ngClass]="{'selected': projectsFilter === undefined}">כל
-                הפרוייקטים</span>
+            <span class="new-small" (click)="filterProjects()" [ngClass]="{'selected': projectsFilter() === undefined}">כל
+                הפרויקטים</span>
             <span class="new-small" (click)="filterProjects(projectTypeEnum.proccess)"
-                [ngClass]="{'selected': projectsFilter === projectTypeEnum.proccess}">תהליכים</span>
+                [ngClass]="{'selected': projectsFilter() === projectTypeEnum.proccess}">תהליכים</span>
             <span class="new-small" (click)="filterProjects(projectTypeEnum.retainer)"
-                [ngClass]="{'selected': projectsFilter === projectTypeEnum.retainer}">ריטיינרים</span>
+                [ngClass]="{'selected': projectsFilter() === projectTypeEnum.retainer}">ריטיינרים</span>
         </div>
     </div>
     <div cdkDropList (cdkDropListDropped)="drop($event)">

@@ -4,6 +4,7 @@ import { Project } from '../models/project';
 import { IStepOrTask, StepOrTask } from '../models/stepOrTask';
 import { Step } from '../models/step';
 import { areDatesEqual, getTodayAtMidnightLocal } from '../helpers/functions';
+import { projectTypeEnum } from '../models/enums';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class ProjectsService {
   tasksWithoutDate: StepOrTask[] = [];
   currentAndFutureTasks: { project: Project, tasks: StepOrTask[] }[] = []; // without date, no matter if active or not
   projectWithOpenNotes = signal<Project | undefined>(undefined);
+  currentProjectFilter = signal<projectTypeEnum | undefined>(undefined); 
 
   getActiveProjects() {
     return this.activeProjects;

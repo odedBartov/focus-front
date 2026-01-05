@@ -36,17 +36,17 @@ export class ProjectsListComponent implements OnInit {
   router = inject(Router);
   projectStatusEnum = ProjectStatus;
   projectTypeEnum = projectTypeEnum;
-  projectsFilter?: projectTypeEnum;
+  projectsFilter: WritableSignal<projectTypeEnum | undefined>;
   userSubscription = subscriptionEnum.free;
-  filterType?: projectTypeEnum
 
   constructor() {
     this.projects = this.projectsService.getActiveProjects();
-    this.filterProjects();
+    this.projectsFilter = this.projectsService.currentProjectFilter;
+    this.filterProjects(this.projectsFilter());
 
     effect(() => {
       this.filteredProjects = [...this.projects()];
-      this.filterProjects(this.filterType);
+      this.filterProjects(this.projectsFilter());
     });
   }
 
@@ -55,8 +55,7 @@ export class ProjectsListComponent implements OnInit {
   }
 
   filterProjects(filterType?: projectTypeEnum) {
-    this.filterType = filterType;
-    this.projectsFilter = filterType;
+    this.projectsFilter.set(filterType);
     var filterLambda = (p: Project) => true;
 
     if (filterType === projectTypeEnum.proccess) {
