@@ -17,7 +17,16 @@ import { DOMParser as ProseMirrorDOMParser } from 'prosemirror-model';
 })
 export class RichTextComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit {
   @ViewChild('editorWrapper', { read: ElementRef }) editorWrapper!: ElementRef;
-  @Input() project?: Project;
+  private _project?: Project;
+  @Input()
+  set project(value: Project | undefined) {
+    this._project = value;
+    this.editorControl = new FormControl({ value: '', disabled: this.isReadOnly() });
+  }
+
+  get project(): Project | undefined {
+    return this._project;
+  }
   @Input() expanded?: boolean;
   httpService = inject(HttpService);
   authenticationService = inject(AuthenticationService);
