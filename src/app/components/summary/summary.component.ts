@@ -27,7 +27,8 @@ export class SummaryComponent implements OnInit {
         this.steps = this.steps.concat(finishedSteps);
       }
     });
-    this.initChart();
+    // this.initChart();
+    this.initDynamicChart();
   }
   updatedProjects: Project[] = [];
   greetings: { hour: number, greeting: string }[] = [{ hour: 5, greeting: 'לילה טוב' },
@@ -53,48 +54,91 @@ export class SummaryComponent implements OnInit {
   graphMonths: number[] = [];
   isPayedHovered = false;
   hoverTimeout: any;
-  graphScales: number[] = [10, 20, 40, 60, 80, 100, 150, 200, 300, 400, 500, 600, 700, 800, 900, 1000,
-    1200, 1400, 1600, 1800, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 6000, 7000, 8000, 9000, 10000,
-    12000, 14000, 16000, 18000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 60000, 70000, 80000, 90000, 100000, 120000, 140000,
-    160000, 180000, 200000, 250000, 300000, 350000, 400000, 450000, 500000, 600000, 700000, 800000, 900000, 1000000];
+  graphScales: number[] = [1000, 2000, 5000, 10000, 20000, 50000];
+  monthsInGraph = 7;
 
   ngOnInit(): void {
     this.initCoffeePicture();
     this.userName = this.authService.getFirstName();
     this.calculateCoffeeRotation();
-    this.initChart();
+    // this.initChart();
+    this.initDynamicChart();
   }
 
-  initChart() {
+  // initChart() {
+  //   const today = new Date();
+  //   const todayMonth = today.getMonth();
+  //   const todayYear = today.getFullYear();
+  //   const filteredMonths = [];
+  //   const half = Math.floor(this.monthsInGraph / 2);
+  //   const paymentSteps = this.steps.filter(s => s && s.stepType === StepType.payment) as Step[];
+  //   this.graphMonths = [];
+  //   for (let index = 0; index < this.monthsInGraph; index++) {
+  //     const offset = half - index;
+  //     const targetDate = new Date(todayYear, todayMonth + offset, 1);
+  //     this.graphMonths.push(this.getMonthForChart(targetDate.getMonth()+1));
+  //     if (offset > 0) {
+  //       filteredMonths[index] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateDue, targetDate) && !s.isComplete);
+  //       this.pastPayments[index] = 0;
+  //       this.futurePayments[index] = filteredMonths[index].reduce((sum, step) => sum + step.price, 0);
+  //     } else if (offset < 0) {
+  //       filteredMonths[index] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateCompleted, targetDate) && s.isComplete);
+  //       this.pastPayments[index] = filteredMonths[index].reduce((sum, step) => sum + (step.isComplete ? step.price : 0), 0);
+  //       this.futurePayments[index] = 0;
+  //     } else {
+  //       filteredMonths[index] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateCompleted, targetDate) || (!s.isComplete && this.compareYearAndMonth(s?.dateDue, targetDate)));
+  //       this.pastPayments[index] = filteredMonths[index].reduce((sum, step) => sum + (step.isComplete ? step.price : 0), 0);
+  //       this.futurePayments[index] = filteredMonths[index].reduce((sum, step) => sum + (!step.isComplete ? step.price : 0), 0);
+  //     }
+  //   }
+
+  //   this.calculateMonthlyRetainerPayments(paymentSteps);
+  //   this.calculateHourlyRetainerPayments();
+
+  //   this.calculateGraphScale();
+  // }
+
+  initDynamicChart() {
+    const half = Math.floor(this.monthsInGraph / 2);
     const today = new Date();
-    const todayMonth = today.getMonth();
-    const twoMonthsAgo = new Date(today.getFullYear(), todayMonth - 2, 1);
-    const oneMonthAgo = new Date(today.getFullYear(), todayMonth - 1, 1);
-    const oneMonthFuture = new Date(today.getFullYear(), todayMonth + 1, 1);
-    const twoMonthsFuture = new Date(today.getFullYear(), todayMonth + 2, 1);
-    this.graphMonths = [this.getMonthForChart(todayMonth + 3), this.getMonthForChart(todayMonth + 2), this.getMonthForChart(todayMonth + 1), this.getMonthForChart(todayMonth), this.getMonthForChart(todayMonth - 1)];
+
+    // Initialize/Reset arrays
+    this.graphMonths = [];
+    this.pastPayments = [];
+    this.futurePayments = [];
+
     const paymentSteps = this.steps.filter(s => s && s.stepType === StepType.payment) as Step[];
-    const filteredMonths = [];
-    filteredMonths[0] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateDue, twoMonthsFuture) && !s.isComplete);
-    filteredMonths[1] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateDue, oneMonthFuture) && !s.isComplete);
-    filteredMonths[2] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateCompleted, today) || (!s.isComplete && this.compareYearAndMonth(s?.dateDue, today)));
-    filteredMonths[3] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateCompleted, oneMonthAgo) && s.isComplete);
-    filteredMonths[4] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateCompleted, twoMonthsAgo) && s.isComplete);
 
-    this.pastPayments[0] = 0;
-    this.pastPayments[1] = 0;
-    this.pastPayments[2] = filteredMonths[2].reduce((sum, step) => sum + (step.isComplete ? step.price : 0), 0);
-    this.pastPayments[3] = filteredMonths[3].reduce((sum, step) => sum + (step.isComplete ? step.price : 0), 0);
-    this.pastPayments[4] = filteredMonths[4].reduce((sum, step) => sum + (step.isComplete ? step.price : 0), 0);
+    for (let i = 0; i < this.monthsInGraph; i++) {
+      // Offset calculates the distance from today. 
+      // If totalMonths is 7: i=0 is offset +3 (Future), i=3 is offset 0 (Today), i=6 is offset -3 (Past)
+      const offset = half - i;
+      const targetDate = new Date(today.getFullYear(), today.getMonth() + offset, 1);
 
-    this.futurePayments[0] = filteredMonths[0].reduce((sum, step) => sum + step.price, 0);
-    this.futurePayments[1] = filteredMonths[1].reduce((sum, step) => sum + step.price, 0);
-    this.futurePayments[2] = filteredMonths[2].reduce((sum, step) => sum + (!step.isComplete ? step.price : 0), 0);
-    this.futurePayments[3] = 0;
-    this.futurePayments[4] = 0;
+      // 1. Set the Label
+      this.graphMonths[i] = this.getMonthForChart(today.getMonth() + offset);
+
+      // 2. Filter steps for this specific month
+      const monthsSteps = paymentSteps.filter(s => {
+        if (offset > 0) {
+          // Future Months: Look for incomplete items due in that month
+          return this.compareYearAndMonth(s.dateDue, targetDate) && !s.isComplete;
+        } else if (offset === 0) {
+          // Current Month: Items completed this month OR items due this month but not complete
+          return this.compareYearAndMonth(s.dateCompleted, today) ||
+            (!s.isComplete && this.compareYearAndMonth(s.dateDue, today));
+        } else {
+          // Past Months: Look for items completed in that month
+          return this.compareYearAndMonth(s.dateCompleted, targetDate) && s.isComplete;
+        }
+      });
+
+      // 3. Sum the payments
+      this.pastPayments[i] = monthsSteps.reduce((sum, s) => sum + (s.isComplete ? s.price : 0), 0);
+      this.futurePayments[i] = monthsSteps.reduce((sum, s) => sum + (!s.isComplete ? s.price : 0), 0);
+    }
     this.calculateMonthlyRetainerPayments(paymentSteps);
     this.calculateHourlyRetainerPayments();
-
     this.calculateGraphScale();
   }
 
@@ -125,20 +169,24 @@ export class SummaryComponent implements OnInit {
 
   getPastGraphValue(index: number) {
     let value = this.pastPayments[index];
-    return (value / (this.futurePayments[index] > 0 ? this.futurePayments[index] + value : 1)) * 100;
+    const res = (value / (this.futurePayments[index] > 0 ? this.futurePayments[index] + value : 1)) * 100;
+    return res;
+    
   }
 
-  getFutureGraphValue(index: number) {
+  getFutureGraphValue(index: number): number {
     let value = this.pastPayments[index] + this.futurePayments[index];
-    return (value / this.maxGraphValue) * 100;
+    const res = (value / this.maxGraphValue) * 100;
+    return res
   }
 
   calculateMonthlyRetainerPayments(paymentSteps: Step[]) {
     if (this.updatedProjects) {
       this.updatedProjects.forEach(project => {
         if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.monthly) {
-          this.futurePayments[0] += project.reccuringPayment ?? 0;
-          this.futurePayments[1] += project.reccuringPayment ?? 0;
+          for (let index = 0; index < Math.floor(this.futurePayments.length/2); index++) {
+            this.futurePayments[index] += project.reccuringPayment ?? 0;            
+          }
         }
       });
 
@@ -154,7 +202,7 @@ export class SummaryComponent implements OnInit {
         step.dateCompleted) {
         const dateCompleted = new Date(step.dateCompleted);
         if (dateCompleted < startOfThisMonth) {
-          this.futurePayments[2] += step.price;
+          this.futurePayments[Math.floor(this.futurePayments.length/2)] += step.price;
         }
       }
     });
@@ -167,9 +215,9 @@ export class SummaryComponent implements OnInit {
         let finishedPayments = project.steps.filter(s => s.stepType === StepType.payment && s.isComplete).reduce((a, b) => a += b.price, 0);
         project.hourlyWorkSessions.forEach(session => {
           const sessionPayment = Math.round((session.workTime / 3600000) * (project.reccuringPayment ?? 0));
-          this.futurePayments[2] += sessionPayment;
+          this.futurePayments[Math.floor(this.futurePayments.length/2)] += sessionPayment;
         });
-        this.futurePayments[2] -= finishedPayments;
+        this.futurePayments[Math.floor(this.futurePayments.length/2)] -= finishedPayments;
       }
     });
   }
@@ -177,10 +225,10 @@ export class SummaryComponent implements OnInit {
   calculateGraphScale() {
     const maxPast = Math.max(...this.pastPayments);
     const maxFuture = Math.max(...this.futurePayments);
-    const todaySum = this.pastPayments[2] + this.futurePayments[2];
+    const todaySum = this.pastPayments[Math.floor(this.pastPayments.length/2)] + this.futurePayments[Math.floor(this.futurePayments.length/2)];
     const maxPayment = Math.max(maxPast, maxFuture, todaySum);
     const maxScale = this.graphScales.find(n => n > maxPayment);
-    this.maxGraphValue = maxScale ?? 0;
+    this.maxGraphValue = maxScale ?? 1;    
   }
 
   startCoffeeRotationCalculation() {
@@ -215,9 +263,10 @@ export class SummaryComponent implements OnInit {
   }
 
   tooltipText(i: number) {
-    if (i < 2) {
+    const half = Math.floor(this.monthsInGraph/2);    
+    if (i < half) {
       return 'הכנסות צפויות: ' + this.futurePayments[i] + ' ₪';
-    } else if (i == 2) {
+    } else if (i == half) {
       return 'הכנסות: ' + this.pastPayments[i] + ' ₪\n' + 'הכנסות צפויות: ' + this.futurePayments[i] + ' ₪\n' + 'סך הכל: ' + (this.pastPayments[i] + this.futurePayments[i]) + ' ₪';
     } else {
       return 'הכנסות: ' + this.pastPayments[i] + ' ₪';
