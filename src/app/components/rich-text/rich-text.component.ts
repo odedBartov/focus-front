@@ -15,13 +15,19 @@ import { DOMParser as ProseMirrorDOMParser } from 'prosemirror-model';
   templateUrl: './rich-text.component.html',
   styleUrl: './rich-text.component.scss'
 })
-export class RichTextComponent implements OnDestroy, OnChanges, OnInit, AfterViewInit {
+export class RichTextComponent implements OnDestroy, OnInit, AfterViewInit {
   @ViewChild('editorWrapper', { read: ElementRef }) editorWrapper!: ElementRef;
   private _project?: Project;
   @Input()
   set project(value: Project | undefined) {
     this._project = value;
     this.editorControl = new FormControl({ value: '', disabled: this.isReadOnly() });
+    setTimeout(() => {
+      if (this.project?.notes) {
+        this.scrollToBottom();
+        this.editor.setContent(this.project.notes)
+      }
+    }, 1);
   }
 
   get project(): Project | undefined {
@@ -82,19 +88,16 @@ export class RichTextComponent implements OnDestroy, OnChanges, OnInit, AfterVie
     this.editor.registerPlugin(preserveHtmlPastePlugin);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['project'] && this.project) {
-      setTimeout(() => {
-        if (this.project?.notes) {
-          this.editor.setContent(this.project.notes)
-        }
-      }, 1);
-    }
-  }
-
   ngOnDestroy(): void {
     this.editor.destroy();
     this.valueChangesSub?.unsubscribe();
+  }
+
+  scrollToBottom() {
+    const container = this.editorWrapper?.nativeElement;
+    setTimeout(() => {
+      container.scrollTop = container.scrollHeight;
+    }, 1);
   }
 
   editorChanged(value: string) {
