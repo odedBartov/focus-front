@@ -94,7 +94,6 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
         this.scrollToFirstIncomplete();
       }, 1);
     });
-
   }
 
   scrollToBottom() {

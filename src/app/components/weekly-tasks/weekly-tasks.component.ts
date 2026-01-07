@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, inject, NgZone, Output, QueryList, signal, ViewChildren, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, EventEmitter, inject, Output, QueryList, ViewChildren, WritableSignal } from '@angular/core';
 import { Project } from '../../models/project';
 import { ProjectsService } from '../../services/projects.service';
 import { isStep, StepOrTask } from '../../models/stepOrTask';
@@ -55,7 +55,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
   isDraggingTaskToProjects = false;
   isDragging = { dragging: false };
 
-  constructor(private ngZone: NgZone, private cdr: ChangeDetectorRef) {
+  constructor() {
     this.projects = this.projectsService.getActiveProjects();
     this.noProject = this.projectsService.getNoProject();
     effect(() => {
@@ -65,12 +65,10 @@ export class WeeklyTasksComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initPresentedDays();
-    this.ngZone.onStable.asObservable().pipe().subscribe(() => {
-      setTimeout(() => {
-        const width = this.days.first.nativeElement.offsetWidth;
-        document.documentElement.style.setProperty('--task-width', `${width - 30}px`);
-      }, 1);
-    });
+    setTimeout(() => {
+      const width = this.days.first.nativeElement.offsetWidth;
+      document.documentElement.style.setProperty('--task-width', `${width - 30}px`);
+    }, 1);
   }
 
   get allDropListIds(): string[] {
