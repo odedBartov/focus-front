@@ -22,12 +22,12 @@ export class SummaryComponent implements OnInit {
     projects.forEach(project => {
       if (project.status === ProjectStatus.active && !(project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.hourly)) {
         this.steps = this.steps.concat(project.steps);
-      } else if (project.status !== ProjectStatus.frozen) {
+      } else if (project.status !== ProjectStatus.frozen && project.status !== ProjectStatus.deleted) {
         const finishedSteps = project.steps.filter(s => s.isComplete);
         this.steps = this.steps.concat(finishedSteps);
       }
     });
-    // this.initChart();
+    // this.initChart();    
     this.initDynamicChart();
   }
   updatedProjects: Project[] = [];
@@ -183,7 +183,7 @@ export class SummaryComponent implements OnInit {
   calculateMonthlyRetainerPayments(paymentSteps: Step[]) {
     if (this.updatedProjects) {
       this.updatedProjects.forEach(project => {
-        if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.monthly) {
+        if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.monthly && project.status === ProjectStatus.active) {
           for (let index = 0; index < Math.floor(this.futurePayments.length / 2); index++) {
             this.futurePayments[index] += project.reccuringPayment ?? 0;
           }
