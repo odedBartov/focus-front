@@ -55,14 +55,14 @@ export class SummaryComponent implements OnInit {
   isPayedHovered = false;
   hoverTimeout: any;
   graphScales: number[] = [1000, 2000, 5000, 10000, 20000, 50000];
-  monthsInGraph = 7;
+  monthsInGraph = 5;
 
   ngOnInit(): void {
     this.initCoffeePicture();
     this.userName = this.authService.getFirstName();
     this.calculateCoffeeRotation();
     // this.initChart();
-    this.initDynamicChart();
+    this.initDynamicChart();    
   }
 
   // initChart() {
@@ -116,7 +116,7 @@ export class SummaryComponent implements OnInit {
       const targetDate = new Date(today.getFullYear(), today.getMonth() + offset, 1);
 
       // 1. Set the Label
-      this.graphMonths[i] = this.getMonthForChart(today.getMonth() + offset);
+      this.graphMonths[i] = this.getMonthForChart(today.getMonth() + offset+1);
 
       // 2. Filter steps for this specific month
       const monthsSteps = paymentSteps.filter(s => {
@@ -184,7 +184,7 @@ export class SummaryComponent implements OnInit {
     if (this.updatedProjects) {
       this.updatedProjects.forEach(project => {
         if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.monthly) {
-          for (let index = 0; index < Math.floor(this.futurePayments.length/2); index++) {
+          for (let index = 0; index <= Math.floor(this.futurePayments.length/2); index++) {
             this.futurePayments[index] += project.reccuringPayment ?? 0;            
           }
         }
