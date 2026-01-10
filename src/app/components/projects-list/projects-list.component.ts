@@ -17,6 +17,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-feature-modal.component';
 import { Step } from '../../models/step';
 import { getTodayAtMidnightLocal } from '../../helpers/functions';
+import { getNextRetainerOccurrenceDate } from '../../helpers/retainerFunctions';
 
 @Component({
   selector: 'app-projects-list',
@@ -198,13 +199,13 @@ export class ProjectsListComponent implements OnInit {
               newStep.recurringEvery = 1;
               newStep.stepType = StepType.payment;
               newStep.dateDue = new Date();
-              if (newProject.monthlyPaymentDay === new Date().getDate()) {
-                newStep.nextOccurrence = getTodayAtMidnightLocal();
-              } else {
-                const nextOccurrence = getTodayAtMidnightLocal();
+              const nextOccurrence = getTodayAtMidnightLocal();
+              if (newProject.monthlyPaymentDay !== new Date().getDate()) {
                 nextOccurrence.setDate(newProject.monthlyPaymentDay);
-                nextOccurrence.setMonth(nextOccurrence.getMonth() + newStep.recurringEvery);
+                nextOccurrence.setMonth(nextOccurrence.getMonth() + newStep.recurringEvery-1);
               }
+              newStep.dateOnWeekly = nextOccurrence;
+              newStep.nextOccurrence = getNextRetainerOccurrenceDate(newStep);
               this.httpService.createStep(newStep).subscribe(res => {
                 newProject.steps.push(res);
                 setTimeout(() => {
