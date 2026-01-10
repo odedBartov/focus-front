@@ -55,7 +55,7 @@ export class SummaryComponent implements OnInit {
   isPayedHovered = false;
   hoverTimeout: any;
   graphScales: number[] = [1000, 2000, 5000, 10000, 20000, 50000];
-  monthsInGraph = 5;
+  monthsInGraph = 7;
 
   ngOnInit(): void {
     this.initCoffeePicture();
