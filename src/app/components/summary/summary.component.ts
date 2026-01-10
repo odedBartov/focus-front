@@ -116,7 +116,7 @@ export class SummaryComponent implements OnInit {
       const targetDate = new Date(today.getFullYear(), today.getMonth() + offset, 1);
 
       // 1. Set the Label
-      this.graphMonths[i] = this.getMonthForChart(today.getMonth() + offset+1);
+      this.graphMonths[i] = this.getMonthForChart(today.getMonth() + offset + 1);
 
       // 2. Filter steps for this specific month
       const monthsSteps = paymentSteps.filter(s => {
@@ -171,7 +171,7 @@ export class SummaryComponent implements OnInit {
     let value = this.pastPayments[index];
     const res = (value / (this.futurePayments[index] > 0 ? this.futurePayments[index] + value : 1)) * 100;
     return res;
-    
+
   }
 
   getFutureGraphValue(index: number): number {
@@ -184,10 +184,8 @@ export class SummaryComponent implements OnInit {
     if (this.updatedProjects) {
       this.updatedProjects.forEach(project => {
         if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.monthly) {
-          for (let index = 0; index < Math.floor(this.futurePayments.length/2); index++) {
-            console.log(index);
-            
-            this.futurePayments[index] += project.reccuringPayment ?? 0;            
+          for (let index = 0; index < Math.floor(this.futurePayments.length / 2); index++) {
+            this.futurePayments[index] += project.reccuringPayment ?? 0;
           }
         }
       });
@@ -204,7 +202,7 @@ export class SummaryComponent implements OnInit {
         step.dateCompleted) {
         const dateCompleted = new Date(step.dateCompleted);
         if (dateCompleted < startOfThisMonth) {
-          this.futurePayments[Math.floor(this.futurePayments.length/2)] += step.price;
+          this.futurePayments[Math.floor(this.futurePayments.length / 2)] += step.price;
         }
       }
     });
@@ -217,9 +215,9 @@ export class SummaryComponent implements OnInit {
         let finishedPayments = project.steps.filter(s => s.stepType === StepType.payment && s.isComplete).reduce((a, b) => a += b.price, 0);
         project.hourlyWorkSessions.forEach(session => {
           const sessionPayment = Math.round((session.workTime / 3600000) * (project.reccuringPayment ?? 0));
-          this.futurePayments[Math.floor(this.futurePayments.length/2)] += sessionPayment;
+          this.futurePayments[Math.floor(this.futurePayments.length / 2)] += sessionPayment;
         });
-        this.futurePayments[Math.floor(this.futurePayments.length/2)] -= finishedPayments;
+        this.futurePayments[Math.floor(this.futurePayments.length / 2)] -= finishedPayments;
       }
     });
   }
@@ -227,10 +225,10 @@ export class SummaryComponent implements OnInit {
   calculateGraphScale() {
     const maxPast = Math.max(...this.pastPayments);
     const maxFuture = Math.max(...this.futurePayments);
-    const todaySum = this.pastPayments[Math.floor(this.pastPayments.length/2)] + this.futurePayments[Math.floor(this.futurePayments.length/2)];
+    const todaySum = this.pastPayments[Math.floor(this.pastPayments.length / 2)] + this.futurePayments[Math.floor(this.futurePayments.length / 2)];
     const maxPayment = Math.max(maxPast, maxFuture, todaySum);
     const maxScale = this.graphScales.find(n => n > maxPayment);
-    this.maxGraphValue = maxScale ?? 1;    
+    this.maxGraphValue = maxScale ?? 1;
   }
 
   startCoffeeRotationCalculation() {
@@ -265,7 +263,7 @@ export class SummaryComponent implements OnInit {
   }
 
   tooltipText(i: number) {
-    const half = Math.floor(this.monthsInGraph/2);    
+    const half = Math.floor(this.monthsInGraph / 2);
     if (i < half) {
       return 'הכנסות צפויות: ' + this.futurePayments[i] + ' ₪';
     } else if (i == half) {
