@@ -62,7 +62,7 @@ export class SummaryComponent implements OnInit {
     this.userName = this.authService.getFirstName();
     this.calculateCoffeeRotation();
     // this.initChart();
-    this.initDynamicChart();    
+    //this.initDynamicChart();    
   }
 
   // initChart() {
@@ -184,7 +184,9 @@ export class SummaryComponent implements OnInit {
     if (this.updatedProjects) {
       this.updatedProjects.forEach(project => {
         if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.monthly) {
-          for (let index = 0; index <= Math.floor(this.futurePayments.length/2); index++) {
+          for (let index = 0; index < Math.floor(this.futurePayments.length/2); index++) {
+            console.log(index);
+            
             this.futurePayments[index] += project.reccuringPayment ?? 0;            
           }
         }
