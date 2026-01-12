@@ -222,13 +222,13 @@ export class NewStepComponent implements AfterViewInit {
   }
 
   setIsCompleteForRecurringStep() {
-    if (!this.isEdit) {
-      if (this.newStep.isRecurring && this.newStep.recurringDateType === recurringDateTypeEnum.day) {
-        this.newStep.isComplete = false;
-      } else {
-        this.newStep.isComplete = !areDatesEqual(new Date(), this.newStep.nextOccurrence)
-      }
-    }
+    // if (!this.isEdit) {
+    //   if (this.newStep.isRecurring && this.newStep.recurringDateType === recurringDateTypeEnum.day) {
+    //     this.newStep.isComplete = false;
+    //   } else {
+    //     this.newStep.isComplete = !areDatesEqual(new Date(), this.newStep.nextOccurrence)
+    //   }
+    // }
   }
 
   validateStep(): boolean {

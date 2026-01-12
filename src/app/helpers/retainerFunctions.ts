@@ -117,7 +117,9 @@ export function getOcurencesInRange(step: Step, start: Date, end: Date): Date[] 
     } else if (step.recurringDateType === recurringDateTypeEnum.week) {
         const days = step.recurringDaysInWeek ?? [];
         nextOcurence.setDate(nextOcurence.getDate() - nextOcurence.getDay());
-        while (!isDateGreaterOrEqual(nextOcurence, start)) {
+        const reallSunday = new Date(start);
+        reallSunday.setDate(reallSunday.getDate() - start.getDay());        
+        while (!isDateGreaterOrEqual(nextOcurence, reallSunday)) { // get from past to current week
             nextOcurence.setDate(nextOcurence.getDate() + (7 * (step.recurringEvery ?? 1)));
         }
         // take the days
