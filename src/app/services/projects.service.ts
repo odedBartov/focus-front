@@ -98,7 +98,6 @@ export class ProjectsService {
     if (project) project.steps.push(step);
   }
 
-
   insertTaskToList(list: StepOrTask[], parentStep: Step, data: IStepOrTask, project?: Project) {
     const taskOrStep = new StepOrTask();
     taskOrStep.data = data;

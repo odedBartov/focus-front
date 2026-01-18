@@ -27,6 +27,7 @@ export class Project {
     retainerPayments: RetainerPayment[]; // list of all retainer payments logged for this project - only for monthly retainer
     hourlyWorkSessions: HourlyWorkSession[]; // list of all hourly work sessions logged for this project - only for hourly retainer
     isConcentForAi?: boolean;
+    lastModifiedDate?: Date;
 
     constructor() {
         this.id = '';

@@ -2,8 +2,8 @@
     <div class="title new-h2">
         <span>ארכיון פרויקטים</span>
     </div>
-    <div cdkDropList (cdkDropListDropped)="drop($event)">
-        <div class="project-drag" *ngFor="let project of projects()" cdkDrag>
+    <div>
+        <div class="project-drag" *ngFor="let project of projects()">
             <div class="project" (contextmenu)="openMenu($event, menuTrigger, menuAnchor)">
                 <img class="status-icon"
                     [src]="`assets/icons/${projectStatusIcons[project.status]}.svg`" />

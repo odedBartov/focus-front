@@ -114,7 +114,8 @@ export class ProjectsListComponent implements OnInit {
     if (status === ProjectStatus.finished) {
       this.animationsService.showFinishProject();
     }
-    this.updateProjects([project]).subscribe(res => {
+    this.updateProjects([project]).subscribe((res: Project[]) => {   
+      project = res[0]; // the updated project, have some new data from the server
       const activeProjects = [...this.projects()]
       activeProjects.splice(this.projects().indexOf(project), 1);
 
