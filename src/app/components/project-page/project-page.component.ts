@@ -411,7 +411,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     cdkPreview.style.height = (div.scrollHeight + 18) + 'px';
   }
 
-  dropStep(event: CdkDragDrop<string[]>, retainerSteps?: Step[]) {
+  dropStep(event: CdkDragDrop<string[]>, retainerSteps?: Step[]): void {
     if (this.project()?.steps) {
       if (this.isRetainer && retainerSteps) {
         moveItemInArray(retainerSteps, event.previousIndex, event.currentIndex);
@@ -435,23 +435,23 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  dropTask(event: CdkDragDrop<any[]>, step: Step) {
+  dropTask(event: CdkDragDrop<any[]>, step: Step): void {
     if (step.tasks) {
       moveItemInArray(step.tasks, event.previousIndex, event.currentIndex);
       for (let index = 0; index < step.tasks.length; index++) {
         step.tasks[index].positionInStep = index;
       }
       
-      const tmp = this.project().steps;
-      this.project().steps = [];
+      const tmp = step.tasks;
+      step.tasks = [];
       setTimeout(() => {
-        this.project().steps = tmp;
+        step.tasks = tmp
+        this.updateStep(step);
       }, 0);
-      this.updateStep(step);
     }
   }
 
-  loadProject() {
+  loadProject(): void {
     if (this.projectId) {
       this.animationsService.changeIsloading(true);
       this.httpService.getProject(this.projectId).subscribe(res => {
@@ -467,7 +467,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  calculatePayments() {
+  calculatePayments(): void {
     this.baseProjectPrice = 0;
     this.paidMoney = 0;
 
@@ -486,7 +486,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  changeStepStatus(step: Step) {
+  changeStepStatus(step: Step): void {
     this.animatingItemId = step.isRecurring || (!step.isRecurring && !step.isComplete) ? step.id : undefined;
     this.changeDetectorRef.detectChanges(); // Ensure the view is updated before the animation starts
     setTimeout(() => {
