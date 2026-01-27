@@ -73,6 +73,10 @@ export class WeeklyDayTaskComponent implements OnInit {
     this.mouseDownInside = false;
   }
 
+  isStepWeekly(): boolean { // dragging retainer steps cause troubles, for now i disable it
+    return (isStep(this.task) && this.task.isRetainerCopy);
+  }
+
   isStepOrTaskComplete(task: StepOrTask): boolean | undefined {
     return isStepOrTaskComplete(task);
   }
