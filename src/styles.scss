@@ -538,3 +538,11 @@ input::-webkit-inner-spin-button {
         content: url('/assets/icons/send_blue.svg');
     }
 }
+
+.icon-share {
+    content: url('/assets/icons/share.svg');
+
+    &:hover {
+        content: url('/assets/icons/share_blue.svg');
+    }
+}

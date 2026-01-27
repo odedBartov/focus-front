@@ -4,7 +4,11 @@
             <div class="info">
                 <div class="text-and-icon">
                     <span class="title new-h1">{{project().name}}</span>
-                    <img class="pointer icon-expand" (click)="openProjectModal()" *ngIf="!isReadOnly()" />
+                    <div class="icons">
+                        <span></span>
+                        <img class="pointer icon-share" (click)="copyProjectUrl(tooltip)" matTooltip="הקישור הועתק" matTooltipDisabled="true" matTooltipPosition="above" matTooltipClass="custom-tooltip" #tooltip="matTooltip"/>
+                        <img class="pointer icon-expand" (click)="openProjectModal()" *ngIf="!isReadOnly()"/>
+                    </div>
                 </div>
                 <span class="description new-small" *ngIf="project().description">
                     {{project().description}}

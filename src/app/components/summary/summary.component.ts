@@ -5,7 +5,6 @@ import { Project } from '../../models/project';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { paymentModelEnum, ProjectStatus, projectTypeEnum, recurringDateTypeEnum, StepType } from '../../models/enums';
 import { Step } from '../../models/step';
-import { HourlyWorkSession } from '../../models/hourlyWorkSession';
 
 @Component({
   selector: 'app-summary',

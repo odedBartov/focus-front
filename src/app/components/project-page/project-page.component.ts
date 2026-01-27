@@ -7,7 +7,7 @@ import { Step } from '../../models/step';
 import { AnimationsService } from '../../services/animations.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NewStepComponent } from '../new-step/new-step.component';
 import { paymentModelEnum, ProjectStatus, projectTypeEnum, recurringDateTypeEnum, retainerPaymentTypeEnum, StepType } from '../../models/enums';
@@ -246,6 +246,16 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.retainerFinishedSteps = retainerSteps.retainerFinishedSteps;
   }
 
+  copyProjectUrl(tooltip: MatTooltip) {
+    navigator.clipboard.writeText(window.location.href);
+    tooltip.disabled = false;
+    tooltip.show();
+    setTimeout(() => {
+      tooltip.disabled = true;
+      tooltip.hide();
+    }, 1000);
+  }
+
   getProjectPrice(): number {
     if (this.isRetainer && this.project().paymentModel === paymentModelEnum.hourly) {
       const totalHours = this.project().hourlyWorkSessions.reduce((acc, session) => acc + (session.workTime / 3600000), 0);
@@ -441,7 +451,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       for (let index = 0; index < step.tasks.length; index++) {
         step.tasks[index].positionInStep = index;
       }
-      
+
       const tmp = step.tasks;
       step.tasks = [];
       setTimeout(() => {
