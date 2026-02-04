@@ -47,34 +47,34 @@ export class ProjectsService {
     this.tasksWithoutDate = [];
     this.currentAndFutureTasks = [];
 
-    const weeklyTasksStep = this.noProject().steps.find(s => s.name === 'weeklyTasks');
-    if (weeklyTasksStep) {
-      weeklyTasksStep.tasks?.forEach(task => {
-        if (task.dateOnWeekly) {
-          this.insertTaskToList(this.tasksWithDate, weeklyTasksStep, task, this.noProject());
-        } else {
-          this.insertTaskToFutueTasks(this.noProject(), weeklyTasksStep, task);
-          this.insertTaskToList(this.tasksWithoutDate, weeklyTasksStep, task, this.noProject());
-        }
-      });
-    }
+    // const weeklyTasksStep = this.noProject().steps.find(s => s.name === 'weeklyTasks');
+    // if (weeklyTasksStep) {
+    //   weeklyTasksStep.tasks?.forEach(task => {
+    //     if (task.dateOnWeekly) {
+    //       this.insertTaskToList(this.tasksWithDate, weeklyTasksStep, task, this.noProject());
+    //     } else {
+    //       this.insertTaskToFutueTasks(this.noProject(), weeklyTasksStep, task);
+    //       this.insertTaskToList(this.tasksWithoutDate, weeklyTasksStep, task, this.noProject());
+    //     }
+    //   });
+    // }
 
     projects.forEach(project => {
       project.steps.sort((a, b) => a.positionInList - b.positionInList);
       let foundActiveStep = false;
       project.steps.forEach(step => {
-        if (step.tasks?.length) {
-          step.tasks.forEach(task => {
-            if (task.dateOnWeekly) {
-              this.insertTaskToList(this.tasksWithDate, step, task, project);
-            } else if (!task.isComplete) {
-              this.insertTaskToFutueTasks(project, step, task);
-              if (!foundActiveStep) { // this is the first not complete step, so its the active one
-                this.insertTaskToList(this.tasksWithoutDate, step, task, project);
-              }
-            }
-          });
-        } else {
+        // if (step.tasks?.length) {
+        //   step.tasks.forEach(task => {
+        //     if (task.dateOnWeekly) {
+        //       this.insertTaskToList(this.tasksWithDate, step, task, project);
+        //     } else if (!task.isComplete) {
+        //       this.insertTaskToFutueTasks(project, step, task);
+        //       if (!foundActiveStep) { // this is the first not complete step, so its the active one
+        //         this.insertTaskToList(this.tasksWithoutDate, step, task, project);
+        //       }
+        //     }
+        //   });
+        // } else {
           if (step.dateOnWeekly) {
             this.insertTaskToList(this.tasksWithDate, step, step, project);
           } else if (!step.isComplete) {
@@ -83,7 +83,7 @@ export class ProjectsService {
               this.insertTaskToList(this.tasksWithoutDate, step, step, project);
             }
           }
-        }
+        // }
         if (!step.isComplete) foundActiveStep = true;
       })
     })
