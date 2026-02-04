@@ -1,59 +1,72 @@
 <div class="main">
     <div class="content">
-        <div class="header new-h2">פרטי הפרויקט</div>
         <div class="form">
             <div class="project">
-                <div class="text-and-input">
-                    <span class="new-small">כותרת ראשית</span>
-                    <input class="new-text" type="text" [(ngModel)]="project.name">
-                    <div class="error-container">
-                        <span *ngIf="submitted && !project.name" class="error">אנא הזינו שם
-                            פרויקט</span>
+                <div class="section">
+                    <div class="header new-h2">{{isRetainer? 'פרטי הריטיינר' : 'פרטי הפרויקט'}}</div>
+                    <div class="project-title">
+                        <div class="text-and-input project-name">
+                            <span class="new-small">שם הפרויט</span>
+                            <input class="new-text" type="text" [(ngModel)]="project.name">
+                            <div class="error-container">
+                                <span *ngIf="submitted && !project.name" class="error">אנא הזינו שם
+                                    פרויקט</span>
+                            </div>
+                        </div>
+                        <div class="text-and-input project-creation-date">
+                            <span class="new-small">תאריך יצירה</span>
+                            <input class="date new-text" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _"
+                                [(ngModel)]="project.startDate" [dropSpecialCharacters]="false" />
+                        </div>
                     </div>
-                </div>
-                <div class="text-and-input">
-                    <span class="new-small">תיאור</span>
-                    <textarea class="new-text" [(ngModel)]="project.description"></textarea>
-                </div>
-                <div class="dates" *ngIf="!isRetainer">
                     <div class="text-and-input">
-                        <span class="new-small">תאריך התחלה</span>
-                        <input class="date new-text" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _"
-                            [(ngModel)]="startDate" [dropSpecialCharacters]="false" />
-                    </div>
-                    <div class="text-and-input">
-                        <span class="new-small">תאריך סיום משוער</span>
-                        <input class="date new-text" type="text" mask="00/00/00" placeholder="_ _/_ _/_ _"
-                            [(ngModel)]="endDate" [dropSpecialCharacters]="false" />
+                        <span class="new-small">תיאור</span>
+                        <textarea class="new-text" [(ngModel)]="project.description"></textarea>
                     </div>
                 </div>
 
-                <div class="retainer-monthly" *ngIf="isRetainer && project.paymentModel === paymentModelEnum.monthly">
-                    <div class="titles">
-                        <span class="new-small">תשלום חודשי (לא כולל מע״מ)</span>
-                        <span class="new-small">תאריך התשלום</span>
-                        <span class="new-small">תאריך התחלה</span>
-                    </div>
-                    <div class="inputs">
-                        <input type="number" [(ngModel)]="project.reccuringPayment">
-                        <select [(ngModel)]="project.monthlyPaymentDay">
-                            <option *ngFor="let day of daysInMonth" [value]="day">
-                                {{ day }} לחודש
-                            </option>
-                        </select>
-                        <input class="new-small" type="text" mask="00/00/00" [(ngModel)]="startDate"
-                            placeholder="_ _/_ _/_ _" [dropSpecialCharacters]="false" />
+                <div class="customer-details section">
+                    <div class="header new-h2">פרטי הלקוח</div>
+                    <div class="details">
+                        <div class="text-and-input">
+                            <span class="new-small">שם הלקוח</span>
+                            <input class="new-text" type="text" [(ngModel)]="project.clientName" />
+                        </div>
+                        <div class="text-and-input">
+                            <span class="new-small">אימייל</span>
+                            <input class="new-text" type="text" [(ngModel)]="project.clientMail" />
+                        </div>
+                        <div class="text-and-input">
+                            <span class="new-small">טלפון</span>
+                            <input class="new-text" type="text" [(ngModel)]="project.clientPhone" />
+                        </div>
                     </div>
                 </div>
-                <div class="retainer-hourly" *ngIf="isRetainer && project.paymentModel === paymentModelEnum.hourly">
-                    <div class="titles">
-                        <span class="new-small">מחיר שעתי (לא כולל מע״מ)</span>
-                        <span class="new-small">תאריך התחלה</span>
+
+                <div class="section">
+                    <div class="retainer-monthly"
+                        *ngIf="isRetainer && project.paymentModel === paymentModelEnum.monthly">
+                        <div class="header new-h2">פרטי התשלום</div>
+                        <div class="grid">
+                            <span class="new-small">תשלום חודשי (לא כולל מע״מ)</span>
+                            <span class="new-small">תאריך התשלום</span>
+                            <div></div>
+                            <input type="number" [(ngModel)]="project.reccuringPayment">
+                            <select [(ngModel)]="project.monthlyPaymentDay">
+                                <option *ngFor="let day of daysInMonth" [value]="day">
+                                    {{ day }} לחודש
+                                </option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="inputs">
-                        <input type="number" [(ngModel)]="project.reccuringPayment">
-                        <input class="new-small" type="text" mask="00/00/00" [(ngModel)]="startDate"
-                            placeholder="_ _/_ _/_ _" [dropSpecialCharacters]="false" />
+                    <div class="retainer-hourly" *ngIf="isRetainer && project.paymentModel === paymentModelEnum.hourly">
+                        <div class="header new-h2">פרטי התשלום</div>
+                        <div class="grid">
+                            <span class="new-small">מחיר שעתי (לא כולל מע״מ)</span>
+                            <span class=""></span>
+                            <div></div>
+                            <input type="number" [(ngModel)]="project.reccuringPayment">
+                        </div>
                     </div>
                 </div>
             </div>
