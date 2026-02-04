@@ -6,8 +6,10 @@
                     <span class="title new-h1">{{project().name}}</span>
                     <div class="icons">
                         <span></span>
-                        <img class="pointer icon-share" (click)="copyProjectUrl(tooltip)" matTooltip="הקישור הועתק" matTooltipDisabled="true" matTooltipPosition="above" matTooltipClass="custom-tooltip" #tooltip="matTooltip"/>
-                        <img class="pointer icon-expand" (click)="openProjectModal()" *ngIf="!isReadOnly()"/>
+                        <img class="pointer icon-share" (click)="copyProjectUrl(tooltip)" matTooltip="הקישור הועתק"
+                            matTooltipDisabled="true" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                            #tooltip="matTooltip" />
+                        <img class="pointer icon-expand" (click)="openProjectModal()" *ngIf="!isReadOnly()" />
                     </div>
                 </div>
                 <span class="description new-small" *ngIf="project().description">
@@ -159,7 +161,7 @@
                         </div>
                         <div class="step-icons" *ngIf="!isReadOnly()">
                             <div class="edit-delete">
-                                <img class="icon-garbage-can" (click)="deleteStep(step)" />
+                                <img class="icon-garbage-can-gray-blue" (click)="deleteStep(step)" />
                                 <img class="icon-pencil" (click)="editStep(stepDiv, step.id)" />
                             </div>
                             <div class="animation-container">
@@ -200,10 +202,15 @@
                                     <span class="new-text-bold">{{step.name}}</span>
                                     <img *ngIf="step.stepType === stepTypeEnum.payment" src="assets/icons/dollar.svg" />
                                 </div>
-                                <textarea class="new-small" disabled="true"
+                                <div class="new-small step-description"
                                     *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
-                                    #descriptions autoResize
-                                    rows="1">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
+                                    #descriptions>
+                                    @if (step.stepType === stepTypeEnum.payment) {
+                                        תשלום בסך <span class="new-text-bold">{{ step.price }} ₪</span>
+                                    } @else {
+                                        {{ step.description }}
+                                    }
+                                </div>
                                 <div class="tasks" *ngIf="step.tasks">
                                     <div class="task-list" cdkDropList (cdkDropListDropped)="dropTask($event, step)">
                                         <div class="task" *ngFor="let task of step.tasks; let i = index" cdkDrag>
@@ -239,8 +246,8 @@
                                 <div class="extra-not-finished">
                                     <div class="step-icons" *ngIf="!isReadOnly()">
                                         <div class="edit-delete">
-                                            <img class="icon-garbage-can" (click)="deleteStep(step)"
-                                                *ngIf="!(project().paymentModel === paymentModelEnum.monthly && step.stepType === stepTypeEnum.payment)" />
+                                            <img class="icon-garbage-can-gray-blue" (click)="deleteStep(step)"
+                                                *ngIf="!(project().paymentModel === paymentModelEnum.monthly && step.stepType === stepTypeEnum.payment && step.isRecurring)" />
                                             <img class="icon-pencil" (click)="openNewStepModal(step)" />
                                         </div>
                                         <div class="animation-container">
@@ -280,7 +287,7 @@
                                     *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
                                     #descriptions
                                     [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"
-                                    rows="1">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
+                                    rows="1">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪22') : step.description}}</textarea>
                                 <div class="tasks" *ngIf="step.tasks">
                                     <div class="task-list">
                                         <div class="task" *ngFor="let task of step.tasks; let i = index">
@@ -300,7 +307,7 @@
                                 </div>
                                 <div class="buttons-and-recurring">
                                     <div class="edit-delete">
-                                        <img class="icon-garbage-can" (click)="deleteStep(step)"
+                                        <img class="icon-garbage-can-gray-blue" (click)="deleteStep(step)"
                                             *ngIf="!(project().paymentModel === paymentModelEnum.monthly && step.stepType === stepTypeEnum.payment)" />
                                         <img class="icon-pencil" (click)="openNewStepModal(step)" />
                                     </div>

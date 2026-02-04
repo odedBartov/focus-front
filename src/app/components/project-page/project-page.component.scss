@@ -86,6 +86,12 @@
         resize: none;
     }
 
+    .step-description {
+        padding: 7px 0;
+        color: var(--default-black);
+        background-color: transparent;
+    }
+
     .animation-container {
         position: relative;
     }

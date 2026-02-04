@@ -78,7 +78,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
   @ViewChild('addStepDiv', { static: false }) addStepDiv!: ElementRef;
-  @ViewChildren('descriptions') descriptions!: QueryList<ElementRef<HTMLTextAreaElement>>;
+  @ViewChildren('descriptions') descriptions!: QueryList<ElementRef<HTMLElement>>;
   @ViewChildren('stepHeader') stepHeaders!: QueryList<ElementRef<HTMLSpanElement>>;
 
   projectTypeEnum = projectTypeEnum;
