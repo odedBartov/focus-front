@@ -15,6 +15,7 @@
   &.not-finished {
     @include regular-border;
     padding: 20px 28px 24px;
+    transition: padding 0.2s;
   }
 
   &.active-step {

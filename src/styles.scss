@@ -550,3 +550,11 @@ input::-webkit-inner-spin-button {
         content: url('/assets/icons/share_blue.svg');
     }
 }
+
+.icon-add-file {
+    content: url('/assets/icons/add_file_gray.svg');
+
+    &:hover {
+        content: url('/assets/icons/add_file_blue.svg');
+    }
+}
