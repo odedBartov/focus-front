@@ -89,25 +89,6 @@
         }
 
         .step4 {
-            .dates {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: flex-start;
-
-                .date-inputs {
-                    margin-top: 20px;
-                    display: flex;
-                    justify-content: space-between;
-                    gap: 50px;
-
-                    input {
-                        margin-top: 4px;
-                        width: 83%;
-                    }
-                }
-            }
-
             .payment-setting {
                 .hourly-text-and-input {
                     margin-top: 40px;
@@ -147,6 +128,12 @@
                     }
                 }
             }
+        }
+
+        .step5 {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
 
         .confirm {

@@ -297,7 +297,11 @@ export class HomeComponent implements OnInit {
   }
 
   navigateBackINNewProjectModal() {
-    this.newProjectStepSignal.set(this.newProjectStepSignal() - 1);
+    if (this.newProjectStepSignal() === 5) {
+      this.newProjectStepSignal.set(2);
+    } else {
+      this.newProjectStepSignal.set(this.newProjectStepSignal() - 1);
+    }
   }
 
   closeNewProjectModal() {
