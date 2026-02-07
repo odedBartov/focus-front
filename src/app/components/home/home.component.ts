@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit, ViewChild, WritableSignal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, ViewChild, WritableSignal } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { Project } from '../../models/project';
 import { UserProjects } from '../../models/userProjects';
@@ -61,6 +61,11 @@ export class HomeComponent implements OnInit {
   noProject!: WritableSignal<Project>;
   selectedProject!: WritableSignal<Project | undefined>;
   isReadOnly!: WritableSignal<boolean>;
+  openNotesSignal: WritableSignal<Project | undefined>;
+  newProjectStepSignal: WritableSignal<number>;
+  showProjectsTab = computed(() => {
+    return this.newProjectStepSignal() === 0 && !this.openNotesSignal();
+  });
   isProjectHovered = this.projectHoverService.getSignal();
   userPicture: string | null = null;
   defaultUserPicture = "assets/icons/default_profile.svg"
@@ -70,10 +75,10 @@ export class HomeComponent implements OnInit {
   activeTab: ProjectTab = { id: 'none' };
   tabs: ProjectTab[] = [];
   projectsForPayment: Project[] = [];
-  openNotesSignal: WritableSignal<Project | undefined>;
 
   constructor() {
     this.openNotesSignal = this.projectsService.getProjectWithOpenNotes();
+    this.newProjectStepSignal = this.projectsService.newProjectStepSignal;
     effect(() => {
       const selectedProject = this.selectedProject();
       if (selectedProject) {
@@ -289,5 +294,13 @@ export class HomeComponent implements OnInit {
     dialogRef.afterClosed().subscribe(res => {
       // do something?
     });
+  }
+
+  navigateBackINNewProjectModal() {
+    this.newProjectStepSignal.set(this.newProjectStepSignal() - 1);
+  }
+
+  closeNewProjectModal() {
+    this.newProjectStepSignal.set(0);
   }
 }

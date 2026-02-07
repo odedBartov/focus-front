@@ -183,7 +183,7 @@ export class ProjectsListComponent implements OnInit {
     if (maxProjects > -1 && maxProjects <= this.projects().length) {      
       this.dialog.open(PaidFeatureModalComponent, { data: { subscription:  this.userSubscription === subscriptionEnum.partial? subscriptionEnum.full : subscriptionEnum.free} });
     } else {
-      const dialogRef = this.dialog.open(NewProjectComponent);
+      const dialogRef = this.dialog.open(NewProjectComponent, {disableClose: true});
       dialogRef.afterClosed().subscribe(res => {
         if (res) {
           this.animationsService.changeIsloading(true);

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, effect, inject, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Project } from '../../models/project';
@@ -7,6 +7,7 @@ import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { parseDate } from '../../helpers/functions';
 import { AuthenticationService } from '../../services/authentication.service';
 import { paymentModelEnum, projectTypeEnum } from '../../models/enums';
+import { ProjectsService } from '../../services/projects.service';
 
 @Component({
   selector: 'app-new-project',
@@ -20,6 +21,8 @@ export class NewProjectComponent {
   formBuilder = inject(FormBuilder);
   authenticationService = inject(AuthenticationService);
   datePipe = inject(DatePipe);
+  projectsService = inject(ProjectsService);
+  newProjectStepSignal: WritableSignal<number>;
   projectTypeEnum = projectTypeEnum;
   paymentModelEnum = paymentModelEnum;
   daysInMonth = new Array(30).fill(0).map((_, i) => i + 1);
@@ -28,11 +31,17 @@ export class NewProjectComponent {
   startDate: string = '';
   endDate: string = '';
   submitted = false;
-  currentProgress = 1;
 
   constructor() {
+    effect(() => {
+      if (this.newProjectStepSignal() === 0) {
+        this.dialogRef.close();
+      }
+    });
     this.project = new Project();
     this.project.ownerPicture = this.authenticationService.getUserPicture() ?? undefined;
+    this.newProjectStepSignal = this.projectsService.newProjectStepSignal;
+    this.newProjectStepSignal.set(1);
     this.startDate = this.datePipe.transform(this.project.startDate, 'dd/MM/yy') ?? '';
     // const today = new Date();
     // const dd = String(today.getDate()).padStart(2, '0');
@@ -48,25 +57,25 @@ export class NewProjectComponent {
   chooseProjectType(type: projectTypeEnum) {
     this.project.projectType = type;
     if (type === projectTypeEnum.retainer) {
-      this.currentProgress += 1;
+      this.newProjectStepSignal.set(this.newProjectStepSignal() + 1);
     } else {
-      this.currentProgress += 2;
+      this.newProjectStepSignal.set(this.newProjectStepSignal() + 2);
     }
   }
 
   choosePaymentModel(paymentModel: paymentModelEnum) {
     this.project.paymentModel = paymentModel;
-    this.currentProgress += 1;
+    this.newProjectStepSignal.set(this.newProjectStepSignal() + 1);
   }
 
   submit() {
     this.submitted = true;
-    switch (this.currentProgress) {
+    switch (this.newProjectStepSignal()) {
       case 1:
         if (this.firstForm.valid) {
           this.project.name = this.firstForm.get("projectName")?.value;
           this.project.description = this.firstForm.get("description")?.value;
-          this.currentProgress += 1;
+          this.newProjectStepSignal.set(this.newProjectStepSignal() + 1);
           this.submitted = false;
         }
         break;

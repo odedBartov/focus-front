@@ -20,6 +20,7 @@ export class ProjectsService {
   currentAndFutureTasks: { project: Project, tasks: StepOrTask[] }[] = []; // without date, no matter if active or not
   projectWithOpenNotes = signal<Project | undefined>(undefined);
   currentProjectFilter = signal<projectTypeEnum | undefined>(undefined); 
+  newProjectStepSignal = signal<number>(0);
 
   getActiveProjects() {
     return this.activeProjects;

@@ -1,6 +1,6 @@
 <div class="main-window">
   <div class="tabs-container">
-    <ng-container *ngIf="!openNotesSignal()">
+    <ng-container *ngIf="showProjectsTab()">
       <div class="tab-list">
         <img src="assets/focus_logo.svg" class="logo" />
         <div *ngFor="let tab of tabs" [class.active]="tab.id === activeTab.id" class="tab new-small"
@@ -15,6 +15,10 @@
     <ng-container *ngIf="openNotesSignal()">
       <span class="new-h2">{{openNotesSignal()?.name}}</span>
       <img class="pointer" src="assets/icons/x_mark_black.svg" (click)="closeOpenNotes()" />
+    </ng-container>
+    <ng-container *ngIf="newProjectStepSignal() !== 0">
+      <img [class]="newProjectStepSignal() > 1? 'icon-navigation-arrow pointer' : ''" (click)="navigateBackINNewProjectModal()"/>
+      <img class="X-mark pointer" (click)="closeNewProjectModal()"/>
     </ng-container>
   </div>
 

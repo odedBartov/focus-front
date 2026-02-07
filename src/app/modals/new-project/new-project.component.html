@@ -1,9 +1,9 @@
-<div class="template" [style.height]="currentProgress === 1 ? '630px' : '430px'">
+<div class="template" [style.height]="newProjectStepSignal() === 1 ? '630px' : '430px'">
     <div class="main">
         <div class="progress-bar">
-            <div class="progress-fill" [style.width.%]="(currentProgress/5)*100"></div>
+            <div class="progress-fill" [style.width.%]="(newProjectStepSignal()/5)*100"></div>
         </div>
-        <div class="step1" *ngIf="currentProgress === 1">
+        <div class="step1" *ngIf="newProjectStepSignal() === 1">
             <div class="header">
                 <span class="new-h1">פרויקט חדש</span>
                 <span class="new-small">איזה כיף! אתגר חדש בדרך</span>
@@ -29,7 +29,7 @@
             </Form>
         </div>
 
-        <div class="step2" *ngIf="currentProgress === 2">
+        <div class="step2" *ngIf="newProjectStepSignal() === 2">
             <span class="new-h1">מבנה הפרויקט</span>
             <div class="project-types-container">
                 <div class="project-type" (click)="chooseProjectType(projectTypeEnum.proccess)" (keydown.enter)="chooseProjectType(projectTypeEnum.proccess)" tabindex="0">
@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        <div class="step3" *ngIf="currentProgress === 3">
+        <div class="step3" *ngIf="newProjectStepSignal() === 3">
             <span class="new-h1">מודל התשלום</span>
             <div class="project-types-container">
                 <div class="project-type" (click)="choosePaymentModel(paymentModelEnum.monthly)" (keydown.enter)="choosePaymentModel(paymentModelEnum.monthly)" tabindex="0">
@@ -61,7 +61,7 @@
             </div>
         </div>
 
-        <div class="step4" *ngIf="currentProgress === 4">
+        <div class="step4" *ngIf="newProjectStepSignal() === 4">
             <div class="dates" *ngIf="project.projectType !== projectTypeEnum.retainer">
                 <span class="new-h1">תאריכים</span>
                 <span class="new-small">לא חובה, אבל מומלץ. תאריכים יסייעו לתכנון הזמן שלך בהמשך.</span>
@@ -113,10 +113,10 @@
             </div>
         </div>
 
-        <div class="confirm" *ngIf="currentProgress !== 2 && currentProgress !== 3">
+        <div class="confirm" *ngIf="newProjectStepSignal() !== 2 && newProjectStepSignal() !== 3">
             <button class="confirm-button" (click)="submit()">
-                <img src="assets/icons/confirm_white.svg" *ngIf="currentProgress === 4" />
-                <span>{{currentProgress === 4 ? 'יצירת פרויקט' : 'המשך'}}</span>
+                <img src="assets/icons/confirm_white.svg" *ngIf="newProjectStepSignal() === 4" />
+                <span>{{newProjectStepSignal() === 4 ? 'יצירת פרויקט' : 'המשך'}}</span>
             </button>
         </div>
     </div>

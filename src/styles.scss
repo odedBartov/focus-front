@@ -101,6 +101,10 @@
         border-radius: var(--common-radius);
     }
 
+    .cdk-overlay-backdrop {
+        background-color: #F3F4F7;
+    }
+
     .cdk-overlay-pane.mat-mdc-dialog-panel {
         max-width: none;
         box-shadow: var(--common-shadow);
@@ -556,5 +560,21 @@ input::-webkit-inner-spin-button {
 
     &:hover {
         content: url('/assets/icons/add_file_blue.svg');
+    }
+}
+
+.icon-navigation-arrow {
+    content: url('/assets/icons/navigation_arrow_black.svg');
+
+    &:hover {
+        content: url('/assets/icons/navigation_arrow_blue.svg');
+    }
+}
+
+.X-mark {
+    content: url('/assets/icons/x_mark_black.svg');
+
+    &:hover {
+        content: url('/assets/icons/x_mark_blue.svg');
     }
 }
