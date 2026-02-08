@@ -11,12 +11,11 @@ import { subscriptionEnum } from '../../models/enums';
 import { UserSubscription } from '../../models/userSubscription';
 import { UserService } from '../../services/user.service';
 import { taxManagementSystemEnum } from '../../models/taxSystem';
-import { simpleResponse } from '../../models/simpleResponse';
-import { AutofocusDirective } from '../../helpers/AutofocusDirective';
+import { ConnectionToTaxComponent, taxSystemConnection } from '../../components/connection-to-tax/connection-to-tax.component';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, FormsModule, AutofocusDirective],
+  imports: [CommonModule, FormsModule, ConnectionToTaxComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -57,7 +56,7 @@ export class ProfileComponent implements AfterViewInit {
 
   handleUserTaxManagement() {
     if (this.user.taxManagementApiKey) {
-      this.taxManagemantStep = 4;
+      this.taxManagemantStep = 3;
     }
   }
 
@@ -115,23 +114,11 @@ export class ProfileComponent implements AfterViewInit {
     this.taxManagemantStep = 2;
   }
 
-  pickTaxManagementSystem(system: taxManagementSystemEnum) {
-    this.user.taxManagementSystem = system;
+  updateTaxConnection(taxConnection: taxSystemConnection) {
+    this.user.taxManagementApiKey = taxConnection.taxManagementApiKey;
+    this.user.taxManagementSystem = taxConnection.taxManagementSystem;
+    this.httpService.updateUser(this.user).subscribe(res => { });
     this.taxManagemantStep = 3;
-  }
-
-  confirmApiUrl() {
-    this.wrongCredentialsError = false;
-    this.animationsService.isLoading.set(true);
-    this.httpService.loginToTaxManagement(this.user.taxManagementApiKey ?? '', this.user.taxManagementSystem).subscribe((res: simpleResponse) => {
-      this.animationsService.isLoading.set(false);
-      if (res.success) {
-        this.taxManagemantStep = 4;
-        this.httpService.updateUser(this.user).subscribe();
-      } else {
-        this.wrongCredentialsError = true;
-      }
-    });
   }
 
   getTaxManagementName() {

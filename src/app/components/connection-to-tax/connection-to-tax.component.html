@@ -1,0 +1,41 @@
+<div class="main">
+    <ng-container *ngIf="taxManagemantStep === 1">
+        <span class="new-h2">לאיזו מערכת אנחנו מתחברים?</span>
+        <div class="tax-management-systems">
+            <div class="system" (click)="pickTaxManagementSystem(taxManagementSystemEnum.iCount)" (keydown.enter)="pickTaxManagementSystem(taxManagementSystemEnum.iCount)" tabindex="1">
+                <span class="new-small">iCount</span>
+                <img src="assets/icons/iCount.svg" />
+            </div>
+            <div class="system" (click)="pickTaxManagementSystem(taxManagementSystemEnum.morning)" (keydown.enter)="pickTaxManagementSystem(taxManagementSystemEnum.morning)" tabindex="1">
+                <span class="new-small">Morning</span>
+                <img src="assets/icons/morning.svg" />
+            </div>
+            <div class="system" (click)="pickTaxManagementSystem(taxManagementSystemEnum.sumit)" (keydown.enter)="pickTaxManagementSystem(taxManagementSystemEnum.sumit)" tabindex="1">
+                <span class="new-small">Summit</span>
+                <img src="assets/icons/sumit.svg" />
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="taxManagemantStep === 2">
+        <ng-container *ngIf="taxManagementSystem === taxManagementSystemEnum.iCount">
+            <span class="new-h2">חיבור למערכת iCount</span>
+            <span class="new-small">כדי שנוכל להתחבר להנהלת החשבונות שלך, צריך ליצור טוקן API ולהזין אותו כאן.
+                חשוב להדביק את המפתח בדיוק כפי שהוא במקור, ללא רווחים.</span>
+            <div class="text-and-input">
+                <span class="text new-small">מפתח סודי</span>
+                <input class="new-text" tabindex="1" [(ngModel)]="taxManagementApiKey"
+                    (keydown.enter)="confirmApiUrl()" appAutofocus>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="taxManagementSystem === taxManagementSystemEnum.sumit"></ng-container>
+        <ng-container *ngIf="taxManagementSystem === taxManagementSystemEnum.morning"></ng-container>
+        <div class="confirm-button" (click)="confirmApiUrl()" (keydown.enter)="confirmApiUrl()" tabindex="1">
+            <img src="assets/icons/confirm_white.svg" />
+            <span>אישור</span>
+        </div>
+        <div class="error-container" *ngIf="wrongCredentialsError">
+            <div class="error">פרטי ההתחברות למערכת הנהלת החשבונות היו שגויים</div>
+        </div>
+    </ng-container>
+</div>

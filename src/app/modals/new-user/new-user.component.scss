@@ -1,20 +1,41 @@
 @use '../../../mixins.scss' as mixins;
 
 .main {
-    width: 100%;
+    width: 500px;
     height: 100%;
-    padding-bottom: 40px;
+    padding: 80px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
+    .progress {
+        margin-bottom: 40px;
+        width: 100%;
+
+        .go-back {
+            margin-bottom: 7px;
+            color: var(--default-gray);
+
+            span {
+                cursor: pointer;
+            }
+
+            img {
+                margin-left: 5px;
+            }
+        }
+    }
+
     .header {
         display: block;
-        margin: 2rem 0;
+        margin-bottom: 2rem;
     }
 
     .form {
+        width: 100%;
+
         .text-and-input {
             display: flex;
             flex-direction: column;
@@ -26,10 +47,11 @@
         padding: 0 30px;
         display: flex;
         flex-direction: column;
+        width: 100%;
 
         .option {
             cursor: pointer;
-            width: 280px;
+            width: 100%;
             height: 50px;
             border-radius: 16px;
             margin-bottom: 1rem;
@@ -54,6 +76,23 @@
                 border: none;
             }
         }
+    }
+
+    .connect-tax-management {
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        width: 100%;
+
+        .buttons {
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+        }
+    }
+
+    .connect-tax-management-component {
+        width: 100%;
     }
 
     .confirm-div {

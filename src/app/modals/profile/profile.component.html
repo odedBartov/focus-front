@@ -77,47 +77,9 @@
             </ng-container>
 
             <ng-container *ngIf="taxManagemantStep === 2">
-                <span class="new-h2">לאיזו מערכת אנחנו מתחברים?</span>
-
-                <div class="tax-management-systems">
-                    <div class="system" (click)="pickTaxManagementSystem(taxManagementSystemEnum.iCount)">
-                        <span class="new-small">iCount</span>
-                        <img src="assets/icons/iCount.svg" />
-                    </div>
-                    <div class="system" (click)="pickTaxManagementSystem(taxManagementSystemEnum.morning)">
-                        <span class="new-small">Morning</span>
-                        <img src="assets/icons/morning.svg" />
-                    </div>
-                    <div class="system" (click)="pickTaxManagementSystem(taxManagementSystemEnum.sumit)">
-                        <span class="new-small">Summit</span>
-                        <img src="assets/icons/sumit.svg" />
-                    </div>
-                </div>
+                <app-connection-to-tax (taxSystemEmitter)="updateTaxConnection($event)"></app-connection-to-tax>
             </ng-container>
-
             <ng-container *ngIf="taxManagemantStep === 3">
-                <ng-container *ngIf="user.taxManagementSystem === taxManagementSystemEnum.iCount">
-                    <span class="new-h2">חיבור למערכת iCount</span>
-                    <span class="new-small">כדי שנוכל להתחבר להנהלת החשבונות שלך, צריך ליצור טוקן API ולהזין אותו כאן.
-                        חשוב להדביק את המפתח בדיוק כפי שהוא במקור, ללא רווחים.</span>
-                    <div class="text-and-input">
-                        <span class="text new-small">מפתח סודי</span>
-                        <input class="new-text" tabindex="1" [(ngModel)]="user.taxManagementApiKey"
-                            (keydown.enter)="confirmApiUrl()" appAutofocus>
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="user.taxManagementSystem === taxManagementSystemEnum.sumit"></ng-container>
-                <ng-container *ngIf="user.taxManagementSystem === taxManagementSystemEnum.morning"></ng-container>
-                <div class="confirm-button" (click)="confirmApiUrl()">
-                    <img src="assets/icons/confirm_white.svg" />
-                    <span>אישור</span>
-                </div>
-                <div class="error-container" *ngIf="wrongCredentialsError">
-                    <div class="error">פרטי התחברות למערכת הנהלת החשבונות היו שגויים</div>
-                </div>
-            </ng-container>
-
-            <ng-container *ngIf="taxManagemantStep === 4">
                 <img src="assets/icons/pin_circle_blue.svg" class="connected-icon" />
                 <span class="new-h2">אנחנו מחוברים לחשבון שלך ב{{getTaxManagementName()}}</span>
                 <span class="new-text">החיבור מאפשר לך להוציא מסמכי הנהלת חשבונות ישירות מתוך שלבי התשלום שבתוך

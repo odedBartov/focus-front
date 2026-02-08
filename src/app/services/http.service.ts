@@ -175,6 +175,6 @@ export class HttpService {
   }
 
   loginToTaxManagement(apiKey: string, system?: taxManagementSystemEnum): Observable<simpleResponse> {
-    return this.httpClient.post<simpleResponse>(this.apiUrl + "TaxDocuments/login", {apiKey: apiKey, provider: system});
+    return this.httpClient.post<simpleResponse>(this.apiUrl + "TaxDocuments/login", {apiKey: apiKey, system: system});
   }
 }
