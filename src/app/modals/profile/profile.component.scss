@@ -175,6 +175,34 @@
                 }
             }
         }
+
+        .tax-management-systems {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+            
+            .system {
+                display: flex;
+                align-items: center;
+                justify-content: end;
+                gap: 10px;
+                padding: 15px;
+                border-radius: 15px;
+                cursor: pointer;
+                background-color: var(--hover-color);
+                border: 2px solid var(--border-color);
+                
+                img {
+                    height: 24px;
+                }
+
+                &:hover {
+                    background-color: var(--main-color-not-active);
+                    color: var(--default-white);
+                }
+            }
+        }
     }
 
     .right {

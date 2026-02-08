@@ -1,4 +1,5 @@
 import { subscriptionEnum } from "./enums";
+import { taxManagementSystemEnum } from "./taxSystem";
 
 export class User {
     firstName = '';
@@ -7,6 +8,8 @@ export class User {
     profession?: profession;
     email?: string;
     subscription?: subscriptionEnum;
+    taxManagementApiKey?: string;
+    taxManagementSystem?: taxManagementSystemEnum;
 }
 
 export enum UserStatus {

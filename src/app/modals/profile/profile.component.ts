@@ -10,6 +10,7 @@ import { environment } from '../../../environments/environment';
 import { subscriptionEnum } from '../../models/enums';
 import { UserSubscription } from '../../models/userSubscription';
 import { UserService } from '../../services/user.service';
+import { taxManagementSystemEnum } from '../../models/taxSystem';
 
 @Component({
   selector: 'app-profile',
@@ -38,6 +39,8 @@ export class ProfileComponent implements AfterViewInit {
     { title: 'פוקוס על מלא', subscription: subscriptionEnum.full, text: 'ללא מגבלת פרויקטים, פיצ׳רים מתקדמים ותמיכה טכנית', price: 'גרסת נסיון' }
   ]
   currentUserSubscription: UserSubscription = this.userSubscriptions[0];
+  taxManagemantStep = 1;
+  taxManagementSystemEnum = taxManagementSystemEnum;
 
   ngAfterViewInit(): void {
     this.getUserSubscription();
@@ -99,5 +102,10 @@ export class ProfileComponent implements AfterViewInit {
   }
 
   connectToTaxManagement() {
+    this.taxManagemantStep = 2;
+  }
+
+  pickTaxManagementSystem(system: taxManagementSystemEnum) {
+    this.user.taxManagementSystem = system;
   }
 }
