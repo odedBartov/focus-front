@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, OnInit, ViewChild, WritableSignal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { Project } from '../../models/project';
 import { UserProjects } from '../../models/userProjects';
@@ -20,7 +20,7 @@ import { ArchiveComponent } from "../archive/archive.component";
 import { StandAloneStepsService } from '../../services/stand-alone-steps.service';
 import { ProjectsService } from '../../services/projects.service';
 import { ActivatedRoute } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ProfileComponent } from '../../modals/profile/profile.component';
 import { WeeklyTasksComponent } from '../weekly-tasks/weekly-tasks.component';
 import { FreeTrialEndComponent } from '../../modals/free-trial-end/free-trial-end.component';
@@ -63,8 +63,9 @@ export class HomeComponent implements OnInit {
   isReadOnly!: WritableSignal<boolean>;
   openNotesSignal: WritableSignal<Project | undefined>;
   newProjectStepSignal: WritableSignal<number>;
+  isProfileOpen = signal(false);
   showProjectsTab = computed(() => {
-    return this.newProjectStepSignal() === 0 && !this.openNotesSignal();
+    return this.newProjectStepSignal() === 0 && !this.openNotesSignal() && !this.isProfileOpen();
   });
   isProjectHovered = this.projectHoverService.getSignal();
   userPicture: string | null = null;
@@ -75,6 +76,7 @@ export class HomeComponent implements OnInit {
   activeTab: ProjectTab = { id: 'none' };
   tabs: ProjectTab[] = [];
   projectsForPayment: Project[] = [];
+  profileModal: MatDialogRef<ProfileComponent, any> | undefined;
 
   constructor() {
     this.openNotesSignal = this.projectsService.getProjectWithOpenNotes();
@@ -289,11 +291,19 @@ export class HomeComponent implements OnInit {
     this.initTabs();
   }
 
-  navigateToProfile() {
-    const dialogRef = this.dialog.open(ProfileComponent);
-    dialogRef.afterClosed().subscribe(res => {
-      // do something?
+  openProfile() {
+    this.isProfileOpen.set(true);
+    this.profileModal = this.dialog.open(ProfileComponent, {disableClose: true});
+    this.profileModal.afterClosed().subscribe(res => {
+      this.isProfileOpen.set(false);
     });
+  }
+
+  closeProfile() {
+    this.isProfileOpen.set(false);
+    if (this.profileModal) {
+      this.profileModal.close();
+    }
   }
 
   navigateBackINNewProjectModal() {

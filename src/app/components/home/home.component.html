@@ -10,15 +10,20 @@
         </div>
       </div>
       <img class="profile" [ngClass]="{pointer: !isReadOnly()}" [src]="userPicture" loading="lazy"
-        (click)="isReadOnly()? '' : navigateToProfile()" />
+        (click)="isReadOnly()? '' : openProfile()" />
     </ng-container>
     <ng-container *ngIf="openNotesSignal()">
       <span class="new-h2">{{openNotesSignal()?.name}}</span>
       <img class="pointer" src="assets/icons/x_mark_black.svg" (click)="closeOpenNotes()" />
     </ng-container>
     <ng-container *ngIf="newProjectStepSignal() !== 0">
-      <img [class]="newProjectStepSignal() > 1? 'icon-navigation-arrow pointer' : ''" (click)="navigateBackINNewProjectModal()"/>
-      <img class="X-mark pointer" (click)="closeNewProjectModal()"/>
+      <img [class]="newProjectStepSignal() > 1? 'icon-navigation-arrow pointer' : ''"
+        (click)="navigateBackINNewProjectModal()" />
+      <img class="X-mark pointer" (click)="closeNewProjectModal()" />
+    </ng-container>
+    <ng-container *ngIf="isProfileOpen()">
+      <div></div>
+      <img class="X-mark pointer" (click)="closeProfile()" />
     </ng-container>
   </div>
 
@@ -33,7 +38,8 @@
             (activeProjectsEmitter)="refreshProjects()"></app-projects-list>
         </div>
         <div class="updates">
-          <app-updates (navigateToCalendarEmitter)="setActiveTab(tasksTab)" (selectProject)="selectProject($event)"></app-updates>
+          <app-updates (navigateToCalendarEmitter)="setActiveTab(tasksTab)"
+            (selectProject)="selectProject($event)"></app-updates>
         </div>
       </div>
     </div>

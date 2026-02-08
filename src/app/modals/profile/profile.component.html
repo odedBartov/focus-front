@@ -1,4 +1,7 @@
 <div class="container">
+    <div class="right">
+        bb
+    </div>
     <div class="main">
         <div class="details">
             <div class="profile-picture-container">
@@ -46,16 +49,33 @@
 
         <div class="upgrade">
             <span class="new-h2">תוכנית נוכחית</span>
-            <div class="button new-small" (click)="navigateToSubscription()" *ngIf="currentUserSubscription.subscription != subscriptionEnum.full">+ שדרוג</div>
+            <div class="button new-small" (click)="navigateToSubscription()"
+                *ngIf="currentUserSubscription.subscription != subscriptionEnum.full">+ שדרוג</div>
         </div>
 
         <div class="subscription">
             <span class="new-text-bold">{{currentUserSubscription.title}}</span>
             <span class="new-small">{{currentUserSubscription.text}}</span>
-            <span class="new-small">{{currentUserSubscription.price? currentUserSubscription.price :  'חינם'}}</span>
+            <span class="new-small">{{currentUserSubscription.price? currentUserSubscription.price : 'חינם'}}</span>
             <div class="un-subscribe new-small">
                 <span (click)="unSubscribe()">ביטול התכנית</span>
             </div>
+        </div>
+    </div>
+    <div class="left">
+        <div class="card">
+            <ng-container>
+                <span class="new-h2">חיבור להנהלת חשבונות</span>
+                <span class="new-small">פוקוס מאפשרת אינטגרציה עם שלוש מערכות הנהלת חשבונות: Morning (חשבונית
+                    ירוקה),Sumit
+                    ו-Icount.
+                    החיבור יאפשר לך ליצור ולשלוח חשבוניות ומסמכים ישירות מתוך פוקוס, לסנכרן את
+                    גרף ההכנסות ועוד. </span>
+                    <div class="connect-button" (click)="connectToTaxManagement()">
+                        <img/>
+                        <span class="new-small">חיבור</span>
+                    </div>
+            </ng-container>
         </div>
     </div>
 </div>
