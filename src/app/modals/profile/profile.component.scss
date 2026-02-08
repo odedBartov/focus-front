@@ -183,6 +183,7 @@
             margin-top: 2rem;
             
             .system {
+                background-color: var(--home-color);
                 display: flex;
                 align-items: center;
                 justify-content: end;
@@ -190,16 +191,14 @@
                 padding: 15px;
                 border-radius: 15px;
                 cursor: pointer;
-                background-color: var(--hover-color);
-                border: 2px solid var(--border-color);
+                @include mixins.regular-border;
                 
                 img {
                     height: 24px;
                 }
-
+                
                 &:hover {
-                    background-color: var(--main-color-not-active);
-                    color: var(--default-white);
+                    background-color: var(--hover-color);
                 }
             }
         }

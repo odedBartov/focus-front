@@ -95,6 +95,12 @@
                     </div>
                 </div>
             </ng-container>
+
+            <ng-container *ngIf="taxManagemantStep === 3">
+            <ng-container *ngIf="user.taxManagementSystem === taxManagementSystemEnum.iCount"></ng-container>
+            <ng-container *ngIf="user.taxManagementSystem === taxManagementSystemEnum.sumit"></ng-container>
+            <ng-container *ngIf="user.taxManagementSystem === taxManagementSystemEnum.morning"></ng-container>
+            </ng-container>
         </div>
     </div>
 </div>

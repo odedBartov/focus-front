@@ -107,5 +107,6 @@ export class ProfileComponent implements AfterViewInit {
 
   pickTaxManagementSystem(system: taxManagementSystemEnum) {
     this.user.taxManagementSystem = system;
+    this.taxManagemantStep = 3;
   }
 }
