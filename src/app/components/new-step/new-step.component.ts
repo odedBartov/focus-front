@@ -9,7 +9,7 @@ import { provideNgxMask } from 'ngx-mask';
 import { HttpService } from '../../services/http.service';
 import { AnimationsService } from '../../services/animations.service';
 import { StepTask } from '../../models/stepTask';
-import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
+import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirective';
 import { createNextOccurenceDate, getNextRetainerOccurrenceDate } from '../../helpers/retainerFunctions';
 import { areDatesEqual, updateDatesWithLocalTime } from '../../helpers/functions';
 

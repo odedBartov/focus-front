@@ -11,6 +11,8 @@ import { HourlyWorkSession } from '../models/hourlyWorkSession';
 import { RetainerPayment } from '../models/RetainerPayment';
 import { Feature } from '../models/feature';
 import { AiConversation, ChatRequest, ChatResponse } from '../models/aiModels';
+import { taxManagementSystemEnum } from '../models/taxSystem';
+import { simpleResponse } from '../models/simpleResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -159,7 +161,7 @@ export class HttpService {
   }
 
   giveUserBonusSubscription(email: string) {
-    return this.httpClient.post(this.apiUrl + "Auth/giveUserBonusSubscription", {email: email});
+    return this.httpClient.post(this.apiUrl + "Auth/giveUserBonusSubscription", { email: email });
   }
 
   getAllUsers() {
@@ -170,5 +172,9 @@ export class HttpService {
   deleteUser(email: string) {
     const headers = this.generateHeaders();
     return this.httpClient.delete(this.apiUrl + "Auth/deleteUser?email=" + email, headers);
+  }
+
+  loginToTaxManagement(apiKey: string, system?: taxManagementSystemEnum): Observable<simpleResponse> {
+    return this.httpClient.post<simpleResponse>(this.apiUrl + "TaxDocuments/login", {apiKey: apiKey, provider: system});
   }
 }

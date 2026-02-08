@@ -18,7 +18,7 @@ import { ProjectHoverService } from '../../services/project-hover.service';
 import { AnimationOptions, LottieComponent } from 'ngx-lottie';
 import { ProjectsService } from '../../services/projects.service';
 import { AuthenticationService } from '../../services/authentication.service';
-import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
+import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirective';
 import { StepTask } from '../../models/stepTask';
 import { AnimationItem } from 'lottie-web';
 import { RetainerPayment } from '../../models/RetainerPayment';

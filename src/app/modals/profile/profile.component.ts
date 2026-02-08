@@ -11,10 +11,12 @@ import { subscriptionEnum } from '../../models/enums';
 import { UserSubscription } from '../../models/userSubscription';
 import { UserService } from '../../services/user.service';
 import { taxManagementSystemEnum } from '../../models/taxSystem';
+import { simpleResponse } from '../../models/simpleResponse';
+import { AutofocusDirective } from '../../helpers/AutofocusDirective';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AutofocusDirective],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -41,6 +43,7 @@ export class ProfileComponent implements AfterViewInit {
   currentUserSubscription: UserSubscription = this.userSubscriptions[0];
   taxManagemantStep = 1;
   taxManagementSystemEnum = taxManagementSystemEnum;
+  wrongCredentialsError = false;
 
   ngAfterViewInit(): void {
     this.getUserSubscription();
@@ -48,7 +51,14 @@ export class ProfileComponent implements AfterViewInit {
     this.userService.getUser().subscribe(user => {
       this.user = user;
       this.animationsService.changeIsloading(false);
+      this.handleUserTaxManagement();
     });
+  }
+
+  handleUserTaxManagement() {
+    if (this.user.taxManagementApiKey) {
+      this.taxManagemantStep = 4;
+    }
   }
 
   getProfilePicture() {
@@ -108,5 +118,38 @@ export class ProfileComponent implements AfterViewInit {
   pickTaxManagementSystem(system: taxManagementSystemEnum) {
     this.user.taxManagementSystem = system;
     this.taxManagemantStep = 3;
+  }
+
+  confirmApiUrl() {
+    this.wrongCredentialsError = false;
+    this.animationsService.isLoading.set(true);
+    this.httpService.loginToTaxManagement(this.user.taxManagementApiKey ?? '', this.user.taxManagementSystem).subscribe((res: simpleResponse) => {
+      this.animationsService.isLoading.set(false);
+      if (res.success) {
+        this.taxManagemantStep = 4;
+        this.httpService.updateUser(this.user).subscribe();
+      } else {
+        this.wrongCredentialsError = true;
+      }
+    });
+  }
+
+  getTaxManagementName() {
+    switch (this.user.taxManagementSystem) {
+      case taxManagementSystemEnum.iCount:
+        return "iCount";
+      case taxManagementSystemEnum.morning:
+        return "Morning";
+      case taxManagementSystemEnum.sumit:
+        return "Sumit";
+      default:
+        return "מערכת לא זוהתה";
+    }
+  }
+
+  disconnectFromTaxManagement() {
+    this.user.taxManagementApiKey = undefined;
+    this.taxManagemantStep = 1;
+    this.httpService.updateUser(this.user).subscribe();
   }
 }
