@@ -441,7 +441,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         // Update the step on the server
         this.updateStep(step);
       });
-    }, 1);
+    }, 100);
   }
 
   updateStep(step: Step) {
