@@ -31,6 +31,7 @@ import { OpenNotesComponent } from '../open-notes/open-notes.component';
 import { AiChatService } from '../../services/ai-chat.service';
 import { GenerateTaxDocumentComponent } from '../generate-tax-document/generate-tax-document.component';
 import { ProjectSummaryComponent } from '../project-summary/project-summary.component';
+import { StepManagementService } from '../../services/step-management.service';
 
 @Component({
   selector: 'app-project-page',
@@ -75,6 +76,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   authenticationService = inject(AuthenticationService);
   WorkSessionService = inject(WorkSessionService);
   aiChatService = inject(AiChatService);
+  stepManagementService = inject(StepManagementService);
   @Output() navigateToHomeEmitter = new EventEmitter<void>();
   @ViewChild('stepsContainer', { static: false }) stepsContainer?: ElementRef;
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
@@ -123,12 +125,12 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       const value = this.project();
       this.aiChatService.initProjectConversation(value.id);
       if (value?.steps) {
-        value.steps.sort((a, b) => a.positionInList - b.positionInList);
+        value.steps = this.stepManagementService.sortStepsByPosition(value.steps);
         if (value.projectType === projectTypeEnum.retainer) {
           this.initRetainerSteps();
         }
       }
-      this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
+      this.activeStepId = this.stepManagementService.findActiveStep(value?.steps ?? [])?.id;
       this.calculatePayments();
 
       setTimeout(() => {
@@ -292,9 +294,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   updateStepsPosition() {
     if (this.project()?.steps) {
-      for (let index = 0; index < this.project()?.steps.length; index++) {
-        this.project().steps[index].positionInList = index;
-      }
+      this.stepManagementService.updateStepsPositions(this.project().steps);
     }
 
     if (this.isRetainer) {
@@ -303,20 +303,14 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   updateRetainerStepsPositions() {
-    for (let index = 0; index < this.retainerActiveSteps.length; index++) {
-      this.retainerActiveSteps[index].positionInList = index;
-    }
-    this.retainerActiveSteps.sort(s => s.positionInList);
+    this.stepManagementService.updateStepsPositions(this.retainerActiveSteps);
+    this.retainerActiveSteps.sort((a, b) => a.positionInList - b.positionInList);
 
-    for (let index = 0; index < this.retainerFutureSteps.length; index++) {
-      this.retainerFutureSteps[index].positionInList = index;
-    }
-    this.retainerFutureSteps.sort(s => s.positionInList);
+    this.stepManagementService.updateStepsPositions(this.retainerFutureSteps);
+    this.retainerFutureSteps.sort((a, b) => a.positionInList - b.positionInList);
 
-    for (let index = 0; index < this.retainerFinishedSteps.length; index++) {
-      this.retainerFinishedSteps[index].positionInList = index;
-    }
-    this.retainerFinishedSteps.sort(s => s.positionInList);
+    this.stepManagementService.updateStepsPositions(this.retainerFinishedSteps);
+    this.retainerFinishedSteps.sort((a, b) => a.positionInList - b.positionInList);
   }
 
   adjustCdkPreviewHeight(div: any) { // this is stupid. angular is stupid
@@ -335,7 +329,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.animationHackFlag = false;
       setTimeout(() => { // stupid angular animation
         this.animationHackFlag = true;
-        this.activeStepId = this.project()?.steps?.find(s => !s.isComplete)?.id;
+        this.activeStepId = this.stepManagementService.findActiveStep(this.project()?.steps ?? [])?.id;
       });
 
       this.animationsService.changeIsLoadingWithDelay();
@@ -371,9 +365,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         if (res.steps) {
           this.project.set(res);
           if (this.project()?.steps) {
-            this.project().steps = this.project().steps.sort((a, b) => a.positionInList - b.positionInList);
+            this.project().steps = this.stepManagementService.sortStepsByPosition(this.project().steps);
           }
-          this.activeStepId = res.steps.find(s => !s.isComplete)?.id;
+          this.activeStepId = this.stepManagementService.findActiveStep(res.steps)?.id;
           this.animationsService.changeIsloading(false);
         }
       });
@@ -381,22 +375,12 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   calculatePayments(): void {
-    this.baseProjectPrice = 0;
-    this.paidMoney = 0;
-
-    if (this.project().projectType === projectTypeEnum.retainer && this.project().paymentModel === paymentModelEnum.hourly) {
-      this.baseProjectPrice = this.getProjectPrice();
-      this.paidMoney = this.retainerFinishedSteps.reduce((acc, step) => acc + step.price, 0);
-    } else {
-      this.project()?.steps?.forEach(step => {
-        if (step.stepType === StepType.payment) {
-          this.baseProjectPrice += step.price;
-          if (step.isComplete) {
-            this.paidMoney += step.price;
-          }
-        }
-      });
-    }
+    const result = this.stepManagementService.calculateProjectPrice(
+      this.project(), 
+      this.retainerFinishedSteps
+    );
+    this.baseProjectPrice = result.basePrice;
+    this.paidMoney = result.paidMoney;
   }
 
   completeStep(step: Step) {
@@ -424,67 +408,32 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   changeStepStatus(step: Step): void {
     this.animatingItemId = step.isRecurring || (!step.isRecurring && !step.isComplete) ? step.id : undefined;
     this.changeDetectorRef.detectChanges(); // Ensure the view is updated before the animation starts
+    
     setTimeout(() => {
       this.playLottieAnimation().then(() => {
         this.animatingItemId = '';
-        step.isComplete = step.isRecurring ? true : !step.isComplete;
-        if (step.isComplete) {
-          step.dateCompleted = new Date();
-          step.dateOnWeekly = new Date();
-          step.positionInWeeklyList = -1;
-          if (this.project()) {
-            let finishedSteps = 0;
-            let notFinishedSteps = 0;
-            for (let index = 0; index < this.project().steps.length; index++) {
-              const currentStep = this.project().steps[index];
-              if (currentStep.isComplete) {
-                if (currentStep.id !== step.id) {
-                  finishedSteps++;
-                } else {
-                  break;
-                }
-              } else {
-                notFinishedSteps++;
-              }
-            }
+        
+        // Use the service to handle step completion logic (mutates step and steps array)
+        this.stepManagementService.completeStep(
+          step, 
+          this.project().steps, 
+          this.isRetainer
+        );
+        
+        // Update positions
+        this.updateStepsPosition();
 
-            moveItemInArray(this.project().steps, finishedSteps + notFinishedSteps, finishedSteps);
-            this.updateStepsPosition();
-          }
-        } else {
-          step.dateCompleted = undefined;
-          let passedStep = false;
-          let stepsToMove = 0;
-          let currentIndex = 0;
-          if (this.project) {
-            for (let index = 0; index < this.project().steps.length; index++) {
-              const currentStep = this.project().steps[index];
-              if (currentStep.id === step.id) {
-                passedStep = true;
-                currentIndex = index;
-              } else {
-                if (currentStep.isComplete) {
-                  if (passedStep) {
-                    stepsToMove++;
-                  }
-                } else {
-                  break;
-                }
-              }
-            }
-            moveItemInArray(this.project().steps, currentIndex, currentIndex + stepsToMove);
-            this.updateStepsPosition();
-          }
-        }
-
+        // Reinitialize retainer steps if needed
         if (this.isRetainer) {
-          step.nextOccurrence = getNextRetainerOccurrenceDate(step);
-          step.dateOnWeekly = step.nextOccurrence;
           this.initRetainerSteps();
         }
-        this.activeStepId = this.project()?.steps?.find(s => !s.isComplete)?.id;
+
+        // Update active step
+        this.activeStepId = this.stepManagementService.findActiveStep(this.project().steps)?.id;
+        
+        // Update the step on the server
         this.updateStep(step);
-      })
+      });
     }, 1);
   }
 
@@ -555,8 +504,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   isFinishProject() {
-    const stepsInProgress = this.project()?.steps.filter(s => !s.isComplete).length;
-    if (stepsInProgress === 0) {
+    if (this.stepManagementService.areAllStepsComplete(this.project().steps)) {
       const updatedProject = { ...this.project() };
       updatedProject.status = ProjectStatus.finished;
       this.project.set(updatedProject);
