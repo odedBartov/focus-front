@@ -30,10 +30,11 @@ import { getNextRetainerOccurrenceDate, initRetainerSteps } from '../../helpers/
 import { OpenNotesComponent } from '../open-notes/open-notes.component';
 import { AiChatService } from '../../services/ai-chat.service';
 import { GenerateTaxDocumentComponent } from '../generate-tax-document/generate-tax-document.component';
+import { ProjectSummaryComponent } from '../project-summary/project-summary.component';
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, LottieComponent, AutoResizeInputDirective, OpenNotesComponent, GenerateTaxDocumentComponent],
+  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, LottieComponent, AutoResizeInputDirective, OpenNotesComponent, GenerateTaxDocumentComponent, ProjectSummaryComponent],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss',
   animations: [
@@ -106,25 +107,11 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   hideProperties = this.projectHoverService.getSignal();
   animationHackFlag = true;
   mouseDownInside = false;
-  private _sessionTimerStep = 1;
-  get sessionTimerStep() {
-    return this._sessionTimerStep;
-  }
-  set sessionTimerStep(value: number) {
-    this._sessionTimerStep = value;
-    this.WorkSessionService.changeIsSessionActive(value !== 1);
-  }
-  sessionTime = 0;
-  lastStartTime = 0;
-  accumulatedTime = 0;
-  sessionTimer?: any;
-  retainerPaymentName = '';
   openedAccordion = 1;
   retainerActiveSteps: Step[] = [];
   retainerFutureSteps: Step[] = [];
   retainerFinishedSteps: Step[] = [];
   daysInWeek = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
-  buzzWorkSession = false;
   generateTaxDocumentId = signal<string>('');
   shouldGenerateTaxDocumentId = signal<string>('');
   shouldFinishStepAfterTaxDocument = signal<boolean>(false);
@@ -142,7 +129,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         }
       }
       this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
-      this.loadSessionTimer();
       this.calculatePayments();
 
       setTimeout(() => {
@@ -154,7 +140,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.loadProject();
     this.isReadOnly = this.authenticationService.getIsReadOnly();
-    this.listenToBuzz();
   }
 
   ngAfterViewInit(): void {
@@ -210,18 +195,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     return this.project()?.projectType === projectTypeEnum.retainer;
   }
 
-  get hours() {
-    return this.pad(Math.floor(this.sessionTime / 3600000));
-  }
-
-  get minutes() {
-    return this.pad(Math.floor((this.sessionTime % 3600000) / 60000));
-  }
-
-  get seconds() {
-    return this.pad(Math.floor((this.sessionTime % 60000) / 1000));
-  }
-
   get isPaymentModelHourly() {
     return this.project().paymentModel === paymentModelEnum.hourly;
   }
@@ -230,17 +203,12 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     return this.authenticationService.getUserApiKey() ?? '';
   }
 
-  pad(num: number) {
-    return num.toString().padStart(2, '0');
-  }
-
-  listenToBuzz() {
-    this.WorkSessionService.getObservable().subscribe(() => {
-      this.buzzWorkSession = true;
-      setTimeout(() => {
-        this.buzzWorkSession = false;
-      }, 600);
-    });
+  getProjectPrice(): number {
+    if (this.isRetainer && this.project().paymentModel === paymentModelEnum.hourly) {
+      const totalHours = this.project().hourlyWorkSessions.reduce((acc, session) => acc + (session.workTime / 3600000), 0);
+      return Math.round(totalHours * (this.project().reccuringPayment ?? 0));
+    }
+    return this.baseProjectPrice;
   }
 
   getWeekDays(days?: number[]) {
@@ -254,99 +222,26 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.retainerFinishedSteps = retainerSteps.retainerFinishedSteps;
   }
 
-  copyProjectUrl(tooltip: MatTooltip) {
-    navigator.clipboard.writeText(window.location.href);
-    tooltip.disabled = false;
-    tooltip.show();
-    setTimeout(() => {
-      tooltip.disabled = true;
-      tooltip.hide();
-    }, 1000);
+  onFinishWorkingSession(sessionData: { name: string, workTime: number, price: number }) {
+    const payment = new HourlyWorkSession();
+    payment.name = sessionData.name;
+    payment.price = sessionData.price;
+    payment.date = new Date();
+    payment.workTime = sessionData.workTime;
+    payment.projectId = this.project().id ?? '';
+
+    this.calculatePayments();
+    this.httpService.createHourlyWorkSession(payment).subscribe(res => {
+      this.project()?.hourlyWorkSessions.push(res);
+    });
   }
 
-  getProjectPrice(): number {
-    if (this.isRetainer && this.project().paymentModel === paymentModelEnum.hourly) {
-      const totalHours = this.project().hourlyWorkSessions.reduce((acc, session) => acc + (session.workTime / 3600000), 0);
-      return Math.round(totalHours * (this.project().reccuringPayment ?? 0));
-    } else return this.baseProjectPrice;
+  onOpenProjectModal() {
+    this.openProjectModal();
   }
 
-  loadSessionTimer() {
-    if (this.isRetainer && this.project().paymentModel === paymentModelEnum.hourly) {
-      const storedSession = this.WorkSessionService.getSession(this.project().id);
-      if (storedSession) {
-        this.sessionTime = storedSession;
-        this.sessionTimerStep = 2;
-      }
-    }
-  }
-
-  startSessionTimer() {
-    if (this.sessionTimerStep === 1) {
-      this.resumeSessionTimer();
-      this.sessionTimerStep = 2;
-    }
-  }
-
-  resumeSessionTimer() {
-    this.WorkSessionService.changeIsSessionActive(true);
-    this.accumulatedTime = this.sessionTime;
-    this.lastStartTime = Date.now();
-    if (!this.sessionTimer) {
-      this.sessionTimer = setInterval(() => {
-        const currentTime = Date.now();
-        const elapsed = currentTime - this.lastStartTime; // elapsed time since resume
-        this.sessionTime = this.accumulatedTime + elapsed;
-      }, 1000);
-    }
-  }
-
-  stopSessionTimer() {
-    this.pauseSessionTimer();
-    this.sessionTimerStep = 3;
-    this.retainerPaymentName = this.retainerActiveSteps[0].name ?? 'שלב נוכחי';
-  }
-
-  pauseSessionTimer() {
-    this.WorkSessionService.storeSession(this.project().id, this.sessionTime);
-    this.WorkSessionService.changeIsSessionActive(false);
-    if (this.sessionTimer) {
-      clearInterval(this.sessionTimer);
-      this.sessionTimer = undefined;
-      this.lastStartTime = 0;
-      this.accumulatedTime = 0;
-    }
-  }
-
-  deleteWorkingSession(event: Event) {
-    this.WorkSessionService.deleteSession(this.project().id);
-    event?.stopPropagation();
-    event?.preventDefault();
-    this.sessionTime = 0;
-    this.sessionTimerStep = 1;
-    this.pauseSessionTimer();
-  }
-
-  finishWorkingSession(event: Event) {
-    this.WorkSessionService.deleteSession(this.project().id);
-    if (this.retainerPaymentName) {
-      event?.stopPropagation();
-      event?.preventDefault();
-      const payment = new HourlyWorkSession();
-      payment.name = this.retainerPaymentName;
-      payment.price = (this.sessionTime / 3600000) * (this.project()?.reccuringPayment ?? 0);
-      payment.date = new Date();
-      payment.workTime = this.sessionTime;
-      payment.projectId = this.project().id ?? '';
-
-      this.sessionTime = 0;
-      this.sessionTimerStep = 1;
-      this.pauseSessionTimer();
-      this.calculatePayments();
-      this.httpService.createHourlyWorkSession(payment).subscribe(res => {
-        this.project()?.hourlyWorkSessions.push(res);
-      });
-    }
+  onOpenPaymentHistoryModal() {
+    this.openPaymentHistoryModal();
   }
 
   finishStepAnimationCreated(animation: AnimationItem) {

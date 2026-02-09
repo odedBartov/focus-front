@@ -1,0 +1,117 @@
+<div class="summurize" [ngClass]="{ 'show-before': hideProperties() }">
+    <div class="info">
+        <div class="text-and-icon">
+            <span class="title new-h1">{{project().name}}</span>
+            <div class="icons">
+                <span></span>
+                <img class="pointer icon-share" (click)="copyProjectUrl(tooltip)" matTooltip="הקישור הועתק"
+                    matTooltipDisabled="true" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                    #tooltip="matTooltip" />
+                <img class="pointer icon-expand" (click)="openProjectModal()" *ngIf="!isReadOnly()" />
+            </div>
+        </div>
+        <span class="description new-small" *ngIf="project().description">
+            {{project().description}}
+        </span>
+        <div class="dates">
+            <ng-container *ngIf="!isRetainer">
+                <div class="cell">
+                    <span class="new-small cell-title">תאריך התחלה</span>
+                    <span class="new-text-bold">{{project().startDate | date: 'dd.MM.yyyy' : 'UTC'}}</span>
+                </div>
+                <div class="cell">
+                    <span class="new-small cell-title">תאריך סיום</span>
+                    <span class="new-text-bold">{{project().endDate | date: 'dd.MM.yyyy' : 'UTC'}}</span>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="isRetainer && isPaymentModelHourly">
+                <div class="cell">
+                    <span class="new-small cell-title">תאריך התחלה</span>
+                    <span class="new-text-bold">{{project().startDate | date: 'dd.MM.yyyy' : 'UTC'}}</span>
+                </div>
+                <div class="cell">
+                    <span class="new-small cell-title">מחיר שעתי</span>
+                    <span class="new-text-bold">{{project().reccuringPayment}} ₪</span>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="isRetainer && project().paymentModel === paymentModelEnum.monthly">
+                <div class="cell">
+                    <span class="new-small cell-title">תשלום חודשי</span>
+                    <span class="new-text-bold">{{project().reccuringPayment}} ₪</span>
+                </div>
+                <div class="cell">
+                    <span class="new-small cell-title">תאריך תשלום</span>
+                    <span class="new-text-bold">{{project().monthlyPaymentDay | number:'2.0-0'}} לחודש</span>
+                </div>
+                <div class="cell">
+                    <span class="new-small cell-title">תאריך התחלה</span>
+                    <span class="new-text-bold">{{project().startDate | date: 'dd.MM.yyyy' : 'UTC'}}</span>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+
+    <div>
+        <div class="price">
+            <div class="text-and-icon">
+                <span class="title new-small">מחיר (לא כולל מע"מ)</span>
+                <img class="icon icon-info" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                    *ngIf="!isRetainer"
+                    matTooltip="אם מחיר הפרויקט משתנה, כל מה שצריך לעשות הוא לשנות את הסכומים בשלבי התשלום (או להוסיף תשלום חדש). המחיר הכולל יתעדכן בהתאם." />
+                <img *ngIf="isRetainer" class="pointer icon-expand" (click)="openPaymentHistoryModal()" />
+            </div>
+            <span class="base-price new-h2">{{getProjectPrice()}} ₪</span>
+            <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="(paidMoney/getProjectPrice())*100">
+                </div>
+            </div>
+            <div class="paid-remain">
+                <div class="paid">
+                    <span class="title new-small">שולם</span>
+                    <span class="new-small-bold">{{paidMoney | number}} ₪</span>
+                </div>
+                <div class="remain">
+                    <span class="title new-small">נשאר לתשלום</span>
+                    <span class="new-small-bold">{{baseProjectPrice-paidMoney | number}} ₪</span>
+                </div>
+            </div>
+        </div>
+        <div class="sessions-counter" [ngClass]="{pointer: sessionTimerStep === 1, buzz: buzzWorkSession}"
+            [ngStyle]="{'height': sessionTimerStep === 1 ? '60px' : sessionTimerStep === 2? '126px' : '115px'}"
+            *ngIf="isRetainer && isPaymentModelHourly" (click)="startSessionTimer()">
+            <ng-container *ngIf="sessionTimerStep === 1">
+                <div style="display: flex; justify-content: space-between;">
+                    <span class="new-text-bold">ספירת שעות לתשלום</span>
+                    <img src="assets/icons/play_button_white.svg" />
+                </div>
+            </ng-container>
+            <ng-container *ngIf="sessionTimerStep === 2">
+                <div>
+                    <span class="new-text-bold">ספירת שעות לתשלום</span>
+                </div>
+                <div class="timer">
+                    <img class="icon-stop pointer" (click)="stopSessionTimer()" />
+                    <div class="clock">
+                        <div class="group">{{ seconds }}</div>
+                        <div class="colon">:</div>
+                        <div class="group">{{ minutes }}</div>
+                        <div class="colon">:</div>
+                        <div class="group">{{ hours }}</div>
+                    </div>
+                    <img [class]="'pointer ' + (sessionTimer? 'icon-pause' : 'icon-play')"
+                        (click)="sessionTimer? pauseSessionTimer() : resumeSessionTimer()" />
+                </div>
+            </ng-container>
+            <ng-container *ngIf="sessionTimerStep === 3">
+                <span class="new-text-bold">שמירת סשן</span>
+                <div class="save-session">
+                    <img class="icon-garbage-can-gray-white pointer" (click)="deleteWorkingSession($event)" />
+                    <input class="new-small" [(ngModel)]="retainerPaymentName" tabindex="0"
+                        (keydown.enter)="finishWorkingSession($event)" />
+                    <img class="icon-confirm-transparent pointer" (click)="finishWorkingSession($event)"
+                        tabindex="0" (keydown.enter)="finishWorkingSession($event)" />
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>
