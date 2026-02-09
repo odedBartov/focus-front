@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { subscriptionEnum } from '../models/enums';
+import { taxManagementSystemEnum } from '../models/taxSystem';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,8 @@ export class AuthenticationService {
   isReadOnly = "is-read-only";
   subscription = "subscription";
   userId = "userId";
+  userApiKey = "user-api-key";
+  userTaxManagementSystem = "user-tax-management-system";
   isReadOnlySignal = signal<boolean>(false);
 
   getToken() {
@@ -90,6 +93,26 @@ export class AuthenticationService {
 
   setUserId(userId: string) {
     localStorage.setItem(this.userId, userId);
+  }
+
+  setUserApiKey(apiKey: string) {
+    localStorage.setItem(this.userApiKey, apiKey);
+  }
+
+  getUserApiKey() {
+    return localStorage.getItem(this.userApiKey);
+  }
+
+  setUserTaxManagementSystem(system: taxManagementSystemEnum) {
+    localStorage.setItem(this.userTaxManagementSystem, system.toString());
+  }
+
+  getUserTaxManagementSystem() {
+    const system = localStorage.getItem(this.userTaxManagementSystem);
+    if (system) {
+      return system as unknown as taxManagementSystemEnum;
+    }
+    return undefined;
   }
 
   logOut() {

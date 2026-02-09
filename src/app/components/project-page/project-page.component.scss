@@ -86,6 +86,22 @@
         resize: none;
     }
 
+    .should-generate-tax-document {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        .buttons {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+
+            .confirm-button, .decline-button {
+            font-size: var(--font-size-1);
+            }
+        }
+    }
+
     .step-description {
         padding: 7px 0;
         color: var(--default-black);
@@ -112,7 +128,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            
+
             .icons {
                 display: flex;
                 gap: 1rem;

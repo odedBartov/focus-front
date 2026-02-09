@@ -1,7 +1,7 @@
 import { Step } from "../models/step";
 import { isStep, StepOrTask } from "../models/stepOrTask";
 
-export function parseDate(input?: string): Date | null {
+export function parseDate(input?: string, timezone?: string): Date | null {
   if (input) {
     const parts = input.split('/');
     if (parts.length !== 3) return null;
@@ -13,7 +13,14 @@ export function parseDate(input?: string): Date | null {
     month = month > 12 ? 12 : month;
     // Handle 2-digit year (assume 2000s)
     const fullYear = year < 100 ? 2000 + year : year;
-    const date = new Date(fullYear, month - 1, day);
+    const date =
+      timezone?.toUpperCase() === 'UTC'
+        ? new Date(Date.UTC(fullYear, month - 1, day, 0, 0, 0, 0))
+        : new Date(fullYear, month - 1, day, 0, 0, 0, 0);
+    if (timezone && timezone.toUpperCase() !== 'UTC') {
+      const offset = parseInt(timezone, 10);
+      if (!isNaN(offset)) date.setHours(date.getHours() + offset);
+    }
     return isNaN(date.getTime()) ? null : date;
   }
   return null;

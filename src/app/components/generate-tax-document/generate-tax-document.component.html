@@ -1,0 +1,50 @@
+<div class="main">
+    <div class="header">
+        <span class="new-h2">יצירת מסמך</span>
+        <img src="assets/icons/document_dollar.svg" />
+    </div>
+
+    <div class="content">
+        <div class="text-and-input">
+            <span class="new-small">איזה סוג מסמך אנחנו יוצרים?</span>
+            <select class="new-text" [(ngModel)]="selectedDocumentType">
+                <option *ngFor="let opt of documentTypeOptions" [ngValue]="opt.apiValue">{{ opt.label }}</option>
+            </select>
+        </div>
+        <div class="text-and-input">
+            <span class="new-small">שם על החשבונית</span>
+            <input type="text" class="new-text" [(ngModel)]="clientName" />
+        </div>
+        <div class="text-and-input">
+            <span class="new-small">מוצר/שירות</span>
+            <input type="text" class="new-text" [(ngModel)]="serviceName" />
+        </div>
+        <div class="text-and-input">
+            <span class="new-small">סכום</span>
+            <input type="text" class="new-text" [(ngModel)]="paymentPrice" />
+        </div>
+
+        <div class="disclaimer" *ngIf="!disclaimerConfirmed">
+            <div class="title">
+                <img src="assets/icons/info_yes.svg" />
+                <span class="new-small-bold">רק רגע, זה חשוב:</span>
+            </div>
+            <span class="new-small">על פי הדרישות החדשות של רשות המיסים, חשבונית בסכום הזה מחייבת מספר הקצאה. אם עדיין
+                לא טיפלת בזה דרך מערכת הנהלת החשבונות שלך, אנחנו ממליצים בחום לעשות את זה לפני יצירת המסמך.</span>
+            <div class="confirm-disclaimer-container">
+                <div class="confirm-disclaimer" (click)="confirmDisclaimer()">
+                    <img src="assets/icons/confirm_gray.svg" />
+                    <span class="new-small">טיפלתי בזה, אל תציגו לי שוב</span>
+                </div>
+            </div>
+        </div>
+        <div class="text-and-input">
+            <span class="new-small">לאן לשלוח את המסמך?</span>
+            <input type="email" class="new-text" [(ngModel)]="clientMail" />
+        </div>
+        <div class="confirm-button" (click)="createAndSendDocument()">
+            <img src="assets/icons/confirm_white.svg"/>
+            <span>יצירה ושליחה</span>
+        </div>
+    </div>
+</div>

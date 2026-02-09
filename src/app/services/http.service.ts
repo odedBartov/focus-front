@@ -11,7 +11,7 @@ import { HourlyWorkSession } from '../models/hourlyWorkSession';
 import { RetainerPayment } from '../models/RetainerPayment';
 import { Feature } from '../models/feature';
 import { AiConversation, ChatRequest, ChatResponse } from '../models/aiModels';
-import { taxManagementSystemEnum } from '../models/taxSystem';
+import { createDocumentResponse, TaxDocumentRequest, taxManagementSystemEnum } from '../models/taxSystem';
 import { simpleResponse } from '../models/simpleResponse';
 
 @Injectable({
@@ -46,6 +46,8 @@ export class HttpService {
       this.authenticationService.setUserName(res.body.firstName, res.body.lastName);
       this.authenticationService.setSubscription(res.body.subscription);
       this.authenticationService.setUserId(res.body.userId);
+      this.authenticationService.setUserApiKey(res.body.taxManagementApiKey);
+      this.authenticationService.setUserTaxManagementSystem(res.body.taxManagementSystem);
       const fullName = this.authenticationService.getUserName();
       if (fullName) {
         this.titleService.setTitle("פוקוס - " + fullName);
@@ -175,6 +177,10 @@ export class HttpService {
   }
 
   loginToTaxManagement(apiKey: string, system?: taxManagementSystemEnum): Observable<simpleResponse> {
-    return this.httpClient.post<simpleResponse>(this.apiUrl + "TaxDocuments/login", {apiKey: apiKey, system: system});
+    return this.httpClient.post<simpleResponse>(this.apiUrl + "TaxDocuments/login", { apiKey: apiKey, system: system });
+  }
+
+  createTaxDocument(request: TaxDocumentRequest): Observable<createDocumentResponse> {
+    return this.httpClient.post<createDocumentResponse>(this.apiUrl + "TaxDocuments/createDocument", request, this.generateHeaders());
   }
 }

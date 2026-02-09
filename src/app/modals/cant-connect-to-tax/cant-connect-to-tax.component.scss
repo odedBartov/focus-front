@@ -1,0 +1,33 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem;
+    box-sizing: border-box;
+    width: 320px;
+    gap: 1rem;
+
+    .icon {
+        height: 80px;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .confirm-button:focus {
+        border: none;
+        outline: none;
+    }
+}
+
+::ng-deep {
+    .cdk-overlay-container {
+        z-index: 1002;
+    }
+
+    .cdk-overlay-backdrop {
+        background-color: var(--error-background-color) !important;
+        opacity: 0.9 !important;
+    }
+}

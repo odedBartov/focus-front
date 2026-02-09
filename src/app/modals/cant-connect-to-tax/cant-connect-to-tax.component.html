@@ -1,0 +1,7 @@
+<div class="main">
+    <img src="assets/icons/pin_disconnect_blue.svg" class="icon" />
+    <span class="new-text-bold">לא הצלחנו להתחבר לחשבון {{systemName}} שלך במערכת</span>
+    <span class="new-small">ייתכן שמפתח ה-API לא תקין או שהתוקף שלו פג. כדאי ליצור מפתח חדש ולנסות להתחבר שוב.</span>
+    <div class="confirm-button pointer" (click)="openApiKeyPage()" (keydown.enter)="openApiKeyPage()" tabindex="1">קחו אותי לשם</div>
+    <span class="new-small pointer" (click)="closeModal()" (keydown.enter)="closeModal()" tabindex="1">לא כרגע</span>
+</div>

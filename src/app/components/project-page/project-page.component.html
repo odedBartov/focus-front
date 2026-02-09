@@ -19,17 +19,17 @@
                     <ng-container *ngIf="!isRetainer">
                         <div class="cell">
                             <span class="new-small cell-title">תאריך התחלה</span>
-                            <span class="new-text-bold">{{project().startDate | date: 'dd.MM.yyyy'}}</span>
+                            <span class="new-text-bold">{{project().startDate | date: 'dd.MM.yyyy' : 'UTC'}}</span>
                         </div>
                         <div class="cell">
                             <span class="new-small cell-title">תאריך סיום</span>
-                            <span class="new-text-bold">{{project().endDate | date: 'dd.MM.yyyy'}}</span>
+                            <span class="new-text-bold">{{project().endDate | date: 'dd.MM.yyyy' : 'UTC'}}</span>
                         </div>
                     </ng-container>
                     <ng-container *ngIf="isRetainer && isPaymentModelHourly">
                         <div class="cell">
                             <span class="new-small cell-title">תאריך התחלה</span>
-                            <span class="new-text-bold">{{project().startDate | date: 'dd.MM.yyyy'}}</span>
+                            <span class="new-text-bold">{{project().startDate | date: 'dd.MM.yyyy' : 'UTC'}}</span>
                         </div>
                         <div class="cell">
                             <span class="new-small cell-title">מחיר שעתי</span>
@@ -47,7 +47,7 @@
                         </div>
                         <div class="cell">
                             <span class="new-small cell-title">תאריך התחלה</span>
-                            <span class="new-text-bold">{{project().startDate | date: 'dd.MM.yyyy'}}</span>
+                            <span class="new-text-bold">{{project().startDate | date: 'dd.MM.yyyy' : 'UTC'}}</span>
                         </div>
                     </ng-container>
                 </div>
@@ -123,7 +123,7 @@
                 [ngClass]="{'step' : editStepId !== step.id, 'active-step': step.id === activeStepId && step.id !== editStepId}"
                 *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
                 (mouseleave)="hoverStepId = undefined" cdkDrag>
-                <div *ngIf="editStepId !== step.id && animationHackFlag">
+                <div *ngIf="editStepId !== step.id && animationHackFlag && generateTaxDocumentId() !== step.id">
                     <div [class]="'step-header '"
                         [ngClass]="{ 'active': !step.isComplete && step.id === activeStepId, 'future': !step.isComplete && step.id !== activeStepId && hoverStepId === step.id }">
                         <span [class]="step.id === activeStepId? 'new-h2' : 'new-text-bold'"
@@ -133,51 +133,68 @@
                         <img src="assets/icons/dollar.svg"
                             *ngIf="!step.isComplete && step.stepType === stepTypeEnum.payment" />
                     </div>
-                    <div class="extra" [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"
-                        *ngIf="step.isComplete">
-                        הסתיים בתאריך {{step.dateCompleted | date: 'dd.MM.yyyy'}}
-                    </div>
-                    <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id) ? 'expanded' : 'collapsed'"
-                        class="extra-not-finished" *ngIf="!step.isComplete">
-                        <textarea [class]="activeStepId === step.id? 'new-text active' : 'new-small future'"
-                            disabled="true"
-                            *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
-                            #descriptions autoResize
-                            rows="1">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
-                        <div class="tasks" *ngIf="step.tasks">
-                            <div class="task-list" cdkDropList (cdkDropListDropped)="dropTask($event, step)">
-                                <div class="task" *ngFor="let task of step.tasks; let i = index" cdkDrag>
-                                    <div *ngIf="i < step.tasks.length" style="display: flex;">
-                                        <img [src]="'assets/icons/'+(task.isComplete? 'confirm_yes' : 'empty_circle')+'.svg'"
-                                            (click)="toggleTask(step, task)"
-                                            [style.pointer-events]="isReadOnly() ? 'none' : 'auto'" class="task-icon" />
-                                        <textarea
-                                            [class]="activeStepId === step.id? 'new-text active' : 'new-small future'"
-                                            [(ngModel)]="task.text" autoResize defaultHeight="20px"
-                                            #taskText></textarea>
+                    <ng-container *ngIf="shouldGenerateTaxDocumentId() !== step.id">
+                        <div class="extra" [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"
+                            *ngIf="step.isComplete">
+                            הסתיים בתאריך {{step.dateCompleted | date: 'dd.MM.yyyy' : 'UTC'}}
+                        </div>
+                        <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id) ? 'expanded' : 'collapsed'"
+                            class="extra-not-finished" *ngIf="!step.isComplete">
+                            <textarea [class]="activeStepId === step.id? 'new-text active' : 'new-small future'"
+                                disabled="true"
+                                *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
+                                #descriptions autoResize
+                                rows="1">{{step.stepType === stepTypeEnum.payment? (step.price + ' ₪') : step.description}}</textarea>
+                            <div class="tasks" *ngIf="step.tasks">
+                                <div class="task-list" cdkDropList (cdkDropListDropped)="dropTask($event, step)">
+                                    <div class="task" *ngFor="let task of step.tasks; let i = index" cdkDrag>
+                                        <div *ngIf="i < step.tasks.length" style="display: flex;">
+                                            <img [src]="'assets/icons/'+(task.isComplete? 'confirm_yes' : 'empty_circle')+'.svg'"
+                                                (click)="toggleTask(step, task)"
+                                                [style.pointer-events]="isReadOnly() ? 'none' : 'auto'"
+                                                class="task-icon" />
+                                            <textarea
+                                                [class]="activeStepId === step.id? 'new-text active' : 'new-small future'"
+                                                [(ngModel)]="task.text" autoResize defaultHeight="20px"
+                                                #taskText></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="step-icons" *ngIf="!isReadOnly()">
-                            <div class="edit-delete">
-                                <img class="icon-garbage-can-gray-blue" (click)="deleteStep(step)" />
-                                <img class="icon-pencil" (click)="editStep(stepDiv, step.id)" />
-                                <img class="icon-add-file"/>
-                            </div>
-                            <div class="animation-container">
-                                <div class="finish-step-animation" *ngIf="step.id === animatingItemId">
-                                    <ng-lottie [options]="lottieOptions"
-                                        (animationCreated)="finishStepAnimationCreated($event)" />
+                            <div class="step-icons" *ngIf="!isReadOnly()">
+                                <div class="edit-delete">
+                                    <img class="icon-garbage-can-gray-blue" (click)="deleteStep(step)" />
+                                    <img class="icon-pencil" (click)="editStep(stepDiv, step.id)" />
+                                    <img class="icon-add-file" (click)="showGenerateTaxDocument(step.id ?? '')"
+                                        *ngIf="step.stepType === stepTypeEnum.payment" />
                                 </div>
-                                <img class="icon-confirm-circle" (click)="changeStepStatus(step)" />
+                                <div class="animation-container">
+                                    <div class="finish-step-animation" *ngIf="step.id === animatingItemId">
+                                        <ng-lottie [options]="lottieOptions"
+                                            (animationCreated)="finishStepAnimationCreated($event)" />
+                                    </div>
+                                    <img class="icon-confirm-circle" (click)="completeStep(step)" />
+                                </div>
                             </div>
+                        </div>
+                    </ng-container>
+
+                    <div class="should-generate-tax-document" *ngIf="shouldGenerateTaxDocumentId() === step.id">
+                        <span class="new-text">ברכות! האם ליצור חשבונית מס או קבלה?</span>
+                        <div class="buttons">
+                            <div class="decline-button" (click)="dontGenerateTaxDocument(step)">לא הפעם</div>
+                            <div class="confirm-button" (click)="generateTaxDocument(step)">כן, אני רוצה ליצור מסמך</div>
                         </div>
                     </div>
                 </div>
                 <div *ngIf="editStepId === step.id" (mousedown)="$event.stopPropagation(); mouseDownInside = true;">
                     <app-new-step class="new-step" [steptInput]="step" [isActive]="editStepId === activeStepId"
                         (stepsEmitter)="updateStep($event)"></app-new-step>
+                </div>
+                <div class="generate-tax-document" *ngIf="generateTaxDocumentId() === step.id">
+                    <app-generate-tax-document [project]="project()" [paymentName]="step.name ?? ''"
+                        [paymentPriceInput]="step.price" [taxManagementApiKey]="userApiKey"
+                        (documentCreated)="taxDocumentCreated(step)"></app-generate-tax-document>
                 </div>
             </div>
             <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly()">
@@ -207,9 +224,9 @@
                                     *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
                                     #descriptions>
                                     @if (step.stepType === stepTypeEnum.payment) {
-                                        תשלום בסך <span class="new-text-bold">{{ step.price }} ₪</span>
+                                    תשלום בסך <span class="new-text-bold">{{ step.price }} ₪</span>
                                     } @else {
-                                        {{ step.description }}
+                                    {{ step.description }}
                                     }
                                 </div>
                                 <div class="tasks" *ngIf="step.tasks">
@@ -360,7 +377,7 @@
                                     class="extra-not-finished">
                                     <span *ngIf="step.dateCompleted" class="new-small">הסתיים בתאריך:
                                         {{step.dateCompleted |
-                                        date: 'dd/MM/yy'}}</span>
+                                        date: 'dd/MM/yy' : 'UTC'}}</span>
                                 </div>
                             </div>
                         </div>

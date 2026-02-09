@@ -1,0 +1,69 @@
+@use '../../../mixins.scss' as mixins;
+
+.main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        
+        .disclaimer {
+            @include mixins.regular-border;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 20px;
+
+            .title {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+
+                img {
+                    height: 16px;
+                    margin-top: 3px;
+                }
+            }
+
+            .confirm-disclaimer-container {
+                display: flex;
+                justify-content: end;
+            }
+
+            .confirm-disclaimer {
+                gap: 5px;
+                display: flex;
+                justify-content: end;
+                cursor: pointer;
+                color: var(--default-gray);
+                align-items: center;
+
+                img {
+                    height: 11px;
+                    margin-top: 3px;
+                }
+            }
+
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+
+}
+
+input, select {
+    width: -webkit-fill-available;
+}

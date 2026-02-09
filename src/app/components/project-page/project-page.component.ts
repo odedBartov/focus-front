@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, HostListener, inject, OnInit, Output, QueryList, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, HostListener, inject, OnInit, Output, QueryList, signal, ViewChild, ViewChildren, WritableSignal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from '../../models/project';
 import { HttpService } from '../../services/http.service';
@@ -29,10 +29,11 @@ import { WorkSessionService } from '../../services/work-session.service';
 import { getNextRetainerOccurrenceDate, initRetainerSteps } from '../../helpers/retainerFunctions';
 import { OpenNotesComponent } from '../open-notes/open-notes.component';
 import { AiChatService } from '../../services/ai-chat.service';
+import { GenerateTaxDocumentComponent } from '../generate-tax-document/generate-tax-document.component';
 
 @Component({
   selector: 'app-project-page',
-  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, LottieComponent, AutoResizeInputDirective, OpenNotesComponent],
+  imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, LottieComponent, AutoResizeInputDirective, OpenNotesComponent, GenerateTaxDocumentComponent],
   templateUrl: './project-page.component.html',
   styleUrl: './project-page.component.scss',
   animations: [
@@ -124,6 +125,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   retainerFinishedSteps: Step[] = [];
   daysInWeek = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
   buzzWorkSession = false;
+  generateTaxDocumentId = signal<string>('');
+  shouldGenerateTaxDocumentId = signal<string>('');
+  shouldFinishStepAfterTaxDocument = signal<boolean>(false);
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.openNotesSignal = this.projectsService.getProjectWithOpenNotes();
@@ -220,6 +224,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   get isPaymentModelHourly() {
     return this.project().paymentModel === paymentModelEnum.hourly;
+  }
+
+  get userApiKey() {
+    return this.authenticationService.getUserApiKey() ?? '';
   }
 
   pad(num: number) {
@@ -496,6 +504,28 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     }
   }
 
+  completeStep(step: Step) {
+    if (step.stepType === StepType.payment) {
+      this.shouldGenerateTaxDocumentId.set(step.id ?? '');
+    } else {
+      this.changeStepStatus(step);
+    }
+  }
+
+  generateTaxDocument(step: Step) {
+    this.shouldGenerateTaxDocumentId.set('');
+    this.generateTaxDocumentId.set(step.id ?? '');
+    this.shouldFinishStepAfterTaxDocument.set(true);
+  }
+
+  dontGenerateTaxDocument(step: Step) {
+    this.shouldGenerateTaxDocumentId.set('');
+    this.shouldFinishStepAfterTaxDocument.set(false);
+    setTimeout(() => {
+      this.changeStepStatus(step);
+    }, 50);
+  }
+
   changeStepStatus(step: Step): void {
     this.animatingItemId = step.isRecurring || (!step.isRecurring && !step.isComplete) ? step.id : undefined;
     this.changeDetectorRef.detectChanges(); // Ensure the view is updated before the animation starts
@@ -741,5 +771,20 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       container.scrollTop = container.scrollHeight;
     }, 1);
+  }
+
+  showGenerateTaxDocument(stepId: string) {
+    this.generateTaxDocumentId.set(stepId);
+  }
+
+  taxDocumentCreated(step: Step) {
+    if (this.shouldFinishStepAfterTaxDocument()) {
+      this.shouldFinishStepAfterTaxDocument.set(false);
+      setTimeout(() => {
+        this.changeStepStatus(step);
+      }, 50);
+    }
+    this.generateTaxDocumentId.set('');
+    this.shouldGenerateTaxDocumentId.set('');
   }
 }

@@ -42,8 +42,3 @@ export enum retainerPaymentTypeEnum {
     mothly,
     oneTime
 }
-
-export enum TaxDocumentEnum {
-    invoice,
-    receipt
-}

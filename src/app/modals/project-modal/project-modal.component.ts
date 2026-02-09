@@ -31,8 +31,8 @@ export class ProjectModalComponent {
   project: Project;
   constructor(@Inject(MAT_DIALOG_DATA) public data: { project: Project }) {
     this.project = { ...data.project };
-    this.startDate = this.datePipe.transform(this.project.startDate, 'dd/MM/yy') ?? '';
-    this.endDate = this.datePipe.transform(this.project.endDate, 'dd/MM/yy') ?? '';
+    this.startDate = this.datePipe.transform(this.project.startDate, 'dd/MM/yy', 'UTC') ?? '';
+    this.endDate = this.datePipe.transform(this.project.endDate, 'dd/MM/yy', 'UTC') ?? '';
   }
 
 
@@ -51,11 +51,11 @@ export class ProjectModalComponent {
   }
 
   transfromDates() {
-    const startDate = parseDate(this.startDate);
+    const startDate = parseDate(this.startDate, 'UTC');
     if (startDate) {
       this.project.startDate = startDate;
     }
-    const endDate = parseDate(this.endDate);
+    const endDate = parseDate(this.endDate, 'UTC');
     if (endDate) {
       this.project.endDate = endDate;
     }
