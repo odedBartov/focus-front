@@ -84,7 +84,7 @@
                     <app-new-step class="new-step" [steptInput]="step" [isActive]="editStepId === activeStepId"
                         (stepsEmitter)="updateStep($event)"></app-new-step>
                 </div>
-                <div class="generate-tax-document" *ngIf="generateTaxDocumentId() === step.id">
+                <div class="generate-tax-document" *ngIf="generateTaxDocumentId() === step.id" (mousedown)="$event.stopPropagation()">
                     <app-generate-tax-document [project]="project()" [paymentName]="step.name ?? ''"
                         [paymentPriceInput]="step.price" [taxManagementApiKey]="userApiKey"
                         (documentCreated)="taxDocumentCreated(step)"></app-generate-tax-document>
