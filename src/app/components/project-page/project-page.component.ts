@@ -82,6 +82,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   @ViewChild('newStepDiv', { static: false }) newStepDiv?: ElementRef;
   @ViewChild('notesDiv', { static: false }) notesDiv?: ElementRef;
   @ViewChild('addStepDiv', { static: false }) addStepDiv!: ElementRef;
+  @ViewChild('generateTaxDocumentDiv', { static: false }) generateTaxDocumentDiv?: ElementRef;
   @ViewChildren('descriptions') descriptions!: QueryList<ElementRef<HTMLElement>>;
   @ViewChildren('stepHeader') stepHeaders!: QueryList<ElementRef<HTMLSpanElement>>;
 
@@ -166,6 +167,12 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.editStepId = '';
     } else {
       this.mouseDownInside = true;
+    }
+
+    if (this.generateTaxDocumentDiv?.nativeElement && 
+        !this.generateTaxDocumentDiv.nativeElement.contains(event.target as Node) && 
+        !this.mouseDownInside) {
+      this.generateTaxDocumentId.set('');
     }
 
     if (this.notesDiv?.nativeElement &&
