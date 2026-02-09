@@ -1,24 +1,20 @@
 <div class="main">
     <ng-container *ngIf="!openNotesSignal()">
-        <app-project-summary 
-            [project]="project" 
-            [isReadOnly]="isReadOnly"
-            [baseProjectPrice]="baseProjectPrice"
-            [paidMoney]="paidMoney"
-            [retainerActiveSteps]="retainerActiveSteps"
-            (openProjectModalEvent)="onOpenProjectModal()"
-            (openPaymentHistoryModalEvent)="onOpenPaymentHistoryModal()"
+        <app-project-summary [project]="project" [isReadOnly]="isReadOnly" [baseProjectPrice]="baseProjectPrice"
+            [paidMoney]="paidMoney" [retainerActiveSteps]="retainerActiveSteps"
+            (openProjectModalEvent)="onOpenProjectModal()" (openPaymentHistoryModalEvent)="onOpenPaymentHistoryModal()"
             (finishWorkingSessionEvent)="onFinishWorkingSession($event)">
         </app-project-summary>
         <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)"
             *ngIf="project().projectType !== projectTypeEnum.retainer" #stepsContainer>
-            <div [class]="step.isComplete? 'finished' : (hoverStepId === step.id? 'not-finished' : '')" #stepDiv
+            <div [class]="step.isComplete? 'finished' : ((hoverStepId === step.id || generateTaxDocumentId() === step.id || shouldGenerateTaxDocumentId() === step.id)? 'not-finished' : '')"
+                #stepDiv
                 [ngClass]="{'step' : editStepId !== step.id, 'active-step': step.id === activeStepId && step.id !== editStepId}"
                 *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
                 (mouseleave)="hoverStepId = undefined" cdkDrag>
                 <div *ngIf="editStepId !== step.id && animationHackFlag && generateTaxDocumentId() !== step.id">
                     <div [class]="'step-header '"
-                        [ngClass]="{ 'active': !step.isComplete && step.id === activeStepId, 'future': !step.isComplete && step.id !== activeStepId && hoverStepId === step.id }">
+                        [ngClass]="{ 'active': !step.isComplete && step.id === activeStepId, 'future': (generateTaxDocumentId() === step.id || shouldGenerateTaxDocumentId() === step.id) || (!step.isComplete && step.id !== activeStepId && hoverStepId === step.id) }">
                         <span [class]="step.id === activeStepId? 'new-h2' : 'new-text-bold'"
                             #stepHeader>{{step.name}}</span>
                         <img [class]="isReadOnly()? 'finished-icon' : 'pointer ' + (step.stepType === stepTypeEnum.payment? 'dollar-confirm' : 'icon-confirm')"
@@ -76,7 +72,8 @@
                         <span class="new-text">ברכות! האם ליצור חשבונית מס או קבלה?</span>
                         <div class="buttons">
                             <div class="decline-button" (click)="dontGenerateTaxDocument(step)">לא הפעם</div>
-                            <div class="confirm-button" (click)="generateTaxDocument(step)">כן, אני רוצה ליצור מסמך</div>
+                            <div class="confirm-button" (click)="generateTaxDocument(step)">כן, אני רוצה ליצור מסמך
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -84,7 +81,8 @@
                     <app-new-step class="new-step" [steptInput]="step" [isActive]="editStepId === activeStepId"
                         (stepsEmitter)="updateStep($event)"></app-new-step>
                 </div>
-                <div class="generate-tax-document" *ngIf="generateTaxDocumentId() === step.id" #generateTaxDocumentDiv (mousedown)="$event.stopPropagation(); mouseDownInside = true;">
+                <div class="generate-tax-document" *ngIf="generateTaxDocumentId() === step.id" #generateTaxDocumentDiv
+                    (mousedown)="$event.stopPropagation(); mouseDownInside = true;">
                     <app-generate-tax-document [project]="project()" [paymentName]="step.name ?? ''"
                         [paymentPriceInput]="step.price" [taxManagementApiKey]="userApiKey"
                         (documentCreated)="taxDocumentCreated(step)"></app-generate-tax-document>
