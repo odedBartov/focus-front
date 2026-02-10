@@ -183,4 +183,9 @@ export class HttpService {
   createTaxDocument(request: TaxDocumentRequest): Observable<createDocumentResponse> {
     return this.httpClient.post<createDocumentResponse>(this.apiUrl + "TaxDocuments/createDocument", request, this.generateHeaders());
   }
+
+  getUserClients(query: string): Observable<string[]> {
+    const headers = this.generateHeaders();
+    return this.httpClient.get<string[]>(this.apiUrl + "Projects/getUserClients?input=" + query, headers);
+  }
 }

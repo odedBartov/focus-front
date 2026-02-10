@@ -30,7 +30,13 @@
                     <div class="details">
                         <div class="text-and-input">
                             <span class="new-small">שם הלקוח</span>
-                            <input class="new-text" type="text" [(ngModel)]="project.clientName" />
+                            <input class="new-text" type="text" [(ngModel)]="project.clientName" matInput
+                                [matAutocomplete]="autoClients" (input)="onInput(clientInput.value)" #clientInput />
+                            <mat-autocomplete #autoClients="matAutocomplete">
+                                <mat-option *ngFor="let c of (clientOptions)" [value]="c">
+                                    {{ c }}
+                                </mat-option>
+                            </mat-autocomplete>
                         </div>
                         <div class="text-and-input">
                             <span class="new-small">אימייל</span>

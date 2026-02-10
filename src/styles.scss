@@ -112,6 +112,19 @@
         border-radius: var(--common-radius);
     }
 
+    .mat-mdc-autocomplete-panel {
+        background-color: var(--default-white);
+        box-shadow: var(--common-shadow);
+        border-radius: var(--common-radius) !important;
+        padding: 0 !important;
+    }
+
+    .mat-mdc-option {
+        &:hover {
+            background-color: var(--hover-color) !important;
+        }
+    }
+
     .custom-tooltip {
         background-color: var(--default-black);
         color: var(--default-white);
