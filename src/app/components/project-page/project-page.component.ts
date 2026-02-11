@@ -124,7 +124,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.project = this.projectsService.getCurrentProject();
     effect(() => {
       const value = this.project();
-      this.aiChatService.initProjectConversation(value.id);
+      //this.aiChatService.initProjectConversation(value.id);
       if (value?.steps) {
         value.steps = this.stepManagementService.sortStepsByPosition(value.steps);
         if (value.projectType === projectTypeEnum.retainer) {

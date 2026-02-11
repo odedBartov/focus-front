@@ -30,7 +30,7 @@
                     <div class="details">
                         <div class="text-and-input">
                             <span class="new-small">שם הלקוח</span>
-                            <input class="new-text" type="text" [(ngModel)]="project.clientName" matInput
+                            <input class="new-text" [(ngModel)]="project.clientName" matInput
                                 [matAutocomplete]="autoClients" (input)="onInput(clientInput.value)" #clientInput />
                             <mat-autocomplete #autoClients="matAutocomplete">
                                 <mat-option *ngFor="let c of (clientOptions)" [value]="c">
@@ -40,11 +40,11 @@
                         </div>
                         <div class="text-and-input">
                             <span class="new-small">אימייל</span>
-                            <input class="new-text" type="text" [(ngModel)]="project.clientMail" />
+                            <input class="new-text" [(ngModel)]="project.clientMail" />
                         </div>
                         <div class="text-and-input">
                             <span class="new-small">טלפון</span>
-                            <input class="new-text" type="text" [(ngModel)]="project.clientPhone" />
+                            <input class="new-text" [(ngModel)]="project.clientPhone" />
                         </div>
                     </div>
                 </div>

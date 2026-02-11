@@ -113,7 +113,13 @@
             <div class="line">
                 <span class="new-text-bold">שם הלקוח</span>
                 <span class="new-small">כדאי לכתוב כאן את השם שיופיע על החשבונית</span>
-                <input [(ngModel)]="project.clientName" />
+                <input [(ngModel)]="project.clientName" matInput [matAutocomplete]="autoClients"
+                    (input)="onInput(clientInput.value)" #clientInput />
+                <mat-autocomplete #autoClients="matAutocomplete">
+                    <mat-option *ngFor="let c of (clientOptions)" [value]="c">
+                        {{ c }}
+                    </mat-option>
+                </mat-autocomplete>
             </div>
             <div class="line">
                 <span class="new-text-bold">אימייל</span>

@@ -1,4 +1,4 @@
-import { Component, effect, inject, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, effect, inject, OnDestroy, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Project } from '../../models/project';
@@ -7,20 +7,25 @@ import { provideNgxMask } from 'ngx-mask';
 import { AuthenticationService } from '../../services/authentication.service';
 import { paymentModelEnum, projectTypeEnum } from '../../models/enums';
 import { ProjectsService } from '../../services/projects.service';
+import { debounceTime, distinctUntilChanged, filter, Subject, switchMap, takeUntil } from 'rxjs';
+import { HttpService } from '../../services/http.service';
+import { MatInput } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-new-project',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, MatAutocompleteModule, MatInput],
   providers: [provideNgxMask(), DatePipe],
   templateUrl: './new-project.component.html',
   styleUrl: './new-project.component.scss'
 })
-export class NewProjectComponent {
+export class NewProjectComponent implements OnDestroy, AfterViewInit {
   dialogRef = inject(MatDialogRef<NewProjectComponent>);
   formBuilder = inject(FormBuilder);
   authenticationService = inject(AuthenticationService);
   datePipe = inject(DatePipe);
   projectsService = inject(ProjectsService);
+  httpService = inject(HttpService);
   newProjectStepSignal: WritableSignal<number>;
   projectTypeEnum = projectTypeEnum;
   paymentModelEnum = paymentModelEnum;
@@ -28,6 +33,9 @@ export class NewProjectComponent {
   firstForm: FormGroup;
   project: Project;
   submitted = false;
+  private readonly input$ = new Subject<string>();
+  private readonly destroy$ = new Subject<void>();
+  clientOptions: string[] = [];
 
   constructor() {
     effect(() => {
@@ -43,6 +51,28 @@ export class NewProjectComponent {
       projectName: ['', [Validators.required]],
       description: ''
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.initClientsAutoComplete();
+  }
+
+  initClientsAutoComplete() {
+    this.input$
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        filter(v => v.trim().length >= 3),
+        switchMap(v => this.httpService.getUserClients(v.trim()).pipe(
+
+        )),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(opts => (this.clientOptions = opts));
+  }
+
+  onInput(value: string): void {
+    this.input$.next(value);
   }
 
   chooseProjectType(type: projectTypeEnum) {
@@ -80,5 +110,10 @@ export class NewProjectComponent {
         this.dialogRef.close(this.project);
         break;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
