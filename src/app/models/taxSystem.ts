@@ -1,3 +1,5 @@
+import { RelatedDocument } from "./relatedDocument";
+
 export enum taxManagementSystemEnum {
     iCount,
     morning,
@@ -20,11 +22,15 @@ export const taxDocumentLabels: Record<taxDocumentEnum, string> = {
 
 export class TaxDocumentRequest {
     apiKey!: string;
+    CompanyID?: number;
     document!: taxDocumentEnum;
     clientName!: string;
     price!: number;
     clientMail!: string;
     description!: string;
+    system!: taxManagementSystemEnum;
+    stepId?: string;
+    relatedDocument?: RelatedDocument;
 }
 
 export class createDocumentResponse {

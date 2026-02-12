@@ -1,6 +1,8 @@
 import { recurringDateTypeEnum, StepType } from "./enums";
+import { RelatedDocument } from "./relatedDocument";
 import { IStepOrTask } from "./stepOrTask";
 import { StepTask } from "./stepTask";
+import { taxDocumentEnum } from "./taxSystem";
 
 export class Step implements IStepOrTask {
     id?: string;
@@ -26,7 +28,7 @@ export class Step implements IStepOrTask {
     recurringDayInMonth?: number; // day in the month. 1-30
     nextOccurrence?: Date; // the next date on which the step is expected to be completed. when this date arrives the step should become not completed
     futureModifiedTasks?: Date[] = []; // list of dates on which the step is expected to be completed, but has been modified by the user. we need to avoid duplicates
-    
+    relatedDocuments?: Record<taxDocumentEnum, RelatedDocument>;
     // these are not stored in db
     isRetainerCopy = false; // if the step is a copy of a retainer step. this is used to avoid duplicates
     originalRetainerStep?: Step; // the original retainer step that was copied

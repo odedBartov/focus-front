@@ -32,6 +32,7 @@ import { AiChatService } from '../../services/ai-chat.service';
 import { GenerateTaxDocumentComponent } from '../generate-tax-document/generate-tax-document.component';
 import { ProjectSummaryComponent } from '../project-summary/project-summary.component';
 import { StepManagementService } from '../../services/step-management.service';
+import { taxManagementSystemEnum } from '../../models/taxSystem';
 
 @Component({
   selector: 'app-project-page',
@@ -169,9 +170,9 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.mouseDownInside = true;
     }
 
-    if (this.generateTaxDocumentDiv?.nativeElement && 
-        !this.generateTaxDocumentDiv.nativeElement.contains(event.target as Node) && 
-        !this.mouseDownInside) {
+    if (this.generateTaxDocumentDiv?.nativeElement &&
+      !this.generateTaxDocumentDiv.nativeElement.contains(event.target as Node) &&
+      !this.mouseDownInside) {
       this.generateTaxDocumentId.set('');
     }
 
@@ -206,10 +207,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   get isPaymentModelHourly() {
     return this.project().paymentModel === paymentModelEnum.hourly;
-  }
-
-  get userApiKey() {
-    return this.authenticationService.getUserApiKey() ?? '';
   }
 
   getProjectPrice(): number {
@@ -294,9 +291,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   clickOnAccordion(accordionNumber: number) {
     this.openedAccordion = this.openedAccordion === accordionNumber ? 0 : accordionNumber;
-    // setTimeout(() => {
-    //   this.setActiveStepHeight()
-    // }, 40);
   }
 
   updateStepsPosition() {
@@ -383,7 +377,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   calculatePayments(): void {
     const result = this.stepManagementService.calculateProjectPrice(
-      this.project(), 
+      this.project(),
       this.retainerFinishedSteps
     );
     this.baseProjectPrice = result.basePrice;
@@ -415,18 +409,18 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   changeStepStatus(step: Step): void {
     this.animatingItemId = step.isRecurring || (!step.isRecurring && !step.isComplete) ? step.id : undefined;
     this.changeDetectorRef.detectChanges(); // Ensure the view is updated before the animation starts
-    
+
     setTimeout(() => {
       this.playLottieAnimation().then(() => {
         this.animatingItemId = '';
-        
+
         // Use the service to handle step completion logic (mutates step and steps array)
         this.stepManagementService.completeStep(
-          step, 
-          this.project().steps, 
+          step,
+          this.project().steps,
           this.isRetainer
         );
-        
+
         // Update positions
         this.updateStepsPosition();
 
@@ -437,7 +431,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
         // Update active step
         this.activeStepId = this.stepManagementService.findActiveStep(this.project().steps)?.id;
-        
+
         // Update the step on the server
         this.updateStep(step);
       });
@@ -628,13 +622,23 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   taxDocumentCreated(step: Step) {
-    if (this.shouldFinishStepAfterTaxDocument()) {
-      this.shouldFinishStepAfterTaxDocument.set(false);
+    this.animationsService.isLoading.set(true);
+    console.log("finish. now get the new step");
+    
+    this.httpService.getStepById(step.id!).subscribe((res: Step) => {
+      console.log("new step", res);
+      this.animationsService.isLoading.set(false);
+      step = res;
       setTimeout(() => {
-        this.changeStepStatus(step);
-      }, 50);
-    }
-    this.generateTaxDocumentId.set('');
-    this.shouldGenerateTaxDocumentId.set('');
+        if (this.shouldFinishStepAfterTaxDocument()) {
+          this.shouldFinishStepAfterTaxDocument.set(false);
+          setTimeout(() => {
+            this.changeStepStatus(step);
+          }, 50);
+        }
+        this.generateTaxDocumentId.set('');
+        this.shouldGenerateTaxDocumentId.set('');
+      }, 1);
+    });
   }
 }

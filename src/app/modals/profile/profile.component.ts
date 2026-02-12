@@ -117,7 +117,8 @@ export class ProfileComponent implements AfterViewInit {
   updateTaxConnection(taxConnection: taxSystemConnection) {
     this.user.taxManagementApiKey = taxConnection.taxManagementApiKey;
     this.user.taxManagementSystem = taxConnection.taxManagementSystem;
-    this.httpService.updateUser(this.user).subscribe(res => { });
+    this.user.taxManagementCompanyId = taxConnection.taxManagementCompanyId;
+    this.userService.updateUser(this.user).subscribe(res => { });
     this.taxManagemantStep = 3;
   }
 
@@ -136,7 +137,9 @@ export class ProfileComponent implements AfterViewInit {
 
   disconnectFromTaxManagement() {
     this.user.taxManagementApiKey = undefined;
+    this.user.taxManagementCompanyId = undefined;
+    this.user.taxManagementSystem = undefined;
     this.taxManagemantStep = 1;
-    this.httpService.updateUser(this.user).subscribe();
+    this.userService.updateUser(this.user).subscribe();
   }
 }

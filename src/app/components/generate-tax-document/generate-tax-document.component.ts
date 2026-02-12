@@ -3,10 +3,13 @@ import { Project } from '../../models/project';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpService } from '../../services/http.service';
-import { createDocumentResponse, taxDocumentEnum, taxDocumentLabels, TaxDocumentRequest } from '../../models/taxSystem';
+import { createDocumentResponse, taxDocumentEnum, taxDocumentLabels, TaxDocumentRequest, taxManagementSystemEnum } from '../../models/taxSystem';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CantConnectToTaxComponent } from '../../modals/cant-connect-to-tax/cant-connect-to-tax.component';
 import { AnimationsService } from '../../services/animations.service';
+import { Step } from '../../models/step';
+import { UserStatus } from '../../models/user';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-generate-tax-document',
@@ -17,26 +20,24 @@ import { AnimationsService } from '../../services/animations.service';
 export class GenerateTaxDocumentComponent implements AfterViewInit {
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
+  authenticationService = inject(AuthenticationService);
   @Input() project!: Project;
   @Input() paymentName!: string;
   @Input() paymentPriceInput!: number;
-  @Input() taxManagementApiKey!: string;
+  @Input() step!: Step;
   @Output() documentCreated = new EventEmitter<void>();
+  taxManagementApiKey!: string;
+  companyId?: number;
+  taxManagementSystem!: taxManagementSystemEnum;
+  userStatus!: UserStatus;
   serviceName = '';
   clientName = '';
   paymentPrice = 0;
   clientMail = '';
   selectedDocumentType: taxDocumentEnum = taxDocumentEnum.invoice;
   disclaimerConfirmed = false;
-  readonly documentTypeOptions: { label: string; apiValue: taxDocumentEnum }[] = [
-    { label: taxDocumentLabels[taxDocumentEnum.requestForPayment], apiValue: taxDocumentEnum.requestForPayment },
-    { label: taxDocumentLabels[taxDocumentEnum.receipt], apiValue: taxDocumentEnum.receipt },
-    { label: taxDocumentLabels[taxDocumentEnum.invoice], apiValue: taxDocumentEnum.invoice },
-    { label: taxDocumentLabels[taxDocumentEnum.invoiceReceipt], apiValue: taxDocumentEnum.invoiceReceipt }
-  ];
+  documentTypeOptions: { label: string; apiValue: taxDocumentEnum }[] = [];
   dialog = inject(MatDialog);
-
-
 
   ngAfterViewInit(): void {
     this.clientName = this.project.clientName;
@@ -44,12 +45,31 @@ export class GenerateTaxDocumentComponent implements AfterViewInit {
     this.paymentPrice = this.paymentPriceInput;
     this.clientMail = this.project.clientMail ?? '';
     this.disclaimerConfirmed = localStorage.getItem('disclaimerConfirmed') === 'true';
+    this.userStatus = this.authenticationService.getUserStatus();
+    this.taxManagementSystem = this.authenticationService.getUserTaxManagementSystem() ?? taxManagementSystemEnum.iCount;
+    this.taxManagementApiKey = this.authenticationService.getUserApiKey() ?? '';
+    this.companyId = this.authenticationService.getUserTaxManagementCompanyId() ?? 0;
+    this.initDocumentTypeOptions();
   }
-
 
   confirmDisclaimer() {
     localStorage.setItem('disclaimerConfirmed', 'true');
     this.disclaimerConfirmed = true;
+  }
+
+  initDocumentTypeOptions() {
+    this.documentTypeOptions = [];
+    const requestForPaymentOption = { label: taxDocumentLabels[taxDocumentEnum.requestForPayment], apiValue: taxDocumentEnum.requestForPayment };
+    const receiptOption = { label: taxDocumentLabels[taxDocumentEnum.receipt], apiValue: taxDocumentEnum.receipt };
+    const invoiceOption = { label: taxDocumentLabels[taxDocumentEnum.invoice], apiValue: taxDocumentEnum.invoice };
+    const invoiceReceiptOption = { label: taxDocumentLabels[taxDocumentEnum.invoiceReceipt], apiValue: taxDocumentEnum.invoiceReceipt };
+
+    this.documentTypeOptions.push(requestForPaymentOption);
+    if (this.userStatus.toString() === UserStatus.exemptDealer.toString()) {
+      this.documentTypeOptions.push(receiptOption);
+    } else {
+      this.documentTypeOptions.push(invoiceReceiptOption);
+    }
   }
 
   createAndSendDocument() {
@@ -59,8 +79,14 @@ export class GenerateTaxDocumentComponent implements AfterViewInit {
       clientName: this.clientName,
       price: this.paymentPrice,
       clientMail: this.clientMail,
-      description: this.serviceName
+      description: this.serviceName,
+      system: this.taxManagementSystem,
+      stepId: this.step.id,
+      CompanyID: this.companyId
     };
+    if (this.step.relatedDocuments?.[taxDocumentEnum.requestForPayment]) {
+      request.relatedDocument = this.step.relatedDocuments?.[taxDocumentEnum.requestForPayment]!;
+    }
 
     this.animationsService.isLoading.set(true);
     this.httpService.createTaxDocument(request).subscribe((res: createDocumentResponse) => {

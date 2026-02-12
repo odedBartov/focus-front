@@ -9,6 +9,7 @@ export class User {
     email?: string;
     subscription?: subscriptionEnum;
     taxManagementApiKey?: string;
+    taxManagementCompanyId?: number;
     taxManagementSystem?: taxManagementSystemEnum;
 }
 

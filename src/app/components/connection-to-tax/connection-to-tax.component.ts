@@ -20,6 +20,7 @@ export class ConnectionToTaxComponent {
   taxManagementSystem!: taxManagementSystemEnum;
   taxManagementSystemEnum = taxManagementSystemEnum;
   taxManagementApiKey = "";
+  taxManagementCompanyId = 0;
   taxManagemantStep = 1;
   wrongCredentialsError = false;
 
@@ -31,10 +32,10 @@ export class ConnectionToTaxComponent {
   confirmApiUrl() {
     this.wrongCredentialsError = false;
     this.animationsService.isLoading.set(true);
-    this.httpService.loginToTaxManagement(this.taxManagementApiKey ?? '', this.taxManagementSystem).subscribe((res: simpleResponse) => {
+    this.httpService.loginToTaxManagement(this.taxManagementApiKey ?? '', this.taxManagementCompanyId, this.taxManagementSystem).subscribe((res: simpleResponse) => {
       this.animationsService.isLoading.set(false);
       if (res.success) {
-        this.taxSystemEmitter.emit({taxManagementApiKey: this.taxManagementApiKey, taxManagementSystem: this.taxManagementSystem});
+        this.taxSystemEmitter.emit({taxManagementApiKey: this.taxManagementApiKey, taxManagementCompanyId: this.taxManagementCompanyId, taxManagementSystem: this.taxManagementSystem});
       } else {
         this.wrongCredentialsError = true;
       }
@@ -45,4 +46,5 @@ export class ConnectionToTaxComponent {
 export interface taxSystemConnection {
   taxManagementSystem: taxManagementSystemEnum;
   taxManagementApiKey: string;
+  taxManagementCompanyId: number;
 }

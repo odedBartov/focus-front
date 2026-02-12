@@ -105,6 +105,7 @@ export class NewUserComponent {
   taxSystemManagement(taxSystemConnection: taxSystemConnection) {
     this.user.taxManagementApiKey = taxSystemConnection.taxManagementApiKey;
     this.user.taxManagementSystem = taxSystemConnection.taxManagementSystem;
+    this.user.taxManagementCompanyId = taxSystemConnection.taxManagementCompanyId;
     this.currentProgress = 5;
   }
 }

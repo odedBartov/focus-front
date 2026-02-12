@@ -5,7 +5,7 @@ import { Step } from '../models/step';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthenticationService } from './authentication.service';
 import { environment } from "../../environments/environment";
-import { User } from '../models/user';
+import { User, UserStatus } from '../models/user';
 import { Title } from '@angular/platform-browser';
 import { HourlyWorkSession } from '../models/hourlyWorkSession';
 import { RetainerPayment } from '../models/RetainerPayment';
@@ -48,6 +48,8 @@ export class HttpService {
       this.authenticationService.setUserId(res.body.userId);
       this.authenticationService.setUserApiKey(res.body.taxManagementApiKey);
       this.authenticationService.setUserTaxManagementSystem(res.body.taxManagementSystem);
+      this.authenticationService.setUserTaxManagementCompanyId(res.body.taxManagementCompanyId ?? 0);
+      this.authenticationService.setUserStatus(res.body.status as UserStatus);
       const fullName = this.authenticationService.getUserName();
       if (fullName) {
         this.titleService.setTitle("פוקוס - " + fullName);
@@ -113,6 +115,11 @@ export class HttpService {
     return this.httpClient.get<Step[]>(`${this.apiUrl}Steps/getSteps?projectId=${projectId}`, headers);
   }
 
+  getStepById(stepId: string): Observable<Step> {
+    const headers = this.generateHeaders();
+    return this.httpClient.get<Step>(`${this.apiUrl}Steps/getStepById?stepId=${stepId}`, headers);
+  }
+
   updateSteps(steps: Step[]): Observable<Step[]> {
     const headers = this.generateHeaders();
     return this.httpClient.put<Step[]>(this.apiUrl + "Steps/updateSteps", steps, headers);
@@ -176,8 +183,8 @@ export class HttpService {
     return this.httpClient.delete(this.apiUrl + "Auth/deleteUser?email=" + email, headers);
   }
 
-  loginToTaxManagement(apiKey: string, system?: taxManagementSystemEnum): Observable<simpleResponse> {
-    return this.httpClient.post<simpleResponse>(this.apiUrl + "TaxDocuments/login", { apiKey: apiKey, system: system });
+  loginToTaxManagement(apiKey: string, companyId?: number, system?: taxManagementSystemEnum): Observable<simpleResponse> {
+    return this.httpClient.post<simpleResponse>(this.apiUrl + "TaxDocuments/login", { apiKey: apiKey, companyId: companyId, system: system });
   }
 
   createTaxDocument(request: TaxDocumentRequest): Observable<createDocumentResponse> {

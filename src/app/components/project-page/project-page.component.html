@@ -84,8 +84,7 @@
                 <div class="generate-tax-document" *ngIf="generateTaxDocumentId() === step.id" #generateTaxDocumentDiv
                     (mousedown)="$event.stopPropagation(); mouseDownInside = true;">
                     <app-generate-tax-document [project]="project()" [paymentName]="step.name ?? ''"
-                        [paymentPriceInput]="step.price" [taxManagementApiKey]="userApiKey"
-                        (documentCreated)="taxDocumentCreated(step)"></app-generate-tax-document>
+                        [paymentPriceInput]="step.price" [step]="step" (documentCreated)="taxDocumentCreated(step)"></app-generate-tax-document>
                 </div>
             </div>
             <div class="add-step" *ngIf="!isShowNewStep && !isReadOnly()">

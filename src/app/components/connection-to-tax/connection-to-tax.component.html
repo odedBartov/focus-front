@@ -28,7 +28,19 @@
                     (keydown.enter)="confirmApiUrl()" appAutofocus>
             </div>
         </ng-container>
-        <ng-container *ngIf="taxManagementSystem === taxManagementSystemEnum.sumit"></ng-container>
+        <ng-container *ngIf="taxManagementSystem === taxManagementSystemEnum.sumit">
+            <span class="new-h2">חיבור למערכת sumit</span>
+            <span class="new-small">כדי שנוכל להתחבר להנהלת החשבונות שלך, צריך ליצור טוקן API ולהזין אותו כאן.
+                חשוב להדביק את המפתח בדיוק כפי שהוא במקור, ללא רווחים.</span>
+            <div class="text-and-input">
+                <span class="text new-small">מפתח סודי</span>
+                <input class="new-text" tabindex="1" [(ngModel)]="taxManagementApiKey" (keydown.enter)="confirmApiUrl()" appAutofocus>
+            </div>
+            <div class="text-and-input">
+                <span class="text new-small">מזהה חברה</span>
+                <input class="new-text" tabindex="1" [(ngModel)]="taxManagementCompanyId" (keydown.enter)="confirmApiUrl()">
+            </div>
+        </ng-container>
         <ng-container *ngIf="taxManagementSystem === taxManagementSystemEnum.morning"></ng-container>
         <div class="confirm-button" (click)="confirmApiUrl()" (keydown.enter)="confirmApiUrl()" tabindex="1">
             <img src="assets/icons/confirm_white.svg" />

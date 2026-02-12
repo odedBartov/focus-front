@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { subscriptionEnum } from '../models/enums';
 import { taxManagementSystemEnum } from '../models/taxSystem';
+import { UserStatus } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,9 @@ export class AuthenticationService {
   userId = "userId";
   userApiKey = "user-api-key";
   userTaxManagementSystem = "user-tax-management-system";
+  userTaxManagementCompanyId = "user-tax-management-company-id";
   isReadOnlySignal = signal<boolean>(false);
+  userStatus = "user-status";
 
   getToken() {
     return localStorage.getItem(this.userTokenKey);
@@ -110,9 +113,33 @@ export class AuthenticationService {
   getUserTaxManagementSystem() {
     const system = localStorage.getItem(this.userTaxManagementSystem);
     if (system) {
-      return system as unknown as taxManagementSystemEnum;
+      return (parseInt(system)) as unknown as taxManagementSystemEnum;
     }
     return undefined;
+  }
+
+  setUserStatus(status: UserStatus) {
+    localStorage.setItem(this.userStatus, status.toString());
+  }
+
+  getUserStatus() {
+    const status = localStorage.getItem(this.userStatus);
+    if (status) {
+      return status as unknown as UserStatus;
+    }
+    return UserStatus.exemptDealer;
+  }
+
+  setUserTaxManagementCompanyId(companyId: number) {
+    localStorage.setItem(this.userTaxManagementCompanyId, companyId.toString());
+  }
+
+  getUserTaxManagementCompanyId() {
+    const companyId = localStorage.getItem(this.userTaxManagementCompanyId);
+    if (companyId) {
+      return parseInt(companyId, 10);
+    }
+    return 0;
   }
 
   logOut() {
