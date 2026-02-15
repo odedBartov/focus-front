@@ -28,7 +28,12 @@ export class Step implements IStepOrTask {
     recurringDayInMonth?: number; // day in the month. 1-30
     nextOccurrence?: Date; // the next date on which the step is expected to be completed. when this date arrives the step should become not completed
     futureModifiedTasks?: Date[] = []; // list of dates on which the step is expected to be completed, but has been modified by the user. we need to avoid duplicates
-    relatedDocuments?: Record<taxDocumentEnum, RelatedDocument>;
+    relatedDocuments?: {
+        requestForPayment?: RelatedDocument;
+        receipt?: RelatedDocument;
+        invoice?: RelatedDocument;
+        invoiceReceipt?: RelatedDocument;
+    };
     // these are not stored in db
     isRetainerCopy = false; // if the step is a copy of a retainer step. this is used to avoid duplicates
     originalRetainerStep?: Step; // the original retainer step that was copied

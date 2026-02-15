@@ -84,8 +84,8 @@ export class GenerateTaxDocumentComponent implements AfterViewInit {
       stepId: this.step.id,
       CompanyID: this.companyId
     };
-    if (this.step.relatedDocuments?.[taxDocumentEnum.requestForPayment]) {
-      request.relatedDocument = this.step.relatedDocuments?.[taxDocumentEnum.requestForPayment]!;
+    if (this.step.relatedDocuments?.requestForPayment) {
+      request.relatedDocument = this.step.relatedDocuments.requestForPayment;
     }
 
     this.animationsService.isLoading.set(true);

@@ -622,18 +622,20 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   taxDocumentCreated(step: Step) {
-    this.animationsService.isLoading.set(true);
-    console.log("finish. now get the new step");
-    
+    this.animationsService.isLoading.set(true);    
     this.httpService.getStepById(step.id!).subscribe((res: Step) => {
-      console.log("new step", res);
       this.animationsService.isLoading.set(false);
-      step = res;
+      // Update the step in the project's steps array
+      if (this.project().steps) {
+        this.project().steps = this.project().steps.map(s =>
+          s.id === res.id ? res : s
+        );
+      }
       setTimeout(() => {
         if (this.shouldFinishStepAfterTaxDocument()) {
           this.shouldFinishStepAfterTaxDocument.set(false);
           setTimeout(() => {
-            this.changeStepStatus(step);
+            this.changeStepStatus(res);
           }, 50);
         }
         this.generateTaxDocumentId.set('');
