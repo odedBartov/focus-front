@@ -13,21 +13,21 @@
                     <span>{{getHebrewDay(day.date)}}</span>
                 </div>
                 <div class="tasks-list-container">
-                    <div class="tasks-list" cdkDropList [cdkDropListData]="day.tasks" [id]="'day-' + i"
+                    <div class="tasks-list" cdkDropList [cdkDropListData]="day.steps" [id]="'day-' + i"
                         cdkDropListOrientation="vertical" [cdkDropListConnectedTo]="allDropListIds"
                         [cdkDropListEnterPredicate]="dropPredicateFor(day)"
                         (cdkDropListDropped)="dropTask($event, day.date)">
-                        <div class="weekly-day-task" *ngFor="let task of day.tasks">
-                            <app-weekly-day-task [task]="task" [isDragging]="isDragging"
-                                (openProject)="openProject(task.project)"
-                                (createNewTaskEmitter)="updateTaskText($event, task.parentStep)"
-                                (completeTask)="completeTask($event, day.tasks)"
+                        <div class="weekly-day-task" *ngFor="let stepItem of day.steps">
+                            <app-weekly-day-task [stepItem]="stepItem" [isDragging]="isDragging"
+                                (openProject)="openProject(stepItem.project)"
+                                (stepUpdated)="updateStepText($event)"
+                                (completeTask)="completeTask($event, day.steps)"
                                 (createFutureRetainerStep)="createFutureRetainerStep($event)"
                                 [shouldHidePlaceHolder]="isDraggingTaskToProjects"></app-weekly-day-task>
                         </div>
                     </div>
                     <div class="new-task" *ngIf="!isDateBeforeToday(day.date)">
-                        <app-new-task (createNewTask)="createNewTask($event, day)"></app-new-task>
+                        <app-new-task (createNewStep)="createNewStep($event, day)"></app-new-task>
                     </div>
                 </div>
             </div>
@@ -47,29 +47,29 @@
             (cdkDropListDropped)="dropTask($event)" (cdkDropListEntered)="isDraggingTaskToProjects = true"
             (cdkDropListExited)="isDraggingTaskToProjects = false" [cdkDropListSortingDisabled]="true"
             cdkDropListOrientation="mixed" *ngIf="!showAllTasks">
-            <div class="task" *ngFor="let task of tasksWithoutDate" cdkDrag (cdkDragStarted)="isDragging.dragging= true"
+            <div class="task" *ngFor="let stepItem of tasksWithoutDate" cdkDrag (cdkDragStarted)="isDragging.dragging= true"
                 (cdkDragEnded)="isDragging.dragging= false">
                 <div class="task-header new-small">
-                    <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
-                    <span>{{task.project?.name}}</span>
+                    <img src="assets/icons/star_full.svg" *ngIf="stepItem.project?.isPriority" />
+                    <span>{{stepItem.project?.name}}</span>
                 </div>
-                <span class="new-small">{{getTextForTask(task)}}</span>
+                <span class="new-small">{{getTextForStep(stepItem)}}</span>
             </div>
         </div>
         <div class="project-tasks" [ngClass]="{'dragging-in': isDraggingTaskToProjects}" *ngIf="showAllTasks">
             <div class="project-task" *ngFor="let project of currentAndFutureTasks">
-                <div cdkDropList [cdkDropListConnectedTo]="daysDropListsIds" [cdkDropListData]="project.tasks"
+                <div cdkDropList [cdkDropListConnectedTo]="daysDropListsIds" [cdkDropListData]="project.steps"
                     (cdkDropListDropped)="dropTaskInProjectsList($event)"
                     (cdkDropListEntered)="isDraggingTaskToProjects = true"
                     (cdkDropListExited)="isDraggingTaskToProjects = false" [cdkDropListSortingDisabled]="true"
                     [id]="project.project.id ?? 'project'">
-                    <div class="task" *ngFor="let task of project.tasks" cdkDrag
+                    <div class="task" *ngFor="let stepItem of project.steps" cdkDrag
                         (cdkDragStarted)="isDragging.dragging= true" (cdkDragEnded)="isDragging.dragging = false">
                         <div class="task-header new-small">
-                            <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
-                            <span>{{task.project?.name}}</span>
+                            <img src="assets/icons/star_full.svg" *ngIf="stepItem.project?.isPriority" />
+                            <span>{{stepItem.project?.name}}</span>
                         </div>
-                        <span class="new-small">{{getTextForTask(task)}}</span>
+                        <span class="new-small">{{getTextForStep(stepItem)}}</span>
                     </div>
                 </div>
             </div>

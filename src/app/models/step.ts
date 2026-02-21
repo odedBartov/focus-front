@@ -1,6 +1,13 @@
 import { recurringDateTypeEnum, StepType } from "./enums";
-import { IStepOrTask } from "./stepOrTask";
 import { StepTask } from "./stepTask";
+
+export interface IStepOrTask {
+  id?: string;
+  text?: string;
+  isComplete?: boolean;
+  dateOnWeekly?: Date;
+  positionInWeeklyList: number;
+}
 
 export class Step implements IStepOrTask {
     id?: string;

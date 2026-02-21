@@ -1,5 +1,5 @@
 import { Step } from "../models/step";
-import { isStep, StepOrTask } from "../models/stepOrTask";
+import { StepWithProject } from "../models/step-with-project";
 
 export function parseDate(input?: string): Date | null {
   if (input) {
@@ -27,11 +27,8 @@ export function isDateBeforeToday(date: Date): boolean {
   return given < today;
 }
 
-export function getTextForTask(task: StepOrTask): string | undefined {
-  if (isStep(task.data)) {
-    return task.data.name;
-  } else
-    return task.data.text;
+export function getTextForStep(item: StepWithProject): string | undefined {
+  return item.step?.name;
 }
 
 export function areTwoDaysInTheSameWeek(date1: Date, date2: Date): boolean {

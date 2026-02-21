@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
-import { StepTask } from '../../models/stepTask';
+import { Component, ElementRef, EventEmitter, HostListener, inject, Input, Output, ViewChild } from '@angular/core';
+import { Step } from '../../models/step';
 import { FormsModule } from '@angular/forms';
-import { IStepOrTask } from '../../models/stepOrTask';
+import { StepType } from '../../models/enums';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-new-task',
@@ -13,20 +14,23 @@ import { IStepOrTask } from '../../models/stepOrTask';
 export class NewTaskComponent {
   @ViewChild('newTaskDiv', { static: false }) newTaskDiv?: ElementRef;
   @ViewChild('taskText', { static: false }) taskText!: ElementRef;
-  @Output() createNewTask = new EventEmitter<StepTask>();
-  @Input() set taskInput(value: IStepOrTask | undefined) {
+  @Output() createNewStep = new EventEmitter<Step>();
+  @Input() set stepInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
       this.isShowNewStep = true;
-      this.newTask = structuredClone(value);
+      this.editingStep = value;
+      this.stepName = value.name ?? '';
       this.startNewTask();
     }
   }
 
+  authenticationService = inject(AuthenticationService);
   isShowNewStep = false;
-  newTask: StepTask = new StepTask();
+  stepName = '';
   isEdit = false;
   mouseDownInside = false;
+  editingStep?: Step;
 
   startNewTask() {
     this.isShowNewStep = true;
@@ -40,7 +44,7 @@ export class NewTaskComponent {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     if (this.newTaskDiv?.nativeElement && !this.newTaskDiv.nativeElement.contains(event.target) && !this.mouseDownInside) {
-      this.newTask = new StepTask();
+      this.stepName = '';
       this.isShowNewStep = false;
     } else {
       this.mouseDownInside = true;
@@ -48,11 +52,21 @@ export class NewTaskComponent {
     this.mouseDownInside = false;
   }
 
-  createTask() {
-    if (this.newTask.text || this.isEdit) {
+  createStep() {
+    if (this.isEdit && this.editingStep) {
       this.isShowNewStep = false;
-      this.createNewTask.emit({ ...this.newTask });
-      this.newTask = new StepTask();
+      this.editingStep.name = this.stepName?.trim();
+      this.createNewStep.emit(this.editingStep);
+      this.editingStep = undefined;
+      this.stepName = '';
+    } else if (this.stepName?.trim()) {
+      this.isShowNewStep = false;
+      const step = new Step();
+      step.name = this.stepName.trim();
+      step.userId = this.authenticationService.getUserId() ?? 'newStep';
+      step.stepType = StepType.task;
+      this.createNewStep.emit(step);
+      this.stepName = '';
     } else {
       this.isShowNewStep = false;
     }
