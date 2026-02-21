@@ -9,16 +9,18 @@ export function initRetainerSteps(steps: Step[]) {
     const retainerFinishedSteps: Step[] = [];
 
     steps.forEach(step => {
-        if (!step.isComplete) {
-            retainerActiveSteps.push(step);
+        if (step.isComplete) {
+            retainerFinishedSteps.push(step);
         } else {
             if (step.isRecurring) {
                 retainerFutureSteps.push(step);
             } else {
-                retainerFinishedSteps.push(step);
+                if (step.dateOnWeekly == undefined || (step.dateOnWeekly && isDateSmallerOrEqual(new Date(step.dateOnWeekly), new Date()))) {
+                    retainerActiveSteps.push(step);
+                }
             }
         }
-    });
+    })
 
     return {
         retainerActiveSteps,

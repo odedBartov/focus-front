@@ -19,7 +19,7 @@ export class ProjectsService {
   tasksWithoutDate: StepWithProject[] = [];
   currentAndFutureTasks: { project: Project, steps: StepWithProject[] }[] = []; // without date, no matter if active or not
   projectWithOpenNotes = signal<Project | undefined>(undefined);
-  currentProjectFilter = signal<projectTypeEnum | undefined>(undefined); 
+  currentProjectFilter = signal<projectTypeEnum | undefined>(undefined);
 
   getActiveProjects() {
     return this.activeProjects;
@@ -63,15 +63,17 @@ export class ProjectsService {
       project.steps.sort((a, b) => a.positionInList - b.positionInList);
       let foundActiveStep = false;
       project.steps.forEach(step => {
-        if (step.dateOnWeekly) {
-          this.insertStepToList(this.tasksWithDate, step, project);
-        } else if (!step.isComplete) {
-          this.insertStepToFutureTasks(project, step);
-          if (!foundActiveStep) {
-            this.insertStepToList(this.tasksWithoutDate, step, project);
+        if (!step.isRecurring) {
+          if (step.dateOnWeekly) {
+            this.insertStepToList(this.tasksWithDate, step, project);
+          } else if (!step.isComplete) {
+            this.insertStepToFutureTasks(project, step);
+            if (!foundActiveStep) {
+              this.insertStepToList(this.tasksWithoutDate, step, project);
+            }
           }
+          if (!step.isComplete) foundActiveStep = true;
         }
-        if (!step.isComplete) foundActiveStep = true;
       })
     })
 

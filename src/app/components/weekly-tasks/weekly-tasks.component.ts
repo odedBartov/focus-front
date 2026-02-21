@@ -119,13 +119,23 @@ export class WeeklyTasksComponent implements AfterViewInit {
         this.presentedDays.push(weeklyDay);
       }
 
-      //this.tasksWithDate = this.tasksWithDate.filter(t => !(isStep(t.data) && t.data.isRetainerCopy));
-      
+      const sunday = new Date();
+      sunday.setDate(sunday.getDate() - sunday.getDay() + this.deltaDays);
+      const saturday = new Date();
+      saturday.setDate(saturday.getDate() - saturday.getDay() + 6 + this.deltaDays);
+
       this.assignTasksToDays();
 
-      // delete these functions?
-      //this.generateRetainerSteps();
-      //this.removeModifiedTodayRetainerSteps();
+      this.httpService.getRetainerSteps(sunday, saturday).subscribe((retainerSteps) => {
+        const withProject = retainerSteps.map((step) => ({
+          step,
+          project: this.projects().find((p) => p.id === step.projectId) ?? this.noProject(),
+        }));
+        this.tasksWithDate.push(...withProject);
+        this.tasksWithDate = this.tasksWithDate.sort((a, b) => this.sortSteps(a, b));
+        this.presentedDays.forEach((d) => (d.steps = []));
+        this.assignTasksToDays();
+      });
     }, 1);
   }
 
@@ -142,41 +152,41 @@ export class WeeklyTasksComponent implements AfterViewInit {
     });
   }
 
-  generateRetainerSteps() {
-    const sunday = new Date();
-    sunday.setDate(sunday.getDate() - sunday.getDay() + this.deltaDays);
-    const saturday = new Date();
-    saturday.setDate(saturday.getDate() - saturday.getDay() + 6 + this.deltaDays);
-    if (this.deltaDays >= 0) {
-      this.tasksWithDate.forEach((item: StepWithProject) => {
-        const step = item.step;
-        if (step.isRecurring) {
-          if (sunday.getDate() === new Date().getDate()) { // we dont want today, just future
-            sunday.setDate(sunday.getDate() + 1);
-          }
-          const retainerDates = getOcurencesInRange(step, sunday, saturday);
-          retainerDates.forEach(date => {
-            if (step && (!step.futureModifiedTasks || !step.futureModifiedTasks.find(d => this.compareDates(d, date))) && !areDatesEqual(step.dateOnWeekly, date)) {
-              const tempStep: Step = structuredClone(step);
-              tempStep.id = undefined;
-              tempStep.dateCreated = date;
-              tempStep.dateOnWeekly = date;
-              tempStep.isRecurring = false;
-              tempStep.recurringEvery = undefined;
-              tempStep.recurringDateType = undefined;
-              tempStep.recurringDayInMonth = undefined;
-              tempStep.recurringDaysInWeek = undefined;
-              tempStep.isComplete = false;
-              tempStep.isRetainerCopy = true;
-              tempStep.positionInWeeklyList = 9999;
-              tempStep.originalRetainerStep = step;
-              this.tasksWithDate.push({ step: tempStep, project: item.project });
-            }
-          });
-        }
-      });
-    }
-  }
+  // generateRetainerSteps() {
+  //   const sunday = new Date();
+  //   sunday.setDate(sunday.getDate() - sunday.getDay() + this.deltaDays);
+  //   const saturday = new Date();
+  //   saturday.setDate(saturday.getDate() - saturday.getDay() + 6 + this.deltaDays);
+  //   if (this.deltaDays >= 0) {
+  //     this.tasksWithDate.forEach((item: StepWithProject) => {
+  //       const step = item.step;
+  //       if (step.isRecurring) {
+  //         if (sunday.getDate() === new Date().getDate()) { // we dont want today, just future
+  //           sunday.setDate(sunday.getDate() + 1);
+  //         }
+  //         const retainerDates = getOcurencesInRange(step, sunday, saturday);
+  //         retainerDates.forEach(date => {
+  //           if (step && (!step.futureModifiedTasks || !step.futureModifiedTasks.find(d => this.compareDates(d, date))) && !areDatesEqual(step.dateOnWeekly, date)) {
+  //             const tempStep: Step = structuredClone(step);
+  //             tempStep.id = undefined;
+  //             tempStep.dateCreated = date;
+  //             tempStep.dateOnWeekly = date;
+  //             tempStep.isRecurring = false;
+  //             tempStep.recurringEvery = undefined;
+  //             tempStep.recurringDateType = undefined;
+  //             tempStep.recurringDayInMonth = undefined;
+  //             tempStep.recurringDaysInWeek = undefined;
+  //             tempStep.isComplete = false;
+  //             tempStep.isRetainerCopy = true;
+  //             tempStep.positionInWeeklyList = 9999;
+  //             tempStep.originalRetainerStep = step;
+  //             this.tasksWithDate.push({ step: tempStep, project: item.project });
+  //           }
+  //         });
+  //       }
+  //     });
+  //   }
+  // }
 
   removeModifiedTodayRetainerSteps(): void {
     const today = getTodayAtMidnightLocal();
