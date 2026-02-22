@@ -105,4 +105,60 @@ export class ProjectsService {
     const secondPosition = second.step.positionInWeeklyList ?? 0;
     return firstPosition - secondPosition;
   }
+
+  addStepsToActiveProjects(steps: Step[]) {
+    this.activeProjects.update(projects => {
+      if (projects.length === 0) {
+        return projects;
+      }
+      const projectMap = new Map<string, Project>();
+      projects.forEach(p => {
+        if (p.id) {
+          projectMap.set(p.id, { ...p, steps: [...(p.steps ?? [])] });
+        }
+      });
+      steps.forEach(step => {
+        if (!step.projectId) return;
+        const project = projectMap.get(step.projectId);
+        if (project) {
+          const originalStep = project.steps.find(s => s.id === step.originalRetainerStepId);
+          if (originalStep) {
+            if (!originalStep.createdStepsFromRetainer) {
+              originalStep.createdStepsFromRetainer = [];
+            }
+            if (!originalStep.createdStepsFromRetainer.includes(step.id ?? '')) {
+              originalStep.createdStepsFromRetainer.push(step.id ?? '');
+            }
+          }
+          const newSteps = [...(project.steps ?? []), step].sort((a, b) => a.positionInList - b.positionInList);
+          projectMap.set(step.projectId, { ...project, steps: newSteps });
+        }
+      });
+      const nextProjects = projects.map(p => {
+        const updated = p.id ? projectMap.get(p.id) : undefined;
+        if (updated) return updated;
+        return { ...p, steps: [...(p.steps ?? [])] };
+      });
+      const currentId = this.currentProject()?.id;
+      if (currentId) {
+        const updatedCurrent = nextProjects.find(pr => pr.id === currentId);
+        if (updatedCurrent) {
+          this.currentProject.set(updatedCurrent);
+        }
+      }
+      return nextProjects;
+    });
+
+    this.currentProject.set({...this.currentProject()});
+  }
+
+  deleteStepsFromProject(stepIds: string[], projectId: string) {    
+    this.activeProjects.update(projects => {
+      const project = projects.find(p => p.id === projectId);
+      if (project) {
+        project.steps = project.steps.filter(s => s.id && !stepIds.includes(s.id));
+      }
+      return projects;
+    });
+  }
 }

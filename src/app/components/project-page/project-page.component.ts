@@ -693,11 +693,30 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     step.projectId = this.project()?.id;
     step.positionInList = (this.project()?.steps?.length ?? 0) + 1;
     this.httpService.createStep(step).subscribe(res => {
+      if (step.isRecurring) {
+        const sunday = new Date();
+        sunday.setDate(sunday.getDate() - sunday.getDay());
+        const saturday = new Date();
+        saturday.setDate(sunday.getDate() + 6);
+        this.httpService.getRetainerSteps(sunday, saturday).subscribe((retainerSteps) => {
+          this.projectsService.addStepsToActiveProjects(retainerSteps);
+        });
+      } else {
+        this.projectsService.addStepsToActiveProjects([res]);
+      }
       if (this.project().steps.length === 0) {
         this.activeStepId = res.id;
       }
-      this.project()?.steps?.push(res);
-      this.initRetainerSteps();
+      if (!step.isRecurring) {
+        const proj = this.projectsService.getCurrentProject()();
+        if (proj?.id === this.project()?.id && proj.steps?.some(s => s.id === res.id)) {
+          this.project.set(proj);
+        } else {
+          this.project()?.steps?.push(res);
+        }
+      } else {
+        this.project()?.steps?.push(res);
+      }
       this.isShowNewStep = false;
       this.calculatePayments();
       this.animationsService.changeIsloading(false);
@@ -722,18 +741,29 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   deleteStep(step: Step) {
-    if (step.id) {
-      this.animationsService.changeIsLoadingWithDelay();
-      const stepIndex = this.project()?.steps?.indexOf(step);
-      if (stepIndex !== undefined) {
-        this.project()?.steps?.splice(stepIndex, 1);
-        this.initRetainerSteps();
-        this.calculatePayments();
+    const stepId = step.id;
+    const projectId = step.projectId;
+    if (!stepId || !projectId) return;
+    this.animationsService.changeIsLoadingWithDelay();
+    this.httpService.deleteStep(stepId).subscribe(() => {
+      const idsToRemove: string[] = step.isRecurring && step.createdStepsFromRetainer?.length
+        ? [stepId, ...step.createdStepsFromRetainer].filter((id): id is string => typeof id === 'string')
+        : [stepId];
+      const idsSet = new Set(idsToRemove.map((id) => String(id)));
+      this.projectsService.deleteStepsFromProject(idsToRemove, projectId);
+      const current = this.project();
+      if (current?.id === projectId && current.steps) {
+        const nextSteps = current.steps.filter(
+          (s) => s.id != null && !idsSet.has(String(s.id))
+        );
+        const updatedProject = { ...current, steps: nextSteps };
+        this.projectsService.getCurrentProject().set(updatedProject);
+        this.changeDetectorRef.detectChanges();
       }
-      this.httpService.deleteStep(step.id).subscribe(res => {
-        this.animationsService.changeIsloading(false);
-      });
-    }
+      this.initRetainerSteps();
+      this.calculatePayments();
+      this.animationsService.changeIsloading(false);
+    });
   }
 
   scrollToBottom() {

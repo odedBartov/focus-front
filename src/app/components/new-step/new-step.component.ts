@@ -211,6 +211,7 @@ export class NewStepComponent implements AfterViewInit {
           this.newStep.recurringEvery = 1;
         }
         this.newStep.nextOccurrence = new Date();//createNextOccurenceDate(this.newStep);
+        this.newStep.nextOccurrence.setDate(this.newStep.nextOccurrence.getDate() - 1);
         this.newStep.nextOccurrence.setHours(12, 0, 0, 0);
         updateDatesWithLocalTime(this.newStep);
         //this.newStep.dateOnWeekly = this.newStep.nextOccurrence;

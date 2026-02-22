@@ -55,7 +55,7 @@ export class WeeklyDayTaskComponent implements OnInit {
   constructor(private renderer: Renderer2) { }
 
   ngOnInit(): void {
-    this.isReadOnly = this.stepItem.step.isRetainerCopy && this.stepItem.step.stepType == StepType.payment;
+    this.isReadOnly =this.stepItem.step.stepType == StepType.payment;
   }
 
   @HostListener('document:click', ['$event'])
