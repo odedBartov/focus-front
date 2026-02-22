@@ -35,10 +35,6 @@ export class Step implements IStepOrTask {
     futureModifiedTasks?: Date[] = []; // list of dates on which the step is expected to be completed, but has been modified by the user. we need to avoid duplicates
     createdStepsFromRetainer?: string[]; // list of steps that were created from a retainer step
     originalRetainerStepId?: string; // the id of the original retainer step that was copied
-    
-    // these are not stored in db
-    isRetainerCopy = false; // if the step is a copy of a retainer step. this is used to avoid duplicates
-    originalRetainerStep?: Step; // the original retainer step that was copied
 
     constructor() {
         this.userId = "newStep";

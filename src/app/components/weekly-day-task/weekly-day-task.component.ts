@@ -6,7 +6,6 @@ import { Project } from '../../models/project';
 import { Step } from '../../models/step';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { getTextForStep, isDateBeforeToday } from '../../helpers/functions';
-import { FutureRetainerStep } from '../../services/futureRetainerStep';
 import { StepType } from '../../models/enums';
 import { StepWithProject } from '../../models/step-with-project';
 
@@ -36,7 +35,6 @@ export class WeeklyDayTaskComponent implements OnInit {
   @Output() openProject = new EventEmitter<Project>();
   @Output() completeTask = new EventEmitter<StepWithProject>();
   @Output() stepUpdated = new EventEmitter<Step>();
-  @Output() createFutureRetainerStep = new EventEmitter<FutureRetainerStep>();
   @Input() stepItem!: StepWithProject;
   @Input() isDragging!: { dragging: boolean };
   @Input() set shouldHidePlaceHolder(value: boolean) {
@@ -55,7 +53,7 @@ export class WeeklyDayTaskComponent implements OnInit {
   constructor(private renderer: Renderer2) { }
 
   ngOnInit(): void {
-    this.isReadOnly =this.stepItem.step.stepType == StepType.payment;
+    this.isReadOnly = this.stepItem.step.stepType == StepType.payment;
   }
 
   @HostListener('document:click', ['$event'])
@@ -68,10 +66,6 @@ export class WeeklyDayTaskComponent implements OnInit {
     }
 
     this.mouseDownInside = false;
-  }
-
-  isStepWeekly(): boolean {
-    return this.stepItem.step.isRetainerCopy;
   }
 
   isStepComplete(): boolean {
@@ -94,15 +88,7 @@ export class WeeklyDayTaskComponent implements OnInit {
   changeTaskStatus(isComplete: boolean): void {
     this.stepItem.step.isComplete = isComplete;
     if (!this.isDateBeforeToday()) {
-      if (this.stepItem.step.isRetainerCopy) {
-        const futureRetainerStep = new FutureRetainerStep();
-        futureRetainerStep.modifiedDate = this.stepItem.step.dateCreated ?? new Date();
-        futureRetainerStep.newStep = this.stepItem.step;
-        futureRetainerStep.newStep.positionInWeeklyList = -1;
-        this.createFutureRetainerStep.emit(futureRetainerStep);
-      } else {
-        this.completeTask.emit(this.stepItem);
-      }
+      this.completeTask.emit(this.stepItem);
     }
   }
 }

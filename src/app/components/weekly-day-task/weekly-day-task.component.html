@@ -1,4 +1,4 @@
-<div class="main" cdkDrag [cdkDragData]="stepItem" [cdkDragDisabled]="isEditing || isStepComplete() || isReadOnly || isStepWeekly()"
+<div class="main" cdkDrag [cdkDragData]="stepItem" [cdkDragDisabled]="isEditing || isStepComplete() || isReadOnly"
     (cdkDragStarted)="isDragging.dragging = true" (cdkDragEnded)="isDragging.dragging= false" (mousedown)="mouseDownInside = true"
     (mouseenter)="isHovering = true" (mouseleave)="isHovering = false" #weeklyDayTaskDiv>
     <div *ngIf="!isEditing && !isStepComplete()" class="task">

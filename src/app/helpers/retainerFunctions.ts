@@ -15,7 +15,11 @@ export function initRetainerSteps(steps: Step[]) {
             if (step.isRecurring) {
                 retainerFutureSteps.push(step);
             } else {
-                if (step.dateOnWeekly == undefined || (step.dateOnWeekly && isDateSmallerOrEqual(new Date(step.dateOnWeekly), new Date()))) {
+                if (step.originalRetainerStepId) {
+                    if (step.dateOnWeekly == undefined || (step.dateOnWeekly && isDateSmallerOrEqual(new Date(step.dateOnWeekly), new Date()))) {
+                        retainerActiveSteps.push(step);
+                    }
+                } else {
                     retainerActiveSteps.push(step);
                 }
             }
