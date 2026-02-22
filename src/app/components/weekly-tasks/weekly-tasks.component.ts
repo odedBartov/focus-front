@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, effect, ElementRef, EventEmitter, inject, Output, QueryList, ViewChildren, WritableSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, inject, Output, QueryList, ViewChildren, WritableSignal } from '@angular/core';
 import { Project } from '../../models/project';
 import { ProjectsService } from '../../services/projects.service';
 import { WeeklyDay } from '../../models/weeklyDay';
@@ -38,6 +38,7 @@ import { FutureRetainerStep } from '../../services/futureRetainerStep';
 export class WeeklyTasksComponent implements AfterViewInit {
   projectsService = inject(ProjectsService);
   httpService = inject(HttpService);
+  cdr = inject(ChangeDetectorRef);
   @Output() selectProject = new EventEmitter<Project>();
   @ViewChildren('days') days!: QueryList<ElementRef<HTMLDivElement>>;
   projects: WritableSignal<Project[]>;
@@ -127,6 +128,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
       this.assignTasksToDays();
 
       this.httpService.getRetainerSteps(sunday, saturday).subscribe((retainerSteps) => {
+        this.projectsService.addStepsToActiveProjects(retainerSteps);
         const withProject = retainerSteps.map((step) => ({
           step,
           project: this.projects().find((p) => p.id === step.projectId) ?? this.noProject(),
@@ -135,6 +137,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
         this.tasksWithDate = this.tasksWithDate.sort((a, b) => this.sortSteps(a, b));
         this.presentedDays.forEach((d) => (d.steps = []));
         this.assignTasksToDays();
+        this.cdr.markForCheck();
       });
     }, 1);
   }
