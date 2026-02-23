@@ -74,8 +74,7 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     const today = getTodayAtMidnightLocal();
     allSteps.forEach(item => {
       const taskDate = item.step.dateOnWeekly;
-      const isRecurrenceModifiedToday = (item.step?.futureModifiedTasks?.find(d => areDatesEqual(d, today)) !== undefined);
-      if (taskDate && areDatesEqual(new Date(taskDate), today) && !isRecurrenceModifiedToday) {
+      if (taskDate && areDatesEqual(new Date(taskDate), today)) {
         this.stepsAndTasks.push(item);
       }
     });

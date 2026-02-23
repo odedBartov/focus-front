@@ -10,7 +10,6 @@ import { HttpService } from '../../services/http.service';
 import { AnimationsService } from '../../services/animations.service';
 import { StepTask } from '../../models/stepTask';
 import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
-import { createNextOccurenceDate, getNextRetainerOccurrenceDate } from '../../helpers/retainerFunctions';
 import { areDatesEqual, updateDatesWithLocalTime } from '../../helpers/functions';
 
 @Component({
