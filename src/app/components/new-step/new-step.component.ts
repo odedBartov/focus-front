@@ -82,6 +82,10 @@ export class NewStepComponent implements AfterViewInit {
     return this.projectType === projectTypeEnum.retainer;
   }
 
+  get isRecurring() {
+    return this.newStep.isRecurring;
+  }
+
   initFutureMonths() {
     const today = new Date();
     for (let index = 0; index < 5; index++) {

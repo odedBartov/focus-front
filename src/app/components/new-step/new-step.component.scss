@@ -19,16 +19,19 @@
 
         .steps {
             display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-items: center;
             justify-content: center;
             gap: 15px;
 
             .step-type {
+                width: 50%;
                 box-sizing: border-box;
-                width: 100%;
                 @include mixins.confirm-button;
 
                 .new-text-bold {
-                    width: max-content;
+                    text-wrap: nowrap;
                 }
             }
         }

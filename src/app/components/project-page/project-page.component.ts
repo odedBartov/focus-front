@@ -730,7 +730,14 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     if (this.project().paymentModel === paymentModelEnum.monthly && step?.isRecurring && step.stepType === StepType.payment) {
       this.openProjectModal();
     } else {
-      const dialogRef = this.dialog.open(NewStepModalComponent, { data: { step: step, isActive: true, paymentModel: this.project().paymentModel } });
+      let stepToEdit = step;
+      if (step?.originalRetainerStepId) {
+        const originalStep = this.project().steps.find(s => s.id === step.originalRetainerStepId);
+        if (originalStep) {
+          stepToEdit = originalStep;
+        }
+      }
+      const dialogRef = this.dialog.open(NewStepModalComponent, { data: { step: stepToEdit, isActive: true, paymentModel: this.project().paymentModel } });
       const childInstance = dialogRef.componentInstance;
       childInstance.stepUpdated.subscribe(newStep => {
         this.updateStep(newStep);
