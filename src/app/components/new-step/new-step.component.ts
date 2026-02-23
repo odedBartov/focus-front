@@ -103,6 +103,11 @@ export class NewStepComponent implements AfterViewInit {
     }, 0);
   }
 
+  selectRetainerType() {
+    this.selectType(StepType.task);
+    this.initStepIsRecurring();
+  }
+
   showDescription() {
     this.isShowDescription = true;
     this.scrollToBottom.emit();

@@ -14,7 +14,6 @@
     width: 340px;
 
     .choose-type {
-        height: 40px;
         display: flex;
         flex-direction: column;
 
@@ -24,8 +23,13 @@
             gap: 15px;
 
             .step-type {
-                width: 80px;
+                box-sizing: border-box;
+                width: 100%;
                 @include mixins.confirm-button;
+
+                .new-text-bold {
+                    width: max-content;
+                }
             }
         }
     }
