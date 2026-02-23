@@ -8,7 +8,7 @@
         <div class="text-and-input">
             <span class="new-small">איזה סוג מסמך אנחנו יוצרים?</span>
             <select class="new-text" [(ngModel)]="selectedDocumentType">
-                <option *ngFor="let opt of documentTypeOptions" [ngValue]="opt.apiValue">{{ opt.label }}</option>
+                <option *ngFor="let opt of documentTypeOptions" [ngValue]="opt.apiValue" [disabled]="isDocumentTypeAlreadyCreated(opt.apiValue)">{{ opt.label }}{{ isDocumentTypeAlreadyCreated(opt.apiValue) ? ' ✓' : '' }}</option>
             </select>
         </div>
         <div class="text-and-input">
@@ -42,7 +42,7 @@
             <span class="new-small">לאן לשלוח את המסמך?</span>
             <input type="email" class="new-text" [(ngModel)]="clientMail" />
         </div>
-        <div class="confirm-button" (click)="createAndSendDocument()">
+        <div class="confirm-button" [ngClass]="{'disabled-button': selectedDocumentType == undefined}" (click)="createAndSendDocument()">
             <img src="assets/icons/confirm_white.svg"/>
             <span>יצירה ושליחה</span>
         </div>

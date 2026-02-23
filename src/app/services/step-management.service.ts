@@ -24,7 +24,7 @@ export class StepManagementService {
    */
   completeStep(step: Step, allSteps: Step[], isRetainer: boolean): StepCompletionResult {
     // Toggle completion status (mutate the step directly)
-    step.isComplete = step.isRecurring ? true : !step.isComplete;
+    step.isComplete = !step.isComplete;
 
     if (step.isComplete) {
       this.handleStepCompletion(step, allSteps, isRetainer);

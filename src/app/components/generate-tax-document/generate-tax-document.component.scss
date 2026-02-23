@@ -62,6 +62,14 @@
         }
     }
 
+    .disabled-button {
+        background-color: var(--disabled-text);
+        cursor: not-allowed;
+        pointer-events: none;
+        &:hover {
+            background-color: var(--disabled-text);
+        }
+    }
 }
 
 input, select {

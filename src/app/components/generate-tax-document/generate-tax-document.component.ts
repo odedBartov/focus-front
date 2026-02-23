@@ -34,7 +34,7 @@ export class GenerateTaxDocumentComponent implements AfterViewInit {
   clientName = '';
   paymentPrice = 0;
   clientMail = '';
-  selectedDocumentType: taxDocumentEnum = taxDocumentEnum.invoice;
+  selectedDocumentType?: taxDocumentEnum;
   disclaimerConfirmed = false;
   documentTypeOptions: { label: string; apiValue: taxDocumentEnum }[] = [];
   dialog = inject(MatDialog);
@@ -57,6 +57,21 @@ export class GenerateTaxDocumentComponent implements AfterViewInit {
     this.disclaimerConfirmed = true;
   }
 
+  private readonly documentTypeToRelatedDocKey: Record<taxDocumentEnum, keyof NonNullable<Step['relatedDocuments']>> = {
+    [taxDocumentEnum.requestForPayment]: 'requestForPayment',
+    [taxDocumentEnum.receipt]: 'receipt',
+    [taxDocumentEnum.invoice]: 'invoice',
+    [taxDocumentEnum.invoiceReceipt]: 'invoiceReceipt',
+  };
+
+  isDocumentTypeAlreadyCreated(apiValue?: taxDocumentEnum): boolean {
+    if (apiValue === undefined || apiValue === null) {
+      return false;
+    }
+    const key = this.documentTypeToRelatedDocKey[apiValue];
+    return !!(this.step?.relatedDocuments?.[key]);
+  }
+
   initDocumentTypeOptions() {
     this.documentTypeOptions = [];
     const requestForPaymentOption = { label: taxDocumentLabels[taxDocumentEnum.requestForPayment], apiValue: taxDocumentEnum.requestForPayment };
@@ -70,12 +85,20 @@ export class GenerateTaxDocumentComponent implements AfterViewInit {
     } else {
       this.documentTypeOptions.push(invoiceReceiptOption);
     }
+
+    // If current selection is already created, switch to first available option
+    if (this.isDocumentTypeAlreadyCreated(this.selectedDocumentType)) {
+      const firstAvailable = this.documentTypeOptions.find(opt => !this.isDocumentTypeAlreadyCreated(opt.apiValue));
+      if (firstAvailable) {
+        this.selectedDocumentType = firstAvailable.apiValue;
+      }
+    }
   }
 
   createAndSendDocument() {
     const request: TaxDocumentRequest = {
       apiKey: this.taxManagementApiKey,
-      document: this.selectedDocumentType,
+      document: this.selectedDocumentType!,
       clientName: this.clientName,
       price: this.paymentPrice,
       clientMail: this.clientMail,
@@ -94,7 +117,7 @@ export class GenerateTaxDocumentComponent implements AfterViewInit {
       if (res.isSuccess) {
         this.documentCreated.emit();
       } else {
-        this.dialog.open(CantConnectToTaxComponent, { data: { systemName: this.documentTypeOptions[this.selectedDocumentType].label, apiKeyPage: res.apiKeyPage } });
+        this.dialog.open(CantConnectToTaxComponent, { data: { systemName: this.documentTypeOptions.find(opt => opt.apiValue === this.selectedDocumentType)?.label ?? '', apiKeyPage: res.apiKeyPage } });
       }
     });
   }
