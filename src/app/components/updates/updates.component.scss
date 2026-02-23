@@ -41,6 +41,24 @@
         }
     }
 
+    .one-time-features {
+        background-color: var(--default-white);
+        border-radius: var(--common-radius);
+        box-shadow: var(--common-shadow);
+        padding: 10px;
+        display: flex;
+        &:hover {
+            .icon-confirm-circle {
+                visibility: visible;
+            }
+        }
+
+        .icon-confirm-circle {
+            align-self: flex-end;
+            visibility: hidden;
+        }
+    }
+
     .contact {
         display: flex;
         flex-direction: column;

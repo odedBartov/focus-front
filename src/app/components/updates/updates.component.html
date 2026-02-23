@@ -30,8 +30,12 @@
             <img src="assets/icons/stars.svg" />
         </div>
         <div class="new-small" style="margin-right: 25px;">
+            <div class="one-time-features" *ngIf="currentOneTimeFeature">
+                <span>{{currentOneTimeFeature.text}}</span>
+                <img class="icon-confirm-circle pointer" (click)="watchOneTimeFeature(currentOneTimeFeature)"/>
+            </div>
             <ul>
-                <li *ngFor="let feature of features">{{feature.text}}</li>
+                <li *ngFor="let feature of regularFeatures">{{feature.text}}</li>
             </ul>
         </div>
     </div>
