@@ -564,9 +564,16 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   updateStep(step: Step) {
-    this.animationsService.changeIsLoadingWithDelay();
+    this.animationsService.changeIsloading(true);
     this.handleRetainerPayments(step);
     this.httpService.updateSteps([step]).subscribe(res => {
+      if (step.isRecurring) {
+        this.projectsService.deleteStepsFromProject(step.createdStepsFromRetainer ?? [], this.project().id ?? '');
+        this.getRetainerStepsAndUpdate();
+        this.animationsService.changeIsloading(false);
+      } else {
+        this.animationsService.changeIsloading(false);
+      }
       if (this.project().steps) {
         this.project().steps = this.project()?.steps?.map(step =>
           step.id === res[0].id ? res[0] : step
@@ -581,7 +588,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
           this.setActiveStepHeight();
         }
       }, 1);
-      this.animationsService.changeIsloading(false);
       if (!this.isRetainer) {
         this.isFinishProject();
       }
@@ -694,15 +700,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     step.positionInList = (this.project()?.steps?.length ?? 0) + 1;
     this.httpService.createStep(step).subscribe(res => {
       if (step.isRecurring) {
-        const sunday = new Date();
-        sunday.setDate(sunday.getDate() - sunday.getDay());
-        const saturday = new Date();
-        saturday.setDate(sunday.getDate() + 6);
-        this.httpService.getRetainerSteps(sunday, saturday).subscribe((retainerSteps) => {
-          this.projectsService.addStepsToActiveProjects(retainerSteps);
-        });
+        this.getRetainerStepsAndUpdate();
       } else {
         this.projectsService.addStepsToActiveProjects([res]);
+        this.animationsService.changeIsloading(false);
       }
       if (this.project().steps.length === 0) {
         this.activeStepId = res.id;
@@ -719,7 +720,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       }
       this.isShowNewStep = false;
       this.calculatePayments();
-      this.animationsService.changeIsloading(false);
     });
   }
 
@@ -744,13 +744,16 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     const stepId = step.id;
     const projectId = step.projectId;
     if (!stepId || !projectId) return;
-    this.animationsService.changeIsLoadingWithDelay();
+    this.animationsService.changeIsloading(true);
     this.httpService.deleteStep(stepId).subscribe(() => {
       const idsToRemove: string[] = step.isRecurring && step.createdStepsFromRetainer?.length
         ? [stepId, ...step.createdStepsFromRetainer].filter((id): id is string => typeof id === 'string')
         : [stepId];
       const idsSet = new Set(idsToRemove.map((id) => String(id)));
       this.projectsService.deleteStepsFromProject(idsToRemove, projectId);
+      if (step.originalRetainerStepId) {
+        this.project().steps = this.project().steps.filter(s => s.id !== step.originalRetainerStepId);
+      }
       const current = this.project();
       if (current?.id === projectId && current.steps) {
         const nextSteps = current.steps.filter(
@@ -771,5 +774,16 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       container.scrollTop = container.scrollHeight;
     }, 1);
+  }
+
+  getRetainerStepsAndUpdate() {
+    const startDate = new Date(); // current day (e.g. Monday)
+    startDate.setHours(12, 0, 0, 0);
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + (6 - startDate.getDay())); // Saturday of current week
+    this.httpService.getRetainerSteps(startDate, endDate).subscribe((retainerSteps) => {
+      this.projectsService.addStepsToActiveProjects(retainerSteps);
+      this.animationsService.changeIsloading(false);
+    });
   }
 }

@@ -212,7 +212,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
     return days[date.getDay()];
   }
 
-  dropTask(event: CdkDragDrop<any[]>, date?: Date) {
+  dropTask(event: CdkDragDrop<any[]>, date?: Date) {    
     this.isDraggingTaskToProjects = false;
     const item = (event.item?.data ?? event.previousContainer.data[event.previousIndex]) as StepWithProject;
     const oldDate = item.step?.dateOnWeekly ?? new Date();
@@ -241,16 +241,16 @@ export class WeeklyTasksComponent implements AfterViewInit {
       this.updateStepsPosition(event.previousContainer.data);
 
       // When moving a retainer-originated step to another day, update the original retainer's futureModifiedTasks
-      if (date && item.step.originalRetainerStepId && item.project) {
-        const originalStep = item.project.steps?.find(s => s.id === item.step.originalRetainerStepId);
-        if (originalStep) {
-          if (!originalStep.futureModifiedTasks) {
-            originalStep.futureModifiedTasks = [];
-          }
-          originalStep.futureModifiedTasks.push(oldDate);
-          stepsToUpdate.push(originalStep);
-        }
-      }
+      // if (date && item.step.originalRetainerStepId && item.project) {
+      //   const originalStep = item.project.steps?.find(s => s.id === item.step.originalRetainerStepId);
+      //   if (originalStep) {
+      //     if (!originalStep.futureModifiedTasks) {
+      //       originalStep.futureModifiedTasks = [];
+      //     }
+      //     originalStep.futureModifiedTasks.push(oldDate);
+      //     stepsToUpdate.push(originalStep);
+      //   }
+      // }
     }
 
     this.initPresentedDays();
