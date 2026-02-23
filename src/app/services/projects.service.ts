@@ -4,7 +4,7 @@ import { Project } from '../models/project';
 import { Step } from '../models/step';
 import { StepWithProject } from '../models/step-with-project';
 import { areDatesEqual, getTodayAtMidnightLocal } from '../helpers/functions';
-import { projectTypeEnum } from '../models/enums';
+import { projectTypeEnum, recurringDateTypeEnum } from '../models/enums';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +39,28 @@ export class ProjectsService {
 
   getProjectWithOpenNotes() {
     return this.projectWithOpenNotes;
+  }
+
+  getNextOccurrenceDate(step: Step): Date {
+    let result = new Date();
+    if (step.isRecurring && step.recurringDateType != null) {
+      switch (step.recurringDateType) {
+        case recurringDateTypeEnum.day:
+          break;
+        case recurringDateTypeEnum.week:
+          while (!step.recurringDaysInWeek?.includes(result.getDay())) {
+            result.setDate(result.getDate() + 1);
+          }
+          break;
+        case recurringDateTypeEnum.month:
+          while (result.getDate() != step.recurringDayInMonth) {
+            result.setDate(result.getDate() + 1);
+          }
+          break;
+      }
+    }
+    result.setHours(12, 0, 0, 0);
+    return result;
   }
 
   populateCalendarTasks() {

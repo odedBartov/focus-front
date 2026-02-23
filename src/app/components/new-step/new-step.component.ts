@@ -10,7 +10,8 @@ import { HttpService } from '../../services/http.service';
 import { AnimationsService } from '../../services/animations.service';
 import { StepTask } from '../../models/stepTask';
 import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
-import { areDatesEqual, updateDatesWithLocalTime } from '../../helpers/functions';
+import { updateDatesWithLocalTime } from '../../helpers/functions';
+import { ProjectsService } from '../../services/projects.service';
 
 @Component({
   selector: 'app-new-step',
@@ -22,6 +23,7 @@ import { areDatesEqual, updateDatesWithLocalTime } from '../../helpers/functions
 export class NewStepComponent implements AfterViewInit {
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
+  projectsService = inject(ProjectsService);
   datePipe = inject(DatePipe);
   @ViewChild('stepNameInput') stepNameInput!: ElementRef;
   @ViewChild('descriptionInput') descriptionInput!: ElementRef;
@@ -214,9 +216,8 @@ export class NewStepComponent implements AfterViewInit {
         if (!this.newStep.recurringEvery) {
           this.newStep.recurringEvery = 1;
         }
-        this.newStep.nextOccurrence = new Date();
+        this.newStep.nextOccurrence = this.projectsService.getNextOccurrenceDate(this.newStep);
         //this.newStep.nextOccurrence.setDate(this.newStep.nextOccurrence.getDate() - 1);
-        this.newStep.nextOccurrence.setHours(12, 0, 0, 0);
         this.newStep.positionInWeeklyList = 9999;
         updateDatesWithLocalTime(this.newStep);
       }
