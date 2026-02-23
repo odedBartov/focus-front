@@ -140,10 +140,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
       this.loadSessionTimer();
       this.calculatePayments();
-
-      setTimeout(() => {
-        this.setActiveStepHeight();
-      }, 1);
     });
   }
 
@@ -154,7 +150,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.setActiveStepHeight();
     if (this.isRetainer) {
       this.initRetainerSteps();
     }
@@ -168,9 +163,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
     if (!this.editDiv?.contains(event.target as Node) && !this.mouseDownInside) {
       if (this.editStepId != '' && this.activeStepId === this.editStepId) {
-        setTimeout(() => {
-          this.setActiveStepHeight();
-        }, 1);
       }
       this.editStepId = '';
     } else {
@@ -350,15 +342,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.dialog.open(PaymentHistoryModalComponent, { data: { payments: payments, isPaymentModelHourly: this.isPaymentModelHourly } });
   }
 
-  setActiveStepHeight() {
-    // const element = this.descriptions.get(0)?.nativeElement as HTMLTextAreaElement;
-    // if (element) {
-    //   element.style.height = 'auto';
-    //   element.style.height = element.scrollHeight + 'px';
-    //   ;
-    // }
-  }
-
   hoverStep(stepId: string | undefined, index: number) {
     this.hoverStepId = stepId;
 
@@ -382,9 +365,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   clickOnAccordion(accordionNumber: number) {
     this.openedAccordion = this.openedAccordion === accordionNumber ? 0 : accordionNumber;
-    // setTimeout(() => {
-    //   this.setActiveStepHeight()
-    // }, 40);
   }
 
   updateStepsPosition() {
@@ -436,9 +416,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       });
 
       this.animationsService.changeIsLoadingWithDelay();
-      setTimeout(() => {
-        this.setActiveStepHeight();
-      }, 1);
       this.httpService.updateSteps(this.project().steps).subscribe(res => {
         this.animationsService.changeIsloading(false);
       })
@@ -582,9 +559,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.calculatePayments();
       setTimeout(() => {
         this.hoverStepId = '';
-        if (step.id === this.activeStepId) {
-          this.setActiveStepHeight();
-        }
       }, 1);
       if (!this.isRetainer) {
         this.isFinishProject();

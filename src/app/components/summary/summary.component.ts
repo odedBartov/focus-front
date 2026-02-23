@@ -26,7 +26,6 @@ export class SummaryComponent implements OnInit {
         this.steps = this.steps.concat(finishedSteps);
       }
     });
-    // this.initChart();    
     this.initDynamicChart();
   }
   updatedProjects: Project[] = [];
@@ -60,42 +59,7 @@ export class SummaryComponent implements OnInit {
     this.initCoffeePicture();
     this.userName = this.authService.getFirstName();
     this.calculateCoffeeRotation();
-    // this.initChart();
-    //this.initDynamicChart();    
   }
-
-  // initChart() {
-  //   const today = new Date();
-  //   const todayMonth = today.getMonth();
-  //   const todayYear = today.getFullYear();
-  //   const filteredMonths = [];
-  //   const half = Math.floor(this.monthsInGraph / 2);
-  //   const paymentSteps = this.steps.filter(s => s && s.stepType === StepType.payment) as Step[];
-  //   this.graphMonths = [];
-  //   for (let index = 0; index < this.monthsInGraph; index++) {
-  //     const offset = half - index;
-  //     const targetDate = new Date(todayYear, todayMonth + offset, 1);
-  //     this.graphMonths.push(this.getMonthForChart(targetDate.getMonth()+1));
-  //     if (offset > 0) {
-  //       filteredMonths[index] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateDue, targetDate) && !s.isComplete);
-  //       this.pastPayments[index] = 0;
-  //       this.futurePayments[index] = filteredMonths[index].reduce((sum, step) => sum + step.price, 0);
-  //     } else if (offset < 0) {
-  //       filteredMonths[index] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateCompleted, targetDate) && s.isComplete);
-  //       this.pastPayments[index] = filteredMonths[index].reduce((sum, step) => sum + (step.isComplete ? step.price : 0), 0);
-  //       this.futurePayments[index] = 0;
-  //     } else {
-  //       filteredMonths[index] = paymentSteps.filter(s => this.compareYearAndMonth(s.dateCompleted, targetDate) || (!s.isComplete && this.compareYearAndMonth(s?.dateDue, targetDate)));
-  //       this.pastPayments[index] = filteredMonths[index].reduce((sum, step) => sum + (step.isComplete ? step.price : 0), 0);
-  //       this.futurePayments[index] = filteredMonths[index].reduce((sum, step) => sum + (!step.isComplete ? step.price : 0), 0);
-  //     }
-  //   }
-
-  //   this.calculateMonthlyRetainerPayments(paymentSteps);
-  //   this.calculateHourlyRetainerPayments();
-
-  //   this.calculateGraphScale();
-  // }
 
   initDynamicChart() {
     const half = Math.floor(this.monthsInGraph / 2);

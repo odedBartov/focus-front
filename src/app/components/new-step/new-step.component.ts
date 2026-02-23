@@ -38,7 +38,6 @@ export class NewStepComponent implements AfterViewInit {
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
-      // this.isShowReccuringData = value.reccuringEvery !== undefined && value.reccuringEvery > 0;
       value.dateDue = value.dateDue ? new Date(value.dateDue) : value.dateDue;
       if (value.description) {
         this.isShowDescription = true;
@@ -221,7 +220,6 @@ export class NewStepComponent implements AfterViewInit {
           this.newStep.recurringEvery = 1;
         }
         this.newStep.nextOccurrence = this.projectsService.getNextOccurrenceDate(this.newStep);
-        //this.newStep.nextOccurrence.setDate(this.newStep.nextOccurrence.getDate() - 1);
         this.newStep.positionInWeeklyList = 9999;
         updateDatesWithLocalTime(this.newStep);
       }
