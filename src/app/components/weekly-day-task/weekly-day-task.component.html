@@ -1,24 +1,24 @@
-<div class="main" cdkDrag [cdkDragData]="task" [cdkDragDisabled]="isEditing || isStepOrTaskComplete(task) || isReadOnly || isStepWeekly()"
+<div class="main" cdkDrag [cdkDragData]="stepItem" [cdkDragDisabled]="isEditing || isStepComplete() || isReadOnly"
     (cdkDragStarted)="isDragging.dragging = true" (cdkDragEnded)="isDragging.dragging= false" (mousedown)="mouseDownInside = true"
     (mouseenter)="isHovering = true" (mouseleave)="isHovering = false" #weeklyDayTaskDiv>
-    <div *ngIf="!isEditing && !isStepOrTaskComplete(task)" class="task">
+    <div *ngIf="!isEditing && !isStepComplete()" class="task">
         <div class="task-header new-small">
-            <img src="assets/icons/star_full.svg" *ngIf="task.project?.isPriority" />
-            <span>{{task.project?.name}}</span>
+            <img src="assets/icons/star_full.svg" *ngIf="stepItem.project?.isPriority" />
+            <span>{{stepItem.project?.name}}</span>
         </div>
-        <span class="new-small">{{getTextForTask(task)}}</span>
+        <span class="new-small">{{getTextForStep(stepItem)}}</span>
         <div class="buttons" [@expandCollapse]="(isHovering && !isDragging.dragging) ? 'expanded' : 'collapsed'">
-            <img class="icon-expand" style="width: 16px;" *ngIf="isStep(task.data)" (click)="openProject.emit(task.project)" />
-            <img class="icon-pencil" style="width: 16px;" (click)="isEditing = true" *ngIf="!isStep(task.data)" />
+            <img class="icon-expand" style="width: 16px;" (click)="openProject.emit(stepItem.project)" />
+            <!-- <img class="icon-pencil" style="width: 16px;" (click)="isEditing = true" /> -->
             <img class="icon-confirm-circle" style="width: 24px;" (click)="changeTaskStatus(true)" *ngIf="!isReadOnly"/>
         </div>
     </div>
     <div *ngIf="isEditing">
-        <app-new-task (createNewTask)="updateTask($event)" [taskInput]="task.data"></app-new-task>
+        <app-new-task (createNewStep)="updateStep($event)" [stepInput]="stepItem.step"></app-new-task>
     </div>
-    <div class="completed-task" *ngIf="isStepOrTaskComplete(task)" (click)="changeTaskStatus(false)"
+    <div class="completed-task" *ngIf="isStepComplete()" (click)="changeTaskStatus(false)"
         [ngClass]="{'pointer': !isDateBeforeToday()}">
-        <div class="new-small">{{task.project?.name}}</div>
-        <div class="new-small">{{getTextForTask(task)}}</div>
+        <div class="new-small">{{stepItem.project?.name}}</div>
+        <div class="new-small">{{getTextForStep(stepItem)}}</div>
     </div>
 </div>

@@ -7,6 +7,11 @@
                     + {{isRetainer ? 'משימה' : 'שלב'}}
                 </div>
             </div>
+            <div class="step-type" (click)="selectRetainerType()" (keydown.enter)="selectRetainerType()" tabindex="1">
+                <div class="new-text-bold">
+                    + משימה חוזרת
+                </div>
+            </div>
             <div class="step-type" (click)="selectType(stepTypeEnum.payment)" (keydown.enter)="selectType(stepTypeEnum.payment)" tabindex="1">
                 <div class="new-text-bold">
                     + תשלום
@@ -19,8 +24,8 @@
         <div class="task" *ngIf="newStep?.stepType === stepTypeEnum.task">
             <div class="title">
                 <div class="new-h2">
-                    <span *ngIf="isEdit">{{isRetainer? 'עריכת משימה' : 'עריכת שלב'}}</span>
-                    <span *ngIf="!isEdit">{{isRetainer? 'משימה חדשה' : 'שלב חדש'}}</span>
+                    <span *ngIf="isEdit">{{isRecurring? 'עריכת משימה חוזרת' : 'עריכת שלב'}}</span>
+                    <span *ngIf="!isEdit">{{isRecurring? 'משימה חוזרת חדשה' : 'שלב חדש'}}</span>
                 </div>
             </div>
             <div class="text-and-input">
@@ -59,14 +64,14 @@
                 </div>
             </div>
             <div class="cycle" *ngIf="isRetainer">
-                <button class="button" (click)="initStepIsRecurring()" (keydown.enter)="initStepIsRecurring()" *ngIf="!newStep.isRecurring" tabindex="1">
+                <!-- <button class="button" (click)="initStepIsRecurring()" (keydown.enter)="initStepIsRecurring()" *ngIf="!newStep.isRecurring" tabindex="1">
                     <img class="cycle" />
                     משימה חוזרת
-                </button>
+                </button> -->
                 <div class="reccuring-data" *ngIf="newStep.isRecurring">
                     <div class="text new-small">
                         <span>חזרה כל</span>
-                        <span style="cursor: pointer;" (click)="closeRecurringEvery()" (keydown.enter)="closeRecurringEvery()">X</span>
+                        <!-- <span style="cursor: pointer;" (click)="closeRecurringEvery()" (keydown.enter)="closeRecurringEvery()">X</span> -->
                     </div>
                     <div class="repeatance new-text">
                         <input type="number" [(ngModel)]="newStep.recurringEvery"

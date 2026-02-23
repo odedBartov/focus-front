@@ -34,11 +34,6 @@ export class NewProjectComponent {
     this.project = new Project();
     this.project.ownerPicture = this.authenticationService.getUserPicture() ?? undefined;
     this.startDate = this.datePipe.transform(this.project.startDate, 'dd/MM/yy') ?? '';
-    // const today = new Date();
-    // const dd = String(today.getDate()).padStart(2, '0');
-    // const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-    // const yy = String(today.getFullYear()).slice(-2); // Get last two digits
-    // const formattedDate = `${dd}/${mm}/${yy}`;
     this.firstForm = this.formBuilder.group({
       projectName: ['', [Validators.required]],
       description: ''

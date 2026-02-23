@@ -9,15 +9,15 @@
         <div class="tasks-container" #tasksContainer>
             <div class="tasks" cdkDropList id="todayTasks" [cdkDropListData]="stepsAndTasks"
                 (cdkDropListDropped)="dropStep($event)">
-                <div class="task" [class.incomplete]="!isComplete(task)" *ngFor="let task of stepsAndTasks">
-                    <app-weekly-day-task [task]="task" [isDragging]="isDragging"
-                        (openProject)="openProject(task.project)"
-                        (createNewTaskEmitter)="updateTaskText($event, task.parentStep)"
+                <div class="task" [class.incomplete]="!isComplete(stepItem)" *ngFor="let stepItem of stepsAndTasks">
+                    <app-weekly-day-task [stepItem]="stepItem" [isDragging]="isDragging"
+                        (openProject)="openProject(stepItem.project)"
+                        (stepUpdated)="updateStepText($event)"
                         (completeTask)="completeTask($event)" [shouldHidePlaceHolder]="true"></app-weekly-day-task>
                 </div>
             </div>
             <div class="new-task" (click)="scrollToBottom()">
-                <app-new-task (createNewTask)="createNewTask($event)" style="width: 100%; margin: 0 25px;"></app-new-task>
+                <app-new-task (createNewStep)="createNewStep($event)" style="width: 100%; margin: 0 25px;"></app-new-task>
             </div>
         </div>
     </div>

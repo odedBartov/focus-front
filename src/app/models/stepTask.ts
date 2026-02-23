@@ -1,4 +1,4 @@
-import { IStepOrTask } from "./stepOrTask";
+import { IStepOrTask } from "./step";
 
 
 export class StepTask implements IStepOrTask {

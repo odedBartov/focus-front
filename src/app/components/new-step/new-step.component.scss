@@ -14,18 +14,25 @@
     width: 340px;
 
     .choose-type {
-        height: 40px;
         display: flex;
         flex-direction: column;
 
         .steps {
             display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            align-items: center;
             justify-content: center;
             gap: 15px;
 
             .step-type {
-                width: 80px;
+                width: 50%;
+                box-sizing: border-box;
                 @include mixins.confirm-button;
+
+                .new-text-bold {
+                    text-wrap: nowrap;
+                }
             }
         }
     }
@@ -261,7 +268,6 @@
                     text-align: center;
                     padding: 0.3rem 0.6rem 0.5rem;
                     cursor: pointer;
-                    // margin-left: 0.5rem;
 
                     &:hover,
                     &:focus {

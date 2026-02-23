@@ -26,7 +26,7 @@ import { HourlyWorkSession } from '../../models/hourlyWorkSession';
 import { NewStepModalComponent } from '../../modals/new-step-modal/new-step-modal.component';
 import { PaymentHistoryModalComponent } from '../../modals/payment-history-modal/payment-history-modal.component';
 import { WorkSessionService } from '../../services/work-session.service';
-import { getNextRetainerOccurrenceDate, initRetainerSteps } from '../../helpers/retainerFunctions';
+import { initRetainerSteps } from '../../helpers/retainerFunctions';
 import { OpenNotesComponent } from '../open-notes/open-notes.component';
 import { AiChatService } from '../../services/ai-chat.service';
 
@@ -140,10 +140,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.activeStepId = value?.steps?.find(s => !s.isComplete)?.id;
       this.loadSessionTimer();
       this.calculatePayments();
-
-      setTimeout(() => {
-        this.setActiveStepHeight();
-      }, 1);
     });
   }
 
@@ -154,7 +150,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.setActiveStepHeight();
     if (this.isRetainer) {
       this.initRetainerSteps();
     }
@@ -168,9 +163,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
     if (!this.editDiv?.contains(event.target as Node) && !this.mouseDownInside) {
       if (this.editStepId != '' && this.activeStepId === this.editStepId) {
-        setTimeout(() => {
-          this.setActiveStepHeight();
-        }, 1);
       }
       this.editStepId = '';
     } else {
@@ -350,15 +342,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     this.dialog.open(PaymentHistoryModalComponent, { data: { payments: payments, isPaymentModelHourly: this.isPaymentModelHourly } });
   }
 
-  setActiveStepHeight() {
-    // const element = this.descriptions.get(0)?.nativeElement as HTMLTextAreaElement;
-    // if (element) {
-    //   element.style.height = 'auto';
-    //   element.style.height = element.scrollHeight + 'px';
-    //   ;
-    // }
-  }
-
   hoverStep(stepId: string | undefined, index: number) {
     this.hoverStepId = stepId;
 
@@ -382,9 +365,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   clickOnAccordion(accordionNumber: number) {
     this.openedAccordion = this.openedAccordion === accordionNumber ? 0 : accordionNumber;
-    // setTimeout(() => {
-    //   this.setActiveStepHeight()
-    // }, 40);
   }
 
   updateStepsPosition() {
@@ -436,9 +416,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       });
 
       this.animationsService.changeIsLoadingWithDelay();
-      setTimeout(() => {
-        this.setActiveStepHeight();
-      }, 1);
       this.httpService.updateSteps(this.project().steps).subscribe(res => {
         this.animationsService.changeIsloading(false);
       })
@@ -553,8 +530,6 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
         }
 
         if (this.isRetainer) {
-          step.nextOccurrence = getNextRetainerOccurrenceDate(step);
-          step.dateOnWeekly = step.nextOccurrence;
           this.initRetainerSteps();
         }
         this.activeStepId = this.project()?.steps?.find(s => !s.isComplete)?.id;
@@ -564,9 +539,16 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   updateStep(step: Step) {
-    this.animationsService.changeIsLoadingWithDelay();
+    this.animationsService.changeIsloading(true);
     this.handleRetainerPayments(step);
     this.httpService.updateSteps([step]).subscribe(res => {
+      if (step.isRecurring) {
+        this.projectsService.deleteStepsFromProject(step.createdStepsFromRetainer ?? [], this.project().id ?? '');
+        this.getRetainerStepsAndUpdate();
+        this.animationsService.changeIsloading(false);
+      } else {
+        this.animationsService.changeIsloading(false);
+      }
       if (this.project().steps) {
         this.project().steps = this.project()?.steps?.map(step =>
           step.id === res[0].id ? res[0] : step
@@ -577,11 +559,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.calculatePayments();
       setTimeout(() => {
         this.hoverStepId = '';
-        if (step.id === this.activeStepId) {
-          this.setActiveStepHeight();
-        }
       }, 1);
-      this.animationsService.changeIsloading(false);
       if (!this.isRetainer) {
         this.isFinishProject();
       }
@@ -693,14 +671,27 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     step.projectId = this.project()?.id;
     step.positionInList = (this.project()?.steps?.length ?? 0) + 1;
     this.httpService.createStep(step).subscribe(res => {
+      if (step.isRecurring) {
+        this.getRetainerStepsAndUpdate();
+      } else {
+        this.projectsService.addStepsToActiveProjects([res]);
+        this.animationsService.changeIsloading(false);
+      }
       if (this.project().steps.length === 0) {
         this.activeStepId = res.id;
       }
-      this.project()?.steps?.push(res);
-      this.initRetainerSteps();
+      if (!step.isRecurring) {
+        const proj = this.projectsService.getCurrentProject()();
+        if (proj?.id === this.project()?.id && proj.steps?.some(s => s.id === res.id)) {
+          this.project.set(proj);
+        } else {
+          this.project()?.steps?.push(res);
+        }
+      } else {
+        this.project()?.steps?.push(res);
+      }
       this.isShowNewStep = false;
       this.calculatePayments();
-      this.animationsService.changeIsloading(false);
     });
   }
 
@@ -713,7 +704,14 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     if (this.project().paymentModel === paymentModelEnum.monthly && step?.isRecurring && step.stepType === StepType.payment) {
       this.openProjectModal();
     } else {
-      const dialogRef = this.dialog.open(NewStepModalComponent, { data: { step: step, isActive: true, paymentModel: this.project().paymentModel } });
+      let stepToEdit = step;
+      if (step?.originalRetainerStepId) {
+        const originalStep = this.project().steps.find(s => s.id === step.originalRetainerStepId);
+        if (originalStep) {
+          stepToEdit = originalStep;
+        }
+      }
+      const dialogRef = this.dialog.open(NewStepModalComponent, { data: { step: stepToEdit, isActive: true, paymentModel: this.project().paymentModel } });
       const childInstance = dialogRef.componentInstance;
       childInstance.stepUpdated.subscribe(newStep => {
         this.updateStep(newStep);
@@ -722,18 +720,32 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   deleteStep(step: Step) {
-    if (step.id) {
-      this.animationsService.changeIsLoadingWithDelay();
-      const stepIndex = this.project()?.steps?.indexOf(step);
-      if (stepIndex !== undefined) {
-        this.project()?.steps?.splice(stepIndex, 1);
-        this.initRetainerSteps();
-        this.calculatePayments();
+    const stepId = step.id;
+    const projectId = step.projectId;
+    if (!stepId || !projectId) return;
+    this.animationsService.changeIsloading(true);
+    this.httpService.deleteStep(stepId).subscribe(() => {
+      const idsToRemove: string[] = step.isRecurring && step.createdStepsFromRetainer?.length
+        ? [stepId, ...step.createdStepsFromRetainer].filter((id): id is string => typeof id === 'string')
+        : [stepId];
+      const idsSet = new Set(idsToRemove.map((id) => String(id)));
+      this.projectsService.deleteStepsFromProject(idsToRemove, projectId);
+      if (step.originalRetainerStepId) {
+        this.project().steps = this.project().steps.filter(s => s.id !== step.originalRetainerStepId);
       }
-      this.httpService.deleteStep(step.id).subscribe(res => {
-        this.animationsService.changeIsloading(false);
-      });
-    }
+      const current = this.project();
+      if (current?.id === projectId && current.steps) {
+        const nextSteps = current.steps.filter(
+          (s) => s.id != null && !idsSet.has(String(s.id))
+        );
+        const updatedProject = { ...current, steps: nextSteps };
+        this.projectsService.getCurrentProject().set(updatedProject);
+        this.changeDetectorRef.detectChanges();
+      }
+      this.initRetainerSteps();
+      this.calculatePayments();
+      this.animationsService.changeIsloading(false);
+    });
   }
 
   scrollToBottom() {
@@ -741,5 +753,16 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       container.scrollTop = container.scrollHeight;
     }, 1);
+  }
+
+  getRetainerStepsAndUpdate() {
+    const startDate = new Date(); // current day (e.g. Monday)
+    startDate.setHours(12, 0, 0, 0);
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + (6 - startDate.getDay())); // Saturday of current week
+    this.httpService.getRetainerSteps(startDate, endDate).subscribe((retainerSteps) => {
+      this.projectsService.addStepsToActiveProjects(retainerSteps);
+      this.animationsService.changeIsloading(false);
+    });
   }
 }

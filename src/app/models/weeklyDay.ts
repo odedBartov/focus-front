@@ -1,6 +1,6 @@
-import { StepOrTask } from "./stepOrTask";
+import { StepWithProject } from "./step-with-project";
 
 export class WeeklyDay {
     date!: Date;
-    tasks: StepOrTask[] = [];
+    steps: StepWithProject[] = [];
 }

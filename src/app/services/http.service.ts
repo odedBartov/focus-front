@@ -171,4 +171,9 @@ export class HttpService {
     const headers = this.generateHeaders();
     return this.httpClient.delete(this.apiUrl + "Auth/deleteUser?email=" + email, headers);
   }
+
+  getRetainerSteps(startDate: Date, endDate: Date): Observable<Step[]> {
+    const headers = this.generateHeaders();
+    return this.httpClient.post<Step[]>(this.apiUrl + "Steps/createStepsForRetainer", { start: startDate, end: endDate }, headers);
+  }
 }

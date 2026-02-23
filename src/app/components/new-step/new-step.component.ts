@@ -10,8 +10,8 @@ import { HttpService } from '../../services/http.service';
 import { AnimationsService } from '../../services/animations.service';
 import { StepTask } from '../../models/stepTask';
 import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
-import { createNextOccurenceDate, getNextRetainerOccurrenceDate } from '../../helpers/retainerFunctions';
-import { areDatesEqual, updateDatesWithLocalTime } from '../../helpers/functions';
+import { updateDatesWithLocalTime } from '../../helpers/functions';
+import { ProjectsService } from '../../services/projects.service';
 
 @Component({
   selector: 'app-new-step',
@@ -23,6 +23,7 @@ import { areDatesEqual, updateDatesWithLocalTime } from '../../helpers/functions
 export class NewStepComponent implements AfterViewInit {
   httpService = inject(HttpService);
   animationsService = inject(AnimationsService);
+  projectsService = inject(ProjectsService);
   datePipe = inject(DatePipe);
   @ViewChild('stepNameInput') stepNameInput!: ElementRef;
   @ViewChild('descriptionInput') descriptionInput!: ElementRef;
@@ -37,7 +38,6 @@ export class NewStepComponent implements AfterViewInit {
   @Input() set steptInput(value: Step | undefined) {
     if (value) {
       this.isEdit = true;
-      // this.isShowReccuringData = value.reccuringEvery !== undefined && value.reccuringEvery > 0;
       value.dateDue = value.dateDue ? new Date(value.dateDue) : value.dateDue;
       if (value.description) {
         this.isShowDescription = true;
@@ -81,6 +81,10 @@ export class NewStepComponent implements AfterViewInit {
     return this.projectType === projectTypeEnum.retainer;
   }
 
+  get isRecurring() {
+    return this.newStep.isRecurring;
+  }
+
   initFutureMonths() {
     const today = new Date();
     for (let index = 0; index < 5; index++) {
@@ -102,6 +106,11 @@ export class NewStepComponent implements AfterViewInit {
     setTimeout(() => {
       this.stepNameInput.nativeElement.focus()
     }, 0);
+  }
+
+  selectRetainerType() {
+    this.selectType(StepType.task);
+    this.initStepIsRecurring();
   }
 
   showDescription() {
@@ -210,25 +219,13 @@ export class NewStepComponent implements AfterViewInit {
         if (!this.newStep.recurringEvery) {
           this.newStep.recurringEvery = 1;
         }
-        this.newStep.nextOccurrence = createNextOccurenceDate(this.newStep);
-        updateDatesWithLocalTime(this.newStep);
-        this.setIsCompleteForRecurringStep();
-        this.newStep.dateOnWeekly = this.newStep.nextOccurrence;
+        this.newStep.nextOccurrence = this.projectsService.getNextOccurrenceDate(this.newStep);
         this.newStep.positionInWeeklyList = 9999;
+        updateDatesWithLocalTime(this.newStep);
       }
 
       this.stepsEmitter.emit(this.newStep);
     }
-  }
-
-  setIsCompleteForRecurringStep() {
-    // if (!this.isEdit) {
-    //   if (this.newStep.isRecurring && this.newStep.recurringDateType === recurringDateTypeEnum.day) {
-    //     this.newStep.isComplete = false;
-    //   } else {
-    //     this.newStep.isComplete = !areDatesEqual(new Date(), this.newStep.nextOccurrence)
-    //   }
-    // }
   }
 
   validateStep(): boolean {

@@ -23,7 +23,6 @@ export class FreeTrialEndComponent {
 
   subscribe() {
     window.location.href = environment.subscriptionUrl;
-    // window.open(environment.subscriptionUrl, '_blank');
   }
 
   sendWhatsapp() {

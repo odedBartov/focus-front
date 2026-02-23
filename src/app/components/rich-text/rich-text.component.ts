@@ -172,10 +172,6 @@ export class RichTextComponent implements OnDestroy, OnInit, AfterViewInit {
     const transaction = state.tr.setSelection(originalSelection); // Preserve the original selection
     command(this.editor.commands);
 
-    // Reapply the preserved selection and dispatch
-    //const newState = view.state.apply(transaction);
-    //view.updateState(newState);
-
     view.focus();
   }
 }
