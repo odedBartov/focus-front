@@ -1,10 +1,8 @@
 import { recurringDateTypeEnum, StepType } from "./enums";
 import { RelatedDocument } from "./relatedDocument";
-import { IStepOrTask } from "./stepOrTask";
 import { StepTask } from "./stepTask";
-import { taxDocumentEnum } from "./taxSystem";
 
-export class Step implements IStepOrTask {
+export class Step {
     id?: string;
     projectId?: string | null;
     dateCreated?: Date; // the date on which the step was created
@@ -34,10 +32,8 @@ export class Step implements IStepOrTask {
         invoice?: RelatedDocument;
         invoiceReceipt?: RelatedDocument;
     };
-    // these are not stored in db
-    isRetainerCopy = false; // if the step is a copy of a retainer step. this is used to avoid duplicates
-    originalRetainerStep?: Step; // the original retainer step that was copied
-
+    createdStepsFromRetainer?: string[]; // list of steps that were created from a retainer step
+    originalRetainerStepId?: string; // the id of the original retainer step that was copied
     constructor() {
         this.userId = "newStep";
         this.isComplete = false;

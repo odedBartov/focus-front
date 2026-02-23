@@ -17,7 +17,6 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-feature-modal.component';
 import { Step } from '../../models/step';
 import { getTodayAtMidnightLocal } from '../../helpers/functions';
-import { getNextRetainerOccurrenceDate } from '../../helpers/retainerFunctions';
 
 @Component({
   selector: 'app-projects-list',
@@ -206,7 +205,6 @@ export class ProjectsListComponent implements OnInit {
                 nextOccurrence.setMonth(nextOccurrence.getMonth() + newStep.recurringEvery-1);
               }
               newStep.dateOnWeekly = nextOccurrence;
-              newStep.nextOccurrence = getNextRetainerOccurrenceDate(newStep);
               this.httpService.createStep(newStep).subscribe(res => {
                 newProject.steps.push(res);
                 setTimeout(() => {

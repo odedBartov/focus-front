@@ -9,10 +9,9 @@ import { environment } from '../../../environments/environment';
 import { Step } from '../../models/step';
 import { Project } from '../../models/project';
 import { ProjectsService } from '../../services/projects.service';
-import { isStep, isStepOrTaskComplete, StepOrTask } from '../../models/stepOrTask';
+import { StepWithProject } from '../../models/step-with-project';
 import { areDatesEqual, getTodayAtMidnightLocal } from '../../helpers/functions';
 import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
-import { StepTask } from '../../models/stepTask';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { StepType } from '../../models/enums';
@@ -37,7 +36,7 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
   projects: WritableSignal<Project[]>;
   noProject: WritableSignal<Project>;
   features: Feature[] = [];
-  stepsAndTasks: StepOrTask[] = [];
+  stepsAndTasks: StepWithProject[] = [];
   isDragging = { dragging: false };
   fullName = "משתמש ללא שם";
   arielsNumber = environment.arielsNumber;
@@ -64,23 +63,19 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     }
   }
 
-  isComplete(task: StepOrTask) {
-    return isStepOrTaskComplete(task);
+  isComplete(item: StepWithProject) {
+    return item.step?.isComplete ?? false;
   }
 
   initTasks() {
     this.stepsAndTasks = [];
     const lists = this.projectsService.populateCalendarTasks();
-    const allTasks = lists.tasksWithDate;
+    const allSteps = lists.tasksWithDate;
     const today = getTodayAtMidnightLocal();
-    allTasks.forEach(t => {
-      const taskDate = t.data.dateOnWeekly;
-      let isRecurrenceModifiedToday = false;
-      if (isStep(t.data)) {
-        isRecurrenceModifiedToday = (t.data?.futureModifiedTasks?.find(d => areDatesEqual(d, today)) !== undefined);
-      }
-      if (taskDate && areDatesEqual(new Date(taskDate), today) && !isRecurrenceModifiedToday) {
-        this.stepsAndTasks.push(t);
+    allSteps.forEach(item => {
+      const taskDate = item.step.dateOnWeekly;
+      if (taskDate && areDatesEqual(new Date(taskDate), today)) {
+        this.stepsAndTasks.push(item);
       }
     });
     this.sortSteps();
@@ -122,16 +117,13 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
   }
 
 
-  dropStep(event: CdkDragDrop<StepOrTask[]>) {
+  dropStep(event: CdkDragDrop<StepWithProject[]>) {
     moveItemInArray(this.stepsAndTasks, event.previousIndex, event.currentIndex);
     this.updateStepsPosition();
     const stepsToUpdate: Step[] = [];
-    this.stepsAndTasks.forEach(taskOrStep => {
-      if (!stepsToUpdate.find(s => s.id === taskOrStep.parentStep?.id)) {
-        if (isStep(taskOrStep.data)) {
-          taskOrStep.parentStep = taskOrStep.data;
-        }
-        stepsToUpdate.push(taskOrStep.parentStep);
+    this.stepsAndTasks.forEach(item => {
+      if (!stepsToUpdate.find(s => s.id === item.step?.id)) {
+        stepsToUpdate.push(item.step);
       }
     });
 
@@ -143,16 +135,15 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
 
   sortSteps() {
     this.stepsAndTasks.sort((a, b) => {
-      const posA = a.data.positionInWeeklyList;
-      const posB = b.data.positionInWeeklyList;
+      const posA = a.step.positionInWeeklyList;
+      const posB = b.step.positionInWeeklyList;
       return posA - posB;
     });
   }
 
   updateStepsPosition() {
     for (let index = 0; index < this.stepsAndTasks.length; index++) {
-      const task = this.stepsAndTasks[index];
-      task.data.positionInWeeklyList = index;
+      this.stepsAndTasks[index].step.positionInWeeklyList = index;
     }
   }
 
@@ -166,63 +157,35 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     }
   }
 
-  updateTaskText(task: StepTask, step: Step) {
-    if (step.tasks) {
-      const index = step.tasks.findIndex(t => t.id === task.id);
-      if (index > -1) {
-        step.tasks[index] = task;
-        this.httpService.updateSteps([step]).subscribe();
-      }
-    }
+  updateStepText(step: Step) {
+    this.httpService.updateSteps([step]).subscribe();
   }
 
-  createNewTask(task: StepTask) {
-    task.positionInWeeklyList = this.stepsAndTasks.length;
-    task.dateOnWeekly = new Date();
-    let tasksStep = this.noProject().steps.find(s => s.name === 'weeklyTasks');
-    if (!tasksStep) {
-      tasksStep = new Step();
-      tasksStep.projectId = this.noProject().id;
-      tasksStep.name = 'weeklyTasks';
-      tasksStep.stepType = StepType.task;
-      tasksStep.tasks = [task];
-      tasksStep.userId = this.authenticationService.getUserId() ?? 'noUserId';
-      this.noProject().steps.push(tasksStep);
+  createNewStep(step: Step) {
+    step.positionInWeeklyList = this.stepsAndTasks.length;
+    step.dateOnWeekly = new Date();
+    step.projectId = this.noProject().id;
+    step.stepType = StepType.task;
+    step.userId = this.authenticationService.getUserId() ?? 'noUserId';
+    this.httpService.createStep(step).subscribe(res => {
+      this.noProject().steps.push(res);
       this.noProject().steps = [...this.noProject().steps];
-      this.httpService.createStep(tasksStep).subscribe(res => {
-        if (tasksStep) {
-          tasksStep.id = res.id;
-        }
-      });
-    } else {
-      tasksStep.tasks?.push(task);
-      this.httpService.updateSteps([tasksStep]).subscribe(res => { });
-    }
-    const newTask = new StepOrTask();
-    newTask.data = task;
-    newTask.parentStep = tasksStep;
-    newTask.project = this.noProject();
-    this.stepsAndTasks.push(newTask);
+      this.stepsAndTasks.push({ step: res, project: this.noProject() });
+    });
   }
 
-  completeTask(task: StepOrTask) {
-    const index = this.stepsAndTasks.findIndex(t => {
-      return t.data.id === task.data.id;
-    });
-    if (index > -1 && (task.data.isComplete)) {
+  completeTask(task: StepWithProject) {
+    const index = this.stepsAndTasks.findIndex(t => t.step.id === task.step.id);
+    if (index > -1 && task.step.isComplete) {
       moveItemInArray(this.stepsAndTasks, index, 0);
     }
     this.updateStepsPosition();
     const stepsToUpdate: Step[] = [];
-    this.stepsAndTasks.forEach(taskOrStep => {
-      if (!stepsToUpdate.find(s => s.id === taskOrStep.parentStep?.id)) {
-        if (isStep(taskOrStep.data)) {
-          taskOrStep.parentStep = taskOrStep.data;
-        }
-        stepsToUpdate.push(taskOrStep.parentStep);
+    this.stepsAndTasks.forEach(item => {
+      if (!stepsToUpdate.find(s => s.id === item.step?.id)) {
+        stepsToUpdate.push(item.step);
       }
     });
-
 
     this.animationsService.changeIsLoadingWithDelay();
     this.httpService.updateSteps(stepsToUpdate).subscribe(res => {

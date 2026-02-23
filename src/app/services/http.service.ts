@@ -195,4 +195,9 @@ export class HttpService {
     const headers = this.generateHeaders();
     return this.httpClient.get<string[]>(this.apiUrl + "Projects/getUserClients?input=" + query, headers);
   }
+
+  getRetainerSteps(startDate: Date, endDate: Date): Observable<Step[]> {
+    const headers = this.generateHeaders();
+    return this.httpClient.post<Step[]>(this.apiUrl + "Steps/createStepsForRetainer", { start: startDate, end: endDate }, headers);
+  }
 }

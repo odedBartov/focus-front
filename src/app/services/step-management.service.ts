@@ -3,7 +3,6 @@ import { Step } from '../models/step';
 import { Project } from '../models/project';
 import { StepType, projectTypeEnum, paymentModelEnum } from '../models/enums';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
-import { getNextRetainerOccurrenceDate } from '../helpers/retainerFunctions';
 
 export interface StepCompletionResult {
   updatedStep: Step;
@@ -70,12 +69,6 @@ export class StepManagementService {
 
     // Move the completed step to the end of finished steps
     moveItemInArray(allSteps, finishedSteps + notFinishedSteps, finishedSteps);
-
-    // Handle retainer-specific logic
-    if (isRetainer) {
-      step.nextOccurrence = getNextRetainerOccurrenceDate(step);
-      step.dateOnWeekly = step.nextOccurrence;
-    }
   }
 
   /**

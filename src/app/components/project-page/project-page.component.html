@@ -178,7 +178,7 @@
             </div>
             <div class="accordion">
                 <span class="title" [ngClass]="{'opened': openedAccordion == 2}" (click)="clickOnAccordion(2)">משימות
-                    עתידיות</span>
+                    חוזרות</span>
                 <div class="content" [class]="(openedAccordion === 2) ? 'expanded' : 'collapsed'">
                     <div class="retainer-steps" *ngIf="isRetainer" cdkDropList cdkDropListOrientation="mixed"
                         #stepsContainer (cdkDropListDropped)="dropStep($event, retainerFutureSteps)">
