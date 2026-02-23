@@ -35,7 +35,10 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
   @Output() selectProject = new EventEmitter<Project>();
   projects: WritableSignal<Project[]>;
   noProject: WritableSignal<Project>;
-  features: Feature[] = [];
+  regularFeatures: Feature[] = [];
+  oneTimeFeatures: Feature[] = [];
+  currentOneTimeFeature?: Feature;
+  watchedFeatures: string[] = [];
   stepsAndTasks: StepWithProject[] = [];
   isDragging = { dragging: false };
   fullName = "משתמש ללא שם";
@@ -54,13 +57,26 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     this.animationsService.changeIsloading(true);
     this.updatesService.getFutureFeatures().subscribe(res => {
       this.animationsService.changeIsloading(false);
-      this.features = res;
+      this.regularFeatures = res.filter(f => !f.oneTimeWatch);
+      this.oneTimeFeatures = res.filter(f => f.oneTimeWatch);
+      this.watchedFeatures = JSON.parse(localStorage.getItem('watchedFeatures') ?? '[]');
+      this.findOneTimeFeature();
     })
 
     const userName = this.authenticationService.getUserName();
     if (userName) {
       this.fullName = userName;
     }
+  }
+
+  findOneTimeFeature() {
+    this.currentOneTimeFeature = this.oneTimeFeatures.find(f => !this.watchedFeatures.includes(f.id));
+  }
+
+  watchOneTimeFeature(feature: Feature) {
+    this.watchedFeatures.push(feature.id);
+    localStorage.setItem('watchedFeatures', JSON.stringify(this.watchedFeatures));
+    this.findOneTimeFeature();
   }
 
   isComplete(item: StepWithProject) {
