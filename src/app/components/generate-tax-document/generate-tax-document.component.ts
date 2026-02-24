@@ -117,7 +117,7 @@ export class GenerateTaxDocumentComponent implements AfterViewInit {
       if (res.isSuccess) {
         this.documentCreated.emit();
       } else {
-        this.dialog.open(CantConnectToTaxComponent, { data: { systemName: this.documentTypeOptions.find(opt => opt.apiValue === this.selectedDocumentType)?.label ?? '', apiKeyPage: res.apiKeyPage } });
+        this.dialog.open(CantConnectToTaxComponent, { data: { systemName: taxManagementSystemEnum[this.taxManagementSystem] ?? '', apiKeyPage: res.apiKeyPage } });
       }
     });
   }
