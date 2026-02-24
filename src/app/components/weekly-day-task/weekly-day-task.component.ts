@@ -48,12 +48,10 @@ export class WeeklyDayTaskComponent implements OnInit {
   isHovering = false;
   isEditing = false;
   mouseDownInside = false;
-  isReadOnly = false;
 
   constructor(private renderer: Renderer2) { }
 
   ngOnInit(): void {
-    this.isReadOnly = this.stepItem.step.stepType == StepType.payment;
   }
 
   @HostListener('document:click', ['$event'])

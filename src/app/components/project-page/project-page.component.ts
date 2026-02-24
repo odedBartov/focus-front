@@ -29,6 +29,7 @@ import { WorkSessionService } from '../../services/work-session.service';
 import { initRetainerSteps } from '../../helpers/retainerFunctions';
 import { OpenNotesComponent } from '../open-notes/open-notes.component';
 import { AiChatService } from '../../services/ai-chat.service';
+import { areDatesEqualYearAndMonth } from '../../helpers/functions';
 
 @Component({
   selector: 'app-project-page',
@@ -463,7 +464,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.paidMoney = this.retainerFinishedSteps.reduce((acc, step) => acc + step.price, 0);
     } else {
       this.project()?.steps?.forEach(step => {
-        if (step.stepType === StepType.payment) {
+        if (step.stepType === StepType.payment && !step.isRecurring && (!step.originalRetainerStepId || areDatesEqualYearAndMonth(step.dateOnWeekly, new Date()))) {
           this.baseProjectPrice += step.price;
           if (step.isComplete) {
             this.paidMoney += step.price;
