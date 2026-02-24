@@ -33,6 +33,7 @@ import { GenerateTaxDocumentComponent } from '../generate-tax-document/generate-
 import { ProjectSummaryComponent } from '../project-summary/project-summary.component';
 import { StepManagementService } from '../../services/step-management.service';
 import { taxManagementSystemEnum } from '../../models/taxSystem';
+import { areDatesEqualYearAndMonth } from '../../helpers/functions';
 
 @Component({
   selector: 'app-project-page',

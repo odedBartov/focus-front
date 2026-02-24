@@ -3,6 +3,7 @@ import { Step } from '../models/step';
 import { Project } from '../models/project';
 import { StepType, projectTypeEnum, paymentModelEnum } from '../models/enums';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
+import { areDatesEqualYearAndMonth } from '../helpers/functions';
 
 export interface StepCompletionResult {
   updatedStep: Step;
@@ -141,7 +142,7 @@ export class StepManagementService {
         : 0;
     } else {
       project.steps?.forEach(step => {
-        if (step.stepType === StepType.payment) {
+        if (step.stepType === StepType.payment && !step.isRecurring && (!step.originalRetainerStepId || areDatesEqualYearAndMonth(step.dateOnWeekly, new Date()))) {
           basePrice += step.price;
           if (step.isComplete) {
             paidMoney += step.price;
