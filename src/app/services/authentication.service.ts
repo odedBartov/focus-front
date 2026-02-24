@@ -61,20 +61,20 @@ export class AuthenticationService {
     return localStorage.getItem(this.isNewUser) === 'true';
   }
 
-  setUserPicture(picture: string) {
-    localStorage.setItem(this.userPicture, picture);
-  }
-
   getUserPicture() {
     return localStorage.getItem(this.userPicture);
   }
 
+  setUserPicture(picture: string) {
+    localStorage.setItem(this.userPicture, picture);
+  }
+  
+    getIsReadOnly() {
+      return this.isReadOnlySignal;
+    }
+
   setIsReadOnly(isReadOnly: boolean) {
     this.isReadOnlySignal.set(isReadOnly);
-  }
-
-  getIsReadOnly() {
-    return this.isReadOnlySignal;
   }
 
   setSubscription(subscription: number) {

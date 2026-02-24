@@ -53,7 +53,7 @@
                             <div class="step-icons" *ngIf="!isReadOnly()">
                                 <div class="edit-delete">
                                     <img class="icon-garbage-can-gray-blue" (click)="deleteStep(step)" />
-                                    <img class="icon-pencil" (click)="editStep(stepDiv, step.id)" />
+                                    <img class="icon-pencil" [ngClass]="{'disabled-icon': isStepReadOnly(step)}" (click)="editStep(stepDiv, step.id)" />
                                     <img class="icon-add-file" (click)="showGenerateTaxDocument(step.id ?? '')"
                                         *ngIf="step.stepType === stepTypeEnum.payment" />
                                 </div>

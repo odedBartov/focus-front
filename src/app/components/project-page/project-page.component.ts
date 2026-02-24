@@ -672,4 +672,11 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       this.animationsService.changeIsloading(false);
     });
   }
+
+  isStepReadOnly(step: Step): boolean {
+    if (step.relatedDocuments) {
+      return Object.values(step.relatedDocuments ?? {}).some(Boolean);
+    }
+    return false;
+  }
 }

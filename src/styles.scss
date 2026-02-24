@@ -406,6 +406,10 @@ input::-webkit-inner-spin-button {
 }
 
 //icons
+.disabled-icon {
+    pointer-events: none;
+}
+
 .icon-garbage-can {
     content: url('/assets/icons/garbage_can_not.svg');
 
