@@ -196,15 +196,12 @@ export class ProjectsListComponent implements OnInit {
               newStep.projectId = newProject.id;
               newStep.recurringDateType = recurringDateTypeEnum.month;
               newStep.recurringDayInMonth = newProject.monthlyPaymentDay;
-              newStep.recurringEvery = 1;
               newStep.stepType = StepType.payment;
               newStep.dateDue = new Date();
-              const nextOccurrence = getTodayAtMidnightLocal();
-              if (newProject.monthlyPaymentDay !== new Date().getDate()) {
-                nextOccurrence.setDate(newProject.monthlyPaymentDay);
-                nextOccurrence.setMonth(nextOccurrence.getMonth() + newStep.recurringEvery-1);
-              }
+              newStep.recurringEvery = 1
+              const nextOccurrence = this.projectsService.getNextOccurrenceDate(newStep);
               newStep.dateOnWeekly = nextOccurrence;
+              newStep.nextOccurrence = nextOccurrence;
               this.httpService.createStep(newStep).subscribe(res => {
                 newProject.steps.push(res);
                 setTimeout(() => {
