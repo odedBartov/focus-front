@@ -88,6 +88,14 @@ export class ProjectsService {
       })
     })
 
+    this.noProject().steps.forEach(step => {
+      if (step.dateOnWeekly) {
+        this.insertStepToList(this.tasksWithDate, step, this.noProject());
+      } else {
+        this.insertStepToFutureTasks(this.noProject(), step);
+      }
+    })
+
     this.tasksWithDate = this.tasksWithDate.sort((a, b) => this.sortSteps(a, b));
     this.tasksWithoutDate = this.tasksWithoutDate.sort((a, b) => this.sortSteps(a, b));
     return { tasksWithDate: this.tasksWithDate, tasksWithoutDate: this.tasksWithoutDate, currentAndFutureTasks: this.currentAndFutureTasks };
@@ -160,10 +168,10 @@ export class ProjectsService {
       return nextProjects;
     });
 
-    this.currentProject.set({...this.currentProject()});
+    this.currentProject.set({ ...this.currentProject() });
   }
 
-  deleteStepsFromProject(stepIds: string[], projectId: string) {    
+  deleteStepsFromProject(stepIds: string[], projectId: string) {
     this.activeProjects.update(projects => {
       const project = projects.find(p => p.id === projectId);
       if (project) {
