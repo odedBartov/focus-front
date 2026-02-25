@@ -12,7 +12,7 @@ import { HttpService } from '../../services/http.service';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
-import { areDatesEqual, getTextForStep, getTodayAtMidnightLocal, isDateBeforeToday } from '../../helpers/functions';
+import { getTextForStep, getTodayAtMidDayLocal, isDateBeforeToday } from '../../helpers/functions';
 
 @Component({
   selector: 'app-weekly-tasks',
@@ -107,7 +107,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
   initPresentedDays() {
     setTimeout(() => {
       this.presentedDays = [];
-      const now = new Date();
+      const now = getTodayAtMidDayLocal();
       const currentDay = new Date(now);
       currentDay.setDate(now.getDate() - now.getDay());
       for (let i = 0; i < 7; i++) {
@@ -118,13 +118,12 @@ export class WeeklyTasksComponent implements AfterViewInit {
         this.presentedDays.push(weeklyDay);
       }
 
-      const sunday = new Date();
+      const sunday = getTodayAtMidDayLocal();
       sunday.setDate(sunday.getDate() - sunday.getDay() + this.deltaDays);
-      const saturday = new Date();
+      const saturday = getTodayAtMidDayLocal();
       saturday.setDate(saturday.getDate() - saturday.getDay() + 6 + this.deltaDays);
 
       this.assignTasksToDays();
-
       this.httpService.getRetainerSteps(sunday, saturday).subscribe((retainerSteps) => {
         if (retainerSteps.length > 0) {
           this.projectsService.addStepsToActiveProjects(retainerSteps);
