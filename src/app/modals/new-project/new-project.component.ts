@@ -39,7 +39,7 @@ export class NewProjectComponent implements OnDestroy, AfterViewInit {
 
   constructor() {
     effect(() => {
-      if (this.newProjectStepSignal() === 0) {
+      if (this.newProjectStepSignal() === 0 && this.dialogRef.getState() === 0) {
         this.dialogRef.close();
       }
     });
@@ -106,13 +106,13 @@ export class NewProjectComponent implements OnDestroy, AfterViewInit {
         }
         break;
       case 5:
-        this.newProjectStepSignal.set(0);
         this.dialogRef.close(this.project);
         break;
     }
   }
 
   ngOnDestroy(): void {
+    this.newProjectStepSignal.set(0);
     this.destroy$.next();
     this.destroy$.complete();
   }
