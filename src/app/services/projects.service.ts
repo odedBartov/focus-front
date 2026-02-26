@@ -92,6 +92,9 @@ export class ProjectsService {
         this.insertStepToList(this.tasksWithDate, step, this.noProject());
       } else {
         this.insertStepToFutureTasks(this.noProject(), step);
+        if (!step.isComplete) {
+          this.insertStepToList(this.tasksWithoutDate, step, this.noProject());
+        }
       }
     })
 
