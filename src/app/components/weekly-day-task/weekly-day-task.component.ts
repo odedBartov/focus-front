@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { Project } from '../../models/project';
@@ -8,6 +8,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { getTextForStep, isDateBeforeToday } from '../../helpers/functions';
 import { StepType } from '../../models/enums';
 import { StepWithProject } from '../../models/step-with-project';
+import { ProjectsService } from '../../services/projects.service';
 
 @Component({
   selector: 'app-weekly-day-task',
@@ -44,6 +45,7 @@ export class WeeklyDayTaskComponent implements OnInit {
     }
   }
 
+  noProject = inject(ProjectsService).getNoProject();
   getTextForStep = getTextForStep;
   isHovering = false;
   isEditing = false;
