@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { HttpService } from '../../services/http.service';
+import { RetainerStepsQueueService } from '../../services/retainer-steps-queue.service';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
@@ -36,6 +37,7 @@ import { getTextForStep, getTodayAtMidDayLocal, isDateBeforeToday } from '../../
 export class WeeklyTasksComponent implements AfterViewInit {
   projectsService = inject(ProjectsService);
   httpService = inject(HttpService);
+  retainerStepsQueue = inject(RetainerStepsQueueService);
   @Output() selectProject = new EventEmitter<Project>();
   @ViewChildren('days') days!: QueryList<ElementRef<HTMLDivElement>>;
   projects: WritableSignal<Project[]>;
@@ -124,7 +126,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
       saturday.setDate(saturday.getDate() - saturday.getDay() + 6 + this.deltaDays);
 
       this.assignTasksToDays();
-      this.httpService.getRetainerSteps(sunday, saturday).subscribe((retainerSteps) => {
+      this.retainerStepsQueue.getRetainerSteps(sunday, saturday).subscribe((retainerSteps) => {
         if (retainerSteps.length > 0) {
           this.projectsService.addStepsToActiveProjects(retainerSteps);
         }
