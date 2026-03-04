@@ -188,7 +188,7 @@ export class ProjectsListComponent implements OnInit {
           this.animationsService.changeIsloading(true);
           this.httpService.createProject(res).subscribe(newProject => {
             this.projects.set(this.projects().concat(newProject));
-            if (false){ //if (newProject.projectType === projectTypeEnum.retainer && newProject.paymentModel === paymentModelEnum.monthly && newProject.reccuringPayment && newProject.monthlyPaymentDay) {
+            if (newProject.projectType === projectTypeEnum.retainer && newProject.paymentModel === paymentModelEnum.monthly && newProject.reccuringPayment && newProject.monthlyPaymentDay) {
               const newStep = new Step();
               newStep.isRecurring = true;
               newStep.name = "תשלום חודשי";
