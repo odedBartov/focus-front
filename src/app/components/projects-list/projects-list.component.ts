@@ -114,9 +114,9 @@ export class ProjectsListComponent implements OnInit {
       this.animationsService.showFinishProject();
     }
     this.updateProjects([project]).subscribe((res: Project[]) => {   
-      project = res[0]; // the updated project, have some new data from the server
       const activeProjects = [...this.projects()]
       activeProjects.splice(this.projects().indexOf(project), 1);
+      project = res[0]; // the updated project, have some new data from the server
 
       this.projectsService.getUnActiveProjects()().push(project)
       this.projects.set(activeProjects);
