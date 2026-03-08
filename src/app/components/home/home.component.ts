@@ -185,6 +185,11 @@ export class HomeComponent implements OnInit {
     } else {
       if (this.activeTab.id === this.archiveTab.id) {
         this.activeTab = this.homeTab;
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: { tab: this.homeTab.id },
+          queryParamsHandling: 'merge'
+        });
       }
     }
   }
