@@ -20,12 +20,12 @@ export class SummaryComponent implements OnInit {
     this.updatedProjects = projects;
     projects.forEach(project => {
       if (project.status === ProjectStatus.active) {
-        this.steps = this.steps.concat(project.steps);
+        this.steps = this.steps.concat(project.steps.filter(s => s.stepType === StepType.payment && !s.originalRetainerStepId));
       } else if (project.status === ProjectStatus.finished) {
         const finishedSteps = project.steps.filter(s => s.isComplete);
-        this.steps = this.steps.concat(finishedSteps);
+        this.steps = this.steps.concat(finishedSteps.filter(s => s.stepType === StepType.payment && !s.originalRetainerStepId));
       }
-    });
+    });    
     this.initDynamicChart();
   }
   updatedProjects: Project[] = [];
