@@ -176,11 +176,13 @@ export class SummaryComponent implements OnInit {
     this.updatedProjects.forEach(project => {
       if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.hourly) {
         let finishedPayments = project.steps.filter(s => s.stepType === StepType.payment && s.isComplete).reduce((a, b) => a += b.price, 0);
-        project.hourlyWorkSessions.forEach(session => {
-          const sessionPayment = Math.round((session.workTime / 3600000) * (project.reccuringPayment ?? 0));
-          this.futurePayments[Math.floor(this.futurePayments.length / 2)] += sessionPayment;
-        });
-        this.futurePayments[Math.floor(this.futurePayments.length / 2)] -= finishedPayments;
+        if (project.status === ProjectStatus.active) {
+          project.hourlyWorkSessions.forEach(session => {
+            const sessionPayment = Math.round((session.workTime / 3600000) * (project.reccuringPayment ?? 0));
+            this.futurePayments[Math.floor(this.futurePayments.length / 2)] += sessionPayment;
+          });
+          this.futurePayments[Math.floor(this.futurePayments.length / 2)] -= finishedPayments;
+        }
       }
     });
   }

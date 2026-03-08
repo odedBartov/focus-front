@@ -47,7 +47,7 @@
     <div class="home-container" *ngIf="activeTab.id === archiveTab.id">
       <div class="home">
         <div class="summary">
-          <app-summary [projects]="activeProjects()"></app-summary>
+          <app-summary [projects]="projectsForPayment"></app-summary>
         </div>
         <div class="projects-list">
           <app-archive (unActiveProjectsEmitter)="refreshProjects()"></app-archive>
