@@ -97,7 +97,7 @@ export class ProjectsListComponent implements OnInit {
           paid = project.steps.filter(s => s.stepType === StepType.payment && s.isComplete).reduce((sum, step) => sum + step.price, 0);
         } else {
           project.steps.forEach(step => {
-            if (step.stepType === StepType.payment && (!step.dateDue || areDatesEqualYearAndMonth(step.dateDue, today))) {
+            if (step.stepType === StepType.payment && !step.isRecurring && (!step.dateDue || areDatesEqualYearAndMonth(step.dateDue, today))) {
               base += step.price;
               if (step.isComplete) paid += step.price;
             }

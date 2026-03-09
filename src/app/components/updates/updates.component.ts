@@ -206,6 +206,10 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     this.animationsService.changeIsLoadingWithDelay();
     this.httpService.updateSteps(stepsToUpdate).subscribe(res => {
       this.animationsService.changeIsloading(false);
+      this.projects.update(projects => projects.map(project => ({
+        ...project,
+        steps: project.steps.map(step => res.find(s => s.id === step.id) ?? step)
+      })));
     })
   }
 
