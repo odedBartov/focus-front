@@ -20,12 +20,12 @@ export class SummaryComponent implements OnInit {
     this.updatedProjects = projects;
     projects.forEach(project => {
       if (project.status === ProjectStatus.active) {
-        this.steps = this.steps.concat(project.steps.filter(s => s.stepType === StepType.payment && !s.originalRetainerStepId));
+        this.steps = this.steps.concat(project.steps.filter(s => s.stepType === StepType.payment && !s.isRecurring));
       } else if (project.status === ProjectStatus.finished) {
         const finishedSteps = project.steps.filter(s => s.isComplete);
-        this.steps = this.steps.concat(finishedSteps.filter(s => s.stepType === StepType.payment && !s.originalRetainerStepId));
+        this.steps = this.steps.concat(finishedSteps.filter(s => s.stepType === StepType.payment && !s.isRecurring));
       }
-    });    
+    });
     this.initDynamicChart();
   }
   updatedProjects: Project[] = [];
@@ -100,7 +100,7 @@ export class SummaryComponent implements OnInit {
       this.pastPayments[i] = monthsSteps.reduce((sum, s) => sum + (s.isComplete ? s.price : 0), 0);
       this.futurePayments[i] = monthsSteps.reduce((sum, s) => sum + (!s.isComplete ? s.price : 0), 0);
     }
-    this.calculateMonthlyRetainerPayments(paymentSteps);
+    //this.calculateMonthlyRetainerPayments(paymentSteps);
     //this.calculateHourlyRetainerPayments();
     this.calculateGraphScale();
   }

@@ -113,7 +113,7 @@ export class ProjectsListComponent implements OnInit {
     if (status === ProjectStatus.finished) {
       this.animationsService.showFinishProject();
     }
-    this.updateProjects([project]).subscribe((res: Project[]) => {   
+    this.updateProjects([project]).subscribe((res: Project[]) => {
       const activeProjects = [...this.projects()]
       activeProjects.splice(this.projects().indexOf(project), 1);
       project = res[0]; // the updated project, have some new data from the server
@@ -179,8 +179,8 @@ export class ProjectsListComponent implements OnInit {
 
   openProjectModal() {
     const maxProjects = this.userSubscription == subscriptionEnum.free ? 1 : (this.userSubscription == subscriptionEnum.partial ? 3 : -1);
-    if (maxProjects > -1 && maxProjects <= this.projects().length) {      
-      this.dialog.open(PaidFeatureModalComponent, { data: { subscription:  this.userSubscription === subscriptionEnum.partial? subscriptionEnum.full : subscriptionEnum.free} });
+    if (maxProjects > -1 && maxProjects <= this.projects().length) {
+      this.dialog.open(PaidFeatureModalComponent, { data: { subscription: this.userSubscription === subscriptionEnum.partial ? subscriptionEnum.full : subscriptionEnum.free } });
     } else {
       const dialogRef = this.dialog.open(NewProjectComponent);
       dialogRef.afterClosed().subscribe(res => {
@@ -204,10 +204,18 @@ export class ProjectsListComponent implements OnInit {
               newStep.nextOccurrence = nextOccurrence;
               this.httpService.createStep(newStep).subscribe(res => {
                 newProject.steps.push(res);
-                setTimeout(() => {
-                  this.animationsService.changeIsloading(false);
-                  this.selectProject(newProject);
-                }, 1);
+                const startDate = new Date(); // current day (e.g. Monday)
+                startDate.setHours(12, 0, 0, 0);
+                const endDate = new Date(startDate);
+                endDate.setDate(startDate.getDate() + (6 - startDate.getDay())); // Saturday of current week
+                endDate.setMonth(endDate.getMonth() + 3);
+                this.httpService.getRetainerSteps(startDate, endDate).subscribe((retainerSteps: Step[]) => {
+                  newProject.steps.push(...retainerSteps);
+                  setTimeout(() => {
+                    this.animationsService.changeIsloading(false);
+                    this.selectProject(newProject);
+                  }, 1);
+                });
               });
             } else {
               setTimeout(() => {
