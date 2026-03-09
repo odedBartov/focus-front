@@ -109,7 +109,9 @@ export class ProjectsListComponent implements OnInit {
   }
 
   areThereOpenSteps(project: Project) {
-    return project.steps?.some(s => !s.isComplete);
+    const today = new Date();
+    var res = project.steps?.some(s => !s.isComplete && !s.isRecurring && (!s.dateDue || areDatesEqualYearAndMonth(s.dateDue, today)));
+    return res;
   }
 
 
