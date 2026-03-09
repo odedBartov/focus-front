@@ -199,6 +199,7 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     const stepsToUpdate: Step[] = [];
     this.stepsAndTasks.forEach(item => {
       if (!stepsToUpdate.find(s => s.id === item.step?.id)) {
+        item.step.dateCompleted = getTodayAtMidnightLocal();
         stepsToUpdate.push(item.step);
       }
     });

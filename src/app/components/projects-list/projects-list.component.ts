@@ -75,8 +75,8 @@ export class ProjectsListComponent implements OnInit {
     this.filteredProjects.sort((a, b) => (a.positionInList ?? 0) - (b.positionInList ?? 0));
   }
 
-  getCurrentStep(project: Project) {
-    return project.steps?.find(s => !s.isComplete);
+  getCurrentStep(project: Project): Step | undefined {
+    return project.steps?.find(s => !s.isComplete && !s.isRecurring && (!s.dateDue || areDatesEqualYearAndMonth(s.dateDue, new Date())));
   }
 
   private computeProjectMaps() {
