@@ -23,12 +23,12 @@
                 </div>
                 <div class="current-step new-small">
                     <span class="disabled-text">
-                        {{areThereOpenSteps(project)? 'שלב נוכחי' : 'אין משימות פתוחות'}}
+                        {{currentStepMap.get(project.id!)? 'שלב נוכחי' : 'אין משימות פתוחות'}}
                     </span>
-                    <span class="small-text" #stepRef matTooltip="{{getCurrentStep(project)?.name}}"
-                        *ngIf="areThereOpenSteps(project)" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                    <span class="small-text" #stepRef matTooltip="{{currentStepMap.get(project.id!)?.name}}"
+                        *ngIf="currentStepMap.get(project.id!)" matTooltipPosition="above" matTooltipClass="custom-tooltip"
                         [matTooltipDisabled]="stepRef.offsetWidth >= stepRef.scrollWidth">
-                        {{getCurrentStep(project)?.name}}
+                        {{currentStepMap.get(project.id!)?.name}}
                     </span>
                 </div>
                 <div class="payment new-small">

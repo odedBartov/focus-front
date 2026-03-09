@@ -35,6 +35,7 @@ export class ProjectsListComponent implements OnInit {
   filteredProjects: Project[] = [];
   projectProgressMap = new Map<string, number>();
   remainingPaymentMap = new Map<string, number>();
+  currentStepMap = new Map<string, Step | undefined>();
   router = inject(Router);
   projectStatusEnum = ProjectStatus;
   projectTypeEnum = projectTypeEnum;
@@ -75,12 +76,14 @@ export class ProjectsListComponent implements OnInit {
     this.filteredProjects.sort((a, b) => (a.positionInList ?? 0) - (b.positionInList ?? 0));
   }
 
-  getCurrentStep(project: Project): Step | undefined {
-    return project.steps?.find(s => !s.isComplete && !s.isRecurring && (!s.dateDue || areDatesEqualYearAndMonth(s.dateDue, new Date())));
-  }
-
   private computeProjectMaps() {
     const today = new Date();
+    this.currentStepMap = new Map(
+      this.filteredProjects.map(project => [
+        project.id!,
+        project.steps?.find(s => !s.isComplete && !s.isRecurring && (!s.dateDue || areDatesEqualYearAndMonth(s.dateDue, today)))
+      ])
+    );
     this.projectProgressMap = new Map(
       this.filteredProjects.map(project => {
         const completedSteps = project.steps?.filter(s => s.isComplete).length ?? 0;
@@ -107,13 +110,6 @@ export class ProjectsListComponent implements OnInit {
       })
     );
   }
-
-  areThereOpenSteps(project: Project) {
-    const today = new Date();
-    var res = project.steps?.some(s => !s.isComplete && !s.isRecurring && (!s.dateDue || areDatesEqualYearAndMonth(s.dateDue, today)));
-    return res;
-  }
-
 
   changeProjectStatus(project: Project, status: ProjectStatus) {
     project.status = status;
