@@ -69,9 +69,10 @@ export class ProjectsService {
     this.tasksWithoutDate = [];
     this.currentAndFutureTasks = [];
 
+    let foundActiveStep = false;
     projects.forEach(project => {
       project.steps.sort((a, b) => a.positionInList - b.positionInList);
-      let foundActiveStep = false;
+      foundActiveStep = false;
       project.steps.forEach(step => {
         if (!step.isRecurring) {
           if (step.dateOnWeekly) {
@@ -82,7 +83,7 @@ export class ProjectsService {
               this.insertStepToList(this.tasksWithoutDate, step, project);
             }
           }
-          if (!step.isComplete) foundActiveStep = true;
+          if (!step.isComplete && !step.dateOnWeekly) foundActiveStep = true;
         }
       })
     })
