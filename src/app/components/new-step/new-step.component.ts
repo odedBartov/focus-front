@@ -98,7 +98,7 @@ export class NewStepComponent implements AfterViewInit {
   selectType(type: StepType) {
     document.body.classList.remove('hide-modal-background');
     this.newStep = new Step();
-    if (this.defaultPrice !== undefined) {
+    if (this.defaultPrice !== undefined && type == StepType.payment) {
       this.newStep.price = this.defaultPrice;
     }
     this.newStep.stepType = type;
