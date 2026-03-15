@@ -16,7 +16,7 @@ import { ProjectsService } from '../../services/projects.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-feature-modal.component';
 import { Step } from '../../models/step';
-import { getTodayAtMidnightLocal } from '../../helpers/functions';
+import { areDatesEqualYearAndMonth } from '../../helpers/functions';
 
 @Component({
   selector: 'app-projects-list',
@@ -33,6 +33,9 @@ export class ProjectsListComponent implements OnInit {
   @Output() selectProjectEmitter = new EventEmitter<Project>();
   projects: WritableSignal<Project[]>;
   filteredProjects: Project[] = [];
+  projectProgressMap = new Map<string, number>();
+  remainingPaymentMap = new Map<string, number>();
+  currentStepMap = new Map<string, Step | undefined>();
   router = inject(Router);
   projectStatusEnum = ProjectStatus;
   projectTypeEnum = projectTypeEnum;
@@ -66,43 +69,46 @@ export class ProjectsListComponent implements OnInit {
 
     this.filteredProjects = this.projects().filter(filterLambda);
     this.sortFilteredProjects();
+    this.computeProjectMaps();
   }
 
   sortFilteredProjects() {
     this.filteredProjects.sort((a, b) => (a.positionInList ?? 0) - (b.positionInList ?? 0));
   }
 
-  getCurrentStep(project: Project) {
-    return project.steps?.find(s => !s.isComplete);
-  }
-
-  getProjectProgress(project: Project) {
-    const completedSteps = project.steps?.filter(s => s.isComplete).length;
-    return ((completedSteps ?? 0) / (project.steps?.length > 0 ? project.steps.length : 1)) * 100;
-  }
-
-  areThereOpenSteps(project: Project) {
-    return project.steps?.some(s => !s.isComplete);
-  }
-
-  getRemainingPayment(project: Project) {
-    let base = 0;
-    let paid = 0;
-    if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.hourly) {
-      base = project.hourlyWorkSessions.reduce((sum, ws) => sum + ws.price, 0);
-      paid = project.steps.filter(s => (s.stepType === StepType.payment && s.isComplete)).reduce((sum, step) => sum + step.price, 0);
-    } else {
-      project.steps.forEach(step => {
-        if (step.stepType === StepType.payment) {
-          base += step.price;
-          if (step.isComplete) {
-            paid += step.price;
-          }
+  private computeProjectMaps() {
+    const today = new Date();
+    this.currentStepMap = new Map(
+      this.filteredProjects.map(project => [
+        project.id!,
+        project.steps?.find(s => !s.isComplete && !s.isRecurring && (!s.dateDue || areDatesEqualYearAndMonth(s.dateDue, today)))
+      ])
+    );
+    this.projectProgressMap = new Map(
+      this.filteredProjects.map(project => {
+        const completedSteps = project.steps?.filter(s => s.isComplete).length ?? 0;
+        const totalSteps = project.steps?.filter(s => !s.isRecurring && (s.isComplete || (!s.dateDue || areDatesEqualYearAndMonth(s.dateOnWeekly, today)))).length ?? 0;
+        return [project.id!, (completedSteps / (totalSteps > 0 ? totalSteps : 1)) * 100];
+      })
+    );
+    this.remainingPaymentMap = new Map(
+      this.filteredProjects.map(project => {
+        let base = 0;
+        let paid = 0;
+        if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.hourly) {
+          base = project.hourlyWorkSessions.reduce((sum, ws) => sum + ws.price, 0);
+          paid = project.steps.filter(s => s.stepType === StepType.payment && s.isComplete).reduce((sum, step) => sum + step.price, 0);
+        } else {
+          project.steps.forEach(step => {
+            if (step.stepType === StepType.payment && !step.isRecurring && (!step.dateDue || areDatesEqualYearAndMonth(step.dateDue, today))) {
+              base += step.price;
+              if (step.isComplete) paid += step.price;
+            }
+          });
         }
-      });
-    }
-
-    return base - paid;
+        return [project.id!, base - paid];
+      })
+    );
   }
 
   changeProjectStatus(project: Project, status: ProjectStatus) {
@@ -113,10 +119,10 @@ export class ProjectsListComponent implements OnInit {
     if (status === ProjectStatus.finished) {
       this.animationsService.showFinishProject();
     }
-    this.updateProjects([project]).subscribe((res: Project[]) => {   
-      project = res[0]; // the updated project, have some new data from the server
+    this.updateProjects([project]).subscribe((res: Project[]) => {
       const activeProjects = [...this.projects()]
       activeProjects.splice(this.projects().indexOf(project), 1);
+      project = res[0]; // the updated project, have some new data from the server
 
       this.projectsService.getUnActiveProjects()().push(project)
       this.projects.set(activeProjects);
@@ -179,8 +185,8 @@ export class ProjectsListComponent implements OnInit {
 
   openProjectModal() {
     const maxProjects = this.userSubscription == subscriptionEnum.free ? 1 : (this.userSubscription == subscriptionEnum.partial ? 3 : -1);
-    if (maxProjects > -1 && maxProjects <= this.projects().length) {      
-      this.dialog.open(PaidFeatureModalComponent, { data: { subscription:  this.userSubscription === subscriptionEnum.partial? subscriptionEnum.full : subscriptionEnum.free} });
+    if (maxProjects > -1 && maxProjects <= this.projects().length) {
+      this.dialog.open(PaidFeatureModalComponent, { data: { subscription: this.userSubscription === subscriptionEnum.partial ? subscriptionEnum.full : subscriptionEnum.free } });
     } else {
       const dialogRef = this.dialog.open(NewProjectComponent, {disableClose: true});
       dialogRef.afterClosed().subscribe(res => {
@@ -204,10 +210,18 @@ export class ProjectsListComponent implements OnInit {
               newStep.nextOccurrence = nextOccurrence;
               this.httpService.createStep(newStep).subscribe(res => {
                 newProject.steps.push(res);
-                setTimeout(() => {
-                  this.animationsService.changeIsloading(false);
-                  this.selectProject(newProject);
-                }, 1);
+                const startDate = new Date(); // current day (e.g. Monday)
+                startDate.setHours(12, 0, 0, 0);
+                const endDate = new Date(startDate);
+                endDate.setDate(startDate.getDate() + (6 - startDate.getDay())); // Saturday of current week
+                endDate.setMonth(endDate.getMonth() + 3);
+                this.httpService.getRetainerSteps(startDate, endDate).subscribe((retainerSteps: Step[]) => {
+                  newProject.steps.push(...retainerSteps);
+                  setTimeout(() => {
+                    this.animationsService.changeIsloading(false);
+                    this.selectProject(newProject);
+                  }, 1);
+                });
               });
             } else {
               setTimeout(() => {

@@ -24,8 +24,16 @@
             display: flex;
             justify-content: space-between;
 
+            .right-buttons {
+                display: flex;
+                justify-content: flex-start;
+                gap: 10px;
+            }
+
             img {
-                height: fit-content;
+                height: 24px;
+                width: 24px;
+                align-items: center;
                 cursor: pointer;
             }
         }

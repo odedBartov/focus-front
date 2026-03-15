@@ -31,7 +31,7 @@
         </div>
         <div class="new-small" style="margin-right: 25px;">
             <div class="one-time-features" *ngIf="currentOneTimeFeature">
-                <span>{{currentOneTimeFeature.text}}</span>
+                <p [innerHTML]="currentOneTimeFeature.text"></p>
                 <img class="icon-confirm-circle pointer" (click)="watchOneTimeFeature(currentOneTimeFeature)"/>
             </div>
             <ul>

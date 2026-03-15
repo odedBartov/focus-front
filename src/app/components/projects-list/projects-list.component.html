@@ -23,12 +23,12 @@
                 </div>
                 <div class="current-step new-small">
                     <span class="disabled-text">
-                        {{areThereOpenSteps(project)? 'שלב נוכחי' : 'אין משימות פתוחות'}}
+                        {{currentStepMap.get(project.id!)? 'שלב נוכחי' : 'אין משימות פתוחות'}}
                     </span>
-                    <span class="small-text" #stepRef matTooltip="{{getCurrentStep(project)?.name}}"
-                        *ngIf="areThereOpenSteps(project)" matTooltipPosition="above" matTooltipClass="custom-tooltip"
+                    <span class="small-text" #stepRef matTooltip="{{currentStepMap.get(project.id!)?.name}}"
+                        *ngIf="currentStepMap.get(project.id!)" matTooltipPosition="above" matTooltipClass="custom-tooltip"
                         [matTooltipDisabled]="stepRef.offsetWidth >= stepRef.scrollWidth">
-                        {{getCurrentStep(project)?.name}}
+                        {{currentStepMap.get(project.id!)?.name}}
                     </span>
                 </div>
                 <div class="payment new-small">
@@ -36,13 +36,13 @@
                         נשאר לתשלום
                     </span>
                     <span class="small-text">
-                        {{getRemainingPayment(project) | number:'1.0-0'}} ₪
+                        {{remainingPaymentMap.get(project.id!) | number:'1.0-0'}} ₪
                     </span>
                 </div>
                 <div class="small-text new-small">
                     <span style="color: var(--default-gray);">התקדמות</span>
                     <div class="progress-bar">
-                        <div class="progress-fill" [style.width.%]="getProjectProgress(project)"></div>
+                        <div class="progress-fill" [style.width.%]="projectProgressMap.get(project.id!)"></div>
                     </div>
                 </div>
                 <div class="menu" (click)="$event.stopPropagation()">

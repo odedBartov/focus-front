@@ -19,11 +19,11 @@ export class SummaryComponent implements OnInit {
     this.steps = [];
     this.updatedProjects = projects;
     projects.forEach(project => {
-      if (project.status === ProjectStatus.active && !(project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.hourly)) {
-        this.steps = this.steps.concat(project.steps);
-      } else if (project.status !== ProjectStatus.frozen && project.status !== ProjectStatus.deleted) {
+      if (project.status === ProjectStatus.active) {
+        this.steps = this.steps.concat(project.steps.filter(s => s.stepType === StepType.payment && !s.isRecurring));
+      } else if (project.status === ProjectStatus.finished) {
         const finishedSteps = project.steps.filter(s => s.isComplete);
-        this.steps = this.steps.concat(finishedSteps);
+        this.steps = this.steps.concat(finishedSteps.filter(s => s.stepType === StepType.payment && !s.isRecurring));
       }
     });
     this.initDynamicChart();
@@ -100,8 +100,8 @@ export class SummaryComponent implements OnInit {
       this.pastPayments[i] = monthsSteps.reduce((sum, s) => sum + (s.isComplete ? s.price : 0), 0);
       this.futurePayments[i] = monthsSteps.reduce((sum, s) => sum + (!s.isComplete ? s.price : 0), 0);
     }
-    this.calculateMonthlyRetainerPayments(paymentSteps);
-    this.calculateHourlyRetainerPayments();
+    //this.calculateMonthlyRetainerPayments(paymentSteps);
+    //this.calculateHourlyRetainerPayments();
     this.calculateGraphScale();
   }
 
@@ -171,19 +171,21 @@ export class SummaryComponent implements OnInit {
     });
   }
 
-  calculateHourlyRetainerPayments() {
-    const today = new Date();
-    this.updatedProjects.forEach(project => {
-      if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.hourly) {
-        let finishedPayments = project.steps.filter(s => s.stepType === StepType.payment && s.isComplete).reduce((a, b) => a += b.price, 0);
-        project.hourlyWorkSessions.forEach(session => {
-          const sessionPayment = Math.round((session.workTime / 3600000) * (project.reccuringPayment ?? 0));
-          this.futurePayments[Math.floor(this.futurePayments.length / 2)] += sessionPayment;
-        });
-        this.futurePayments[Math.floor(this.futurePayments.length / 2)] -= finishedPayments;
-      }
-    });
-  }
+  // calculateHourlyRetainerPayments() {
+  //   const today = new Date();
+  //   this.updatedProjects.forEach(project => {
+  //     if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.hourly) {
+  //       let finishedPayments = project.steps.filter(s => s.stepType === StepType.payment && s.isComplete).reduce((a, b) => a += b.price, 0);
+  //       if (project.status === ProjectStatus.active) {
+  //         project.hourlyWorkSessions.forEach(session => {
+  //           const sessionPayment = Math.round((session.workTime / 3600000) * (project.reccuringPayment ?? 0));
+  //           this.futurePayments[Math.floor(this.futurePayments.length / 2)] += sessionPayment;
+  //         });
+  //         this.futurePayments[Math.floor(this.futurePayments.length / 2)] -= finishedPayments;
+  //       }
+  //     }
+  //   });
+  // }
 
   calculateGraphScale() {
     const maxPast = Math.max(...this.pastPayments);

@@ -9,10 +9,11 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem, CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { HttpService } from '../../services/http.service';
+import { RetainerStepsQueueService } from '../../services/retainer-steps-queue.service';
 import { NewTaskComponent } from '../new-task/new-task.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { WeeklyDayTaskComponent } from '../weekly-day-task/weekly-day-task.component';
-import { areDatesEqual, getTextForStep, getTodayAtMidnightLocal, isDateBeforeToday } from '../../helpers/functions';
+import { getTextForStep, getTodayAtMidDayLocal, isDateBeforeToday } from '../../helpers/functions';
 
 @Component({
   selector: 'app-weekly-tasks',
@@ -36,6 +37,7 @@ import { areDatesEqual, getTextForStep, getTodayAtMidnightLocal, isDateBeforeTod
 export class WeeklyTasksComponent implements AfterViewInit {
   projectsService = inject(ProjectsService);
   httpService = inject(HttpService);
+  retainerStepsQueue = inject(RetainerStepsQueueService);
   @Output() selectProject = new EventEmitter<Project>();
   @ViewChildren('days') days!: QueryList<ElementRef<HTMLDivElement>>;
   projects: WritableSignal<Project[]>;
@@ -107,7 +109,7 @@ export class WeeklyTasksComponent implements AfterViewInit {
   initPresentedDays() {
     setTimeout(() => {
       this.presentedDays = [];
-      const now = new Date();
+      const now = getTodayAtMidDayLocal();
       const currentDay = new Date(now);
       currentDay.setDate(now.getDate() - now.getDay());
       for (let i = 0; i < 7; i++) {
@@ -118,14 +120,13 @@ export class WeeklyTasksComponent implements AfterViewInit {
         this.presentedDays.push(weeklyDay);
       }
 
-      const sunday = new Date();
+      const sunday = getTodayAtMidDayLocal();
       sunday.setDate(sunday.getDate() - sunday.getDay() + this.deltaDays);
-      const saturday = new Date();
+      const saturday = getTodayAtMidDayLocal();
       saturday.setDate(saturday.getDate() - saturday.getDay() + 6 + this.deltaDays);
 
       this.assignTasksToDays();
-
-      this.httpService.getRetainerSteps(sunday, saturday).subscribe((retainerSteps) => {
+      this.retainerStepsQueue.getRetainerSteps(sunday, saturday).subscribe((retainerSteps) => {
         if (retainerSteps.length > 0) {
           this.projectsService.addStepsToActiveProjects(retainerSteps);
         }

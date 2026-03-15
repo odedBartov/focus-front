@@ -98,7 +98,7 @@ export class NewStepComponent implements AfterViewInit {
   selectType(type: StepType) {
     document.body.classList.remove('hide-modal-background');
     this.newStep = new Step();
-    if (this.defaultPrice !== undefined) {
+    if (this.defaultPrice !== undefined && type == StepType.payment) {
       this.newStep.price = this.defaultPrice;
     }
     this.newStep.stepType = type;
@@ -223,7 +223,7 @@ export class NewStepComponent implements AfterViewInit {
           this.newStep.recurringDateType = recurringDateTypeEnum.day;
         }
         this.newStep.nextOccurrence = this.projectsService.getNextOccurrenceDate(this.newStep);
-        this.newStep.nextOccurrence.setDate(this.newStep.nextOccurrence.getDate() - 1);
+        // this.newStep.nextOccurrence.setDate(this.newStep.nextOccurrence.getDate() - 1);
         this.newStep.positionInWeeklyList = 9999;
         updateDatesWithLocalTime(this.newStep);
       }

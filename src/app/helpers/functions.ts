@@ -121,6 +121,17 @@ export function getTodayAtMidnightLocal() {
   return adjusted;
 }
 
+export function getTodayAtMidDayLocal() {
+  const now = new Date();
+  const localMidday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    12, 0, 0, 0
+  );
+  return localMidday;
+}
+
 export function isUsingDesktop(): boolean {
   const userAgent = navigator.userAgent.toLowerCase();
   return !(/android|ipad|iphone|ipod|mobile|tablet/i.test(userAgent));

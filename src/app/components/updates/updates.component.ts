@@ -199,6 +199,7 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     const stepsToUpdate: Step[] = [];
     this.stepsAndTasks.forEach(item => {
       if (!stepsToUpdate.find(s => s.id === item.step?.id)) {
+        item.step.dateCompleted = getTodayAtMidnightLocal();
         stepsToUpdate.push(item.step);
       }
     });
@@ -206,6 +207,10 @@ export class UpdatesComponent implements OnInit, AfterViewInit {
     this.animationsService.changeIsLoadingWithDelay();
     this.httpService.updateSteps(stepsToUpdate).subscribe(res => {
       this.animationsService.changeIsloading(false);
+      this.projects.update(projects => projects.map(project => ({
+        ...project,
+        steps: project.steps.map(step => res.find(s => s.id === step.id) ?? step)
+      })));
     })
   }
 
