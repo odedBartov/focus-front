@@ -315,9 +315,8 @@
         @include mixins.step;
         @include extra-not-finished-style;
         background-color: var(--home-color);
-        width: 15.25rem !important;
         height: auto !important;
-        border-radius: 0;
+        border-radius: 11px; // finished steps get clippeded on drag
     }
 
     &.retainer-step {

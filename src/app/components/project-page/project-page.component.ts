@@ -216,7 +216,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
       'step': this.editStepId !== step.id,
       'active-step': step.id === this.activeStepId && step.id !== this.editStepId,
       'finished': step.isComplete,
-      'not-finished': !step.isComplete && (this.hoverStepId === step.id || this.isInTaxDocumentFlow(step.id)),
+      'not-finished': !step.isComplete && step.id !== this.activeStepId && (this.hoverStepId === step.id || this.isInTaxDocumentFlow(step.id)),
     };
   }
 
