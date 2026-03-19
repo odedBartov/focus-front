@@ -19,10 +19,6 @@
                     <span class="new-small cell-title">תאריך התחלה</span>
                     <span class="new-text-bold">{{project().startDate | date: 'dd.MM.yyyy' : 'UTC'}}</span>
                 </div>
-                <div class="cell">
-                    <span class="new-small cell-title">תאריך סיום</span>
-                    <span class="new-text-bold">{{project().endDate | date: 'dd.MM.yyyy' : 'UTC'}}</span>
-                </div>
             </ng-container>
             <ng-container *ngIf="isRetainer && isPaymentModelHourly">
                 <div class="cell">
