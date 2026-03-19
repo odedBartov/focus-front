@@ -20,8 +20,7 @@
     <ng-container *ngIf="taxManagemantStep === 2">
         <ng-container *ngIf="taxManagementSystem === taxManagementSystemEnum.iCount">
             <span class="new-h2">חיבור למערכת iCount</span>
-            <span class="new-small">כדי שנוכל להתחבר להנהלת החשבונות שלך, צריך ליצור טוקן API ולהזין אותו כאן.
-                חשוב להדביק את המפתח בדיוק כפי שהוא במקור, ללא רווחים.</span>
+            <span class="new-small">כדי שנוכל להתחבר להנהלת החשבונות שלך, צריך <span class="token-link" (click)="navigateToIcountApiKeyPage()">ליצור API טוקן</span> ולהזין אותו כאן. חשוב להדביק את המפתח בדיוק כפי שהוא במקור, ללא רווחים.</span>
             <div class="text-and-input">
                 <span class="text new-small">מפתח סודי</span>
                 <input class="new-text" tabindex="1" [(ngModel)]="taxManagementApiKey"
@@ -30,8 +29,9 @@
         </ng-container>
         <ng-container *ngIf="taxManagementSystem === taxManagementSystemEnum.sumit">
             <span class="new-h2">חיבור למערכת sumit</span>
-            <span class="new-small">כדי שנוכל להתחבר להנהלת החשבונות שלך, צריך ליצור טוקן API ולהזין אותו כאן.
-                חשוב להדביק את המפתח בדיוק כפי שהוא במקור, ללא רווחים.</span>
+            <span class="new-small">כדי שנוכל להתחבר להנהלת החשבונות שלך, אנחנו צריכים מפתח סודי ומזהה חברה. <span class="token-link" (click)="navigateToSumitApiKeyPage()">כאן אפשר למצוא/ליצור אותם</span>.
+                חשוב להדביק את המפתחות בדיוק כפי שהם במקור, ללא רווחים.
+                </span>
             <div class="text-and-input">
                 <span class="text new-small">מפתח סודי</span>
                 <input class="new-text" tabindex="1" [(ngModel)]="taxManagementApiKey" (keydown.enter)="confirmApiUrl()" appAutofocus>

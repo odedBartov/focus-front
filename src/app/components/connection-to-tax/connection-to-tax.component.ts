@@ -29,6 +29,14 @@ export class ConnectionToTaxComponent {
     this.taxManagemantStep = 2;
   }
 
+  navigateToIcountApiKeyPage() {
+    window.open('https://app.icount.co.il/admin/settings_automation.php', '_blank');
+  }
+
+  navigateToSumitApiKeyPage() {
+    window.open('https://app.sumit.co.il/developers/keys', '_blank');
+  }
+
   confirmApiUrl() {
     this.wrongCredentialsError = false;
     this.animationsService.isLoading.set(true);
