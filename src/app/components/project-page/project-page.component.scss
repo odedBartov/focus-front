@@ -1,5 +1,11 @@
 @use '../../../mixins.scss' as mixins;
 
+.payment-text {
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+}
+
 @mixin extra-not-finished-style {
     .task-list {
         display: flex;

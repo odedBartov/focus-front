@@ -42,10 +42,14 @@
 
                         <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id) ? 'expanded' : 'collapsed'"
                             class="extra-not-finished" *ngIf="!step.isComplete">
+                            <p [class]="activeStepId === step.id ? 'new-text active payment-text' : 'new-small future payment-text'"
+                                *ngIf="step.stepType === stepTypeEnum.payment && step.price">
+                                תשלום בסך <strong>{{step.price}} ₪</strong>
+                            </p>
                             <textarea [class]="activeStepId === step.id ? 'new-text active' : 'new-small future'"
                                 disabled="true"
-                                *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
-                                #descriptions autoResize rows="1">{{step.stepType === stepTypeEnum.payment ? (step.price + ' ₪') : step.description}}</textarea>
+                                *ngIf="step.stepType === stepTypeEnum.task && step.description && !step.tasks"
+                                #descriptions autoResize rows="1">{{step.description}}</textarea>
 
                             <div class="tasks" *ngIf="step.tasks">
                                 <div class="task-list" cdkDropList (cdkDropListDropped)="dropTask($event, step)">
