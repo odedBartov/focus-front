@@ -19,7 +19,8 @@
   }
 
   &.active-step {
-    width: 20rem;
+    width: 400px;
+    box-sizing: border-box;
     font-size: var(--font-size-3) !important;
     background-color: var(--default-white);
     border: none !important;
