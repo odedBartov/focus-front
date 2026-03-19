@@ -232,6 +232,19 @@ export class NewStepComponent implements AfterViewInit {
     }
   }
 
+  onPriceKeyDown(event: KeyboardEvent): boolean {
+    return event.key !== '.' && event.key !== ',' && event.key !== '-';
+  }
+
+  onPricePaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const text = event.clipboardData?.getData('text') ?? '';
+    const value = Math.abs(parseInt(text, 10));
+    if (!isNaN(value)) {
+      document.execCommand('insertText', false, String(value));
+    }
+  }
+
   validateStep(): boolean {
     this.submitted = true;
     if (this.newStep.stepType === StepType.task) {

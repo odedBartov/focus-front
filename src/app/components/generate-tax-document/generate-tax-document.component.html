@@ -13,15 +13,15 @@
         </div>
         <div class="text-and-input">
             <span class="new-small">שם על החשבונית</span>
-            <input type="text" class="new-text" [(ngModel)]="clientName" />
+            <input type="text" class="new-text" [(ngModel)]="clientName" [disabled]="step.relatedDocuments?.requestForPayment != undefined"/>
         </div>
         <div class="text-and-input">
             <span class="new-small">מוצר/שירות</span>
-            <input type="text" class="new-text" [(ngModel)]="serviceName" />
+            <input type="text" class="new-text" [(ngModel)]="serviceName" [disabled]="step.relatedDocuments?.requestForPayment != undefined"/>
         </div>
         <div class="text-and-input">
             <span class="new-small">סכום</span>
-            <input type="text" class="new-text" [(ngModel)]="paymentPrice" />
+            <input type="text" class="new-text" [(ngModel)]="paymentPrice" [disabled]="step.relatedDocuments?.requestForPayment != undefined"/>
         </div>
 
         <div class="disclaimer" *ngIf="!disclaimerConfirmed">
@@ -40,7 +40,7 @@
         </div>
         <div class="text-and-input">
             <span class="new-small">לאן לשלוח את המסמך?</span>
-            <input type="email" class="new-text" [(ngModel)]="clientMail" />
+            <input type="email" class="new-text" [(ngModel)]="clientMail" [disabled]="step.relatedDocuments?.requestForPayment != undefined"/>
         </div>
         <div class="confirm-button" [ngClass]="{'disabled-button': selectedDocumentType == undefined}" (click)="createAndSendDocument()">
             <img src="assets/icons/confirm_white.svg"/>

@@ -16,7 +16,7 @@ export enum taxDocumentEnum {
 export const taxDocumentLabels: Record<taxDocumentEnum, string> = {
     [taxDocumentEnum.requestForPayment]: 'חשבון עסקה',
     [taxDocumentEnum.receipt]: 'קבלה',
-    [taxDocumentEnum.invoice]: 'חשבונית מס',
+    [taxDocumentEnum.invoice]: 'חשבונית מס', // לא משתמשים בזה כרגע
     [taxDocumentEnum.invoiceReceipt]: 'חשבונית מס קבלה'
 };
 
