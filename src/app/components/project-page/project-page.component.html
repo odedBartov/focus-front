@@ -105,7 +105,7 @@
                         #stepsContainer (cdkDropListDropped)="dropStep($event, retainerActiveSteps)">
                         <div class="retainer-step" *ngFor="let step of retainerActiveSteps; let i = index" #stepDiv
                             cdkDrag>
-                            <div *ngIf="animationHackFlag">
+                            <div *ngIf="animationHackFlag && generateTaxDocumentId() !== step.id">
                                 <div class="step-header active">
                                     <span class="new-text-bold">{{step.name}}</span>
                                     <img *ngIf="step.stepType === stepTypeEnum.payment" src="assets/icons/dollar.svg" />
@@ -157,6 +157,8 @@
                                             <img class="icon-garbage-can-gray-blue" (click)="deleteStep(step)"
                                                 *ngIf="!(project().paymentModel === paymentModelEnum.monthly && step.stepType === stepTypeEnum.payment && step.isRecurring)" />
                                             <img class="icon-pencil" (click)="openNewStepModal(step)" />
+                                            <img class="icon-add-file" (click)="showGenerateTaxDocument(step.id ?? '')"
+                                                *ngIf="step.stepType === stepTypeEnum.payment" />
                                         </div>
                                         <div class="animation-container">
                                             <div class="finish-step-animation" *ngIf="step.id === animatingItemId">
@@ -167,6 +169,13 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="generate-tax-document" *ngIf="generateTaxDocumentId() === step.id"
+                                #generateTaxDocumentDiv
+                                (mousedown)="$event.stopPropagation(); mouseDownInside = true;">
+                                <app-generate-tax-document [project]="project()" [paymentName]="step.name ?? ''"
+                                    [paymentPriceInput]="step.price" [step]="step"
+                                    (documentCreated)="taxDocumentCreated(step)"></app-generate-tax-document>
                             </div>
                         </div>
                     </div>
