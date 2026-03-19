@@ -24,7 +24,7 @@
             <input type="text" class="new-text" [(ngModel)]="paymentPrice" [disabled]="step.relatedDocuments?.requestForPayment != undefined"/>
         </div>
 
-        <div class="disclaimer" *ngIf="!disclaimerConfirmed">
+        <div class="disclaimer" *ngIf="!disclaimerConfirmed && step.price >= 10000">
             <div class="title">
                 <img src="assets/icons/info_yes.svg" />
                 <span class="new-small-bold">רק רגע, זה חשוב:</span>
