@@ -35,6 +35,8 @@ import { StepManagementService } from '../../services/step-management.service';
 import { taxManagementSystemEnum } from '../../models/taxSystem';
 import { areDatesEqualYearAndMonth } from '../../helpers/functions';
 
+type TaxDocumentFlow = { stepId: string; phase: 'prompt' | 'form'; finishAfter: boolean } | null;
+
 @Component({
   selector: 'app-project-page',
   imports: [CommonModule, MatDialogModule, FormsModule, MatTooltipModule, DragDropModule, NewStepComponent, NotesComponent, LottieComponent, AutoResizeInputDirective, OpenNotesComponent, GenerateTaxDocumentComponent, ProjectSummaryComponent],
@@ -117,9 +119,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   retainerFutureSteps: Step[] = [];
   retainerFinishedSteps: Step[] = [];
   daysInWeek = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'];
-  generateTaxDocumentId = signal<string>('');
-  shouldGenerateTaxDocumentId = signal<string>('');
-  shouldFinishStepAfterTaxDocument = signal<boolean>(false);
+  taxDocumentState = signal<TaxDocumentFlow>(null);
 
   constructor(private changeDetectorRef: ChangeDetectorRef) {
     this.openNotesSignal = this.projectsService.getProjectWithOpenNotes();
@@ -166,7 +166,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     if (this.generateTaxDocumentDiv?.nativeElement &&
       !this.generateTaxDocumentDiv.nativeElement.contains(event.target as Node) &&
       !this.mouseDownInside) {
-      this.generateTaxDocumentId.set('');
+      this.taxDocumentState.set(null);
     }
 
     if (this.notesDiv?.nativeElement &&
@@ -367,21 +367,18 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   completeStep(step: Step) {
     if (step.stepType === StepType.payment) {
-      this.shouldGenerateTaxDocumentId.set(step.id ?? '');
+      this.taxDocumentState.set({ stepId: step.id ?? '', phase: 'prompt', finishAfter: false });
     } else {
       this.changeStepStatus(step);
     }
   }
 
-  generateTaxDocument(step: Step) {
-    this.shouldGenerateTaxDocumentId.set('');
-    this.generateTaxDocumentId.set(step.id ?? '');
-    this.shouldFinishStepAfterTaxDocument.set(true);
+  confirmTaxDocument(step: Step) {
+    this.taxDocumentState.set({ stepId: step.id ?? '', phase: 'form', finishAfter: true });
   }
 
-  dontGenerateTaxDocument(step: Step) {
-    this.shouldGenerateTaxDocumentId.set('');
-    this.shouldFinishStepAfterTaxDocument.set(false);
+  declineTaxDocument(step: Step) {
+    this.taxDocumentState.set(null);
     setTimeout(() => {
       this.changeStepStatus(step);
     }, 50);
@@ -489,30 +486,22 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   isFinishProject() {
-    if (this.stepManagementService.areAllStepsComplete(this.project().steps)) {
-      const updatedProject = { ...this.project() };
-      updatedProject.status = ProjectStatus.finished;
-      this.project.set(updatedProject);
-      this.animationsService.showFinishProject();
-      const activeProjects = this.projectsService.getActiveProjects();
-      const unActiveProjects = this.projectsService.getUnActiveProjects();
-      let activeProjectIndex = -1;
-      for (let index = 0; index < activeProjects().length; index++) {
-        const element = activeProjects()[index];
-        if (element.id === this.project().id) {
-          activeProjectIndex = index;
-          break;
-        }
-      }
-      if (activeProjectIndex > -1) {
-        unActiveProjects.set(unActiveProjects().concat(this.project()));
-        activeProjects().splice(activeProjectIndex, 1);
-      }
-      this.httpService.updateProjects([this.project()]).subscribe(res => { });
-      setTimeout(() => {
-        this.navigateToHomeEmitter.emit();
-      }, 5000);
+    if (!this.stepManagementService.areAllStepsComplete(this.project().steps)) return;
+
+    this.project.set({ ...this.project(), status: ProjectStatus.finished });
+    this.animationsService.showFinishProject();
+
+    const activeProjects = this.projectsService.getActiveProjects();
+    const unActiveProjects = this.projectsService.getUnActiveProjects();
+    const activeProjectIndex = activeProjects().findIndex(p => p.id === this.project().id);
+
+    if (activeProjectIndex > -1) {
+      unActiveProjects.set(unActiveProjects().concat(this.project()));
+      activeProjects().splice(activeProjectIndex, 1);
     }
+
+    this.httpService.updateProjects([this.project()]).subscribe();
+    setTimeout(() => this.navigateToHomeEmitter.emit(), 5000);
   }
 
   openProjectModal() {
@@ -636,30 +625,43 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   showGenerateTaxDocument(stepId: string) {
-    this.generateTaxDocumentId.set(stepId);
+    this.taxDocumentState.set({ stepId, phase: 'form', finishAfter: false });
   }
 
   taxDocumentCreated(step: Step) {
-    this.animationsService.isLoading.set(true);    
+    this.animationsService.isLoading.set(true);
     this.httpService.getStepById(step.id!).subscribe((res: Step) => {
       this.animationsService.isLoading.set(false);
-      // Update the step in the project's steps array
       if (this.project().steps) {
         this.project().steps = this.project().steps.map(s =>
           s.id === res.id ? res : s
         );
+        if (this.isRetainer) {
+          this.initRetainerSteps();
+        }
       }
       setTimeout(() => {
-        if (this.shouldFinishStepAfterTaxDocument()) {
-          this.shouldFinishStepAfterTaxDocument.set(false);
-          setTimeout(() => {
-            this.changeStepStatus(res);
-          }, 50);
+        const finishAfter = this.taxDocumentState()?.finishAfter ?? false;
+        this.taxDocumentState.set(null);
+        if (finishAfter) {
+          setTimeout(() => this.changeStepStatus(res), 50);
         }
-        this.generateTaxDocumentId.set('');
-        this.shouldGenerateTaxDocumentId.set('');
       }, 1);
     });
+  }
+
+  isTaxDocumentForm(stepId: string | undefined): boolean {
+    const state = this.taxDocumentState();
+    return state?.phase === 'form' && state.stepId === stepId;
+  }
+
+  isTaxDocumentPrompt(stepId: string | undefined): boolean {
+    const state = this.taxDocumentState();
+    return state?.phase === 'prompt' && state.stepId === stepId;
+  }
+
+  isInTaxDocumentFlow(stepId: string | undefined): boolean {
+    return !!stepId && this.taxDocumentState()?.stepId === stepId;
   }
 
   getRetainerStepsAndUpdate() {

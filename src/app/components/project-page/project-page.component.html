@@ -7,14 +7,14 @@
         </app-project-summary>
         <div class="steps" cdkDropList (cdkDropListDropped)="dropStep($event)"
             *ngIf="project().projectType !== projectTypeEnum.retainer" #stepsContainer>
-            <div [class]="step.isComplete? 'finished' : ((hoverStepId === step.id || generateTaxDocumentId() === step.id || shouldGenerateTaxDocumentId() === step.id)? 'not-finished' : '')"
+            <div [class]="step.isComplete? 'finished' : ((hoverStepId === step.id || isInTaxDocumentFlow(step.id))? 'not-finished' : '')"
                 #stepDiv
                 [ngClass]="{'step' : editStepId !== step.id, 'active-step': step.id === activeStepId && step.id !== editStepId}"
                 *ngFor="let step of project().steps; let i = index" (mouseenter)="hoverStep(step.id, i)"
                 (mouseleave)="hoverStepId = undefined" cdkDrag>
-                <div *ngIf="editStepId !== step.id && animationHackFlag && generateTaxDocumentId() !== step.id">
+                <div *ngIf="editStepId !== step.id && animationHackFlag && !isTaxDocumentForm(step.id)">
                     <div [class]="'step-header '"
-                        [ngClass]="{ 'active': !step.isComplete && step.id === activeStepId, 'future': (generateTaxDocumentId() === step.id || shouldGenerateTaxDocumentId() === step.id) || (!step.isComplete && step.id !== activeStepId && hoverStepId === step.id) }">
+                        [ngClass]="{ 'active': !step.isComplete && step.id === activeStepId, 'future': isInTaxDocumentFlow(step.id) || (!step.isComplete && step.id !== activeStepId && hoverStepId === step.id) }">
                         <span [class]="step.id === activeStepId? 'new-h2' : 'new-text-bold'"
                             #stepHeader>{{step.name}}</span>
                         <img [class]="isReadOnly()? 'finished-icon' : 'pointer ' + (step.stepType === stepTypeEnum.payment? 'dollar-confirm' : 'icon-confirm')"
@@ -22,7 +22,7 @@
                         <img src="assets/icons/dollar.svg"
                             *ngIf="!step.isComplete && step.stepType === stepTypeEnum.payment" />
                     </div>
-                    <ng-container *ngIf="shouldGenerateTaxDocumentId() !== step.id">
+                    <ng-container *ngIf="!isTaxDocumentPrompt(step.id)">
                         <div class="extra" [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"
                             *ngIf="step.isComplete">
                             הסתיים בתאריך {{step.dateCompleted | date: 'dd.MM.yyyy' : 'UTC'}}
@@ -68,11 +68,11 @@
                         </div>
                     </ng-container>
 
-                    <div class="should-generate-tax-document" *ngIf="shouldGenerateTaxDocumentId() === step.id">
+                    <div class="should-generate-tax-document" *ngIf="isTaxDocumentPrompt(step.id)">
                         <span class="new-text">ברכות! האם ליצור חשבונית מס או קבלה?</span>
                         <div class="buttons">
-                            <div class="decline-button" (click)="dontGenerateTaxDocument(step)">לא הפעם</div>
-                            <div class="confirm-button" (click)="generateTaxDocument(step)">כן, אני רוצה ליצור מסמך
+                            <div class="decline-button" (click)="declineTaxDocument(step)">לא הפעם</div>
+                            <div class="confirm-button" (click)="confirmTaxDocument(step)">כן, אני רוצה ליצור מסמך
                             </div>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                     <app-new-step class="new-step" [steptInput]="step" [isActive]="editStepId === activeStepId"
                         (stepsEmitter)="updateStep($event)"></app-new-step>
                 </div>
-                <div class="generate-tax-document" *ngIf="generateTaxDocumentId() === step.id" #generateTaxDocumentDiv
+                <div class="generate-tax-document" *ngIf="isTaxDocumentForm(step.id)" #generateTaxDocumentDiv
                     (mousedown)="$event.stopPropagation(); mouseDownInside = true;">
                     <app-generate-tax-document [project]="project()" [paymentName]="step.name ?? ''"
                         [paymentPriceInput]="step.price" [step]="step" (documentCreated)="taxDocumentCreated(step)"></app-generate-tax-document>
@@ -105,7 +105,7 @@
                         #stepsContainer (cdkDropListDropped)="dropStep($event, retainerActiveSteps)">
                         <div class="retainer-step" *ngFor="let step of retainerActiveSteps; let i = index" #stepDiv
                             cdkDrag>
-                            <div *ngIf="animationHackFlag && generateTaxDocumentId() !== step.id">
+                            <div *ngIf="animationHackFlag && !isTaxDocumentForm(step.id)">
                                 <div class="step-header active">
                                     <span class="new-text-bold">{{step.name}}</span>
                                     <img *ngIf="step.stepType === stepTypeEnum.payment" src="assets/icons/dollar.svg" />
@@ -170,7 +170,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="generate-tax-document" *ngIf="generateTaxDocumentId() === step.id"
+                            <div class="generate-tax-document" *ngIf="isTaxDocumentForm(step.id)"
                                 #generateTaxDocumentDiv
                                 (mousedown)="$event.stopPropagation(); mouseDownInside = true;">
                                 <app-generate-tax-document [project]="project()" [paymentName]="step.name ?? ''"
