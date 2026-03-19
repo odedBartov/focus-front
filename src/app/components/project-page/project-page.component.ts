@@ -279,7 +279,10 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     const payments = this.isPaymentModelHourly
       ? this.project().hourlyWorkSessions
       : this.project().retainerPayments;
-    this.dialog.open(PaymentHistoryModalComponent, { data: { payments, isPaymentModelHourly: this.isPaymentModelHourly } });
+    const dialogRef = this.dialog.open(PaymentHistoryModalComponent, { data: { payments, isPaymentModelHourly: this.isPaymentModelHourly } });
+    dialogRef.afterClosed().subscribe(() => {
+      this.calculatePayments();
+    });
   }
 
   isFinishProject() {
