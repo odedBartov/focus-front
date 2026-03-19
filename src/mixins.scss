@@ -4,7 +4,7 @@
 }
 
 @mixin step {
-  width: 15.25rem;
+  width: 270px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -15,7 +15,9 @@
   &.not-finished {
     @include regular-border;
     padding: 20px 28px 24px;
-    transition: padding 0.2s;
+    transition: padding 0.2s, width 0.2s;
+    box-sizing: border-box;
+    width: 340px;
   }
 
   &.active-step {
