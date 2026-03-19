@@ -37,8 +37,7 @@
                     <ng-container *ngIf="!isTaxDocumentPrompt(step)">
                         <div class="extra"
                             [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"
-                            *ngIf="step.isComplete">
-                            הסתיים בתאריך {{step.dateCompleted | date: 'dd.MM.yyyy' : 'UTC'}}
+                            *ngIf="step.isComplete">{{step.stepType == stepTypeEnum.payment ? (('שולמו ') + step.price + ' ₪') : 'הסתיים'}} בתאריך {{step.dateCompleted | date: 'dd.MM.yyyy' : 'UTC'}}
                         </div>
 
                         <div [@expandCollapse]="(hoverStepId === step.id || activeStepId === step.id) ? 'expanded' : 'collapsed'"
@@ -318,7 +317,7 @@
                                 <div [@expandCollapse]="(hoverStepId === step.id) ? 'expanded' : 'collapsed'"
                                     class="extra-not-finished">
                                     <span *ngIf="step.dateCompleted" class="new-small">
-                                        הסתיים בתאריך: {{step.dateCompleted | date: 'dd/MM/yy' : 'UTC'}}
+                                        {{step.stepType == stepTypeEnum.payment ? (('שולמו ') + step.price + ' ₪') : 'הסתיים'}} בתאריך {{step.dateCompleted | date: 'dd.MM.yyyy' : 'UTC'}}
                                     </span>
                                 </div>
                             </div>
