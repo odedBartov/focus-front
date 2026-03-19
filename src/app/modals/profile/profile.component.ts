@@ -43,12 +43,14 @@ export class ProfileComponent implements AfterViewInit {
   taxManagemantStep = 1;
   taxManagementSystemEnum = taxManagementSystemEnum;
   wrongCredentialsError = false;
+  private originalUser: Partial<User> = {};
 
   ngAfterViewInit(): void {
     this.getUserSubscription();
     this.animationsService.changeIsloading(true);
     this.userService.getUser().subscribe(user => {
       this.user = user;
+      this.originalUser = { ...user };
       this.animationsService.changeIsloading(false);
       this.handleUserTaxManagement();
     });
@@ -89,6 +91,13 @@ export class ProfileComponent implements AfterViewInit {
     const parsedProfession = Number(profession.value) as profession;
     this.user.profession = parsedProfession;
     this.updateUser();
+  }
+
+  updateUserIfChanged(field: keyof User) {
+    if (this.user[field] !== this.originalUser[field]) {
+      this.originalUser[field] = this.user[field] as any;
+      this.updateUser();
+    }
   }
 
   updateUser() {

@@ -9,11 +9,11 @@
             <div class="line">
                 <div class="text-and-input">
                     <span class="text new-small">שם פרטי</span>
-                    <input class="new-text" type="text" [(ngModel)]="user.firstName" (blur)="updateUser()">
+                    <input class="new-text" type="text" [(ngModel)]="user.firstName" (blur)="updateUserIfChanged('firstName')">
                 </div>
                 <div class="text-and-input">
                     <span class="text new-small">שם משפחה</span>
-                    <input class="new-text" type="text" [(ngModel)]="user.lastName" (blur)="updateUser()">
+                    <input class="new-text" type="text" [(ngModel)]="user.lastName" (blur)="updateUserIfChanged('lastName')">
                 </div>
             </div>
 
