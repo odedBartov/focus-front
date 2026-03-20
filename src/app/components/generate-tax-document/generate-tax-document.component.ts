@@ -86,12 +86,12 @@ export class GenerateTaxDocumentComponent implements AfterViewInit {
       this.documentTypeOptions.push(invoiceReceiptOption);
     }
 
-    // If current selection is already created, switch to first available option
-    if (this.isDocumentTypeAlreadyCreated(this.selectedDocumentType)) {
-      const firstAvailable = this.documentTypeOptions.find(opt => !this.isDocumentTypeAlreadyCreated(opt.apiValue));
-      if (firstAvailable) {
-        this.selectedDocumentType = firstAvailable.apiValue;
-      }
+    const availableOptions = this.documentTypeOptions.filter(opt => !this.isDocumentTypeAlreadyCreated(opt.apiValue));
+
+    if (availableOptions.length === 1) {
+      this.selectedDocumentType = availableOptions[0].apiValue;
+    } else if (this.isDocumentTypeAlreadyCreated(this.selectedDocumentType)) {
+      this.selectedDocumentType = availableOptions[0]?.apiValue;
     }
   }
 
