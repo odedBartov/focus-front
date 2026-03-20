@@ -70,10 +70,12 @@
                             <div class="step-icons" *ngIf="!isReadOnly()">
                                 <div class="edit-delete">
                                     <img class="icon-garbage-can-gray-blue" (click)="deleteStep(step)" />
-                                    <img class="icon-pencil" [ngClass]="{'disabled-icon': isStepReadOnly(step)}"
-                                        (click)="editStep(stepDiv, step.id)" />
-                                    <img class="icon-add-file" (click)="showGenerateTaxDocument(step.id ?? '')"
-                                        *ngIf="step.stepType === stepTypeEnum.payment" />
+                                    <img class="icon-pencil" [ngClass]="{'disabled-icon': isStepHasDocuments(step)}"
+                                        (click)="isStepHasDocuments(step) ? null : editStep(stepDiv, step.id)"
+                                        [matTooltip]="isStepHasDocuments(step) ? 'לא ניתן לערוך שלב תשלום אחרי יצירת מסמך חשבונאי' : ''"
+                                        matTooltipClass="custom-tooltip" />
+                                    <img class="icon-add-file" (click)="isStepHasAllDocuments(step) ? null : showGenerateTaxDocument(step.id ?? '')" [ngClass]="{'disabled-icon': isStepHasAllDocuments(step)}"
+                                        *ngIf="step.stepType === stepTypeEnum.payment" [matTooltip]="isStepHasAllDocuments(step) ? 'לא נשארו מסמכים שאפשר ליצור עבור התשלום' : ''" matTooltipClass="custom-tooltip" />
                                 </div>
                                 <div class="animation-container">
                                     <div class="finish-step-animation" *ngIf="step.id === animatingItemId">
@@ -191,9 +193,11 @@
                                         <div class="edit-delete">
                                             <img class="icon-garbage-can-gray-blue" (click)="deleteStep(step)"
                                                 *ngIf="!(project().paymentModel === paymentModelEnum.monthly && step.stepType === stepTypeEnum.payment && step.isRecurring)" />
-                                            <img class="icon-pencil" (click)="openNewStepModal(step)" />
+                                            <img class="icon-pencil" [ngClass]="{'disabled-icon': isStepHasDocuments(step)}" (click)="isStepHasDocuments(step) ? null : openNewStepModal(step)"
+                                                [matTooltip]="isStepHasDocuments(step) ? 'לא ניתן לערוך שלב תשלום אחרי יצירת מסמך חשבונאי' : ''"
+                                                matTooltipClass="custom-tooltip" />
                                             <img class="icon-add-file" (click)="showGenerateTaxDocument(step.id ?? '')"
-                                                *ngIf="step.stepType === stepTypeEnum.payment" />
+                                                *ngIf="step.stepType === stepTypeEnum.payment" [ngClass]="{'disabled-icon': isStepHasAllDocuments(step)}" />
                                         </div>
                                         <div class="animation-container">
                                             <div class="finish-step-animation" *ngIf="step.id === animatingItemId">
@@ -273,7 +277,9 @@
                                     <div class="edit-delete">
                                         <img class="icon-garbage-can-gray-blue" (click)="deleteStep(step)"
                                             *ngIf="!(project().paymentModel === paymentModelEnum.monthly && step.stepType === stepTypeEnum.payment)" />
-                                        <img class="icon-pencil" (click)="openNewStepModal(step)" />
+                                        <img class="icon-pencil" [ngClass]="{'disabled-icon': isStepHasDocuments(step)}" (click)="isStepHasDocuments(step) ? null : openNewStepModal(step)"
+                                            [matTooltip]="isStepHasDocuments(step) ? 'לא ניתן לערוך שלב תשלום אחרי יצירת מסמך חשבונאי' : ''"
+                                            matTooltipClass="custom-tooltip" />
                                     </div>
                                     <div class="recurring-data-span new-small" *ngIf="step.isRecurring">
                                         <img class="cycle" />

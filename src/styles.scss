@@ -407,7 +407,7 @@ input::-webkit-inner-spin-button {
 
 //icons
 .disabled-icon {
-    pointer-events: none;
+    cursor: default !important;
 }
 
 .icon-garbage-can {
@@ -423,6 +423,10 @@ input::-webkit-inner-spin-button {
 
     &:hover {
         content: url('/assets/icons/pencil_yes.svg');
+    }
+
+    &.disabled-icon {
+        content: url('/assets/icons/pencil_disabled.svg');
     }
 }
 
@@ -625,6 +629,10 @@ input::-webkit-inner-spin-button {
 
     &:hover {
         content: url('/assets/icons/add_file_blue.svg');
+    }
+
+    &.disabled-icon {
+        content: url('/assets/icons/add_file_disabled.svg');
     }
 }
 

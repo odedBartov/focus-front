@@ -27,7 +27,8 @@ import { StepTask } from '../../models/stepTask';
 import { RetainerPayment } from '../../models/RetainerPayment';
 import { HourlyWorkSession } from '../../models/hourlyWorkSession';
 import { paymentModelEnum, ProjectStatus, projectTypeEnum, recurringDateTypeEnum, retainerPaymentTypeEnum, StepType } from '../../models/enums';
-import { taxManagementSystemEnum } from '../../models/taxSystem';
+import { taxDocumentEnum, taxManagementSystemEnum } from '../../models/taxSystem';
+import { UserStatus } from '../../models/user';
 
 import { ProjectModalComponent } from '../../modals/project-modal/project-modal.component';
 import { NewStepModalComponent } from '../../modals/new-step-modal/new-step-modal.component';
@@ -455,8 +456,15 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  isStepReadOnly(step: Step): boolean {
+  isStepHasDocuments(step: Step): boolean {
     return step.relatedDocuments ? Object.values(step.relatedDocuments).some(Boolean) : false;
+  }
+
+  isStepHasAllDocuments(step: Step): boolean {
+    const docs = step.relatedDocuments;
+    if (!docs?.requestForPayment) return false;
+    const isExemptDealer = this.authenticationService.getUserStatus().toString() === UserStatus.exemptDealer.toString();
+    return isExemptDealer ? !!docs.receipt : !!docs.invoiceReceipt;
   }
 
   // --- Step Modals ---
