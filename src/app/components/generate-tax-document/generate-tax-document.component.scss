@@ -64,11 +64,11 @@
     }
 
     .disabled-button {
-        background-color: var(--disabled-text);
+        background-color: #A2ACEF;
         cursor: not-allowed;
         pointer-events: none;
         &:hover {
-            background-color: var(--disabled-text);
+            background-color: #A2ACEF;
         }
     }
 }
