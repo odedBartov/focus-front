@@ -250,7 +250,7 @@ export class NewStepComponent implements AfterViewInit {
     if (this.newStep.stepType === StepType.task) {
       return this.newStep.name !== undefined;
     } else {
-      return this.newStep.name !== undefined && this.newStep.price !== undefined && this.newStep.price > 0;
+      return this.newStep.name !== undefined && this.newStep.price > 0;
     }
   }
 }
