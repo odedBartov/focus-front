@@ -141,71 +141,81 @@
                         <div class="retainer-step" *ngFor="let step of retainerActiveSteps; let i = index"
                             #stepDiv cdkDrag>
                             <div *ngIf="animationHackFlag && !isTaxDocumentForm(step.id)">
-                                <div class="step-header active">
-                                    <span class="new-text-bold">{{step.name}}</span>
-                                    <img *ngIf="step.stepType === stepTypeEnum.payment" src="assets/icons/dollar.svg" />
-                                </div>
+                                <ng-container *ngIf="!isTaxDocumentPrompt(step)">
+                                    <div class="step-header active">
+                                        <span class="new-text-bold">{{step.name}}</span>
+                                        <img *ngIf="step.stepType === stepTypeEnum.payment" src="assets/icons/dollar.svg" />
+                                    </div>
 
-                                <div class="new-small step-description"
-                                    *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
-                                    #descriptions>
-                                    @if (step.stepType === stepTypeEnum.payment) {
-                                        תשלום בסך <span class="new-text-bold">{{ step.price }} ₪</span>
-                                    } @else {
-                                        {{ step.description }}
-                                    }
-                                </div>
+                                    <div class="new-small step-description"
+                                        *ngIf="((step.stepType === stepTypeEnum.payment && step.price) || (step.stepType === stepTypeEnum.task && step.description) && !step.tasks)"
+                                        #descriptions>
+                                        @if (step.stepType === stepTypeEnum.payment) {
+                                            תשלום בסך <span class="new-text-bold">{{ step.price }} ₪</span>
+                                        } @else {
+                                            {{ step.description }}
+                                        }
+                                    </div>
 
-                                <div class="tasks" *ngIf="step.tasks">
-                                    <div class="task-list" cdkDropList (cdkDropListDropped)="dropTask($event, step)">
-                                        <div class="task" *ngFor="let task of step.tasks; let i = index" cdkDrag>
-                                            <div *ngIf="i < step.tasks.length" style="display: flex;">
-                                                <div [class]="'radio-button ' + (task.isComplete ? 'checked-circle' : 'empty-circle')"
-                                                    (click)="toggleTask(step, task)"
-                                                    [style.pointer-events]="isReadOnly() ? 'none' : 'auto'">
-                                                    <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg" />
+                                    <div class="tasks" *ngIf="step.tasks">
+                                        <div class="task-list" cdkDropList (cdkDropListDropped)="dropTask($event, step)">
+                                            <div class="task" *ngFor="let task of step.tasks; let i = index" cdkDrag>
+                                                <div *ngIf="i < step.tasks.length" style="display: flex;">
+                                                    <div [class]="'radio-button ' + (task.isComplete ? 'checked-circle' : 'empty-circle')"
+                                                        (click)="toggleTask(step, task)"
+                                                        [style.pointer-events]="isReadOnly() ? 'none' : 'auto'">
+                                                        <img *ngIf="task.isComplete" src="assets\icons\confirm_white.svg" />
+                                                    </div>
+                                                    <textarea class="new-small future" [(ngModel)]="task.text"
+                                                        autoResize defaultHeight="20px" #taskText></textarea>
                                                 </div>
-                                                <textarea class="new-small future" [(ngModel)]="task.text"
-                                                    autoResize defaultHeight="20px" #taskText></textarea>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="recurring-data-span" *ngIf="step.isRecurring">
-                                    <img class="cycle" />
-                                    <span>חוזר כל {{step.recurringEvery && step.recurringEvery > 1 ? step.recurringEvery : ''}}&nbsp;</span>
-                                    <span *ngIf="step.recurringDateType === recurringDateTypeEnum.day">
-                                        {{(step.recurringEvery && step.recurringEvery > 1) ? 'ימים' : 'יום'}}
-                                    </span>
-                                    <span *ngIf="step.recurringDateType === recurringDateTypeEnum.week">
-                                        {{(step.recurringEvery && step.recurringEvery > 1) ? 'שבועות' : 'שבוע'}}
-                                        {{(step.recurringDaysInWeek && step.recurringDaysInWeek.length > 1) ? 'בימים' : 'ביום'}}
-                                        {{getWeekDays(step.recurringDaysInWeek)}}
-                                    </span>
-                                    <span *ngIf="step.recurringDateType === recurringDateTypeEnum.month">
-                                        {{(step.recurringEvery && step.recurringEvery > 1) ? 'חודשים' : 'חודש'}} ב-{{step.recurringDayInMonth}} לחודש
-                                    </span>
-                                </div>
+                                    <div class="recurring-data-span" *ngIf="step.isRecurring">
+                                        <img class="cycle" />
+                                        <span>חוזר כל {{step.recurringEvery && step.recurringEvery > 1 ? step.recurringEvery : ''}}&nbsp;</span>
+                                        <span *ngIf="step.recurringDateType === recurringDateTypeEnum.day">
+                                            {{(step.recurringEvery && step.recurringEvery > 1) ? 'ימים' : 'יום'}}
+                                        </span>
+                                        <span *ngIf="step.recurringDateType === recurringDateTypeEnum.week">
+                                            {{(step.recurringEvery && step.recurringEvery > 1) ? 'שבועות' : 'שבוע'}}
+                                            {{(step.recurringDaysInWeek && step.recurringDaysInWeek.length > 1) ? 'בימים' : 'ביום'}}
+                                            {{getWeekDays(step.recurringDaysInWeek)}}
+                                        </span>
+                                        <span *ngIf="step.recurringDateType === recurringDateTypeEnum.month">
+                                            {{(step.recurringEvery && step.recurringEvery > 1) ? 'חודשים' : 'חודש'}} ב-{{step.recurringDayInMonth}} לחודש
+                                        </span>
+                                    </div>
 
-                                <div class="extra-not-finished">
-                                    <div class="step-icons" *ngIf="!isReadOnly()">
-                                        <div class="edit-delete">
-                                            <img class="icon-garbage-can-gray-blue" (click)="deleteStep(step)"
-                                                *ngIf="!(project().paymentModel === paymentModelEnum.monthly && step.stepType === stepTypeEnum.payment && step.isRecurring)" />
-                                            <img class="icon-pencil" [ngClass]="{'disabled-icon': isStepHasDocuments(step)}" (click)="isStepHasDocuments(step) ? null : openNewStepModal(step)"
-                                                [matTooltip]="isStepHasDocuments(step) ? 'לא ניתן לערוך שלב תשלום אחרי יצירת מסמך חשבונאי' : ''"
-                                                matTooltipClass="custom-tooltip" />
-                                            <img class="icon-add-file" (click)="showGenerateTaxDocument(step.id ?? '')"
-                                                *ngIf="step.stepType === stepTypeEnum.payment" [ngClass]="{'disabled-icon': isStepHasAllDocuments(step)}" />
-                                        </div>
-                                        <div class="animation-container">
-                                            <div class="finish-step-animation" *ngIf="step.id === animatingItemId">
-                                                <ng-lottie [options]="lottieOptions"
-                                                    (animationCreated)="finishStepAnimationCreated($event)" />
+                                    <div class="extra-not-finished">
+                                        <div class="step-icons" *ngIf="!isReadOnly()">
+                                            <div class="edit-delete">
+                                                <img class="icon-garbage-can-gray-blue" (click)="deleteStep(step)"
+                                                    *ngIf="!(project().paymentModel === paymentModelEnum.monthly && step.stepType === stepTypeEnum.payment && step.isRecurring)" />
+                                                <img class="icon-pencil" [ngClass]="{'disabled-icon': isStepHasDocuments(step)}" (click)="isStepHasDocuments(step) ? null : openNewStepModal(step)"
+                                                    [matTooltip]="isStepHasDocuments(step) ? 'לא ניתן לערוך שלב תשלום אחרי יצירת מסמך חשבונאי' : ''"
+                                                    matTooltipClass="custom-tooltip" />
+                                                <img class="icon-add-file" (click)="showGenerateTaxDocument(step.id ?? '')"
+                                                    *ngIf="step.stepType === stepTypeEnum.payment" [ngClass]="{'disabled-icon': isStepHasAllDocuments(step)}" />
                                             </div>
-                                            <img class="icon-confirm-circle" (click)="changeStepStatus(step)" />
+                                            <div class="animation-container">
+                                                <div class="finish-step-animation" *ngIf="step.id === animatingItemId">
+                                                    <ng-lottie [options]="lottieOptions"
+                                                        (animationCreated)="finishStepAnimationCreated($event)" />
+                                                </div>
+                                                <img class="icon-confirm-circle" (click)="completeStep(step)" />
+                                            </div>
                                         </div>
+                                    </div>
+                                </ng-container>
+
+                                <div class="should-generate-tax-document" *ngIf="isTaxDocumentPrompt(step)">
+                                    <span class="new-text">ברכות! האם ליצור חשבונית מס או קבלה?</span>
+                                    <div class="buttons">
+                                        <div class="decline-button" (click)="declineTaxDocument(step)">לא הפעם</div>
+                                        <div class="confirm-button" (click)="confirmTaxDocument(step)">כן, אני רוצה ליצור מסמך</div>
                                     </div>
                                 </div>
                             </div>

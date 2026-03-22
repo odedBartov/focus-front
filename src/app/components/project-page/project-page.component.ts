@@ -403,9 +403,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
   }
 
   completeStep(step: Step) {
-    const hasRelatedDocuments = step.relatedDocuments
-      ? Object.values(step.relatedDocuments).some(Boolean)
-      : false;
+    const hasRelatedDocuments = !!(step.relatedDocuments?.requestForPayment || step.relatedDocuments?.receipt);
 
     if (step.stepType === StepType.payment && !hasRelatedDocuments) {
       this.taxDocumentState.set({ stepId: step.id ?? '', phase: 'prompt', finishAfter: false });
