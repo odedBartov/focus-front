@@ -90,7 +90,7 @@
 
                     <div class="text-and-input">
                         <span class="new-small">תאריך לתשלום</span>
-                        <select [(ngModel)]="project.monthlyPaymentDay" tabindex="0">
+                        <select [(ngModel)]="project.monthlyPaymentDay" tabindex="0" class="new-small">
                             <option *ngFor="let day of daysInMonth" [value]="day">
                                 {{ day }} לחודש
                             </option>
@@ -113,7 +113,7 @@
             <div class="line">
                 <span class="new-text-bold">שם הלקוח</span>
                 <span class="new-small">כדאי לכתוב כאן את השם שיופיע על החשבונית</span>
-                <input [(ngModel)]="project.clientName" matInput [matAutocomplete]="autoClients"
+                <input [(ngModel)]="project.clientName" matInput [matAutocomplete]="autoClients" class="new-text"
                     (input)="onInput(clientInput.value)" #clientInput />
                 <mat-autocomplete #autoClients="matAutocomplete">
                     <mat-option *ngFor="let c of (clientOptions)" [value]="c">
@@ -123,11 +123,11 @@
             </div>
             <div class="line">
                 <span class="new-text-bold">אימייל</span>
-                <input [(ngModel)]="project.clientMail" />
+                <input [(ngModel)]="project.clientMail" class="new-text" />
             </div>
             <div class="line">
                 <span class="new-text-bold">טלפון</span>
-                <input [(ngModel)]="project.clientPhone" />
+                <input [(ngModel)]="project.clientPhone" class="new-text" />
             </div>
         </div>
 
