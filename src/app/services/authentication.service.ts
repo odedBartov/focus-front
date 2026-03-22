@@ -68,10 +68,10 @@ export class AuthenticationService {
   setUserPicture(picture: string) {
     localStorage.setItem(this.userPicture, picture);
   }
-  
-    getIsReadOnly() {
-      return this.isReadOnlySignal;
-    }
+
+  getIsReadOnly() {
+    return this.isReadOnlySignal;
+  }
 
   setIsReadOnly(isReadOnly: boolean) {
     this.isReadOnlySignal.set(isReadOnly);
@@ -106,8 +106,12 @@ export class AuthenticationService {
     return localStorage.getItem(this.userApiKey);
   }
 
-  setUserTaxManagementSystem(system: taxManagementSystemEnum) {
-    localStorage.setItem(this.userTaxManagementSystem, system.toString());
+  setUserTaxManagementSystem(system?: taxManagementSystemEnum) {
+    if (system) {
+      localStorage.setItem(this.userTaxManagementSystem, system.toString());
+    } else {
+      localStorage.removeItem(this.userTaxManagementSystem);
+    }
   }
 
   getUserTaxManagementSystem() {
@@ -118,8 +122,12 @@ export class AuthenticationService {
     return undefined;
   }
 
-  setUserStatus(status: UserStatus) {
-    localStorage.setItem(this.userStatus, status.toString());
+  setUserStatus(status?: UserStatus) {
+    if (status) {
+      localStorage.setItem(this.userStatus, status.toString());
+    } else {
+      localStorage.removeItem(this.userStatus);
+    }
   }
 
   getUserStatus() {
@@ -131,7 +139,9 @@ export class AuthenticationService {
   }
 
   setUserTaxManagementCompanyId(companyId: number) {
-    localStorage.setItem(this.userTaxManagementCompanyId, companyId.toString());
+    if (companyId > -1) {
+      localStorage.setItem(this.userTaxManagementCompanyId, companyId.toString());
+    }
   }
 
   getUserTaxManagementCompanyId() {

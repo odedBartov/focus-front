@@ -96,6 +96,10 @@ export class GenerateTaxDocumentComponent implements AfterViewInit {
   }
 
   createAndSendDocument() {
+    if (this.paymentPrice !== this.paymentPriceInput) {
+      this.httpService.updateSteps([{ ...this.step, price: this.paymentPrice }]).subscribe();
+    }
+
     const request: TaxDocumentRequest = {
       apiKey: this.taxManagementApiKey,
       document: this.selectedDocumentType!,

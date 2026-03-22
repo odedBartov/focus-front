@@ -48,7 +48,7 @@ export class HttpService {
       this.authenticationService.setUserId(res.body.userId);
       this.authenticationService.setUserApiKey(res.body.taxManagementApiKey);
       this.authenticationService.setUserTaxManagementSystem(res.body.taxManagementSystem);
-      this.authenticationService.setUserTaxManagementCompanyId(res.body.taxManagementCompanyId ?? 0);
+      this.authenticationService.setUserTaxManagementCompanyId(res.body.taxManagementCompanyId ?? -1);
       this.authenticationService.setUserStatus(res.body.status as UserStatus);
       const fullName = this.authenticationService.getUserName();
       if (fullName) {
