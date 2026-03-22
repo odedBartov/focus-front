@@ -2,8 +2,8 @@
 
 .container {
     display: flex;
-    justify-content: space-between;
-    width: 100vw;
+    gap: 80px;
+    padding: 0 80px;
     margin: 100px 0;
 
     .main {
@@ -11,7 +11,7 @@
         background-color: var(--default-white);
         box-shadow: var(--common-shadow);
         border-radius: 15px;
-        padding: 4rem;
+        padding: 70px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -135,9 +135,10 @@
     .left {
         display: flex;
         flex-direction: column;
-        justify-content: end;
+        justify-content: space-between;
         align-items: center;
-        flex: 3;
+        gap: 50px;
+        flex: 2;
 
         .connection-button {
             margin-top: 6px;
@@ -178,7 +179,6 @@
             gap: 20px;
             background-color: var(--default-white);
             box-shadow: var(--common-shadow);
-            width: 50%;
             padding: 3rem;
         }
 
@@ -203,7 +203,18 @@
     }
 
     .right {
-        flex: 3;
+        flex: 2;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        align-items: center;
+        gap: 50px;
+    }
+
+    .placeholder-card {
+        background-color: #EDEDF3;
+        width: 100%;
+        border-radius: var(--common-radius);
     }
 }
 
@@ -215,5 +226,6 @@
 
     .cdk-overlay-pane {
         box-shadow: none !important;
+        display: contents;
     }
 }
