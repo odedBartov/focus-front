@@ -161,7 +161,7 @@ export class ProjectPageComponent implements OnInit, AfterViewInit {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    if (this.newStepDiv?.nativeElement && !this.newStepDiv.nativeElement.contains(event.target)) {
+    if (this.newStepDiv?.nativeElement && !this.newStepDiv.nativeElement.contains(event.target) && !this.mouseDownInside) {
       this.isShowNewStep = false;
     }
 
