@@ -27,6 +27,9 @@ export class NewUserComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { user: User }) {
     this.user = data.user;
+    if (!this.user.status) {
+      this.user.status = UserStatus.exemptDealer;
+    }
     this.userForm = this.formBuilder.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]]
