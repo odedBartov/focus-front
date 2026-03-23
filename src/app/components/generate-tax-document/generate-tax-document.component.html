@@ -13,11 +13,11 @@
         </div>
         <div class="text-and-input">
             <span class="new-small">שם על החשבונית</span>
-            <input type="text" class="new-text" [(ngModel)]="clientName" [disabled]="step.relatedDocuments?.requestForPayment != undefined"/>
+            <input type="text" class="new-text" [(ngModel)]="clientName"/>
         </div>
         <div class="text-and-input">
             <span class="new-small">מוצר/שירות</span>
-            <input type="text" class="new-text" [(ngModel)]="serviceName" [disabled]="step.relatedDocuments?.requestForPayment != undefined"/>
+            <input type="text" class="new-text" [(ngModel)]="serviceName"/>
         </div>
         <div class="text-and-input">
             <span class="new-small">סכום</span>
