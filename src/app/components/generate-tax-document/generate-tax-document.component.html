@@ -40,7 +40,7 @@
         </div>
         <div class="text-and-input">
             <span class="new-small">לאן לשלוח את המסמך?</span>
-            <input type="email" class="new-text" [(ngModel)]="clientMail" [disabled]="step.relatedDocuments?.requestForPayment != undefined"/>
+            <input type="email" class="new-text" [(ngModel)]="clientMail"/>
         </div>
         <div class="confirm-button" [ngClass]="{'disabled-button': selectedDocumentType == undefined}" (click)="createAndSendDocument()">
             <img src="assets/icons/confirm_white.svg"/>
