@@ -233,6 +233,11 @@ export class NewStepComponent implements AfterViewInit {
   }
 
   onPriceKeyDown(event: KeyboardEvent): boolean {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.createStep();
+      return false;
+    }
     return event.key !== '.' && event.key !== ',' && event.key !== '-';
   }
 

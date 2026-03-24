@@ -229,29 +229,29 @@
                                                     חשבונית מס קבלה
                                                     #{{step.relatedDocuments!.invoiceReceipt!.documentNumber}}</span>
                                             </div>
+                                        </div>
 
-                                            <div class="step-icons" *ngIf="!isReadOnly()">
-                                                <div class="edit-delete">
-                                                    <img class="icon-garbage-can-gray-blue" (click)="deleteStep(step)"
-                                                        *ngIf="!(project().paymentModel === paymentModelEnum.monthly && step.stepType === stepTypeEnum.payment && step.isRecurring)" />
-                                                    <img class="icon-pencil"
-                                                        [ngClass]="{'disabled-icon': isStepHasDocuments(step)}"
-                                                        (click)="isStepHasDocuments(step) ? null : openNewStepModal(step)"
-                                                        [matTooltip]="isStepHasDocuments(step) ? 'לא ניתן לערוך שלב תשלום אחרי יצירת מסמך חשבונאי' : ''"
-                                                        matTooltipClass="custom-tooltip" />
-                                                    <img class="icon-add-file"
-                                                        (click)="showGenerateTaxDocument(step.id ?? '')"
-                                                        *ngIf="step.stepType === stepTypeEnum.payment"
-                                                        [ngClass]="{'disabled-icon': isStepHasAllDocuments(step)}" />
+                                        <div class="step-icons" *ngIf="!isReadOnly()">
+                                            <div class="edit-delete">
+                                                <img class="icon-garbage-can-gray-blue" (click)="deleteStep(step)"
+                                                    *ngIf="!(project().paymentModel === paymentModelEnum.monthly && step.stepType === stepTypeEnum.payment && step.isRecurring)" />
+                                                <img class="icon-pencil"
+                                                    [ngClass]="{'disabled-icon': isStepHasDocuments(step)}"
+                                                    (click)="isStepHasDocuments(step) ? null : openNewStepModal(step)"
+                                                    [matTooltip]="isStepHasDocuments(step) ? 'לא ניתן לערוך שלב תשלום אחרי יצירת מסמך חשבונאי' : ''"
+                                                    matTooltipClass="custom-tooltip" />
+                                                <img class="icon-add-file"
+                                                    (click)="showGenerateTaxDocument(step.id ?? '')"
+                                                    *ngIf="step.stepType === stepTypeEnum.payment"
+                                                    [ngClass]="{'disabled-icon': isStepHasAllDocuments(step)}" />
+                                            </div>
+                                            <div class="animation-container">
+                                                <div class="finish-step-animation"
+                                                    *ngIf="step.id === animatingItemId">
+                                                    <ng-lottie [options]="lottieOptions"
+                                                        (animationCreated)="finishStepAnimationCreated($event)" />
                                                 </div>
-                                                <div class="animation-container">
-                                                    <div class="finish-step-animation"
-                                                        *ngIf="step.id === animatingItemId">
-                                                        <ng-lottie [options]="lottieOptions"
-                                                            (animationCreated)="finishStepAnimationCreated($event)" />
-                                                    </div>
-                                                    <img class="icon-confirm-circle" (click)="completeStep(step)" />
-                                                </div>
+                                                <img class="icon-confirm-circle" (click)="completeStep(step)" />
                                             </div>
                                         </div>
                                     </div>
