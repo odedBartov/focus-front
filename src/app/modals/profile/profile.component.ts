@@ -5,13 +5,14 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { profession, User, userProfessionsWithText, UserStatus, userStatusesWithText } from '../../models/user';
 import { CommonModule } from '@angular/common';
 import { AnimationsService } from '../../services/animations.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { environment } from '../../../environments/environment';
 import { subscriptionEnum } from '../../models/enums';
 import { UserSubscription } from '../../models/userSubscription';
 import { UserService } from '../../services/user.service';
 import { taxManagementSystemEnum } from '../../models/taxSystem';
 import { ConnectionToTaxComponent, taxSystemConnection } from '../../components/connection-to-tax/connection-to-tax.component';
+import { PaidFeatureModalComponent } from '../paid-feature-modal/paid-feature-modal.component';
 
 @Component({
   selector: 'app-profile',
@@ -25,6 +26,7 @@ export class ProfileComponent implements AfterViewInit {
   userService = inject(UserService);
   animationsService = inject(AnimationsService);
   dialogRef = inject(MatDialogRef<ProfileComponent>);
+  dialog = inject(MatDialog);
   cd = inject(ChangeDetectorRef);
   userStatuses = userStatusesWithText;
   userProfessions = userProfessionsWithText;
@@ -120,7 +122,11 @@ export class ProfileComponent implements AfterViewInit {
   }
 
   connectToTaxManagement() {
-    this.taxManagemantStep = 2;
+    if (this.authenticationService.getSubscription() === subscriptionEnum.free || this.authenticationService.getSubscription() === subscriptionEnum.partial) {
+      this.dialog.open(PaidFeatureModalComponent, { data: { subscription: subscriptionEnum.full } });
+    } else {
+      this.taxManagemantStep = 2;
+    }
   }
 
   updateTaxConnection(taxConnection: taxSystemConnection) {
