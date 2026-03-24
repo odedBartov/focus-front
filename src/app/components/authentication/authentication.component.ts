@@ -29,7 +29,7 @@ export class AuthenticationComponent {
       res => {
         this.animationsService.changeIsloading(false);
         if (this.authenticationService.getIsNewUser()) {
-          const dialogParams = isUsingDesktop()? {data: { user: res.body }, backdropClass: 'grey-background' } : {width: '100%', height: '100%', data: { user: res.body } };
+          const dialogParams = isUsingDesktop()? {disableClose: true, data: { user: res.body }, backdropClass: 'grey-background' } : {width: '100%', height: '100%', data: { user: res.body } };
           const dialogRef = this.dialog.open(NewUserComponent, dialogParams);
           dialogRef.afterClosed().subscribe(res => {
             if (res) {
