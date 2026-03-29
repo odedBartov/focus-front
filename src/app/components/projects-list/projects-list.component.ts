@@ -16,7 +16,7 @@ import { ProjectsService } from '../../services/projects.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { PaidFeatureModalComponent } from '../../modals/paid-feature-modal/paid-feature-modal.component';
 import { Step } from '../../models/step';
-import { areDatesEqualYearAndMonth } from '../../helpers/functions';
+import { areDatesEqualYearAndMonth, isDateGreaterByMonth } from '../../helpers/functions';
 
 @Component({
   selector: 'app-projects-list',
@@ -78,6 +78,8 @@ export class ProjectsListComponent implements OnInit {
 
   private computeProjectMaps() {
     const today = new Date();
+    const oneNonthInTheFuture = new Date();
+    oneNonthInTheFuture.setMonth(today.getMonth() + 1);
     this.currentStepMap = new Map(
       this.filteredProjects.map(project => [
         project.id!,
@@ -100,7 +102,7 @@ export class ProjectsListComponent implements OnInit {
           paid = project.steps.filter(s => s.stepType === StepType.payment && s.isComplete).reduce((sum, step) => sum + step.price, 0);
         } else {
           project.steps.forEach(step => {
-            if (step.stepType === StepType.payment && !step.isRecurring && (!step.dateDue || areDatesEqualYearAndMonth(step.dateDue, today))) {
+            if (step.stepType === StepType.payment && !step.isRecurring && (!step.dateOnWeekly || !step.originalRetainerStepId || !isDateGreaterByMonth(step.dateOnWeekly, today))) {
               base += step.price;
               if (step.isComplete) paid += step.price;
             }
@@ -188,7 +190,7 @@ export class ProjectsListComponent implements OnInit {
     if (maxProjects > -1 && maxProjects <= this.projects().length) {
       this.dialog.open(PaidFeatureModalComponent, { data: { subscription: this.userSubscription === subscriptionEnum.partial ? subscriptionEnum.full : subscriptionEnum.free } });
     } else {
-      const dialogRef = this.dialog.open(NewProjectComponent, {disableClose: true});
+      const dialogRef = this.dialog.open(NewProjectComponent, { disableClose: true });
       dialogRef.afterClosed().subscribe(res => {
         if (res) {
           this.animationsService.changeIsloading(true);

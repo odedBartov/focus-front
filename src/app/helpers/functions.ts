@@ -75,6 +75,14 @@ export function isDateSmallerOrEqual(d1: Date, d2: Date) {
   return date1.getTime() <= date2.getTime();
 }
 
+export function isDateGreaterByMonth(d1: Date, d2: Date): boolean {
+  const date1 = new Date(d1);
+  const date2 = new Date(d2);
+  if (date1.getFullYear() > date2.getFullYear()) return true;
+  if (date1.getFullYear() < date2.getFullYear()) return false;
+  return date1.getMonth() > date2.getMonth();
+}
+
 export function areDatesEqual(d1: Date | undefined, d2: Date | undefined): boolean {
   if (!d1 || !d2) return false;
   d1 = new Date(d1);
