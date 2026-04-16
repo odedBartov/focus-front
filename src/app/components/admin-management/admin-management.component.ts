@@ -12,6 +12,7 @@ import { subscriptionEnum } from '../../models/enums';
 })
 export class AdminManagementComponent implements AfterViewInit {
   httpService = inject(HttpService);
+  systemMessageInput = "";
   bonusInput = "";
   deleteInput = "";
   freeUSers = 0;
@@ -52,6 +53,14 @@ export class AdminManagementComponent implements AfterViewInit {
 
   deleteUser() {
     this.httpService.deleteUser(this.deleteInput).subscribe(res => {
+      alert("הפעולה בוצעה בהצלחה");
+    }, err => {
+      alert(err.error);
+    });
+  }
+
+  addSystemMessage() {
+    this.httpService.addSystemMessage(this.systemMessageInput).subscribe(res => {
       alert("הפעולה בוצעה בהצלחה");
     }, err => {
       alert(err.error);

@@ -200,4 +200,9 @@ export class HttpService {
     const headers = this.generateHeaders();
     return this.httpClient.post<Step[]>(this.apiUrl + "Steps/createStepsForRetainer", { start: startDate, end: endDate }, headers);
   }
+
+  addSystemMessage(message: string) {
+    const headers = this.generateHeaders();
+    return this.httpClient.get(this.apiUrl + "Info/addSystemMessage?message=" + message, headers);
+  }
 }

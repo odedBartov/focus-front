@@ -9,6 +9,11 @@
         <button (click)="deleteUser()">מחק משתמש זה</button>
     </div>
 
+    <div class="button">
+        <input [(ngModel)]="systemMessageInput" placeholder="הודעת מערכת"/>
+        <button (click)="addSystemMessage()">הוסף הודעת מערכת</button>
+    </div>
+
     <div class="users">
         ישנם במערכת:
         <span>
