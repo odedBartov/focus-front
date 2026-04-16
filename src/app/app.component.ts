@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
   constructor() {
     this.isLoading = this.animationsService.getIsLoading();
 
-    if (!isUsingDesktop() && false) { // todo: return to real check
+    if (!isUsingDesktop()) { // todo: return to real check
       this.router.navigate(['unsupportedDevice']);
     } else {
       const fullName = this.authenticationService.getUserName();
