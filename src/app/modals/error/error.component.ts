@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AuthenticationService } from '../../services/authentication.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-error',
@@ -11,7 +12,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 export class ErrorComponent implements AfterViewInit {
   dialogRef = inject(MatDialogRef<ErrorComponent>);
   authenticationService = inject(AuthenticationService);
-  OdedsNumber = "972503664101";
+  odedsNumber = environment.odedsNumber;
   fullName = "משתמש ללא שם";
   
   ngAfterViewInit(): void {
@@ -24,7 +25,7 @@ export class ErrorComponent implements AfterViewInit {
   openWhatsapp() {
     const message = `הי, זה ${this.fullName}. אני משתמש בפוקוס ונתקלתי בבעיה. הנה הסבר מפורט של התקלה והצעדים שעשיתי שהובילו אליה:
     `;
-    const url = `https://wa.me/${this.OdedsNumber}?text=${message}`;
+    const url = `https://wa.me/${this.odedsNumber}?text=${message}`;
     window.open(url, '_blank');
   }
 

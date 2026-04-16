@@ -5,15 +5,18 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { profession, User, userProfessionsWithText, UserStatus, userStatusesWithText } from '../../models/user';
 import { CommonModule } from '@angular/common';
 import { AnimationsService } from '../../services/animations.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { environment } from '../../../environments/environment';
 import { subscriptionEnum } from '../../models/enums';
 import { UserSubscription } from '../../models/userSubscription';
 import { UserService } from '../../services/user.service';
+import { taxManagementSystemEnum } from '../../models/taxSystem';
+import { ConnectionToTaxComponent, taxSystemConnection } from '../../components/connection-to-tax/connection-to-tax.component';
+import { PaidFeatureModalComponent } from '../paid-feature-modal/paid-feature-modal.component';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConnectionToTaxComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -23,6 +26,7 @@ export class ProfileComponent implements AfterViewInit {
   userService = inject(UserService);
   animationsService = inject(AnimationsService);
   dialogRef = inject(MatDialogRef<ProfileComponent>);
+  dialog = inject(MatDialog);
   cd = inject(ChangeDetectorRef);
   userStatuses = userStatusesWithText;
   userProfessions = userProfessionsWithText;
@@ -38,14 +42,26 @@ export class ProfileComponent implements AfterViewInit {
     { title: 'פוקוס על מלא', subscription: subscriptionEnum.full, text: 'ללא מגבלת פרויקטים, פיצ׳רים מתקדמים ותמיכה טכנית', price: 'גרסת נסיון' }
   ]
   currentUserSubscription: UserSubscription = this.userSubscriptions[0];
+  taxManagemantStep = 1;
+  taxManagementSystemEnum = taxManagementSystemEnum;
+  wrongCredentialsError = false;
+  private originalUser: Partial<User> = {};
 
   ngAfterViewInit(): void {
     this.getUserSubscription();
     this.animationsService.changeIsloading(true);
     this.userService.getUser().subscribe(user => {
       this.user = user;
+      this.originalUser = { ...user };
       this.animationsService.changeIsloading(false);
+      this.handleUserTaxManagement();
     });
+  }
+
+  handleUserTaxManagement() {
+    if (this.user.taxManagementApiKey) {
+      this.taxManagemantStep = 3;
+    }
   }
 
   getProfilePicture() {
@@ -79,6 +95,13 @@ export class ProfileComponent implements AfterViewInit {
     this.updateUser();
   }
 
+  updateUserIfChanged(field: keyof User) {
+    if (this.user[field] !== this.originalUser[field]) {
+      this.originalUser[field] = this.user[field] as any;
+      this.updateUser();
+    }
+  }
+
   updateUser() {
     this.userService.updateUser(this.user).subscribe(res => { });
   }
@@ -96,5 +119,42 @@ export class ProfileComponent implements AfterViewInit {
   logOut() {
     this.authenticationService.logOut();
     this.dialogRef.close();
+  }
+
+  connectToTaxManagement() {
+    if (this.authenticationService.getSubscription() === subscriptionEnum.free || this.authenticationService.getSubscription() === subscriptionEnum.partial) {
+      this.dialog.open(PaidFeatureModalComponent, { data: { subscription: subscriptionEnum.full } });
+    } else {
+      this.taxManagemantStep = 2;
+    }
+  }
+
+  updateTaxConnection(taxConnection: taxSystemConnection) {
+    this.user.taxManagementApiKey = taxConnection.taxManagementApiKey;
+    this.user.taxManagementSystem = taxConnection.taxManagementSystem;
+    this.user.taxManagementCompanyId = taxConnection.taxManagementCompanyId;
+    this.userService.updateUser(this.user).subscribe(res => { });
+    this.taxManagemantStep = 3;
+  }
+
+  getTaxManagementName() {
+    switch (this.user.taxManagementSystem) {
+      case taxManagementSystemEnum.iCount:
+        return "iCount";
+      case taxManagementSystemEnum.morning:
+        return "Morning";
+      case taxManagementSystemEnum.sumit:
+        return "Sumit";
+      default:
+        return "מערכת לא זוהתה";
+    }
+  }
+
+  disconnectFromTaxManagement() {
+    this.user.taxManagementApiKey = undefined;
+    this.user.taxManagementCompanyId = undefined;
+    this.user.taxManagementSystem = undefined;
+    this.taxManagemantStep = 1;
+    this.userService.updateUser(this.user).subscribe();
   }
 }

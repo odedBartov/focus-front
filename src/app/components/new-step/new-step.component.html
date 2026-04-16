@@ -127,7 +127,9 @@
 
             <div class="text-and-input">
                 <span class="text new-small">סכום (לא כולל מע"מ)</span>
-                <input class="text new-text" type="number" [(ngModel)]="newStep.price">
+                <input class="text new-text" type="number" [(ngModel)]="newStep.price" step="1" min="0"
+                    (keydown)="onPriceKeyDown($event)"
+                    (paste)="onPricePaste($event)">
                 <div class="error-container new-small">
                     <span *ngIf="submitted && newStep.price <= 0 || newStep.price === undefined" class="error">אנא הזינו
                         סכום</span>
@@ -141,9 +143,6 @@
                         [ngClass]="{'selected': newStep.dateDue === date || (newStep.dateDue !== undefined && newStep.dateDue?.getFullYear() == date?.getFullYear() && newStep.dateDue?.getMonth() === date?.getMonth())}">
                         {{date? (date | date: 'MM') : 'לא ידוע'}}
                     </span>
-                </div>
-                <div class="error-container">
-                    <span *ngIf="submitted && newStep.dateDue === undefined" class="error">אנא בחרו תאריך</span>
                 </div>
             </div>
         </div>

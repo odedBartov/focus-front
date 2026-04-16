@@ -5,5 +5,6 @@ export const environment = {
     realApi: 'https://focus-server-51qa.onrender.com/api/',
     subscriptionUrl: 'https://arieladler.co.il/focus/',
     defaultPicture: 'assets/icons/default_profile.svg',
-    arielsNumber: "972584046213"
+    arielsNumber: "972584046213",
+    odedsNumber: "972503664101"
   };

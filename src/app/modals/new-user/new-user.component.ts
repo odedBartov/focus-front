@@ -4,10 +4,11 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { User, userProfessionsWithText, UserStatus, userStatusesWithText } from '../../models/user';
 import { CommonModule } from '@angular/common';
 import { isUsingDesktop } from '../../helpers/functions';
+import { ConnectionToTaxComponent, taxSystemConnection } from "../../components/connection-to-tax/connection-to-tax.component";
 
 @Component({
   selector: 'app-new-user',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, ConnectionToTaxComponent],
   templateUrl: './new-user.component.html',
   styleUrl: './new-user.component.scss'
 })
@@ -26,6 +27,9 @@ export class NewUserComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { user: User }) {
     this.user = data.user;
+    if (!this.user.status) {
+      this.user.status = UserStatus.exemptDealer;
+    }
     this.userForm = this.formBuilder.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]]
@@ -42,7 +46,7 @@ export class NewUserComponent {
   }
 
   getCurrentProgress() {
-    return (this.currentProgress / 4) * 100;
+    return (this.currentProgress / 6) * 100;
   }
 
   confirm() {
@@ -72,7 +76,7 @@ export class NewUserComponent {
           }, 1);
         };
         break
-      case 3:
+      case 5:
         if (this.user.profession !== undefined) {
           const isMobile = !isUsingDesktop();
           if (isMobile) {
@@ -83,5 +87,28 @@ export class NewUserComponent {
         }
         break;
     }
+  }
+
+  goBack() {
+    if (this.currentProgress === 5) {
+      this.currentProgress = 3
+    } else {
+      this.currentProgress--;
+    }
+  }
+
+  declineTaxManagement() {
+    this.currentProgress = 5;
+  }
+
+  approveTaxManagement() {
+    this.currentProgress = 4;
+  }
+
+  taxSystemManagement(taxSystemConnection: taxSystemConnection) {
+    this.user.taxManagementApiKey = taxSystemConnection.taxManagementApiKey;
+    this.user.taxManagementSystem = taxSystemConnection.taxManagementSystem;
+    this.user.taxManagementCompanyId = taxSystemConnection.taxManagementCompanyId;
+    this.currentProgress = 5;
   }
 }

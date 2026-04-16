@@ -5,12 +5,14 @@ import { Step } from '../models/step';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthenticationService } from './authentication.service';
 import { environment } from "../../environments/environment";
-import { User } from '../models/user';
+import { User, UserStatus } from '../models/user';
 import { Title } from '@angular/platform-browser';
 import { HourlyWorkSession } from '../models/hourlyWorkSession';
 import { RetainerPayment } from '../models/RetainerPayment';
 import { Feature } from '../models/feature';
 import { AiConversation, ChatRequest, ChatResponse } from '../models/aiModels';
+import { createDocumentResponse, TaxDocumentRequest, taxManagementSystemEnum } from '../models/taxSystem';
+import { simpleResponse } from '../models/simpleResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +46,10 @@ export class HttpService {
       this.authenticationService.setUserName(res.body.firstName, res.body.lastName);
       this.authenticationService.setSubscription(res.body.subscription);
       this.authenticationService.setUserId(res.body.userId);
+      this.authenticationService.setUserApiKey(res.body.taxManagementApiKey);
+      this.authenticationService.setUserTaxManagementSystem(res.body.taxManagementSystem);
+      this.authenticationService.setUserTaxManagementCompanyId(res.body.taxManagementCompanyId ?? -1);
+      this.authenticationService.setUserStatus(res.body.status as UserStatus);
       const fullName = this.authenticationService.getUserName();
       if (fullName) {
         this.titleService.setTitle("פוקוס - " + fullName);
@@ -109,6 +115,11 @@ export class HttpService {
     return this.httpClient.get<Step[]>(`${this.apiUrl}Steps/getSteps?projectId=${projectId}`, headers);
   }
 
+  getStepById(stepId: string): Observable<Step> {
+    const headers = this.generateHeaders();
+    return this.httpClient.get<Step>(`${this.apiUrl}Steps/getStepById?stepId=${stepId}`, headers);
+  }
+
   updateSteps(steps: Step[]): Observable<Step[]> {
     const headers = this.generateHeaders();
     return this.httpClient.put<Step[]>(this.apiUrl + "Steps/updateSteps", steps, headers);
@@ -159,7 +170,7 @@ export class HttpService {
   }
 
   giveUserBonusSubscription(email: string) {
-    return this.httpClient.post(this.apiUrl + "Auth/giveUserBonusSubscription", {email: email});
+    return this.httpClient.post(this.apiUrl + "Auth/giveUserBonusSubscription", { email: email });
   }
 
   getAllUsers() {
@@ -170,6 +181,19 @@ export class HttpService {
   deleteUser(email: string) {
     const headers = this.generateHeaders();
     return this.httpClient.delete(this.apiUrl + "Auth/deleteUser?email=" + email, headers);
+  }
+
+  loginToTaxManagement(apiKey: string, companyId?: number, system?: taxManagementSystemEnum): Observable<simpleResponse> {
+    return this.httpClient.post<simpleResponse>(this.apiUrl + "TaxDocuments/login", { apiKey: apiKey, companyId: companyId, system: system });
+  }
+
+  createTaxDocument(request: TaxDocumentRequest): Observable<createDocumentResponse> {
+    return this.httpClient.post<createDocumentResponse>(this.apiUrl + "TaxDocuments/createDocument", request, this.generateHeaders());
+  }
+
+  getUserClients(query: string): Observable<string[]> {
+    const headers = this.generateHeaders();
+    return this.httpClient.get<string[]>(this.apiUrl + "Projects/getUserClients?input=" + query, headers);
   }
 
   getRetainerSteps(startDate: Date, endDate: Date): Observable<Step[]> {

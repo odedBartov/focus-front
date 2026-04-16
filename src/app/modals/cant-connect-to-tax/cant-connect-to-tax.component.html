@@ -1,0 +1,28 @@
+<div class="main">
+    <img src="assets/icons/pin_disconnect_blue.svg" class="icon" />
+    <span class="new-text-bold title">לא הצלחנו להתחבר לחשבון {{systemName}} שלך</span>
+    <div class="what-to-do-container">
+        <span class="what-to-do new-small-bold">מה אפשר לעשות?</span>
+        <div class="steps-forconnect">
+            <div style="display: flex;">
+                <span class="new-small" style="margin-left: 8px;">1. </span>
+                <span class="new-small">לבדוק שהחשבון שלך ב{{systemName}} פעיל והמנוי שלך כולל שימוש ב-API.</span>
+            </div>
+            <div style="display: flex;">
+                <span class="new-small" style="margin-left: 8px;">2. </span>
+                <span class="new-small">לוודא שמפתח ה-API פעיל ושכל פרטי החיבור נכונים.</span>
+            </div>
+            <div style="display: flex;">
+                <span class="new-small" style="margin-left: 8px;">3. </span>
+                <span class="new-small">לוודא שהגדרת העוסק שלך בפוקוס וב{{systemName}} תואמת.</span>
+            </div>
+            <div style="display: flex;">
+                <span class="new-small" style="margin-left: 8px;">4. </span>
+                <span class="new-small">ליצור מפתח API ותשלום חדשים ולנסות שוב</span>
+            </div>
+        </div>
+    </div>
+    <!-- <span class="new-small">ייתכן שמפתח ה-API לא תקין או שהתוקף שלו פג. כדאי ליצור מפתח חדש ולנסות להתחבר שוב.</span> -->
+    <div class="confirm-button pointer" (click)="closeModal()" (keydown.enter)="closeModal()" tabindex="1">הבנתי, תודה</div>
+    <span class="new-small pointer" (click)="openWhatsapp()" (keydown.enter)="openWhatsapp()" tabindex="1">אשמח לעזרה</span>
+</div>

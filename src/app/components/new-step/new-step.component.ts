@@ -9,7 +9,7 @@ import { provideNgxMask } from 'ngx-mask';
 import { HttpService } from '../../services/http.service';
 import { AnimationsService } from '../../services/animations.service';
 import { StepTask } from '../../models/stepTask';
-import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirectory';
+import { AutoResizeInputDirective } from '../../helpers/autoResizeInputDirective';
 import { updateDatesWithLocalTime } from '../../helpers/functions';
 import { ProjectsService } from '../../services/projects.service';
 
@@ -232,12 +232,30 @@ export class NewStepComponent implements AfterViewInit {
     }
   }
 
+  onPriceKeyDown(event: KeyboardEvent): boolean {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.createStep();
+      return false;
+    }
+    return event.key !== '.' && event.key !== ',' && event.key !== '-';
+  }
+
+  onPricePaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const text = event.clipboardData?.getData('text') ?? '';
+    const value = Math.abs(parseInt(text, 10));
+    if (!isNaN(value)) {
+      document.execCommand('insertText', false, String(value));
+    }
+  }
+
   validateStep(): boolean {
     this.submitted = true;
     if (this.newStep.stepType === StepType.task) {
       return this.newStep.name !== undefined;
     } else {
-      return this.newStep.name !== undefined && this.newStep.price !== undefined && this.newStep.price > 0;
+      return this.newStep.name !== undefined && this.newStep.price > 0;
     }
   }
 }

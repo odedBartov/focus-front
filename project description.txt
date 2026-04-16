@@ -1,0 +1,125 @@
+i am building a project for management of projects and clients, and i have a problem with a certain feature. Project can be of type regular, or retainer. Retainer projects are recurring projects, which means they are eternally on my schedule, cycling over and over. this kind of project also can have recurring steps (some kind of tasks) that can also be recuring. A recurring step can recur every amount of months, days, or weeks with specific days in the week. On the schedule i can also see future occurrences of the step so i will know for every step when it will be in the future. here are some examples:
+1) i have a step that occur every 5 days. i will see it on the schedule, and i will complete the step. the step will have its property "isComplete" with value true, and when its dateOnWeekly will come it will automatically change isComplete to false.
+2) i have a step the occur every Sunday and Tuesday. i will be able to complete the next occurrence, and once this date will come the step will change its isComplete back to false
+3) Suppose:
+RecurringDateType = week
+RecurringEvery = 2 (every 2 weeks)
+RecurringDaysInWeek = [0, 2] (Sunday, Tuesday)
+then Every Sunday and every Tuesday, but the whole cycle is considered “every 2 weeks” in some other sense.
+4) For RecurringDateType = month i want to use the same calendar day, and not the weekday. in cases that there is no such a day in the month (like 30th February) then use the last day of the month instead.
+
+the future occurrences are like ghosts, or temporary steps. i generate them dynamically in the front to give the user indication, but the are not interactable. 
+in the server i have this code that check weather a recurring step should change its isComplete from true to false:
+
+private void UpdateRetainerSteps(List<Step> steps)
+{
+    foreach (Step step in steps)
+    {
+        if (step.IsRecurring)
+        {
+            DateTime nextOccurrence = Functions.SetDefaultHHMMSS(step.NextOccurrence ?? step.DateCreated ?? new DateTime(0));
+            var today = Functions.SetDefaultHHMMSS(DateTime.UtcNow);
+
+            if (nextOccurrence <= today && step.IsComplete)
+            {
+                step.IsComplete = false;
+                step.DateCompleted = null;
+                step.PositionInWeeklyList = 9999;
+
+                // Handle weekly recurrence with specific days in week
+                if (step.RecurringDateType == RecurringDateTypeEnum.week)
+                {
+                    // RecurringDaysInWeek expected to be ints matching DayOfWeek (0 = Sunday ... 6 = Saturday)
+                    if (step.RecurringDaysInWeek != null && step.RecurringDaysInWeek.Count > 0)
+                    {
+                        var days = step.RecurringDaysInWeek.Distinct().OrderBy(d => d).ToList();
+
+                        // Advance nextOccurrence to the next matching weekday (taking RecurringEvery into account)
+                        while (nextOccurrence <= today || (step.FutureModifiedTasks != null && step.FutureModifiedTasks.Contains(nextOccurrence)))
+                        {
+                            int currentDay = (int)nextOccurrence.DayOfWeek;
+                            // find next day in the same week strictly after current day
+                            int? nextDayInList = days.FirstOrDefault(d => d > currentDay);
+                            DateTime candidate;
+
+                            if (nextDayInList != null && nextDayInList > currentDay)
+                            {
+                                int diff = nextDayInList.Value - currentDay;
+                                candidate = nextOccurrence.AddDays(diff);
+                            }
+                            else
+                            {
+                                // no later day in this week -> jump to the next recurrence week block and pick the first configured weekday
+                                int weeksToAdd = step.RecurringEvery ?? 1;
+                                var startOfNextBlock = nextOccurrence.AddDays(7 * weeksToAdd);
+                                int firstDay = days.First();
+                                int diff = (firstDay - (int)startOfNextBlock.DayOfWeek + 7) % 7;
+                                candidate = startOfNextBlock.AddDays(diff);
+                            }
+
+                            nextOccurrence = Functions.SetDefaultHHMMSS(candidate);
+                        }
+
+                        step.NextOccurrence = nextOccurrence;
+                        // we've already advanced past today for the weekly-with-specific-days case
+                        continue;
+                    }
+                    // else: no specific days configured - fall through to the generic weekly handling below
+                }
+
+                // Generic advancement for day/week/month (covers weekly when no specific weekdays specified)
+                while (nextOccurrence <= today)
+                {
+                    step.DateOnWeekly = nextOccurrence;
+                    switch (step.RecurringDateType)
+                    {
+                        case RecurringDateTypeEnum.day:
+                            nextOccurrence = nextOccurrence.AddDays(step.RecurringEvery ?? 1);
+                            break;
+                        case RecurringDateTypeEnum.week:
+                            nextOccurrence = nextOccurrence.AddDays(7 * (step.RecurringEvery ?? 1));
+                            break;
+                        case RecurringDateTypeEnum.month:
+                            nextOccurrence = nextOccurrence.AddMonths(step.RecurringEvery ?? 1);
+                            break;
+                    }
+                }
+
+                step.DateCreated = step.NextOccurrence;
+                step.NextOccurrence = nextOccurrence;
+            }
+        }
+    }
+}
+in this logic, the future completed step should be "reloaded", to indicate that it is no longer a future completed step and now it should be shown as not completed. this should happen at the moment that today catch up with the step date.
+
+the Step object has the following properties:
+    id?: string;
+    projectId?: string | null;
+    dateCreated?: Date; // the date on which the step was created
+    userId: string;
+    name?: string;
+    description?: string;
+    isComplete: boolean; // if the step is complete. if its a recurring step, then this should be changed when the next occurrence date arrives
+    stepType: StepType;
+    price: number;
+    dateCompleted?: Date;
+    dateDue?: Date | null; // month for payment
+    dateOnWeekly?: Date; // the date on which the step is expected to be completed, we see this on the calendar
+    positionInList: number; // the order of the step in the list of steps in the project
+    positionInWeeklyList: number; // the order of the step in the list of steps in the weekly view
+    hideTaskDate?: Date;
+    tasks?: StepTask[];
+    isRecurring = false; // if the step is recurring every period, or just a regular step
+    recurringEvery?: number; // the number of the recurring period. i.e. every 2 days, every 3 weeks, every 4 months
+    recurringDateType?: recurringDateTypeEnum; // the type of the recurring date. day, week, month
+    recurringDaysInWeek?: number[]; // 1 - Sunday, 7 - Saturday. if the step is recurring every week, this is the days of the week on which the step is expected to be completed
+    recurringDayInMonth?: number; // day in the month. 1-30
+    nextOccurrence?: Date; // the next date on which the step is expected to be completed. when this date arrives the step should become not completed
+    futureModifiedTasks?: Date[] = []; // list of dates on which the step is expected to be completed, but has been modified by the user. we need to avoid duplicates
+    
+    // these are not stored in db
+    isRetainerCopy = false; // if the step is a copy of a retainer step. this is used to avoid duplicates
+    originalRetainerStep?: Step;
+
+i have several bugs with this whole recurring steps feature, mainly with weekly and monthly steps. dont do anything yet, just read and analyze everything. ask me whatever you have to, be careful and dont break anything

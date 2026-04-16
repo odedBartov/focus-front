@@ -1,6 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { subscriptionEnum } from '../models/enums';
+import { taxManagementSystemEnum } from '../models/taxSystem';
+import { UserStatus } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,11 @@ export class AuthenticationService {
   isReadOnly = "is-read-only";
   subscription = "subscription";
   userId = "userId";
+  userApiKey = "user-api-key";
+  userTaxManagementSystem = "user-tax-management-system";
+  userTaxManagementCompanyId = "user-tax-management-company-id";
   isReadOnlySignal = signal<boolean>(false);
+  userStatus = "user-status";
 
   getToken() {
     return localStorage.getItem(this.userTokenKey);
@@ -55,20 +61,20 @@ export class AuthenticationService {
     return localStorage.getItem(this.isNewUser) === 'true';
   }
 
-  setUserPicture(picture: string) {
-    localStorage.setItem(this.userPicture, picture);
-  }
-
   getUserPicture() {
     return localStorage.getItem(this.userPicture);
   }
 
-  setIsReadOnly(isReadOnly: boolean) {
-    this.isReadOnlySignal.set(isReadOnly);
+  setUserPicture(picture: string) {
+    localStorage.setItem(this.userPicture, picture);
   }
 
   getIsReadOnly() {
     return this.isReadOnlySignal;
+  }
+
+  setIsReadOnly(isReadOnly: boolean) {
+    this.isReadOnlySignal.set(isReadOnly);
   }
 
   setSubscription(subscription: number) {
@@ -92,8 +98,63 @@ export class AuthenticationService {
     localStorage.setItem(this.userId, userId);
   }
 
+  setUserApiKey(apiKey: string) {
+    localStorage.setItem(this.userApiKey, apiKey);
+  }
+
+  getUserApiKey() {
+    return localStorage.getItem(this.userApiKey);
+  }
+
+  setUserTaxManagementSystem(system?: taxManagementSystemEnum) {
+    if (system) {
+      localStorage.setItem(this.userTaxManagementSystem, system.toString());
+    } else {
+      localStorage.removeItem(this.userTaxManagementSystem);
+    }
+  }
+
+  getUserTaxManagementSystem() {
+    const system = localStorage.getItem(this.userTaxManagementSystem);
+    if (system) {
+      return (parseInt(system)) as unknown as taxManagementSystemEnum;
+    }
+    return undefined;
+  }
+
+  setUserStatus(status?: UserStatus) {
+    if (status) {
+      localStorage.setItem(this.userStatus, status.toString());
+    } else {
+      localStorage.removeItem(this.userStatus);
+    }
+  }
+
+  getUserStatus() {
+    const status = localStorage.getItem(this.userStatus);
+    if (status) {
+      return status as unknown as UserStatus;
+    }
+    return UserStatus.exemptDealer;
+  }
+
+  setUserTaxManagementCompanyId(companyId: number) {
+    if (companyId > -1) {
+      localStorage.setItem(this.userTaxManagementCompanyId, companyId.toString());
+    }
+  }
+
+  getUserTaxManagementCompanyId() {
+    const companyId = localStorage.getItem(this.userTaxManagementCompanyId);
+    if (companyId) {
+      return parseInt(companyId, 10);
+    }
+    return 0;
+  }
+
   logOut() {
     localStorage.clear();
     this.router.navigate(['/login']);
+    window.location.reload();
   }
 }

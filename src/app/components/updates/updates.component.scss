@@ -47,10 +47,19 @@
         box-shadow: var(--common-shadow);
         padding: 10px;
         display: flex;
+        flex-direction: column;
         &:hover {
             .icon-confirm-circle {
                 visibility: visible;
             }
+        }
+
+        .one-time-features-header {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            gap: 6px;
+            color: var(--main-color);
         }
 
         .icon-confirm-circle {

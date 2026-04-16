@@ -16,7 +16,8 @@ export class Project {
     steps: Step[];
     positionInList: number;
     clientName: string;
-    clientMail: string;
+    clientMail?: string;
+    clientPhone?: string;
     links:{name: string, url: string}[];
     notes: string;
     ownerPicture?: string;
@@ -41,7 +42,6 @@ export class Project {
         this.steps = [];
         this.positionInList = 0;
         this.clientName = '';
-        this.clientMail = '';
         this.links = [];
         this.notes = '';
         this.retainerPayments = [];

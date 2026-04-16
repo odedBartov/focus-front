@@ -1,15 +1,8 @@
 import { recurringDateTypeEnum, StepType } from "./enums";
+import { RelatedDocument } from "./relatedDocument";
 import { StepTask } from "./stepTask";
 
-export interface IStepOrTask {
-  id?: string;
-  text?: string;
-  isComplete?: boolean;
-  dateOnWeekly?: Date;
-  positionInWeeklyList: number;
-}
-
-export class Step implements IStepOrTask {
+export class Step {
     id?: string;
     projectId?: string | null;
     dateCreated?: Date; // the date on which the step was created
@@ -33,9 +26,14 @@ export class Step implements IStepOrTask {
     recurringDayInMonth?: number; // day in the month. 1-30
     nextOccurrence?: Date; // the next date on which the step is expected to be completed. when this date arrives the step should become not completed
     futureModifiedTasks?: Date[] = []; // list of dates on which the step is expected to be completed, but has been modified by the user. we need to avoid duplicates
+    relatedDocuments?: {
+        requestForPayment?: RelatedDocument;
+        receipt?: RelatedDocument;
+        invoice?: RelatedDocument;
+        invoiceReceipt?: RelatedDocument;
+    };
     createdStepsFromRetainer?: string[]; // list of steps that were created from a retainer step
     originalRetainerStepId?: string; // the id of the original retainer step that was copied
-
     constructor() {
         this.userId = "newStep";
         this.isComplete = false;

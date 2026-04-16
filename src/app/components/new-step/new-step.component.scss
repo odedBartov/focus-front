@@ -11,7 +11,8 @@
 }
 
 .main {
-    width: 340px;
+    width: 400px;
+    box-sizing: border-box;
 
     .choose-type {
         display: flex;
