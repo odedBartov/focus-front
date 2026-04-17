@@ -216,7 +216,7 @@ export class ProjectsListComponent implements OnInit {
                 startDate.setHours(12, 0, 0, 0);
                 const endDate = new Date(startDate);
                 endDate.setDate(startDate.getDate() + (6 - startDate.getDay())); // Saturday of current week
-                endDate.setMonth(endDate.getMonth() + 3);
+                endDate.setMonth(endDate.getMonth() + 4);
                 this.httpService.getRetainerSteps(startDate, endDate).subscribe((retainerSteps: Step[]) => {
                   newProject.steps.push(...retainerSteps);
                   setTimeout(() => {

@@ -143,33 +143,32 @@ export class SummaryComponent implements OnInit {
     return res
   }
 
-  calculateMonthlyRetainerPayments(paymentSteps: Step[]) {
-    if (this.updatedProjects) {
-      this.updatedProjects.forEach(project => {
-        if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.monthly && project.status === ProjectStatus.active) {
-          for (let index = 0; index < Math.floor(this.futurePayments.length / 2); index++) {
-            this.futurePayments[index] += project.reccuringPayment ?? 0;
-          }
-        }
-      });
+  // calculateMonthlyRetainerPayments(paymentSteps: Step[]) {
+  //   if (this.updatedProjects) {
+  //     this.updatedProjects.forEach(project => {
+  //       if (project.projectType === projectTypeEnum.retainer && project.paymentModel === paymentModelEnum.monthly && project.status === ProjectStatus.active) {
+  //         for (let index = 0; index < Math.floor(this.futurePayments.length / 2); index++) {
+  //           this.futurePayments[index] += project.reccuringPayment ?? 0;
+  //         }
+  //       }
+  //     });
+  //   }
 
-    }
-
-    const now = new Date();
-    const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    paymentSteps.forEach(step => {
-      if (step.isComplete &&
-        step.stepType === StepType.payment &&
-        step.isRecurring &&
-        step.recurringDateType === recurringDateTypeEnum.month &&
-        step.dateCompleted) {
-        const dateCompleted = new Date(step.dateCompleted);
-        if (dateCompleted < startOfThisMonth) {
-          this.futurePayments[Math.floor(this.futurePayments.length / 2)] += step.price;
-        }
-      }
-    });
-  }
+  //   const now = new Date();
+  //   const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  //   paymentSteps.forEach(step => {
+  //     if (step.isComplete &&
+  //       step.stepType === StepType.payment &&
+  //       step.isRecurring &&
+  //       step.recurringDateType === recurringDateTypeEnum.month &&
+  //       step.dateCompleted) {
+  //       const dateCompleted = new Date(step.dateCompleted);
+  //       if (dateCompleted < startOfThisMonth) {
+  //         this.futurePayments[Math.floor(this.futurePayments.length / 2)] += step.price;
+  //       }
+  //     }
+  //   });
+  // }
 
   // calculateHourlyRetainerPayments() {
   //   const today = new Date();
